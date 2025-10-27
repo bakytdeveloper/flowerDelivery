@@ -36,6 +36,8 @@ async function deductProductsFromStock(products) {
                 throw new Error(`Insufficient quantity for product ${product.name}`);
             }
             product.quantity -= item.quantity;
+            // Увеличиваем счетчик продаж
+            product.soldCount += item.quantity;
             await product.save();
         } catch (error) {
             console.error(`Error deducting product ${item.product} from stock:`, error);
@@ -66,12 +68,30 @@ async function sendOrderEmail(orderData, orderProducts, userType) {
     const productList = orderProducts.map(item => {
         let itemInfo = `- ${item.name} (${item.quantity} шт.)`;
 
-        if (item.size && item.size.trim() !== '') {
-            itemInfo += ` - Размер: ${item.size}`;
+        // Информация о цветах
+        if (item.flowerType) {
+            itemInfo += ` - Тип: ${item.flowerType === 'single' ? 'Одиночный цветок' : 'Букет'}`;
         }
 
-        if (item.color && item.color.trim() !== '') {
-            itemInfo += ` - Цвет: ${item.color}`;
+        if (item.flowerNames && item.flowerNames.length > 0) {
+            itemInfo += ` - Цветы: ${item.flowerNames.join(', ')}`;
+        }
+
+        if (item.flowerColors && item.flowerColors.length > 0) {
+            const colors = item.flowerColors.map(color => color.name).join(', ');
+            itemInfo += ` - Цвета: ${colors}`;
+        }
+
+        if (item.stemLength) {
+            itemInfo += ` - Длина стебля: ${item.stemLength} см`;
+        }
+
+        if (item.occasion) {
+            itemInfo += ` - Повод: ${item.occasion}`;
+        }
+
+        if (item.recipient) {
+            itemInfo += ` - Для: ${item.recipient}`;
         }
 
         itemInfo += ` - ${item.price * item.quantity} сом`;
@@ -82,9 +102,9 @@ async function sendOrderEmail(orderData, orderProducts, userType) {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: process.env.SMTP_USER,
-        subject: `Новый заказ #${_id || '0000'} это ${userTypeText}`,
+        subject: `Новый заказ цветов #${_id || '0000'} от ${userTypeText}`,
         html: `
-            <h2>Поступил новый заказ!</h2>
+            <h2>Поступил новый заказ цветов!</h2>
             <p><strong>Тип пользователя:</strong> ${userTypeText}</p>
             <p><strong>Клиент:</strong> ${firstName} </p>
             <p><strong>Эл.почта:</strong> ${email ? `${email}` : ''}</p>
@@ -101,7 +121,7 @@ async function sendOrderEmail(orderData, orderProducts, userType) {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log('Email уведомление о заказе отправлено администратору');
+        console.log('Email уведомление о заказе цветов отправлено администратору');
         return true;
     } catch (error) {
         console.error('Ошибка отправки email администратору:', error);
@@ -112,9 +132,9 @@ async function sendOrderEmail(orderData, orderProducts, userType) {
 // Функция для отправки уведомлений о низком количестве товаров
 async function notifyAboutLowQuantity(products) {
     for (const {
-            product,
-            quantity
-        } of products) {
+        product,
+        quantity
+    } of products) {
         const existingProduct = await Product.findById(product).populate('admin');
         if (existingProduct && existingProduct.quantity <= 3 && existingProduct.quantity >= 1) {
             const admin = existingProduct.admin;
@@ -122,8 +142,8 @@ async function notifyAboutLowQuantity(products) {
                 const mailOptions = {
                     from: process.env.EMAIL_USER,
                     to: admin.email,
-                    subject: `Оповещение о низком уровне запаса товара: ${existingProduct.name}`,
-                    text: `Дорогой ${admin.name},\n\nНастоящим сообщением, мы хотели сказать, что товара "${existingProduct.name}" осталось мало на складе, осталось всего ${existingProduct.quantity} шт.\n\nПожалуйста, пополните запасы как можно скорее.\n\nС уважением,\nАдминистрация Магазина`,
+                    subject: `Оповещение о низком уровне запаса цветов: ${existingProduct.name}`,
+                    text: `Дорогой ${admin.name},\n\nНастоящим сообщением, мы хотели сказать, что цветов "${existingProduct.name}" осталось мало на складе, осталось всего ${existingProduct.quantity} шт.\n\nПожалуйста, пополните запасы как можно скорее.\n\nС уважением,\nАдминистрация Цветочного Магазина`,
                 };
                 await transporter.sendMail(mailOptions);
             }
@@ -190,7 +210,7 @@ export const createOrder = [
         // Проверяем доступность товаров
         for (const item of products) {
             const product = await Product.findById(item.product);
-            if (!product || product.quantity < item.quantity) {
+            if (!product || !product.isActive || product.quantity < item.quantity) {
                 return res.status(400).json({
                     message: `Товар "${product?.name}" недоступен в нужном количестве`,
                     product: product?.name,
@@ -248,15 +268,17 @@ export const createOrder = [
         let calculatedTotalAmount = 0;
 
         try {
-            const productUpdates = products.map(async ({
-                product,
-                quantity,
-                size,
-                color
-            }) => {
-                const existingProduct = await Product.findById(product).populate('admin');
+            const productUpdates = products.map(async (item) => {
+                const {
+                    product: productId,
+                    quantity,
+                    flowerType,
+                    flowerColor
+                } = item;
+
+                const existingProduct = await Product.findById(productId).populate('admin');
                 if (!existingProduct) {
-                    throw new Error(`Product not found: ${product}`);
+                    throw new Error(`Product not found: ${productId}`);
                 }
 
                 if (existingProduct.quantity < quantity) {
@@ -268,13 +290,16 @@ export const createOrder = [
                     const productItem = {
                         product: existingProduct._id,
                         name: existingProduct.name,
-                        brand: existingProduct.brand,
-                        type: existingProduct.type,
+                        flowerType: flowerType || existingProduct.type,
+                        category: existingProduct.category,
                         description: existingProduct.description,
                         price: existingProduct.price,
                         quantity,
-                        size,
-                        color,
+                        flowerNames: existingProduct.flowerNames,
+                        flowerColors: existingProduct.flowerColors,
+                        stemLength: existingProduct.stemLength,
+                        occasion: existingProduct.occasion,
+                        recipient: existingProduct.recipient,
                         admin: {
                             id: existingProduct.admin._id,
                             name: existingProduct.admin.name,
@@ -286,15 +311,10 @@ export const createOrder = [
                     orderProducts.push(productItem);
                     calculatedTotalAmount += existingProduct.price * quantity;
 
-                    await Product.findByIdAndUpdate(
-                        product, {
-                            $inc: {
-                                quantity: -quantity
-                            }
-                        }, {
-                            new: true
-                        }
-                    );
+                    // Обновляем количество и счетчик продаж
+                    existingProduct.quantity -= quantity;
+                    existingProduct.soldCount += quantity;
+                    await existingProduct.save();
                 }
             });
 
@@ -410,9 +430,9 @@ export const getUserOrders = async (req, res) => {
         const perPage = 5;
 
         const orders = await Order.find({
-                user: user._id
-            })
-            .populate('products.product', 'name price images')
+            user: user._id
+        })
+            .populate('products.product', 'name price images flowerNames occasion')
             .sort({
                 date: 'desc'
             })
@@ -441,17 +461,41 @@ export const getUserOrders = async (req, res) => {
 export const getAllOrders = async (req, res) => {
     try {
         const {
-            page = 1, perPage = 20
+            page = 1, perPage = 20, status, occasion
         } = req.query;
-        const orders = await Order.find()
+
+        let query = {};
+
+        // Фильтрация по статусу
+        if (status && status !== 'all') {
+            query.status = status;
+        }
+
+        // Фильтрация по поводу
+        if (occasion && occasion !== 'all') {
+            query['products.occasion'] = occasion;
+        }
+
+        const orders = await Order.find(query)
             .populate('user', 'name email')
-            .populate('products.product', 'name price images')
+            .populate('products.product', 'name price images flowerNames occasion recipient')
             .sort({
                 date: 'desc'
             })
             .skip((page - 1) * perPage)
             .limit(perPage);
-        res.json(orders);
+
+        const totalOrders = await Order.countDocuments(query);
+
+        res.json({
+            orders,
+            pagination: {
+                currentPage: parseInt(page),
+                perPage: parseInt(perPage),
+                totalOrders,
+                totalPages: Math.ceil(totalOrders / perPage)
+            }
+        });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -464,7 +508,7 @@ export const getOrderById = async (req, res) => {
     try {
         const order = await Order.findById(req.params.orderId)
             .populate('user', 'name email')
-            .populate('products.product', 'name price images brand');
+            .populate('products.product', 'name price images flowerNames flowerColors stemLength occasion recipient');
         if (!order) {
             return res.status(404).json({
                 message: 'Order not found'
@@ -602,10 +646,20 @@ export const updateProductQuantity = async (req, res) => {
             });
         }
 
+        // Обновляем количество в заказе
         productItem.quantity = quantity;
-        product.quantity -= quantityDifference;
+
+        // Обновляем количество на складе и счетчик продаж
+        if (quantityDifference > 0) {
+            product.quantity -= quantityDifference;
+            product.soldCount += quantityDifference;
+        } else if (quantityDifference < 0) {
+            product.quantity += Math.abs(quantityDifference);
+            product.soldCount -= Math.abs(quantityDifference);
+        }
         await product.save();
 
+        // Пересчитываем общую сумму заказа
         order.totalAmount = order.products.reduce(
             (total, item) => total + (item.price || 0) * (item.quantity || 0),
             0
@@ -647,16 +701,19 @@ export const removeProductFromOrder = async (req, res) => {
         const productToRemove = order.products[productIndex];
         order.products.splice(productIndex, 1);
 
+        // Возвращаем товар на склад и корректируем счетчик продаж
         await Product.findByIdAndUpdate(
             productToRemove.product, {
                 $inc: {
-                    quantity: productToRemove.quantity
+                    quantity: productToRemove.quantity,
+                    soldCount: -productToRemove.quantity
                 }
             }, {
                 new: true
             }
         );
 
+        // Пересчитываем общую сумму
         order.totalAmount = order.products.reduce(
             (total, item) => total + (item.price || 0) * (item.quantity || 0),
             0
@@ -753,10 +810,10 @@ export const getAdminPurchaseHistory = async (req, res) => {
 
         // Находим заказы, где администратор является текущим пользователем
         const orders = await Order.find({
-                user: adminId
-            })
+            user: adminId
+        })
             .populate('user', 'name email')
-            .populate('products.product', 'name price images')
+            .populate('products.product', 'name price images flowerNames occasion')
             .sort({
                 date: 'desc'
             })
@@ -776,6 +833,41 @@ export const getAdminPurchaseHistory = async (req, res) => {
                 totalOrders,
                 hasNext: pageNum < totalPages,
                 hasPrev: pageNum > 1
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+// Контроллер для получения статистики заказов по поводам
+export const getOrdersByOccasion = async (req, res) => {
+    try {
+        const { occasion } = req.params;
+        const { page = 1, perPage = 20 } = req.query;
+
+        const orders = await Order.find({
+            'products.occasion': occasion
+        })
+            .populate('user', 'name email')
+            .populate('products.product', 'name price images flowerNames')
+            .sort({ date: -1 })
+            .skip((page - 1) * perPage)
+            .limit(parseInt(perPage));
+
+        const totalOrders = await Order.countDocuments({
+            'products.occasion': occasion
+        });
+
+        res.json({
+            orders,
+            pagination: {
+                currentPage: parseInt(page),
+                perPage: parseInt(perPage),
+                totalOrders,
+                totalPages: Math.ceil(totalOrders / perPage)
             }
         });
     } catch (error) {

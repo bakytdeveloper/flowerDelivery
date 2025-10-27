@@ -17,10 +17,29 @@ const __dirname = path.dirname(__filename);
 export const getAdminProducts = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const adminProducts = await Product.find({
-            admin: userId
+        const { page = 1, limit = 10, search = '' } = req.query;
+
+        const skip = (page - 1) * limit;
+        let query = { admin: userId };
+
+        // Добавляем поиск по названию, если есть
+        if (search) {
+            query.name = { $regex: search, $options: 'i' };
+        }
+
+        const adminProducts = await Product.find(query)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(parseInt(limit));
+
+        const totalCount = await Product.countDocuments(query);
+
+        res.json({
+            products: adminProducts,
+            totalCount,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(totalCount / limit)
         });
-        res.json(adminProducts);
     } catch (error) {
         console.error('Ошибка при получении товаров админа:', error);
         res.status(500).json({
@@ -38,22 +57,37 @@ export const createProduct = async (req, res) => {
             price,
             originalPrice,
             category,
-            direction,
             type,
-            brand,
-            gender,
+            occasion,
+            recipient,
+            flowerNames,
+            stemLength,
+            flowerColors,
             characteristics,
             images,
-            sizes,
-            colors,
             quantity = 10
         } = req.body;
 
         const adminId = req.user.userId;
 
-        if (!name || !price || !category || !type || !brand) {
+        // Проверка обязательных полей для цветов
+        if (!name || !price || !category || !type || !occasion || !recipient || !flowerNames || !stemLength) {
             return res.status(400).json({
                 message: 'Необходимо заполнить все обязательные поля'
+            });
+        }
+
+        // Проверяем, что flowerNames - массив
+        const processedFlowerNames = Array.isArray(flowerNames) ? flowerNames : [flowerNames];
+
+        // Обрабатываем flowerColors
+        let processedFlowerColors = [];
+        if (flowerColors && Array.isArray(flowerColors)) {
+            processedFlowerColors = flowerColors.map(color => {
+                if (typeof color === 'string') {
+                    return { name: color, value: color };
+                }
+                return color;
             });
         }
 
@@ -63,14 +97,14 @@ export const createProduct = async (req, res) => {
             price,
             originalPrice,
             category,
-            direction,
             type,
-            brand,
-            gender,
-            characteristics,
-            images,
-            sizes,
-            colors,
+            occasion,
+            recipient,
+            flowerNames: processedFlowerNames,
+            stemLength: parseInt(stemLength),
+            flowerColors: processedFlowerColors,
+            characteristics: characteristics || [],
+            images: images || [],
             quantity,
             admin: adminId
         });
@@ -91,16 +125,16 @@ export const checkProductDuplicate = async (req, res) => {
     try {
         const {
             name,
-            brand,
-            type
+            type,
+            flowerNames
         } = req.body;
         const adminId = req.user.userId;
 
         const existingProduct = await Product.findOne({
             admin: adminId,
             name,
-            brand,
-            type
+            type,
+            flowerNames: { $in: flowerNames }
         });
 
         res.json({
@@ -162,7 +196,30 @@ export const updateProduct = async (req, res) => {
             });
         }
 
-        const updatedProduct = await Product.findByIdAndUpdate(productId, req.body, {
+        // Обрабатываем данные перед обновлением
+        const updateData = { ...req.body };
+
+        // Обрабатываем flowerNames
+        if (updateData.flowerNames && !Array.isArray(updateData.flowerNames)) {
+            updateData.flowerNames = [updateData.flowerNames];
+        }
+
+        // Обрабатываем flowerColors
+        if (updateData.flowerColors && Array.isArray(updateData.flowerColors)) {
+            updateData.flowerColors = updateData.flowerColors.map(color => {
+                if (typeof color === 'string') {
+                    return { name: color, value: color };
+                }
+                return color;
+            });
+        }
+
+        // Преобразуем stemLength в число
+        if (updateData.stemLength) {
+            updateData.stemLength = parseInt(updateData.stemLength);
+        }
+
+        const updatedProduct = await Product.findByIdAndUpdate(productId, updateData, {
             new: true
         });
         res.json(updatedProduct);
@@ -230,8 +287,8 @@ export const getSalesHistory = async (req, res) => {
 
         // Получаем заказы для текущего админа
         const orders = await Order.aggregate([{
-                $unwind: '$products'
-            },
+            $unwind: '$products'
+        },
             {
                 $match: {
                     'products.admin.id': new mongoose.Types.ObjectId(adminId)
@@ -254,6 +311,12 @@ export const getSalesHistory = async (req, res) => {
                     },
                     user: {
                         $first: '$user'
+                    },
+                    firstName: {
+                        $first: '$firstName'
+                    },
+                    phoneNumber: {
+                        $first: '$phoneNumber'
                     }
                 }
             },
@@ -282,6 +345,93 @@ export const getSalesHistory = async (req, res) => {
         });
     } catch (error) {
         console.error("Error fetching sales history:", error);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+// Контроллер для получения статистики продаж
+export const getSalesStats = async (req, res) => {
+    try {
+        const adminId = req.user.userId;
+
+        const stats = await Order.aggregate([
+            { $unwind: '$products' },
+            {
+                $match: {
+                    'products.admin.id': new mongoose.Types.ObjectId(adminId),
+                    status: { $in: ['completed', 'inProgress'] }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalRevenue: { $sum: '$products.price' },
+                    totalProductsSold: { $sum: '$products.quantity' },
+                    totalOrders: { $addToSet: '$_id' }
+                }
+            },
+            {
+                $project: {
+                    totalRevenue: 1,
+                    totalProductsSold: 1,
+                    totalOrders: { $size: '$totalOrders' }
+                }
+            }
+        ]);
+
+        // Получаем самые популярные цветы
+        const popularFlowers = await Order.aggregate([
+            { $unwind: '$products' },
+            {
+                $match: {
+                    'products.admin.id': new mongoose.Types.ObjectId(adminId),
+                    status: { $in: ['completed', 'inProgress'] }
+                }
+            },
+            { $unwind: '$products.flowerNames' },
+            {
+                $group: {
+                    _id: '$products.flowerNames',
+                    totalSold: { $sum: '$products.quantity' },
+                    revenue: { $sum: '$products.price' }
+                }
+            },
+            { $sort: { totalSold: -1 } },
+            { $limit: 5 }
+        ]);
+
+        // Получаем статистику по поводам
+        const occasionStats = await Order.aggregate([
+            { $unwind: '$products' },
+            {
+                $match: {
+                    'products.admin.id': new mongoose.Types.ObjectId(adminId),
+                    status: { $in: ['completed', 'inProgress'] }
+                }
+            },
+            {
+                $group: {
+                    _id: '$products.occasion',
+                    totalSold: { $sum: '$products.quantity' },
+                    revenue: { $sum: '$products.price' }
+                }
+            },
+            { $sort: { totalSold: -1 } }
+        ]);
+
+        const result = {
+            totalRevenue: stats[0]?.totalRevenue || 0,
+            totalProductsSold: stats[0]?.totalProductsSold || 0,
+            totalOrders: stats[0]?.totalOrders || 0,
+            popularFlowers,
+            occasionStats
+        };
+
+        res.json(result);
+    } catch (error) {
+        console.error("Error fetching sales stats:", error);
         res.status(500).json({
             message: error.message
         });
@@ -338,6 +488,39 @@ export const deleteImageByName = async (req, res) => {
         console.error('Ошибка при удалении изображения:', err);
         res.status(500).json({
             message: 'Не удалось удалить изображение'
+        });
+    }
+};
+
+// Контроллер для обновления количества проданных цветов
+export const updateSoldCount = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const { soldCount } = req.body;
+        const adminId = req.user.userId;
+
+        const product = await Product.findOne({
+            _id: productId,
+            admin: adminId
+        });
+
+        if (!product) {
+            return res.status(404).json({
+                message: 'Товар не найден'
+            });
+        }
+
+        product.soldCount = parseInt(soldCount);
+        await product.save();
+
+        res.json({
+            message: 'Количество продаж обновлено',
+            product
+        });
+    } catch (error) {
+        console.error('Ошибка при обновлении количества продаж:', error);
+        res.status(500).json({
+            message: error.message
         });
     }
 };

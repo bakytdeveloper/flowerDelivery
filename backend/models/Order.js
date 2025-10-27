@@ -6,7 +6,6 @@ const cartItemSchema = new mongoose.Schema({
         ref: 'Product',
         required: true
     },
-    // Удаляем seller, так как все товары от админа
     quantity: {
         type: Number,
         required: true
@@ -31,7 +30,6 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    // Удаляем seller, так как все заказы обрабатываются админом
     guestInfo: {
         name: {
             type: String
@@ -45,7 +43,7 @@ const orderSchema = new mongoose.Schema({
     },
     userType: {
         type: String,
-        enum: ['customer', 'guest'], // Удаляем 'seller'
+        enum: ['customer', 'guest'],
         required: true
     },
     cart: [cartItemSchema],
@@ -59,11 +57,11 @@ const orderSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        brand: {
-            type: String
-        },
-        type: {
-            type: String
+        // Удаляем brand, добавляем поля для цветов
+        flowerType: {
+            type: String,
+            enum: ['single', 'bouquet'],
+            required: true
         },
         category: {
             type: String
@@ -79,13 +77,28 @@ const orderSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
-        size: {
+        // Удаляем size, добавляем информацию о цветах
+        flowerNames: [{
+            type: String
+        }],
+        flowerColors: [{
+            name: {
+                type: String
+            },
+            value: {
+                type: String
+            }
+        }],
+        stemLength: {
+            type: Number
+        },
+        occasion: {
             type: String
         },
-        color: {
+        recipient: {
             type: String
         },
-        // Упрощаем информацию о продавце (теперь всегда админ)
+        // Информация о админе
         admin: {
             id: {
                 type: mongoose.Schema.Types.ObjectId,
@@ -105,7 +118,7 @@ const orderSchema = new mongoose.Schema({
                 required: true
             },
         },
-    }, ],
+    }],
     totalAmount: {
         type: Number,
         required: true

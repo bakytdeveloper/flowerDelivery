@@ -1,19 +1,17 @@
 import express from 'express';
 import {
     getProducts,
-    getFiltersHierarchy,
-    getGenders,
-    getCategories,
-    getTypes,
+    getAvailableFilters,
     getNewestProducts,
+    getBestSellingProducts,
     getProductById,
     createProduct,
     updateProduct,
     deleteProduct,
     getRelatedProducts,
-    getAccessoriesByDirection,
     toggleProductActive,
-    getProductRating
+    getProductRating,
+    getProductsByOccasion
 } from '../controllers/productController.js';
 import {
     authenticateToken,
@@ -24,14 +22,12 @@ const router = express.Router();
 
 // Публичные маршруты (доступны всем)
 router.get('/', getProducts);
-router.get('/filters/hierarchy', getFiltersHierarchy);
-router.get('/genders', getGenders);
-router.get('/categories', getCategories);
-router.get('/types', getTypes);
+router.get('/filters/available', getAvailableFilters);
 router.get('/newest', getNewestProducts);
+router.get('/bestselling', getBestSellingProducts);
+router.get('/occasion/:occasion', getProductsByOccasion);
 router.get('/:id', getProductById);
 router.get('/related/:productId', getRelatedProducts);
-router.get('/accessories/:direction', getAccessoriesByDirection);
 router.get('/:id/rating', getProductRating);
 
 // Защищенные маршруты (только для администраторов)

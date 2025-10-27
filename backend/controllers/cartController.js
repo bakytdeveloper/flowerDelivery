@@ -53,8 +53,8 @@ export const addToCart = async (req, res) => {
         const {
             productId,
             quantity,
-            size,
-            color
+            flowerType,
+            flowerColor
         } = req.body;
 
         // Проверяем доступность товара
@@ -69,6 +69,13 @@ export const addToCart = async (req, res) => {
             return res.status(400).json({
                 message: 'Недостаточно товара на складе',
                 available: product.quantity
+            });
+        }
+
+        // Проверяем соответствие типа цветов
+        if (flowerType && product.type !== flowerType) {
+            return res.status(400).json({
+                message: 'Несоответствие типа цветов'
             });
         }
 
@@ -89,11 +96,21 @@ export const addToCart = async (req, res) => {
             cart = new Cart(cartData);
         }
 
+        // Создаем уникальный идентификатор для товара в корзине
+        const itemIdentifier = {
+            product: productId,
+            flowerType: flowerType || product.type,
+            flowerColor: flowerColor || (product.flowerColors && product.flowerColors[0] ? {
+                name: product.flowerColors[0].name,
+                value: product.flowerColors[0].value
+            } : null)
+        };
+
         // Проверяем, есть ли уже такой товар в корзине
         const existingItemIndex = cart.items.findIndex(item =>
             item.product.toString() === productId &&
-            item.size === size &&
-            item.color === color
+            item.flowerType === itemIdentifier.flowerType &&
+            JSON.stringify(item.flowerColor) === JSON.stringify(itemIdentifier.flowerColor)
         );
 
         if (existingItemIndex !== -1) {
@@ -113,12 +130,18 @@ export const addToCart = async (req, res) => {
             cart.items.push({
                 product: productId,
                 quantity,
-                size,
-                color,
+                flowerType: flowerType || product.type,
+                flowerColor: flowerColor || (product.flowerColors && product.flowerColors[0] ? {
+                    name: product.flowerColors[0].name,
+                    value: product.flowerColors[0].value
+                } : null),
                 price: product.price,
                 name: product.name,
                 image: product.images[0],
-                brand: product.brand
+                flowerNames: product.flowerNames,
+                stemLength: product.stemLength,
+                occasion: product.occasion,
+                recipient: product.recipient
             });
         }
 
@@ -160,6 +183,12 @@ export const updateCartItem = async (req, res) => {
 
         // Проверяем доступность
         const product = await Product.findById(item.product);
+        if (!product || !product.isActive) {
+            return res.status(404).json({
+                message: 'Товар больше не доступен'
+            });
+        }
+
         if (product.quantity < quantity) {
             return res.status(400).json({
                 message: 'Недостаточно товара на складе',
@@ -175,6 +204,9 @@ export const updateCartItem = async (req, res) => {
         cart.lastUpdated = new Date();
 
         await cart.save();
+
+        // Повторно заполняем данные продукта
+        await cart.populate('items.product');
         res.json(cart);
     } catch (error) {
         res.status(500).json({
@@ -203,6 +235,9 @@ export const removeFromCart = async (req, res) => {
         cart.lastUpdated = new Date();
 
         await cart.save();
+
+        // Повторно заполняем данные продукта
+        await cart.populate('items.product');
         res.json(cart);
     } catch (error) {
         res.status(500).json({
@@ -226,6 +261,51 @@ export const clearCart = async (req, res) => {
 
         await cart.save();
         res.json(cart);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+// Контроллер для получения сводки корзины (мини-корзина)
+export const getCartSummary = async (req, res) => {
+    try {
+        let cart;
+
+        if (req.user.role === 'customer' || req.user.role === 'admin') {
+            cart = await Cart.findOne({
+                user: req.user.userId
+            });
+        } else {
+            cart = await Cart.findOne({
+                sessionId: req.user.sessionId
+            });
+        }
+
+        if (!cart) {
+            return res.json({
+                totalItems: 0,
+                total: 0,
+                items: []
+            });
+        }
+
+        const summary = {
+            totalItems: cart.totalItems,
+            total: cart.total,
+            items: cart.items.map(item => ({
+                id: item._id,
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+                image: item.image,
+                flowerType: item.flowerType,
+                flowerNames: item.flowerNames
+            }))
+        };
+
+        res.json(summary);
     } catch (error) {
         res.status(500).json({
             message: error.message

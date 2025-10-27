@@ -8,16 +8,6 @@ const __filename = fileURLToPath(
     import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const genderOrder = [
-    "Мужская одежда",
-    "Женская одежда",
-    "Детская одежда",
-    "Унисекс",
-    "Гаджеты",
-    "Бытовая эл.техника",
-    "Аксессуары"
-];
-
 const escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Вспомогательная функция для обработки изображений продукта
@@ -44,11 +34,16 @@ const processProductImages = (product, req) => {
 export const getProducts = async (req, res) => {
     try {
         const {
-            gender,
-            category,
             type,
+            occasion,
+            recipient,
+            flowerNames,
+            stemLength,
+            flowerColors,
             search,
             page = 1,
+            sortBy = 'createdAt',
+            sortOrder = 'desc'
         } = req.query;
 
         const userAgent = req.headers['user-agent'];
@@ -63,12 +58,31 @@ export const getProducts = async (req, res) => {
             }
         };
 
-        if (gender) baseQuery.gender = gender;
-        if (category) baseQuery.category = category;
+        // Добавляем фильтры для цветов
         if (type) baseQuery.type = type;
+        if (occasion) baseQuery.occasion = occasion;
+        if (recipient) baseQuery.recipient = recipient;
+        if (flowerNames) baseQuery.flowerNames = { $in: Array.isArray(flowerNames) ? flowerNames : [flowerNames] };
+        if (stemLength) baseQuery.stemLength = { $gte: parseInt(stemLength) };
+        if (flowerColors) {
+            baseQuery['flowerColors.name'] = { $in: Array.isArray(flowerColors) ? flowerColors : [flowerColors] };
+        }
 
         let products = [];
         let totalCount = 0;
+
+        // Сортировка
+        const sortOptions = {};
+        if (sortBy === 'price') {
+            sortOptions.price = sortOrder === 'asc' ? 1 : -1;
+        } else if (sortBy === 'soldCount') {
+            sortOptions.soldCount = sortOrder === 'asc' ? 1 : -1;
+        } else if (sortBy === 'rating') {
+            // Для рейтинга нужна дополнительная логика
+            sortOptions.averageRating = sortOrder === 'asc' ? 1 : -1;
+        } else {
+            sortOptions.createdAt = sortOrder === 'asc' ? 1 : -1;
+        }
 
         if (search) {
             const exactPhrase = escapeRegex(search.trim());
@@ -78,16 +92,22 @@ export const getProducts = async (req, res) => {
             const exactQuery = {
                 ...baseQuery,
                 $or: [{
-                        name: exactRegex
-                    },
+                    name: exactRegex
+                },
                     {
                         type: exactRegex
                     },
                     {
-                        brand: exactRegex
+                        flowerNames: exactRegex
                     },
                     {
                         description: exactRegex
+                    },
+                    {
+                        occasion: exactRegex
+                    },
+                    {
+                        recipient: exactRegex
                     }
                 ]
             };
@@ -96,9 +116,7 @@ export const getProducts = async (req, res) => {
                 .populate('admin', 'name email')
                 .skip(skip)
                 .limit(limit)
-                .sort({
-                    createdAt: -1
-                });
+                .sort(sortOptions);
 
             totalCount = await Product.countDocuments(exactQuery);
 
@@ -115,9 +133,7 @@ export const getProducts = async (req, res) => {
                     .populate('admin', 'name email')
                     .skip(skip)
                     .limit(limit)
-                    .sort({
-                        createdAt: -1
-                    });
+                    .sort(sortOptions);
 
                 totalCount = await Product.countDocuments(textQuery);
             }
@@ -128,16 +144,22 @@ export const getProducts = async (req, res) => {
                 const looseQuery = {
                     ...baseQuery,
                     $or: [{
-                            name: looseRegex
-                        },
+                        name: looseRegex
+                    },
                         {
                             type: looseRegex
                         },
                         {
-                            brand: looseRegex
+                            flowerNames: looseRegex
                         },
                         {
                             description: looseRegex
+                        },
+                        {
+                            occasion: looseRegex
+                        },
+                        {
+                            recipient: looseRegex
                         }
                     ]
                 };
@@ -146,9 +168,7 @@ export const getProducts = async (req, res) => {
                     .populate('admin', 'name email')
                     .skip(skip)
                     .limit(limit)
-                    .sort({
-                        createdAt: -1
-                    });
+                    .sort(sortOptions);
 
                 totalCount = await Product.countDocuments(looseQuery);
             }
@@ -158,9 +178,7 @@ export const getProducts = async (req, res) => {
                 .populate('admin', 'name email')
                 .skip(skip)
                 .limit(limit)
-                .sort({
-                    createdAt: -1
-                });
+                .sort(sortOptions);
 
             totalCount = await Product.countDocuments(baseQuery);
         }
@@ -184,8 +202,8 @@ export const getProducts = async (req, res) => {
     }
 };
 
-// Контроллер для получения иерархии фильтров
-export const getFiltersHierarchy = async (req, res) => {
+// Контроллер для получения доступных фильтров
+export const getAvailableFilters = async (req, res) => {
     try {
         const baseQuery = {
             isActive: true,
@@ -194,126 +212,103 @@ export const getFiltersHierarchy = async (req, res) => {
             }
         };
 
-        // Получаем все genders
-        const genders = await Product.distinct('gender', baseQuery);
-        const sortedGenders = genders.sort((a, b) =>
-            genderOrder.indexOf(a) - genderOrder.indexOf(b)
-        );
+        const [
+            types,
+            occasions,
+            recipients,
+            flowerNames,
+            flowerColors,
+            stemLengths
+        ] = await Promise.all([
+            // Типы (одиночный/букет)
+            Product.distinct('type', baseQuery),
+            // Поводы
+            Product.distinct('occasion', baseQuery),
+            // Получатели
+            Product.distinct('recipient', baseQuery),
+            // Названия цветов
+            Product.distinct('flowerNames', baseQuery),
+            // Цвета цветов
+            Product.distinct('flowerColors.name', baseQuery),
+            // Длины стеблей (уникальные значения)
+            Product.distinct('stemLength', baseQuery).then(lengths =>
+                lengths.filter(length => length != null).sort((a, b) => a - b)
+            )
+        ]);
 
-        // Для каждого gender получаем категории
-        const genderWithCategories = await Promise.all(
-            sortedGenders.map(async (gender) => {
-                const categories = await Product.distinct('category', {
-                    ...baseQuery,
-                    gender
-                });
+        // Получаем статистику по продажам для популярных цветов
+        const popularFlowers = await Product.aggregate([
+            { $match: baseQuery },
+            { $unwind: '$flowerNames' },
+            {
+                $group: {
+                    _id: '$flowerNames',
+                    totalSold: { $sum: '$soldCount' },
+                    productCount: { $sum: 1 }
+                }
+            },
+            { $sort: { totalSold: -1 } },
+            { $limit: 10 }
+        ]);
 
-                // Для каждой категории получаем типы
-                const categoriesWithTypes = await Promise.all(
-                    categories.map(async (category) => {
-                        const types = await Product.distinct('type', {
-                            ...baseQuery,
-                            gender,
-                            category
-                        });
-                        return {
-                            category,
-                            types
-                        };
-                    })
-                );
+        res.json({
+            filters: {
+                types: types || [],
+                occasions: occasions || [],
+                recipients: recipients || [],
+                flowerNames: flowerNames || [],
+                flowerColors: flowerColors || [],
+                stemLengths: stemLengths || [],
+                popularFlowers: popularFlowers || []
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching filters:', error);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
 
-                return {
-                    gender,
-                    categories: categoriesWithTypes
-                };
+// Контроллер для получения самых продаваемых цветов
+export const getBestSellingProducts = async (req, res) => {
+    try {
+        const userAgent = req.headers['user-agent'];
+        const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);
+        const limit = isMobile ? 8 : 12;
+
+        const products = await Product.find({
+            isActive: true,
+            quantity: {
+                $gt: 0
+            },
+            soldCount: {
+                $gt: 0
+            }
+        })
+            .populate('admin', 'name email')
+            .sort({
+                soldCount: -1
             })
-        );
+            .limit(limit)
+            .lean();
 
-        res.json({
-            filters: genderWithCategories
+        // Обрабатываем изображения и добавляем виртуальные поля
+        const processedProducts = products.map(product => {
+            const processed = processProductImages(product, req);
+            return {
+                ...processed,
+                truncatedDescription: product.description?.slice(0, 100) +
+                    (product.description?.length > 100 ? "..." : "")
+            };
         });
+
+        res.json(processedProducts);
+
     } catch (error) {
+        console.error('Error fetching best selling products:', error);
         res.status(500).json({
-            message: error.message
-        });
-    }
-};
-
-// Контроллер для получения genders
-export const getGenders = async (req, res) => {
-    try {
-        const genders = await Product.distinct('gender', {
-            isActive: true,
-            quantity: {
-                $gt: 0
-            }
-        });
-
-        res.json({
-            genders: genders || []
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};
-
-// Контроллер для получения категорий
-export const getCategories = async (req, res) => {
-    try {
-        const {
-            gender
-        } = req.query;
-
-        let query = {
-            isActive: true,
-            quantity: {
-                $gt: 0
-            }
-        };
-
-        if (gender) {
-            query.gender = gender;
-        }
-
-        const categories = await Product.distinct('category', query);
-        res.json({
-            categories: categories || []
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};
-
-// Контроллер для получения типов
-export const getTypes = async (req, res) => {
-    try {
-        const {
-            gender,
-            category
-        } = req.query;
-
-        let query = {
-            isActive: true,
-            quantity: {
-                $gt: 0
-            }
-        };
-
-        if (gender) query.gender = gender;
-        if (category) query.category = category;
-
-        const types = await Product.distinct('type', query);
-        res.json({
-            types: types || []
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
+            message: 'Server error'
         });
     }
 };
@@ -326,11 +321,11 @@ export const getNewestProducts = async (req, res) => {
         const limit = isMobile ? 10 : 18;
 
         const products = await Product.find({
-                isActive: true,
-                quantity: {
-                    $gt: 0
-                }
-            })
+            isActive: true,
+            quantity: {
+                $gt: 0
+            }
+        })
             .populate('admin', 'name email')
             .sort({
                 createdAt: -1
@@ -419,15 +414,15 @@ export const createProduct = async (req, res) => {
         description,
         price,
         category,
-        direction,
         type,
-        brand,
+        occasion,
+        recipient,
+        flowerNames,
+        stemLength,
+        flowerColors,
         characteristics,
         images,
         originalPrice,
-        gender,
-        sizes,
-        colors,
         quantity
     } = req.body;
 
@@ -437,15 +432,15 @@ export const createProduct = async (req, res) => {
             description,
             price,
             category,
-            direction,
             type,
-            brand,
+            occasion,
+            recipient,
+            flowerNames,
+            stemLength,
+            flowerColors,
             characteristics,
             images,
             originalPrice,
-            gender,
-            sizes,
-            colors,
             quantity,
             admin: req.user.userId
         });
@@ -466,17 +461,18 @@ export const updateProduct = async (req, res) => {
         description,
         price,
         category,
-        direction,
         type,
-        brand,
+        occasion,
+        recipient,
+        flowerNames,
+        stemLength,
+        flowerColors,
         characteristics,
         images,
         originalPrice,
-        gender,
-        sizes,
-        colors,
         quantity,
-        isActive
+        isActive,
+        soldCount
     } = req.body;
 
     try {
@@ -486,17 +482,18 @@ export const updateProduct = async (req, res) => {
                 description,
                 price,
                 category,
-                direction,
                 type,
-                brand,
+                occasion,
+                recipient,
+                flowerNames,
+                stemLength,
+                flowerColors,
                 characteristics,
                 images,
                 originalPrice,
-                gender,
-                sizes,
-                colors,
                 quantity,
-                isActive
+                isActive,
+                soldCount
             }, {
                 new: true
             }
@@ -550,18 +547,19 @@ export const getRelatedProducts = async (req, res) => {
             });
         }
 
-        const productType = product.type;
-
         const relatedProducts = await Product.find({
-            type: productType,
-            _id: {
-                $ne: productId
-            },
+            $or: [
+                { type: product.type },
+                { occasion: product.occasion },
+                { recipient: product.recipient },
+                { flowerNames: { $in: product.flowerNames } }
+            ],
+            _id: { $ne: productId },
             isActive: true,
-            quantity: {
-                $gt: 0
-            }
-        }).populate('admin');
+            quantity: { $gt: 0 }
+        })
+            .populate('admin')
+            .limit(8);
 
         // Обрабатываем изображения
         const processedProducts = relatedProducts.map(product => processProductImages(product, req));
@@ -569,34 +567,6 @@ export const getRelatedProducts = async (req, res) => {
         res.json(processedProducts);
     } catch (error) {
         console.error('Error fetching related products:', error);
-        res.status(500).json({
-            message: 'Internal Server Error',
-            success: false
-        });
-    }
-};
-
-// Контроллер для получения аксессуаров по направлению
-export const getAccessoriesByDirection = async (req, res) => {
-    try {
-        const {
-            direction
-        } = req.params;
-
-        const accessories = await Product.find({
-            direction,
-            isActive: true,
-            quantity: {
-                $gt: 0
-            }
-        }).populate('admin');
-
-        // Обрабатываем изображения
-        const processedAccessories = accessories.map(product => processProductImages(product, req));
-
-        res.json(processedAccessories);
-    } catch (error) {
-        console.error('Error fetching accessories:', error);
         res.status(500).json({
             message: 'Internal Server Error',
             success: false
@@ -652,6 +622,47 @@ export const getProductRating = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             message: error.message
+        });
+    }
+};
+
+// Контроллер для получения продуктов по поводу
+export const getProductsByOccasion = async (req, res) => {
+    try {
+        const { occasion } = req.params;
+        const { page = 1 } = req.query;
+
+        const limit = 12;
+        const skip = (page - 1) * limit;
+
+        const products = await Product.find({
+            occasion,
+            isActive: true,
+            quantity: { $gt: 0 }
+        })
+            .populate('admin', 'name email')
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+
+        const totalCount = await Product.countDocuments({
+            occasion,
+            isActive: true,
+            quantity: { $gt: 0 }
+        });
+
+        const processedProducts = products.map(product => processProductImages(product, req));
+
+        res.json({
+            products: processedProducts,
+            totalCount,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(totalCount / limit)
+        });
+    } catch (error) {
+        console.error('Error fetching products by occasion:', error);
+        res.status(500).json({
+            message: 'Server error'
         });
     }
 };

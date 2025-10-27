@@ -7,6 +7,8 @@ import {
     updateProduct,
     deleteProduct,
     getSalesHistory,
+    getSalesStats,
+    updateSoldCount,
     removeImage,
     deleteImageByName
 } from '../controllers/adminController.js';
@@ -29,9 +31,11 @@ router.post('/products/check-duplicate', authenticateToken, requireAdmin, checkP
 router.get('/products/:productId', authenticateToken, requireAdmin, getProduct);
 router.put('/products/:productId', authenticateToken, requireAdmin, updateProduct);
 router.delete('/products/:productId', authenticateToken, requireAdmin, deleteProduct);
+router.put('/products/:productId/sold-count', authenticateToken, requireAdmin, updateSoldCount);
 
-// Маршруты для истории продаж
+// Маршруты для статистики и истории продаж
 router.get('/sales-history', authenticateToken, requireAdmin, getSalesHistory);
+router.get('/sales-stats', authenticateToken, requireAdmin, getSalesStats);
 
 // Маршруты для загрузки и управления изображениями
 router.post('/upload',

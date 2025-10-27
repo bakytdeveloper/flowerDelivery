@@ -10,7 +10,8 @@ import {
     removeProductFromOrder,
     deleteOrder,
     getLastOrder,
-    getAdminPurchaseHistory
+    getAdminPurchaseHistory,
+    getOrdersByOccasion
 } from '../controllers/orderController.js';
 import {
     authenticateToken,
@@ -30,6 +31,7 @@ router.get('/last-order/:userId', authenticateToken, getLastOrder);
 // Маршруты для администратора
 router.get('/', authenticateToken, requireAdmin, getAllOrders);
 router.get('/admin/purchase-history', authenticateToken, requireAdmin, getAdminPurchaseHistory);
+router.get('/occasion/:occasion', authenticateToken, requireAdmin, getOrdersByOccasion);
 router.get('/:orderId', authenticateToken, requireAdmin, getOrderById);
 router.put('/update-status/:orderId', authenticateToken, requireAdmin, updateOrderStatus);
 router.put('/update-comments-admin/:orderId', authenticateToken, requireAdmin, updateAdminComments);

@@ -28,6 +28,10 @@ const reviewSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    // Добавляем поле для ответа администратора
+    adminResponse: {
+        type: String
     }
 });
 
@@ -51,26 +55,34 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    // Тип: одиночный цветок или букет
     type: {
         type: String,
-        required: true
+        required: true,
+        enum: ['single', 'bouquet'] // одиночный цветок или букет
     },
-    direction: {
-        type: String
-    },
-    brand: {
+    // Повод для цветов
+    occasion: {
         type: String,
         required: true
     },
-    gender: {
+    // Кому предназначены цветы
+    recipient: {
         type: String,
         required: true
     },
-    characteristics: [characteristicSchema],
-    sizes: [{
-        type: String
+    // Название цветов (роза, тюльпан и т.д.)
+    flowerNames: [{
+        type: String,
+        required: true
     }],
-    colors: [{
+    // Длина стебля (в см)
+    stemLength: {
+        type: Number,
+        required: true
+    },
+    // Цвет цветов
+    flowerColors: [{
         name: {
             type: String,
             required: true
@@ -80,6 +92,12 @@ const productSchema = new mongoose.Schema({
             required: true
         },
     }],
+    // Количество проданных цветов
+    soldCount: {
+        type: Number,
+        default: 0
+    },
+    characteristics: [characteristicSchema],
     images: [{
         type: String
     }],
@@ -87,7 +105,6 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 10
     },
-    // Меняем seller на admin (ссылка на User с ролью admin)
     admin: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -104,11 +121,11 @@ const productSchema = new mongoose.Schema({
     }
 });
 
-// Обновляем индексы
+// Обновляем индексы для цветов
 productSchema.index({
-    gender: 1,
+    type: 1,
     category: 1,
-    type: 1
+    occasion: 1
 });
 productSchema.index({
     isActive: 1,
@@ -116,24 +133,28 @@ productSchema.index({
 });
 productSchema.index({
     name: 1,
-    brand: 1,
+    flowerNames: 1,
     type: 1,
     category: 1
 });
 
-// Текстовый поиск
+// Текстовый поиск для цветов
 productSchema.index({
     name: 'text',
-    brand: 'text',
+    flowerNames: 'text',
     type: 'text',
     description: 'text',
-    category: 'text'
+    category: 'text',
+    occasion: 'text',
+    recipient: 'text'
 }, {
     weights: {
         name: 5,
-        brand: 4,
+        flowerNames: 4,
         type: 3,
         category: 2,
+        occasion: 2,
+        recipient: 2,
         description: 1
     },
     name: 'text_search_index'
@@ -143,7 +164,7 @@ productSchema.index({
     description: 1
 });
 
-// Виртуальные поля
+// Виртуальные поля (оставляем без изменений)
 productSchema.virtual('discountPercentage').get(function () {
     if (!this.originalPrice || this.originalPrice <= this.price) return 0;
     return Math.floor((this.originalPrice - this.price) / this.originalPrice * 100);

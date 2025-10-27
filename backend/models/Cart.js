@@ -11,11 +11,20 @@ const cartItemSchema = new mongoose.Schema({
         required: true,
         min: 1
     },
-    size: {
-        type: String
+    // Удаляем size, так как для цветов не нужно
+    // Добавляем поле для типа цветов (одиночный/букет)
+    flowerType: {
+        type: String,
+        enum: ['single', 'bouquet']
     },
-    color: {
-        type: String
+    // Обновляем color для работы с цветами цветов
+    flowerColor: {
+        name: {
+            type: String
+        },
+        value: {
+            type: String
+        }
     },
     price: {
         type: Number,
@@ -28,8 +37,12 @@ const cartItemSchema = new mongoose.Schema({
     image: {
         type: String
     },
-    brand: {
+    // Удаляем brand, добавляем информацию о цветах
+    flowerNames: [{
         type: String
+    }],
+    stemLength: {
+        type: Number
     }
 });
 
@@ -38,7 +51,6 @@ const cartSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    // Удаляем seller, так как теперь только один админ
     sessionId: {
         type: String
     },
