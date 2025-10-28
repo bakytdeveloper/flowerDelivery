@@ -7,6 +7,8 @@ import cartRoutes from './cartRoutes.js';
 import orderRoutes from './orderRoutes.js';
 import reviewRoutes from './reviewRoutes.js';
 import homepageRoutes from './homepageRoutes.js';
+import wrapperRoutes from './wrapperRoutes.js';
+import addonRoutes from './addonRoutes.js';
 
 const router = express.Router();
 
@@ -19,6 +21,9 @@ router.use('/cart', cartRoutes);
 router.use('/orders', orderRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/homepage', homepageRoutes);
+
+router.use('/wrappers', wrapperRoutes);
+router.use('/addons', addonRoutes);
 
 // Health check endpoint
 router.get('/health', (req, res) => {

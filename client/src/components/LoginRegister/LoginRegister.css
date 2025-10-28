@@ -1,0 +1,257 @@
+/* LoginRegister.css */
+
+* {
+    box-sizing: border-box;
+}
+
+.form-login-page{
+    width: 100%;
+    background: white;
+}
+
+.form {
+    max-width: 400px;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Poppins;
+    position: relative;
+}
+
+.formCloseLogin {
+    margin-left: 340px;
+    font-size: 22px;
+    cursor: pointer;
+
+}
+.formCloseLogin:hover {
+    color: #0355a7;
+}
+
+h2 {
+    margin-left: 0;
+    left: 0;
+}
+
+
+h2 {
+    /*text-align: center;*/
+    color: #343a40;
+}
+
+.form-register-and-login-arrow {
+    display: inline-flex;
+    position: absolute;
+    top: 14px;
+    font-size: 20px;
+}
+
+.hr-line {
+    margin-top: 0;
+}
+
+input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.Login-register-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+p {
+    text-align: end;
+    /*text-align: center;*/
+    color: #007bff;
+    cursor: pointer;
+    /*margin-left: 22px;*/
+}
+
+p:hover {
+    text-decoration: underline;
+}
+
+.text-login-or-register-block {
+    display: flex;
+    margin-top: 11px;
+    justify-content: space-between;
+}
+
+.newPassword {
+    margin-top: 15px;
+    margin-bottom: -17px;
+}
+
+.timer-login {
+    display: flex;
+    margin-top: 11px;
+    text-align: center;
+    justify-content: center;
+}
+.timer-login-time {
+    display: inline-flex;
+}
+
+.timer-login-time strong {
+    margin-left: 7px;
+    margin-right: 3px;
+    width: 20px;
+    cursor: text;
+}
+
+.login-step-email {
+    text-align: center;
+    margin-bottom: 10px;
+}
+.otp-error {
+    display: flex;
+    color: red;
+    margin-bottom: 5px;
+    margin-top: -5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.formInput {
+    /*margin-top: 12px;*/
+}
+
+.formInput password-yey {
+    margin-top: 1px!important;
+}
+
+
+.span-fa-eye {
+    position: absolute;
+    right: 10px;
+    top: 42px!important;
+    cursor: pointer;
+}
+
+.formInput-password-eye {
+    position: absolute;
+    /*margin-top: 10px;*/
+}
+
+.form-register-and-login label {
+    margin-top: 0;
+}
+
+.load-new-password {
+    display: inline-flex;
+    width: 100%;
+    margin-bottom: -22px;
+    justify-content: space-between;
+
+}
+
+.load-new-password div {
+    justify-content: left;
+    margin-left: 0;
+}
+
+.element-label-input {
+    margin-top: 5px;
+}
+
+@media only screen and (max-width: 768px) {
+
+    * {
+        box-sizing: border-box;
+    }
+    h2 {
+        font-size: 22px!important;
+        /*margin-top: -20px;*/
+    }
+
+    .formCloseLogin {
+        margin-left: 95%!important;
+        /*margin-top: -10px;*/
+        cursor: pointer;
+        z-index: 1111;
+        /*width: 150px;*/
+        height: 30px;
+        background: none;
+        text-align: center;
+        color: #0355a7;
+        /*font-size: 22px;*/
+        /*margin-left: 87%;*/
+    }
+
+    .form {
+        display: block;
+        margin: 55px 0 0 17px;
+        width: 90%;
+        /*height: 100vh;*/
+    }
+
+    .form-login-page {
+        height: 100vh!important;
+        width: 100%;
+        margin-top: 0!important;
+        background: white;
+        /*height: 40% !important;*/
+        /*margin-bottom: -88px;*/
+        overflow-y: hidden!important;
+    }
+
+
+    .hr-line {
+        margin-top: 0;
+        margin-bottom: 33px;
+    }
+
+
+    .form-register-and-login label {
+        margin-top: 11px;
+    }
+
+    .element-label-input {
+        display: block;
+        margin-top: -18px;
+    }
+
+    .formInput {
+        font-size: 17px;
+        margin-bottom: 20px;
+    }
+
+    .text-login-or-register {
+        margin-top: 10px;
+        line-height: 23px;
+    }
+
+    .text-login-or-register-block {
+        display: flex;
+        position: relative;
+        margin-top: 13px;
+    }
+
+    .text-login-or-register {
+        margin-top: 0;
+    }
+
+    .span-fa-eye {
+        margin-top: 12px;
+        margin-right: 7px;
+    }
+
+}

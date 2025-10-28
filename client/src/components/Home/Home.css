@@ -1,0 +1,560 @@
+.home-container {
+    width: 100%;
+    margin-top: 75px;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    overflow-y: auto;
+}
+
+.carousel {
+    position: relative;
+    width: auto;
+    /*max-width: 1340px;*/
+    overflow: hidden;
+    margin: 0 auto;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+}
+
+.carousel-inner {
+    position: relative;
+    max-width: 100%;
+
+    height: 100%;
+}
+
+.carousel-item {
+    position: relative;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    max-height: 40%;
+    -webkit-transition: -webkit-transform 0.6s ease-in-out;
+    -o-transition: -o-transform 0.6s ease-in-out;
+    transition: transform 0.6s ease-in-out;
+}
+
+
+.carousel-item.active {
+    display: block;
+    transition: transform 0.6s ease-in-out;
+}
+
+.carousel-item-image {
+    width: 25% !important;
+    height: 400px;
+
+}
+
+.carousel-item-img {
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    position: absolute;
+    width: 80px!important;
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    opacity: 0.5;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.carousel-control-prev {
+    left: 0;
+}
+
+.carousel-control-next {
+    right: 0;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    opacity: 0.5;
+    transition: opacity 0.3s ease-in-out;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 0.6!important;
+}
+
+.carousel-control-prev:hover .carousel-control-prev-icon,
+.carousel-control-next:hover .carousel-control-next-icon {
+    opacity: 1!important;
+}
+
+.carousel-control-prev-icon:hover,
+.carousel-control-next-icon:hover {
+    opacity: 1!important;
+}
+
+.carousel-indicators {
+    bottom: 10px;
+    z-index: 1!important;
+}
+
+.carousel-indicators button {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.carousel-indicators .active {
+    background-color: #fff;
+}
+
+.carousel-caption-title-description {
+    display: flex;
+    width: 60%;
+    max-height: 70%;
+    background: none;
+    margin-left: 20%;
+    margin-bottom: 5%;
+    top: 10px;
+    object-fit: contain;
+    z-index: 1;
+
+
+
+}
+
+.carousel-caption-title {
+    display: flex;
+    justify-content: center;
+    max-width: 90%;
+    line-height: 50px;
+    margin-bottom: 20px;
+}
+
+.carousel-caption-description {
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+    max-width: 90%;
+    line-height: 1.3;
+    /*lineHeight: '1.5'*/
+
+}
+
+
+
+
+.info-blocks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+    width: 100%;
+    left: 0;
+
+    margin-bottom: 15px;
+
+}
+
+.info-block {
+    display: block;
+    position: relative;
+    width: 23%;
+    height: 250px;
+    margin: 10px 0;
+    background-color: #f6f6f3;
+    justify-content: center;
+    align-items: center;
+    font-family: Wingdings !important;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: transform 0.5s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.info-block:hover {
+    transform: scale(1.03);
+    box-shadow: 2px 4px 8px rgba(7, 0, 0, 0.3);
+
+}
+
+.info-block-title {
+    font-family: Sathu;
+}
+
+.info-block-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border-radius: 12px;
+}
+
+.info-block-img {
+    width: 100%;
+    height: 210px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    object-fit: cover;
+    padding: 0;
+    border-radius: 0 0 12px 12px;
+}
+
+.home-page-footer {
+    display: inline-flex;
+    width: 100%;
+    height: 111px;
+    background: #dddddd;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    padding: 0;
+}
+
+.contact-info {
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.close-btn {
+    display: none;
+}
+
+.info-block-img-two {
+
+    border-radius: 0 0 12px 12px;
+}
+
+.newest-products-title {
+    background: linear-gradient(to bottom, #00aaff, #ffffff); /* Голубой сверху, белый снизу */
+    /*background: #06ddf8;*/
+    width: auto;
+    padding: 2px 0!important;
+    font-family: 'Poppins';
+    color: #060b7a;
+    text-shadow: 3px 4px 4px #b7b7e0;
+}
+
+
+/* Стили для блока с датами */
+.carousel-caption-date {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 25px;
+    color: #666;
+    padding: 0 7px!important;
+    font-style: italic;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    margin: 0 auto 10px;
+    width: fit-content;
+    width: 50%;
+    margin-left: 23%;
+
+}
+
+
+/* Показываем только десктопную версию по умолчанию */
+.desktop-date {
+    display: inline;
+}
+.mobile-date {
+    display: none;
+}
+
+.carousel-caption-date:empty {
+    background: none;
+}
+
+.home-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+
+/* На мобильных устройствах показываем только мобильную версию */
+@media (max-width: 768px) {
+    .desktop-date {
+        display: none;
+    }
+    .mobile-date {
+        display: inline-flex;
+        bottom: 0;
+    }
+
+    .carousel-caption-date {
+        bottom: 0!important;
+        font-size: 13px;
+        padding: 3px 4px!important;
+
+    }
+
+    .carousel-caption-title-description {
+        height: 90% !important;
+        max-height: 90% !important;
+        margin-bottom: 30px; /* Добавляем отступ снизу для заголовка */
+    }
+
+    .carousel-item {
+        padding-bottom: 40px; /* Оставляем место для дат */
+    }
+}
+
+
+@media (max-width: 768px) {
+    .home-container {
+        margin-top: 0!important;
+        padding: 0 10px;
+        margin-bottom: 0;
+    }
+
+
+    .carousel {
+        width: 100%;
+        height: 222px;
+        margin: 0 auto;
+        overflow: hidden;
+        position: relative;
+        background: #f8efe5;
+        border-radius: 20px;
+        margin-top: 0!important;
+
+    }
+
+    .carousel {
+        margin-top: 110px;
+        height: 202px;
+    }
+
+    .carousel-item.active {
+        height: 202px!important;
+    }
+
+    .carousel-item-img {
+        height: 202px!important;
+    }
+
+    .text-container {
+        text-align: left;
+        position: absolute;
+        align-items: flex-start;
+        top: 15px;
+        left: 15px;
+    }
+
+
+    .title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 20px;
+        margin: 0;
+        margin-left: 10px;
+    }
+
+
+    .slide-title {
+        cursor: text;
+        font-size: 15px;
+        margin-left: 0;
+
+    }
+
+    .subtitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 10px !important;
+        line-height: 16px;
+        margin: 10px 0;
+        text-align: left;
+        font-weight: bold;
+
+    }
+
+    .description-home {
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+        width: 44%;
+        font-weight: 275;
+        line-height: 17px;
+        letter-spacing: 0.05em;
+        margin: 0;
+    }
+
+    .slide-image {
+        width: 100px;
+        height: 98%;
+        position: absolute;
+        top: 6px;
+        left: 67%;
+        object-fit: contain;
+    }
+
+    .slide-button {
+        width: 177px;
+        /*width: 176px;*/
+        height: auto;
+        font-family: Poppins;
+        /*font-size: 194px;*/
+        font-size: 10px;
+        font-weight: 400;
+        line-height: 18px;
+        letter-spacing: 0.1em;
+        background: rgb(252, 249, 249);
+        text-align: center;
+        color: black;
+        gap: 3px;
+        margin-top: 180px;
+        margin-left: 28px;
+        padding: 5px;
+        border-radius: 13px;
+        cursor: pointer;
+    }
+
+
+    .info-block {
+        display: block;
+        width: 47%;
+        height: 200px;
+        margin: 10px 0;
+        background-color: #f6f6f3;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 12px;
+        font-size: 16PX;
+
+    }
+
+    .info-block-img {
+        height: 170px;
+    }
+
+    .carousel-caption-title-description {
+        display: block!important;
+        top: 0!important;
+        margin-right: 0;
+
+    }
+
+    .carousel-caption-title {
+        font-size: 22px!important;
+        margin-bottom: 10px;
+        line-height: 25px;
+        margin-left: 14px;
+    }
+
+    .carousel-caption-description {
+        font-size: 17px!important;
+        margin-left: 14px;
+        line-height: 1.2;
+    }
+
+    .home-page-footer {
+        display: none;
+    }
+
+
+    .one-all {
+        font-size: 15px;
+    }
+
+    .two-all {
+        font-size: 15px;
+    }
+
+
+    .carousel-item-image {
+        width: 33% !important;
+        height: 330px;
+
+    }
+
+
+}
+
+
+@media (max-width: 768px) {
+    .carousel {
+        height: auto !important; /* Убираем фиксированную высоту */
+    }
+
+    .carousel-item {
+        height: auto !important;
+        min-height: 202px; /* Минимальная высота */
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 40px;
+    }
+
+
+    .carousel-indicators button {
+        z-index: 9;
+    }
+
+    .carousel-item.active {
+        height: auto !important;
+        display: flex !important;
+    }
+
+    .carousel-caption-title-description {
+        height: 80% !important; /* 90% может быть слишком много с учетом дат */
+        max-height: 80% !important;
+        margin-bottom: 0;
+        flex-grow: 1; /* Занимает все доступное пространство */
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .carousel-item-image {
+        width: 33% !important;
+        height: 100% !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .carousel-item-img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .carousel-caption-date {
+        position: absolute;
+        bottom: 10px;
+        left: 34% !important;
+        /*transform: translateX(-50%);*/
+        width: 65%;
+        margin: 0 auto;
+        z-index: 1;
+        padding-top: 0!important;
+    }
+}
+
+

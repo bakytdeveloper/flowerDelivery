@@ -11,13 +11,11 @@ const cartItemSchema = new mongoose.Schema({
         required: true,
         min: 1
     },
-    // Удаляем size, так как для цветов не нужно
-    // Добавляем поле для типа цветов (одиночный/букет)
     flowerType: {
         type: String,
-        enum: ['single', 'bouquet']
+        enum: ['single', 'bouquet'],
+        required: true
     },
-    // Обновляем color для работы с цветами цветов
     flowerColor: {
         name: {
             type: String
@@ -37,12 +35,55 @@ const cartItemSchema = new mongoose.Schema({
     image: {
         type: String
     },
-    // Удаляем brand, добавляем информацию о цветах
     flowerNames: [{
         type: String
     }],
     stemLength: {
         type: Number
+    },
+    // Новые поля для обертки и дополнений
+    wrapper: {
+        wrapperId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Wrapper'
+        },
+        name: {
+            type: String
+        },
+        price: {
+            type: Number,
+            default: 0
+        },
+        image: {
+            type: String
+        }
+    },
+    addons: [{
+        addonId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Addon'
+        },
+        name: {
+            type: String
+        },
+        type: {
+            type: String
+        },
+        price: {
+            type: Number
+        },
+        image: {
+            type: String
+        },
+        quantity: {
+            type: Number,
+            default: 1
+        }
+    }],
+    // Общая цена для этого item (продукт + обертка + дополнения)
+    itemTotal: {
+        type: Number,
+        required: true
     }
 });
 
@@ -69,16 +110,19 @@ const cartSchema = new mongoose.Schema({
     }
 });
 
-// Обновляем индексы
-cartSchema.index({
-    user: 1
-}, {
-    sparse: true
+// Middleware для расчета totals
+cartSchema.pre('save', function(next) {
+    this.totalItems = this.items.reduce((total, item) => total + item.quantity, 0);
+
+    this.total = this.items.reduce((total, item) => {
+        return total + (item.itemTotal * item.quantity);
+    }, 0);
+
+    this.lastUpdated = Date.now();
+    next();
 });
-cartSchema.index({
-    sessionId: 1
-}, {
-    sparse: true
-});
+
+cartSchema.index({ user: 1 }, { sparse: true });
+cartSchema.index({ sessionId: 1 }, { sparse: true });
 
 export default mongoose.model('Cart', cartSchema);

@@ -1,6 +1,30 @@
 import mongoose from 'mongoose';
 
-const cartItemSchema = new mongoose.Schema({
+const orderItemAddonSchema = new mongoose.Schema({
+    addonId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Addon'
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    type: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    quantity: {
+        type: Number,
+        required: true,
+        default: 1
+    }
+});
+
+const orderItemSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
@@ -9,6 +33,85 @@ const cartItemSchema = new mongoose.Schema({
     quantity: {
         type: Number,
         required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    flowerType: {
+        type: String,
+        enum: ['single', 'bouquet'],
+        required: true
+    },
+    category: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    flowerNames: [{
+        type: String
+    }],
+    flowerColors: [{
+        name: {
+            type: String
+        },
+        value: {
+            type: String
+        }
+    }],
+    stemLength: {
+        type: Number
+    },
+    occasion: {
+        type: String
+    },
+    recipient: {
+        type: String
+    },
+    // Информация об обертке
+    wrapper: {
+        wrapperId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Wrapper'
+        },
+        name: {
+            type: String
+        },
+        price: {
+            type: Number,
+            default: 0
+        }
+    },
+    // Информация о дополнениях
+    addons: [orderItemAddonSchema],
+    // Общая цена за этот item
+    itemTotal: {
+        type: Number,
+        required: true
+    },
+    admin: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        },
+        phoneNumber: {
+            type: String,
+            required: true
+        },
     },
 });
 
@@ -46,79 +149,7 @@ const orderSchema = new mongoose.Schema({
         enum: ['customer', 'guest'],
         required: true
     },
-    cart: [cartItemSchema],
-    products: [{
-        product: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product',
-            required: true
-        },
-        name: {
-            type: String,
-            required: true
-        },
-        // Удаляем brand, добавляем поля для цветов
-        flowerType: {
-            type: String,
-            enum: ['single', 'bouquet'],
-            required: true
-        },
-        category: {
-            type: String
-        },
-        description: {
-            type: String
-        },
-        price: {
-            type: Number,
-            required: true
-        },
-        quantity: {
-            type: Number,
-            required: true
-        },
-        // Удаляем size, добавляем информацию о цветах
-        flowerNames: [{
-            type: String
-        }],
-        flowerColors: [{
-            name: {
-                type: String
-            },
-            value: {
-                type: String
-            }
-        }],
-        stemLength: {
-            type: Number
-        },
-        occasion: {
-            type: String
-        },
-        recipient: {
-            type: String
-        },
-        // Информация о админе
-        admin: {
-            id: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
-                required: true
-            },
-            name: {
-                type: String,
-                required: true
-            },
-            email: {
-                type: String,
-                required: true
-            },
-            phoneNumber: {
-                type: String,
-                required: true
-            },
-        },
-    }],
+    products: [orderItemSchema],
     totalAmount: {
         type: Number,
         required: true
