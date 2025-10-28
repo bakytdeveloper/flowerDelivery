@@ -1,6 +1,7 @@
 /* src/components/Header/Header.css */
 .header {
-    background: white;
+    background: rgba(0, 0, 0, 0.6);
+    /*background: white;*/
     box-shadow: 0 2px 20px rgba(45, 80, 22, 0.1);
     position: sticky;
     top: 0;
@@ -15,7 +16,8 @@
 
 /* Верхняя панель */
 .header-top {
-    background: linear-gradient(135deg, #2d5016, #4a7c2a);
+    background: linear-gradient(135deg, #040900, #11110b);
+    /*background: linear-gradient(135deg, #2d5016, #4a7c2a);*/
     color: white;
     padding: 8px 0;
     font-size: 14px;
@@ -105,7 +107,7 @@
     background: none;
     border: none;
     font-size: 24px;
-    color: #2d5016;
+    color: #f8faf7;
     cursor: pointer;
     padding: 8px;
     border-radius: 6px;
@@ -209,7 +211,7 @@
     /*gap: 8px;*/
     background: none;
     border: none;
-    color: #4a5568;
+    color: #f5f6f8;
     text-decoration: none;
     padding: 10px 15px;
     border-radius: 12px;
@@ -236,6 +238,8 @@
     font-size: 18px;
     transition: color 0.3s ease;
     flex-shrink: 0;
+
+    margin-right: 7px;
 }
 
 .favorites-icon.has-favorites {
@@ -325,8 +329,9 @@
 
 /* Навигационная панель */
 .header-nav {
-    background: linear-gradient(135deg, #f8fff8, #f0f8f0);
-    border-bottom: 1px solid #e2e8f0;
+    background: rgba(0, 0, 0, 0.1);
+    /*background: linear-gradient(135deg, #f8fff8, #f0f8f0);*/
+    border-bottom: 1px solid #081528;
     overflow: hidden;
 }
 
@@ -350,7 +355,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #4a5568;
+    color: #f0f2f6!important;
     text-decoration: none;
     font-weight: 600;
     font-size: 15px;
@@ -367,13 +372,13 @@
 }
 
 .nav-link:hover {
-    color: #2d5016;
+    color: #d7ddd2;
     background: rgba(45, 80, 22, 0.05);
 }
 
 .nav-link.active {
-    color: #2d5016;
-    border-bottom-color: #2d5016!important;
+    color: #f2f6ef;
+    border-bottom-color: #f8faf7 !important;
     background: rgba(45, 80, 22, 0.1);
 }
 
@@ -508,6 +513,10 @@
         font-size: 12px;
     }
 
+    .none-mobile {
+        display: none!important;
+    }
+
     .header-content {
         flex-wrap: wrap;
         gap: 15px;
@@ -639,7 +648,7 @@
     background: none;
     border: none;
     font-size: 24px;
-    color: #2d5016;
+    color: #f4f6f3;
     cursor: pointer;
     padding: 8px;
     border-radius: 6px;
@@ -659,7 +668,7 @@
 /* Основная шапка */
 .header-main {
     padding: 15px 0;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #010d1d;
     position: relative; /* Добавьте это */
 }
 

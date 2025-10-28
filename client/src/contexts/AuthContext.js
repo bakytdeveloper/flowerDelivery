@@ -19,6 +19,10 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [cartItems, setCartItems] = useState([]);
+    // eslint-disable-next-line
+    const [favoritesCount, setFavoritesCount] = useState(0); // Добавьте это
+    // eslint-disable-next-line
+    const [cartItemsCount, setCartItemsCount] = useState(0); // И это
 
     // Функция для проверки валидности токена
     const validateToken = useCallback((token) => {
@@ -107,7 +111,10 @@ export const AuthProvider = ({ children }) => {
         logout,
         isLoading,
         // Добавляем функцию очистки корзины
-        clearCart
+        clearCart,
+        // Добавьте эти поля:
+        favoritesCount,
+        cartItemsCount
     };
 
     // console.log('AuthProvider render, isAuthenticated:', isAuthenticated, 'userRole:', userRole);

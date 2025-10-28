@@ -233,7 +233,7 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
     // const safeGenderImages = Array.isArray(genderImages) ? genderImages : [];
 
     return (
-        <div className="home-container">
+        <div className="home-container" style={{ paddingBottom: '60px' }}>
             <div
                 id="carouselExampleCaptions"
                 className="carousel slide"

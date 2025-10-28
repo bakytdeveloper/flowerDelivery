@@ -465,13 +465,13 @@ const Header = ({
                     <div className={`nav-content ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                         <Link
                             to="/"
-                            className={`nav-link ${activePage === 'home' ? 'active' : ''}`}
+                            className={`none-mobile nav-link ${activePage === 'home' ? 'active' : ''}`}
                         >
                             Главная
                         </Link>
                         <Link
                             to="/catalog"
-                            className={`nav-link ${activePage === 'catalog' ? 'active' : ''}`}
+                            className={`none-mobile nav-link ${activePage === 'catalog' ? 'active' : ''}`}
                         >
                             Каталог
                         </Link>
@@ -481,12 +481,12 @@ const Header = ({
                         >
                             О нас
                         </Link>
-                        <Link
-                            to="/promotions"
-                            className={`nav-link ${activePage === 'promotions' ? 'active' : ''}`}
-                        >
-                            Акции
-                        </Link>
+                        {/*<Link*/}
+                        {/*    to="/promotions"*/}
+                        {/*    className={`nav-link ${activePage === 'promotions' ? 'active' : ''}`}*/}
+                        {/*>*/}
+                        {/*    Акции*/}
+                        {/*</Link>*/}
                         <Link
                             to="/payment"
                             className={`nav-link ${activePage === 'payment' ? 'active' : ''}`}

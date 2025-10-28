@@ -1,14 +1,33 @@
 
 * {
   box-sizing: border-box;
+
+
 }
 
 
 /* Global styles to remove horizontal scrolling */
-body, html {
+body {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://img.freepik.com/free-photo/florist-looking-through-shop-window_23-2147762233.jpg?t=st=1761634024~exp=1761637624~hmac=df3554a15d844016a061a44f15a7fdbf4dff42594d42fc45f787a812b72498ce&w=2000");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(6px); /* степень размытия */
+  z-index: -1; /* чтобы фон был за контентом */
 }
 
 
@@ -28,6 +47,11 @@ body, html {
   display: flex;
   gap: 10px; /* Добавляет промежуток между компонентами */
   align-items: flex-start; /* Выравнивание по верхнему краю */
+}
+
+.content {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 a {
