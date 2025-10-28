@@ -556,6 +556,7 @@
         margin: 0 auto;
         z-index: 1;
         padding-top: 0!important;
+        margin-bottom: 20px;
     }
 }
 
