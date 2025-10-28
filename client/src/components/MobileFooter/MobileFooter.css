@@ -1,0 +1,105 @@
+.mobile-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+}
+
+.mobile-footer-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0;
+    height: 60px;
+}
+
+.footer-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    position: relative;
+}
+
+.footer-button:hover {
+    background-color: #f8f9fa;
+}
+
+.footer-button.active {
+    color: #007bff;
+}
+
+.footer-icon {
+    font-size: 18px;
+    margin-bottom: 4px;
+    transition: color 0.3s ease;
+}
+
+.footer-button.active .footer-icon {
+    color: #007bff;
+}
+
+.footer-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.footer-badge-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4444;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+/* Показываем мобильный футер только на маленьких экранах */
+@media (max-width: 768px) {
+    .mobile-footer {
+        display: block;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 360px) {
+    .footer-label {
+        font-size: 9px;
+    }
+
+    .footer-icon {
+        font-size: 16px;
+    }
+
+    .mobile-footer-content {
+        padding: 6px 0;
+        height: 56px;
+    }
+}

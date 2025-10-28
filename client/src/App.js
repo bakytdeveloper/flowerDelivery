@@ -276,6 +276,7 @@
 import React, {useEffect, useState} from 'react';
 import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
 import Header from './components/Header/Header';
+import MobileFooter from './components/MobileFooter/MobileFooter'
 import LoginRegister from './components/LoginRegister/LoginRegister';
 import Home from "./components/Home/Home";
 import LoadingSpinner from "./LoadingSpinner";
@@ -290,6 +291,7 @@ const AppContent = ({ children, showHeader, ...props }) => {
   const location = useLocation();
   // eslint-disable-next-line
   const [showContactInfo, setShowContactInfo] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const isLoginRoute = location.pathname === '/login';
 
@@ -298,6 +300,19 @@ const AppContent = ({ children, showHeader, ...props }) => {
       setShowContactInfo(true);
     }
   }, [isLoginRoute]);
+
+  // Определяем мобильное устройство
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Скрываем мобильный футер на странице логина
+  const showMobileFooter = isMobile && !isLoginRoute;
 
   return (
       <div className="app">
@@ -318,7 +333,10 @@ const AppContent = ({ children, showHeader, ...props }) => {
                       searchTerm={props.searchTerm}
                   />
               )}
-              {children}
+              <div className={showMobileFooter ? 'content-with-mobile-footer' : 'content'}>
+                {children}
+              </div>
+              {showMobileFooter && <MobileFooter />}
             </>
         )}
       </div>
