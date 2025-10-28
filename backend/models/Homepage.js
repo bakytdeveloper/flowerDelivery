@@ -44,14 +44,8 @@ const sliderImageSchema = new mongoose.Schema({
     }
 });
 
-const genderImageSchema = new mongoose.Schema({
-    url: String,
-    _id: mongoose.Schema.Types.ObjectId
-});
-
 const homepageSchema = new mongoose.Schema({
-    sliderImages: [sliderImageSchema],
-    genderImages: [genderImageSchema]
+    sliderImages: [sliderImageSchema]
 });
 
 const Homepage = mongoose.model('Homepage', homepageSchema);

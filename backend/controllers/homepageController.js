@@ -71,12 +71,11 @@ export const getHomepage = async (req, res) => {
 export const updateHomepage = async (req, res) => {
     try {
         const {
-            sliderImages,
-            genderImages
+            sliderImages
         } = req.body;
 
         // Валидация данных
-        if (!Array.isArray(sliderImages) || !Array.isArray(genderImages)) {
+        if (!Array.isArray(sliderImages)) {
             return res.status(400).json({
                 message: 'Invalid data format'
             });
@@ -89,8 +88,7 @@ export const updateHomepage = async (req, res) => {
         }));
 
         const homepage = await Homepage.findOneAndUpdate({}, {
-            sliderImages: cleanedSliderImages,
-            genderImages: genderImages.filter(img => img.url)
+            sliderImages: cleanedSliderImages
         }, {
             new: true,
             upsert: true
@@ -119,31 +117,6 @@ export const deleteSliderImage = async (req, res) => {
         }
 
         homepage.sliderImages = homepage.sliderImages.filter(sliderImage => sliderImage.url !== imageUrl);
-        await homepage.save();
-
-        res.json(homepage);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};
-
-// Контроллер для удаления изображения для полов
-export const deleteGenderImage = async (req, res) => {
-    try {
-        const {
-            imageUrl
-        } = req.params;
-        const homepage = await Homepage.findOne();
-
-        if (!homepage) {
-            return res.status(404).json({
-                message: 'Homepage data not found'
-            });
-        }
-
-        homepage.genderImages = homepage.genderImages.filter(genderImage => genderImage.url !== imageUrl);
         await homepage.save();
 
         res.json(homepage);
@@ -231,32 +204,15 @@ export const getFormattedSlides = async (req, res) => {
     }
 };
 
-// Контроллер для проверки наличия товаров по категории/гендеру
+// Контроллер для проверки наличия активных товаров
 export const checkProducts = async (req, res) => {
     try {
-        const {
-            gender
-        } = req.query;
-
-        if (!gender) {
-            return res.status(400).json({
-                message: 'Gender parameter is required'
-            });
-        }
-
-        let query = {
+        const query = {
             isActive: true,
             quantity: {
                 $gt: 0
             }
         };
-
-        // Упрощенная логика - проверяем только активные товары
-        if (gender === 'Аксессуары') {
-            query.category = 'Аксессуары';
-        } else {
-            query.gender = gender;
-        }
 
         const count = await Product.countDocuments(query);
         res.json({
