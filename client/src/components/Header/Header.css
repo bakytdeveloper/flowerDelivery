@@ -71,8 +71,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 30px;
+    /*gap: 7%;*/
     position: relative;
+    margin: 0 auto;
 }
 
 /* Логотип */
@@ -84,18 +85,18 @@
 .logo-text {
     font-size: 32px;
     font-weight: 800;
-    color: #2d5016;
+    color: #d9fac3;
     margin: 0;
     letter-spacing: -0.5px;
     white-space: nowrap;
 }
 
 .logo-accent {
-    color: #ff6b6b;
-    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: #faf7f7;
+    /*background: linear-gradient(45deg, #ff6b6b, #ff8e8e) !important;*/
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    /*-webkit-text-fill-color: transparent;*/
+    /*background-clip: text;*/
 }
 
 /* Кнопка бургер-меню */
@@ -121,7 +122,7 @@
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 20%;
     flex-shrink: 0;
 }
 
@@ -205,7 +206,7 @@
 .profile-button {
     display: flex;
     align-items: center;
-    gap: 8px;
+    /*gap: 8px;*/
     background: none;
     border: none;
     color: #4a5568;
@@ -214,7 +215,7 @@
     border-radius: 12px;
     transition: all 0.3s ease;
     cursor: pointer;
-    position: relative;
+    /*position: relative;*/
     font-weight: 600;
     font-size: 14px;
     white-space: nowrap;
@@ -513,7 +514,8 @@
     }
 
     .mobile-menu-toggle {
-        display: block;
+        display: flex;
+        /*display: block;*/
         order: 2;
     }
 
@@ -626,5 +628,100 @@
     .search-input {
         padding: 8px 12px;
         font-size: 13px;
+    }
+}
+
+
+
+/* Кнопка бургер-меню */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #2d5016;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    z-index: 1002;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.mobile-menu-toggle:hover {
+    background: #f7fafc;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Основная шапка */
+.header-main {
+    padding: 15px 0;
+    border-bottom: 1px solid #e2e8f0;
+    position: relative; /* Добавьте это */
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin: 0 auto;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .header-top-content {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+        font-size: 12px;
+        position: relative; /* Добавьте это */
+    }
+
+    .header-content {
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center; /* Центрируем контент */
+        padding-right: 60px; /* Место для кнопки бургера */
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-bottom: 10px;
+    }
+
+    .header-actions {
+        order: 3;
+        width: 100%;
+        justify-content: center; /* Центрируем действия */
+        display: none;
+    }
+
+    .header-actions.mobile-visible {
+        display: flex;
+    }
+
+    /* Убедитесь, что логотип центрируется правильно */
+    .header-logo {
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-content {
+        padding-right: 50px; /* Меньше места для кнопки на очень маленьких экранах */
+    }
+
+    .mobile-menu-toggle {
+        right: 10px;
+        font-size: 20px;
+        padding: 6px;
     }
 }

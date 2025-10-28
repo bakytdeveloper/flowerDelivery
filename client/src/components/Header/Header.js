@@ -302,24 +302,6 @@ const Header = ({
                         <div className="working-hours">
                             <span>⏰ {workingHours}</span>
                         </div>
-                        <div className="header-phone">
-                            <button
-                                className="phone-button"
-                                onClick={handlePhoneClick}
-                            >
-                                <FaPhone className="phone-icon" />
-                                <span>{phoneNumber}</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Основная шапка */}
-            <div className="header-main">
-                <div className="container">
-                    <div className="header-content">
-                        {/* Логотип и название */}
                         <div className="header-logo">
                             <div
                                 className="logo"
@@ -331,6 +313,31 @@ const Header = ({
                                 <h1 className="logo-text">FLOWER<span className="logo-accent">KZ</span></h1>
                             </div>
                         </div>
+                        <div className="header-phone">
+                            <button
+                                className="phone-button"
+                                onClick={handlePhoneClick}
+                            >
+                                <FaPhone className="phone-icon" />
+                                <span>{phoneNumber}</span>
+                            </button>
+                        </div>
+                        {/*/!* Кнопка бургер-меню для мобильных *!/*/}
+                        {/*<button*/}
+                        {/*    className="mobile-menu-toggle"*/}
+                        {/*    onClick={handleMobileMenuToggle}*/}
+                        {/*    aria-label="Открыть меню"*/}
+                        {/*>*/}
+                        {/*    {isMobileMenuOpen ? <FaTimes /> : <FaBars />}*/}
+                        {/*</button>*/}
+                    </div>
+                </div>
+            </div>
+
+            {/* Основная шапка */}
+            <div className="header-main">
+                <div className="container">
+                    <div className="header-content">
 
                         {/* Кнопка бургер-меню для мобильных */}
                         <button
