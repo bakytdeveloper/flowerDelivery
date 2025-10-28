@@ -3,7 +3,7 @@
     margin-top: 5px;
     justify-content: center;
     align-items: center;
-    padding: 25px;
+    padding: 25px 5px;
     overflow-y: auto;
 }
 
