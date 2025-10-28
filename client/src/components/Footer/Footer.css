@@ -1,0 +1,398 @@
+.footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #ffffff;
+    padding: 2rem 0 1.5rem;
+    margin-top: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(232, 67, 147, 0.6) 50%,
+    transparent 100%);
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2.5rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footer-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #ffffff;
+    position: relative;
+    padding-bottom: 0.75rem;
+    letter-spacing: 0.5px;
+    text-align: left; /* Добавляем выравнивание по левому краю */
+}
+
+.footer-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #e84393, #6c5ce7);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.footer-section:hover .footer-title::after {
+    width: 80px;
+}
+
+/* Контактная информация */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    align-items: flex-start; /* Выравниваем по левому краю */
+}
+
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    width: 100%; /* Занимает всю ширину */
+}
+
+.contact-item:last-child {
+    border-bottom: none;
+}
+
+.contact-item:hover {
+    transform: translateX(5px);
+    border-bottom-color: rgba(232, 67, 147, 0.3);
+}
+
+.contact-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.contact-item:hover .contact-icon {
+    background: linear-gradient(135deg, #e84393, #6c5ce7);
+    transform: scale(1.1);
+}
+
+.contact-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+    text-align: left; /* Выравниваем текст по левому краю */
+    align-items: flex-start; /* Выравниваем содержимое по левому краю */
+}
+
+.contact-text strong {
+    color: #a0a0a0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.contact-text span,
+.contact-text a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    line-height: 1.4;
+    text-align: left; /* Выравниваем текст по левому краю */
+}
+
+.contact-text a:hover {
+    color: #e84393;
+    text-shadow: 0 0 10px rgba(232, 67, 147, 0.3);
+}
+
+/* Социальные сети */
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    align-items: flex-start; /* Выравниваем по левому краю */
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #ffffff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    width: 70%;
+}
+
+.social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent);
+    transition: left 0.6s ease;
+}
+
+.social-link:hover::before {
+    left: 100%;
+}
+
+.social-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(8px);
+    border-color: rgba(232, 67, 147, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.social-icon {
+    font-size: 1.4rem;
+    width: 24px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.social-link:hover .social-icon {
+    transform: scale(1.2);
+}
+
+/* Instagram специфичный стиль */
+.social-link[aria-label="Instagram"]:hover {
+    background: linear-gradient(135deg, #e4405f, #833ab4);
+}
+
+/* Telegram специфичный стиль */
+.social-link[aria-label="Telegram"]:hover {
+    background: linear-gradient(135deg, #0088cc, #00a8e8);
+}
+
+/* Нижняя часть футера */
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.footer-bottom::before {
+    content: '❀';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a2e;
+    padding: 0 1rem;
+    color: #e84393;
+    font-size: 1.2rem;
+}
+
+.footer-copyright p {
+    margin: 0;
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+/* Анимации */
+.footer {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Декоративные элементы */
+.footer::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg,
+    #e84393 0%,
+    #6c5ce7 25%,
+    #00b894 50%,
+    #fdcb6e 75%,
+    #e84393 100%);
+    background-size: 200% 100%;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 968px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        max-width: 500px;
+    }
+
+    .footer-section {
+        text-align: left; /* Меняем на левое выравнивание */
+    }
+
+    .footer-title::after {
+        left: 0; /* Убираем центрирование, оставляем слева */
+        transform: none; /* Убираем трансформацию */
+    }
+
+    .footer-section:hover .footer-title::after {
+        width: 80px; /* Возвращаем увеличение при наведении */
+    }
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 3rem 0 1.5rem;
+    }
+
+    .footer-content {
+        gap: 2rem;
+    }
+
+    .footer-title {
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        text-align: left; /* Оставляем выравнивание по левому краю */
+    }
+
+    .contact-item {
+        justify-content: flex-start; /* Меняем на выравнивание по левому краю */
+        text-align: left; /* Текст по левому краю */
+        padding: 1rem 0;
+    }
+
+    .contact-text {
+        align-items: flex-start; /* Выравниваем по левому краю */
+    }
+
+    .social-links {
+        align-items: flex-start; /* Выравниваем по левому краю */
+    }
+
+    .social-link {
+        min-width: 200px;
+        justify-content: flex-start; /* Выравниваем по левому краю */
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 2.5rem 0 1.5rem;
+    }
+
+    .footer-content {
+        gap: 2rem;
+    }
+
+    .footer-title {
+        font-size: 1.2rem;
+    }
+
+    .contact-item {
+        flex-direction: row; /* Оставляем в строку даже на мобильных */
+        gap: 1rem;
+        padding: 1.25rem 0;
+        justify-content: flex-start; /* Выравниваем по левому краю */
+    }
+
+    .contact-icon {
+        align-self: flex-start; /* Выравниваем по верхнему краю */
+    }
+
+    .social-link {
+        padding: 0.875rem 1rem;
+        min-width: 180px;
+        justify-content: flex-start; /* Выравниваем по левому краю */
+    }
+
+    .footer-bottom {
+        padding-top: 1.5rem;
+    }
+
+    .footer-copyright p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Плавные переходы */
+.footer * {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Улучшенная читаемость */
+.contact-text span,
+.contact-text a {
+    line-height: 1.5;
+}
+
+.social-link {
+    font-weight: 500;
+}
