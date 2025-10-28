@@ -106,7 +106,8 @@ const productSchema = new mongoose.Schema({
         default: 10
     },
     admin: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
+        // type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },

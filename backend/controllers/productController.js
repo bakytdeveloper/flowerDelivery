@@ -277,41 +277,44 @@ export const getBestSellingProducts = async (req, res) => {
         const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);
         const limit = isMobile ? 8 : 12;
 
-        const products = await Product.find({
+        // 1️⃣ Сначала получаем цветы с продажами
+        let products = await Product.find({
             isActive: true,
-            quantity: {
-                $gt: 0
-            },
-            soldCount: {
-                $gt: 0
-            }
+            quantity: { $gt: 0 },
+            soldCount: { $gt: 0 },
         })
             .populate('admin', 'name email')
-            .sort({
-                soldCount: -1
-            })
+            .sort({ soldCount: -1 })
             .limit(limit)
             .lean();
 
-        // Обрабатываем изображения и добавляем виртуальные поля
-        const processedProducts = products.map(product => {
+        // 2️⃣ Если таких нет или их меньше лимита — добавляем случайные товары
+        if (products.length < limit) {
+            const additionalProducts = await Product.aggregate([
+                { $match: { isActive: true, quantity: { $gt: 0 } } },
+                { $sample: { size: limit - products.length } },
+            ]);
+            products = [...products, ...additionalProducts];
+        }
+
+        // 3️⃣ Обрабатываем изображения и описание
+        const processedProducts = products.map((product) => {
             const processed = processProductImages(product, req);
             return {
                 ...processed,
-                truncatedDescription: product.description?.slice(0, 100) +
-                    (product.description?.length > 100 ? "..." : "")
+                truncatedDescription:
+                    product.description?.slice(0, 100) +
+                    (product.description?.length > 100 ? '...' : ''),
             };
         });
 
         res.json(processedProducts);
-
     } catch (error) {
         console.error('Error fetching best selling products:', error);
-        res.status(500).json({
-            message: 'Server error'
-        });
+        res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 // Контроллер для получения новейших продуктов
 export const getNewestProducts = async (req, res) => {

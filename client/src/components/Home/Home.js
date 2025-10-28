@@ -5,6 +5,7 @@ import './Home.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingSpinner from "../../LoadingSpinner";
+import HitsSection from '../HitsSection/HitsSection'
 // import { genderTitles } from "../../constants/constants";
 // import { sanitizeInput } from "../../utils/securityUtils";
 // import { useNavigate } from 'react-router-dom';
@@ -386,6 +387,9 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
                     </>
                 )}
             </div>
+
+            {/* Добавляем компонент хитов продаж */}
+            <HitsSection />
 
             {/*{safeGenderImages.length > 0 && (*/}
             {/*    <div className="info-blocks">*/}
