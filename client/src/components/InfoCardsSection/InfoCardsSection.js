@@ -1,0 +1,127 @@
+import React, { useState } from 'react';
+import './InfoCardsSection.css';
+
+const InfoCardsSection = () => {
+    const [isFirstCardOpen, setIsFirstCardOpen] = useState(true);
+    const [isSecondCardOpen, setIsSecondCardOpen] = useState(true);
+
+    const cards = [
+        {
+            id: 1,
+            title: "Оплата и Доставка",
+            isOpen: isFirstCardOpen,
+            toggle: () => setIsFirstCardOpen(!isFirstCardOpen),
+            content: {
+                sections: [
+                    {
+                        title: "ДОСТАВКА ЦВЕТОВ",
+                        items: [
+                            "ТРАНСПОРТИРОВКА ПО ГОРОДУ И РАЙОНАМ",
+                            "Стоимость доставки зависит от района доставки букета"
+                        ]
+                    },
+                    {
+                        title: "ВРЕМЯ:",
+                        items: [
+                            "Как правило занимает 1-2 часа",
+                            "Возможна срочная доставка"
+                        ]
+                    }
+                ],
+                description: "Наша команда обеспечит своевременную и быструю доставку цветов по городу и за его пределы",
+                imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            }
+        },
+        {
+            id: 2,
+            title: "БЛОГ О ЦВЕТАХ",
+            isOpen: isSecondCardOpen,
+            toggle: () => setIsSecondCardOpen(!isSecondCardOpen),
+            content: {
+                sections: [
+                    {
+                        title: "УХОД ЗА ЦВЕТАМИ",
+                        items: [
+                            "Советы по уходу разных видов цветов"
+                        ]
+                    },
+                    {
+                        title: "Акции и новости",
+                        items: [
+                            "Данные о новых предложениях"
+                        ]
+                    },
+                    {
+                        title: "СИМВОЛИКА",
+                        items: [
+                            "Значимость различных цветов и букетов"
+                        ]
+                    }
+                ],
+                description: "В нашем блоге вы найдете немало полезной информации о цветах и правильном уходе",
+                imageUrl: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            }
+        }
+    ];
+
+    return (
+        <section className="info-cards-section">
+            <div className="container">
+                <div className="info-cards-grid">
+                    {cards.map((card) => (
+                        <div
+                            key={card.id}
+                            className={`info-card ${card.isOpen ? 'open' : 'closed'}`}
+                        >
+                            {/* Заголовок всегда вверху */}
+                            <div
+                                className="info-card-header"
+                                onClick={card.toggle}
+                            >
+                                <h3 className="info-card-title info-card-title-color">{card.title}</h3>
+                                <span className="toggle-icon">
+                                    {card.isOpen ? '−' : '+'}
+                                </span>
+                            </div>
+
+                            {/* Контент карточки (скрывается при закрытии) */}
+                            {card.isOpen && (
+                                <div className="info-card-content">
+                                    <div className="text-content">
+                                        {card.content.sections.map((section, index) => (
+                                            <div key={index} className="content-section">
+                                                <h4 className="section-title-color">{section.title}</h4>
+                                                <ul className="section-items">
+                                                    {section.items.map((item, itemIndex) => (
+                                                        <li key={itemIndex} className="section-item">
+                                                            {item}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        ))}
+                                        <p className="card-description">
+                                            {card.content.description}
+                                        </p>
+                                    </div>
+
+                                    {/* Картинка занимает всю ширину внизу */}
+                                    <div className="image-container">
+                                        <img
+                                            src={card.content.imageUrl}
+                                            alt={card.title}
+                                            className="card-image"
+                                            loading="lazy"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default InfoCardsSection;

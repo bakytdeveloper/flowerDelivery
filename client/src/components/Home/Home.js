@@ -9,6 +9,7 @@ import HitsSection from '../HitsSection/HitsSection';
 import WhyChooseUs from "../WhyChooseUs/WhyChooseUs";
 import SeasonalOffers from "../SeasonalOffers/SeasonalOffers";
 import MapSection from "../MapSection/MapSection";
+import InfoCardsSection from "../InfoCardsSection/InfoCardsSection";
 // import { genderTitles } from "../../constants/constants";
 // import { sanitizeInput } from "../../utils/securityUtils";
 // import { useNavigate } from 'react-router-dom';
@@ -399,6 +400,9 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
 
             {/* Секция сезонных предложений */}
             <SeasonalOffers />
+
+            {/* Новая секция с информационными карточками */}
+            <InfoCardsSection />
 
             {/* Карта с расположением */}
             <MapSection />

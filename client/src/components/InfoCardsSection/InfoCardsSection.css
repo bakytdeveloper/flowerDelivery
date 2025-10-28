@@ -1,0 +1,409 @@
+.info-cards-section {
+    padding: 4rem 0;
+    background: rgba(0, 0, 0, 0.02);
+    position: relative;
+}
+
+.info-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start; /* Важно: выравниваем по верху */
+}
+
+.info-card {
+    background: rgba(0, 0, 0, 0.70);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: auto; /* Автоматическая высота */
+}
+
+/* Когда карточка закрыта - занимает только место заголовка */
+.info-card.closed {
+    background: rgba(0, 0, 0, 0.75);
+    max-height: 120px; /* Фиксированная высота только для заголовка */
+    animation: cardCollapse 0.4s ease-out;
+}
+
+/* Когда карточка открыта - занимает столько места, сколько нужно */
+.info-card.open {
+    animation: cardExpand 0.4s ease-out;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Заголовок всегда вверху */
+.info-card-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0; /* Запрещаем сжиматься заголовку */
+    min-height: 80px; /* Фиксированная высота заголовка */
+    box-sizing: border-box;
+}
+
+.info-card.closed .info-card-header {
+    border-bottom: none;
+}
+
+.info-card-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.info-card-title {
+    color: white!important;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.toggle-icon {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 300;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.info-card-header:hover .toggle-icon {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Контент карточки */
+.info-card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.text-content {
+    padding: 2rem;
+    flex: 1;
+}
+
+.content-section {
+    margin-bottom: 1.5rem;
+}
+
+.content-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-title-color {
+    color: #f6b348;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Желтый цвет для подзаголовков section-title */
+.section-title-color {
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+    position: relative;
+    display: inline-block;
+}
+
+.section-title-color::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #FFD700, transparent);
+    border-radius: 2px;
+}
+
+.section-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.section-item {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 0.3rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.section-item::before {
+    content: '•';
+    color: #e84393;
+    position: absolute;
+    left: 0;
+    font-size: 1.2rem;
+}
+
+.section-item:last-child {
+    margin-bottom: 0;
+}
+
+.card-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-style: italic;
+    text-align: left;
+}
+
+/* Картинка занимает всю ширину внизу */
+.image-container {
+    width: 100%;
+    margin-top: auto; /* Прижимаем картинку к низу */
+}
+
+.card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    display: block;
+}
+
+.info-card:hover .card-image {
+    transform: scale(1.05);
+}
+
+.image-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+            to bottom,
+            transparent 0%,
+            rgba(0, 0, 0, 0.3) 100%
+    );
+    pointer-events: none;
+}
+
+/* Анимации сворачивания/разворачивания */
+@keyframes cardExpand {
+    from {
+        max-height: 80px;
+        opacity: 0.8;
+    }
+    to {
+        max-height: 1000px;
+        opacity: 1;
+    }
+}
+
+@keyframes cardCollapse {
+    from {
+        max-height: 1000px;
+        opacity: 0.8;
+    }
+    to {
+        max-height: 80px;
+        opacity: 1;
+    }
+}
+
+/* Анимация появления контента */
+.info-card-content {
+    animation: contentSlideDown 0.3s ease-out;
+}
+
+@keyframes contentSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .info-cards-grid {
+        gap: 1.5rem;
+    }
+
+    .info-card-header {
+        padding: 1.25rem 1.5rem;
+        min-height: 70px;
+    }
+
+    .text-content {
+        padding: 1.5rem;
+    }
+
+    .info-card.closed {
+        max-height: 70px;
+    }
+}
+
+@media (max-width: 768px) {
+    .info-cards-section {
+        padding: 3rem 0;
+    }
+
+    .info-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        max-width: 600px;
+    }
+
+    .info-card-header {
+        padding: 1rem 1.5rem;
+        min-height: 65px;
+    }
+
+    .info-card-title {
+        font-size: 1.2rem;
+    }
+
+    .info-card-title-color {
+        font-size: 1.2rem;
+    }
+
+    .text-content {
+        padding: 1.5rem;
+    }
+
+    .card-image {
+        height: 180px;
+    }
+
+    .info-card.closed {
+        max-height: 65px;
+    }
+
+    .section-title-color {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .info-cards-section {
+        padding: 2rem 0;
+    }
+
+    .info-cards-grid {
+        gap: 1rem;
+    }
+
+    .info-card-header {
+        padding: 1rem;
+        min-height: 60px;
+    }
+
+    .info-card-title {
+        font-size: 1.1rem;
+    }
+
+    .info-card-title-color {
+        font-size: 1.1rem;
+    }
+
+    .text-content {
+        padding: 1rem;
+    }
+
+    .section-title {
+        font-size: 1rem;
+    }
+
+    .section-title-color {
+        font-size: 1rem;
+    }
+
+    .section-item {
+        font-size: 0.9rem;
+    }
+
+    .card-description {
+        font-size: 0.85rem;
+    }
+
+    .card-image {
+        height: 150px;
+    }
+
+    .toggle-icon {
+        width: 25px;
+        height: 25px;
+        font-size: 1.2rem;
+    }
+
+    .info-card.closed {
+        max-height: 60px;
+    }
+}
+
+/* Дополнительные эффекты */
+.info-card {
+    position: relative;
+}
+
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #e84393, #0984e3, #00b894, #fdcb6e);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.info-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* Плавное появление секции */
+.info-cards-section {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
