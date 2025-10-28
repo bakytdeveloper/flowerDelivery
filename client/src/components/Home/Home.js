@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import LoadingSpinner from "../../LoadingSpinner";
 import HitsSection from '../HitsSection/HitsSection';
 import WhyChooseUs from "../WhyChooseUs/WhyChooseUs";
+import SeasonalOffers from "../SeasonalOffers/SeasonalOffers";
 // import { genderTitles } from "../../constants/constants";
 // import { sanitizeInput } from "../../utils/securityUtils";
 // import { useNavigate } from 'react-router-dom';
@@ -394,6 +395,9 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
 
             {/* Новая секция "Почему мы?" */}
             <WhyChooseUs />
+
+            {/* Секция сезонных предложений */}
+            <SeasonalOffers />
 
             {/*{safeGenderImages.length > 0 && (*/}
             {/*    <div className="info-blocks">*/}
