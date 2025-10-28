@@ -333,7 +333,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0;
+    gap: 7%;
     padding: 0;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -354,14 +354,14 @@
     font-weight: 600;
     font-size: 15px;
     transition: all 0.3s ease;
-    padding: 15px 25px;
+    padding: 3px 15px!important;
     position: relative;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
     flex-shrink: 0;
-    min-height: 50px;
-    border-bottom: 3px solid transparent;
+    /*min-height: 50px;*/
+    border-bottom: 3px solid transparent!important;
     gap: 20px;
 }
 
@@ -372,8 +372,8 @@
 
 .nav-link.active {
     color: #2d5016;
-    border-bottom-color: #2d5016;
-    background: rgba(45, 80, 22, 0.08);
+    border-bottom-color: #2d5016!important;
+    background: rgba(45, 80, 22, 0.1);
 }
 
 /* Модальное окно */
