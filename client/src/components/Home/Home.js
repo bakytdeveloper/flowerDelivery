@@ -8,6 +8,7 @@ import LoadingSpinner from "../../LoadingSpinner";
 import HitsSection from '../HitsSection/HitsSection';
 import WhyChooseUs from "../WhyChooseUs/WhyChooseUs";
 import SeasonalOffers from "../SeasonalOffers/SeasonalOffers";
+import MapSection from "../MapSection/MapSection";
 // import { genderTitles } from "../../constants/constants";
 // import { sanitizeInput } from "../../utils/securityUtils";
 // import { useNavigate } from 'react-router-dom';
@@ -399,37 +400,8 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
             {/* Секция сезонных предложений */}
             <SeasonalOffers />
 
-            {/*{safeGenderImages.length > 0 && (*/}
-            {/*    <div className="info-blocks">*/}
-            {/*        {safeGenderImages.map((image, index) => (*/}
-            {/*            <div*/}
-            {/*                className="info-block"*/}
-            {/*                key={index}*/}
-            {/*                onClick={() => handleImageClick(genderTitles[index] || '')}*/}
-            {/*            >*/}
-            {/*                <div className="info-block-title">*/}
-            {/*                    {genderTitles[index] || `Категория ${index + 1}`}*/}
-            {/*                </div>*/}
-            {/*                <div className="info-block-image">*/}
-            {/*                    <img*/}
-            {/*                        className="info-block-img"*/}
-            {/*                        src={image.url}*/}
-            {/*                        alt={genderTitles[index] || `Категория ${index + 1}`}*/}
-            {/*                    />*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*        ))}*/}
-            {/*    </div>*/}
-            {/*)}*/}
-
-            {/*<div>*/}
-            {/*    {showNewestTitle && <h2 className="newest-products-title">Самые Новые Товары</h2>}*/}
-            {/*    <NewestProducts*/}
-            {/*        setSearchTerm={setSearchTerm}*/}
-            {/*        setCartItems={setCartItems}*/}
-            {/*        cartItems={cartItems}*/}
-            {/*        apiUrl={process.env.REACT_APP_API_URL} />*/}
-            {/*</div>*/}
+            {/* Карта с расположением */}
+            <MapSection />
 
 
         </div>
