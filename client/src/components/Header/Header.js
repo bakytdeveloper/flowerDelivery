@@ -7,6 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { safeJwtDecode, sanitizeInput } from '../../utils/securityUtils';
 import { useNavigate } from 'react-router-dom';
 import CatalogModal from "../CatalogModal/CatalogModal";
+import { toast } from 'react-toastify';
 
 const Header = ({
                     onSearch,
@@ -16,7 +17,7 @@ const Header = ({
                 }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isCatalogOpen, setIsCatalogOpen] = useState(false); // Добавляем состояние для каталога
+    const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     const profileRef = useRef(null);
     const mobileMenuRef = useRef(null);
     const location = useLocation();
@@ -242,25 +243,30 @@ const Header = ({
         navigate("/");
     };
 
-    const handleProfileClick = () => {
-        setIsProfileOpen(!isProfileOpen);
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ: Клик по кнопке профиля
+    const handleProfileButtonClick = () => {
+        if (isAuthenticated) {
+            // Если авторизован - открываем dropdown меню
+            setIsProfileOpen(!isProfileOpen);
+        } else {
+            // Если не авторизован - сразу переходим на страницу логина
+            navigate("/login");
+        }
     };
 
-    const handleLoginClick = () => {
-        if (isAuthenticated) {
-            if (userRole === 'admin') {
-                navigate("/admin");
-            } else {
-                navigate("/profile");
-            }
+    // Функции для dropdown меню
+    const handleProfileClick = () => {
+        if (userRole === 'admin') {
+            navigate("/admin");
         } else {
-            navigate("/login");
+            navigate("/profile");
         }
         setIsProfileOpen(false);
     };
 
     const handleLogoutClick = () => {
         logout();
+        toast.success('Вы успешно вышли из системы');
         navigate("/");
         setIsProfileOpen(false);
     };
@@ -393,11 +399,11 @@ const Header = ({
                                 <span className="button-text">Избранное</span>
                             </div>
 
-                            {/* Профиль */}
+                            {/* Профиль - ИСПРАВЛЕННАЯ ЛОГИКА */}
                             <div className="profile-container" ref={profileRef}>
                                 <button
                                     className="profile-button"
-                                    onClick={handleProfileClick}
+                                    onClick={handleProfileButtonClick} // Используем исправленную функцию
                                 >
                                     <FaUser className="profile-icon" />
                                     <span className="profile-text">
@@ -405,39 +411,29 @@ const Header = ({
                                     </span>
                                 </button>
 
-                                {isProfileOpen && (
+                                {/* Dropdown меню показывается только для авторизованных пользователей */}
+                                {isProfileOpen && isAuthenticated && (
                                     <div className="profile-dropdown">
-                                        {isAuthenticated ? (
-                                            <>
-                                                <button
-                                                    onClick={handleLoginClick}
-                                                    className="dropdown-item"
-                                                >
-                                                    Мой профиль
-                                                </button>
-                                                {userRole === 'admin' && (
-                                                    <Link
-                                                        to="/admin"
-                                                        className="dropdown-item"
-                                                    >
-                                                        Админ-панель
-                                                    </Link>
-                                                )}
-                                                <button
-                                                    onClick={handleLogoutClick}
-                                                    className="dropdown-item logout"
-                                                >
-                                                    Выйти
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <button
-                                                onClick={handleLoginClick}
+                                        <button
+                                            onClick={handleProfileClick}
+                                            className="dropdown-item"
+                                        >
+                                            Мой профиль
+                                        </button>
+                                        {userRole === 'admin' && (
+                                            <Link
+                                                to="/admin"
                                                 className="dropdown-item"
                                             >
-                                                Войти / Регистрация
-                                            </button>
+                                                Админ-панель
+                                            </Link>
                                         )}
+                                        <button
+                                            onClick={handleLogoutClick}
+                                            className="dropdown-item logout"
+                                        >
+                                            Выйти
+                                        </button>
                                     </div>
                                 )}
                             </div>
@@ -493,7 +489,7 @@ const Header = ({
                 </div>
             </nav>
 
-            {/* Модальное окно каталога - ДОБАВЛЯЕМ ЭТОТ КОМПОНЕНТ */}
+            {/* Модальное окно каталога */}
             <CatalogModal
                 isOpen={isCatalogOpen}
                 onClose={handleCloseCatalog}

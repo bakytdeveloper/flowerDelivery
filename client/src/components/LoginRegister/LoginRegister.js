@@ -1,14 +1,34 @@
 import React, { useEffect, useState, useCallback } from 'react';
-// import { useHistory } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './LoginRegister.css';
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaUser, FaArrowLeft, FaTimes } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 import { sanitizeInputLogin } from "../../utils/securityUtils";
-// Константы для избежания magic numbers/strings
-import {OTP_LENGTH, OTP_PURPOSES, PASSWORD_MIN_LENGTH, RESEND_TIMER_DURATION, STEPS} from "../../constants/constants";
+
+// Константы
+const OTP_LENGTH = 6;
+const PASSWORD_MIN_LENGTH = 6;
+const RESEND_TIMER_DURATION = 60;
+
+const STEPS = {
+    REGISTER: {
+        EMAIL_ENTRY: 1,
+        OTP_VERIFICATION: 2,
+        USER_DETAILS: 3
+    },
+    FORGOT_PASSWORD: {
+        EMAIL_ENTRY: 1,
+        OTP_VERIFICATION: 2,
+        PASSWORD_UPDATE: 3
+    }
+};
+
+const OTP_PURPOSES = {
+    REGISTRATION: 'registration',
+    PASSWORD_RESET: 'password_reset'
+};
 
 const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
     const [formData, setFormData] = useState({
@@ -27,21 +47,23 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
         resendTimer: -1,
         forgotPassword: false,
         forgotPasswordStep: STEPS.FORGOT_PASSWORD.EMAIL_ENTRY,
-        forgotPasswordResendTimer: -1
+        forgotPasswordResendTimer: -1,
+        isLoading: false
     });
 
     const [errors, setErrors] = useState({
         otp: '',
         otpForgotPassword: '',
-        passwordMatch: false
+        passwordMatch: false,
+        email: '',
+        password: '',
+        name: ''
     });
 
     const [tempToken, setTempToken] = useState('');
 
-    const { login, isAuthenticated } = useAuth();
-    // const history = useHistory();
+    const { login, isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
-
 
     // Очистка временных токенов
     const clearTempTokens = useCallback(() => {
@@ -50,7 +72,7 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
         setTempToken('');
     }, []);
 
-    // Таймеры для повторной отправки OTP.
+    // Таймеры для повторной отправки OTP
     useEffect(() => {
         let timer;
         if (uiState.resendTimer > 0) {
@@ -88,21 +110,16 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
     // Скрытие header/sidebar
     useEffect(() => {
         setShowHeader(false);
+        setShowSidebar(false);
         return () => {
             setShowHeader(true);
-        };
-    }, [setShowHeader]);
-
-    useEffect(() => {
-        setShowSidebar(true);
-        return () => {
             setShowSidebar(true);
         };
-    }, [setShowSidebar]);
+    }, [setShowHeader, setShowSidebar]);
 
     // Хелпер функции
     const sanitizeEmail = (email) => {
-        return sanitizeInputLogin(email).toLowerCase();
+        return sanitizeInputLogin(email).toLowerCase().trim();
     };
 
     const isValidEmail = (email) => {
@@ -110,8 +127,38 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
         return emailRegex.test(email);
     };
 
+    const validateField = (field, value) => {
+        switch (field) {
+            case 'email':
+                if (!value) return 'Email обязателен';
+                if (!isValidEmail(value)) return 'Введите корректный email';
+                return '';
+            case 'password':
+                if (!value) return 'Пароль обязателен';
+                if (value.length < PASSWORD_MIN_LENGTH) return `Пароль должен быть не менее ${PASSWORD_MIN_LENGTH} символов`;
+                return '';
+            case 'name':
+                if (!value) return 'Имя обязательно';
+                if (value.length < 2) return 'Имя должно быть не менее 2 символов';
+                return '';
+            case 'otp':
+                if (!value) return 'Код обязателен';
+                if (value.length !== OTP_LENGTH) return `Код должен содержать ${OTP_LENGTH} цифр`;
+                return '';
+            default:
+                return '';
+        }
+    };
+
     const updateFormData = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+        // Очищаем ошибку при вводе
+        if (errors[field]) {
+            setErrors(prev => ({ ...prev, [field]: '' }));
+        }
+        if (field === 'confirmPassword' && errors.passwordMatch) {
+            setErrors(prev => ({ ...prev, passwordMatch: false }));
+        }
     };
 
     const updateUiState = (updates) => {
@@ -134,13 +181,17 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
         setErrors({
             otp: '',
             otpForgotPassword: '',
-            passwordMatch: false
+            passwordMatch: false,
+            email: '',
+            password: '',
+            name: ''
         });
     };
 
     // API вызовы
     const makeApiCall = async (url, data, errorMessage) => {
         try {
+            updateUiState({ isLoading: true });
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -158,14 +209,17 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
             console.error(`${errorMessage}:`, error);
             toast.error(errorMessage);
             throw error;
+        } finally {
+            updateUiState({ isLoading: false });
         }
     };
 
     const handleSendOtp = async (purpose) => {
         const sanitizedEmail = sanitizeEmail(formData.email);
 
-        if (!isValidEmail(sanitizedEmail)) {
-            toast.error('Пожалуйста, введите корректный email');
+        const emailError = validateField('email', sanitizedEmail);
+        if (emailError) {
+            toast.error(emailError);
             return false;
         }
 
@@ -182,7 +236,7 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
 
             const shouldExist = purpose === OTP_PURPOSES.PASSWORD_RESET;
             if (checkEmailData.exists !== shouldExist) {
-                toast.error(shouldExist ? 'У нас нет такого клиента' : 'Пользователь с таким email уже существует');
+                toast.error(shouldExist ? 'Пользователь с таким email не найден' : 'Пользователь с таким email уже существует');
                 return false;
             }
 
@@ -193,10 +247,10 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
                     email: sanitizedEmail,
                     purpose: purpose
                 },
-                'Произошла ошибка при отправке OTP'
+                'Ошибка при отправке кода'
             );
 
-            toast.success('OTP отправлен на ваш email');
+            toast.success('Код подтверждения отправлен на ваш email');
             return true;
         } catch (error) {
             return false;
@@ -207,8 +261,9 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
         const sanitizedEmail = sanitizeEmail(formData.email);
         const sanitizedOtp = sanitizeInputLogin(formData.otp);
 
-        if (sanitizedOtp.length < OTP_LENGTH) {
-            updateErrors({ otp: 'Код должен содержать минимум 6 символов' });
+        const otpError = validateField('otp', sanitizedOtp);
+        if (otpError) {
+            updateErrors({ otp: otpError });
             return null;
         }
 
@@ -222,7 +277,7 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
                     otp: sanitizedOtp,
                     purpose: purpose
                 },
-                'Произошла ошибка при проверке OTP'
+                'Ошибка при проверке кода'
             );
 
             if (data.tempToken) {
@@ -231,33 +286,46 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
                 setTempToken(data.tempToken);
             }
 
-            toast.success('OTP успешно проверен');
+            toast.success('Код успешно подтвержден');
             updateErrors({ otp: '' });
             return data.tempToken;
         } catch (error) {
-            updateErrors({ otp: 'Неверный OTP' });
+            updateErrors({ otp: 'Неверный код подтверждения' });
             return null;
         }
     };
 
     const handleLogin = async () => {
+        const sanitizedEmail = sanitizeEmail(formData.email);
+        const sanitizedPassword = sanitizeInputLogin(formData.password);
+
+        const emailError = validateField('email', sanitizedEmail);
+        const passwordError = validateField('password', sanitizedPassword);
+
+        if (emailError || passwordError) {
+            if (emailError) toast.error(emailError);
+            if (passwordError) toast.error(passwordError);
+            return;
+        }
+
         const loginUrl = `${process.env.REACT_APP_API_URL}/api/auth/login`;
 
         try {
             const loginData = await makeApiCall(
                 loginUrl,
                 {
-                    email: sanitizeEmail(formData.email),
-                    password: sanitizeInputLogin(formData.password),
+                    email: sanitizedEmail,
+                    password: sanitizedPassword,
                 },
                 'Ошибка при входе'
             );
 
-            const success = login(loginData.token, loginData.user.role);
-
-            if (success) {
-                toast.success(`Добро пожаловать, ${loginData.user.name || 'пользователь'}!`);
-                navigate('/');
+            if (loginData.success) {
+                const success = login(loginData.token, loginData.user.role);
+                if (success) {
+                    toast.success(`Добро пожаловать, ${loginData.user.name || 'пользователь'}!`);
+                    navigate('/');
+                }
             }
         } catch (error) {
             // Ошибка уже обработана в makeApiCall
@@ -265,13 +333,18 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
     };
 
     const handleRegister = async () => {
-        if (formData.password.length < PASSWORD_MIN_LENGTH) {
-            toast.error('Пароль должен содержать минимум 6 символов');
+        const nameError = validateField('name', formData.name);
+        const passwordError = validateField('password', formData.password);
+
+        if (nameError || passwordError) {
+            if (nameError) toast.error(nameError);
+            if (passwordError) toast.error(passwordError);
             return;
         }
 
         if (formData.password !== formData.confirmPassword) {
             updateErrors({ passwordMatch: true });
+            toast.error('Пароли не совпадают');
             return;
         }
 
@@ -289,12 +362,14 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
                 'Ошибка при регистрации'
             );
 
-            const success = login(responseData.token, responseData.user.role);
-            if (success) {
-                clearTempTokens();
-                toast.success('Успешная регистрация и вход');
-                updateUiState({ isRegisterMode: false, step: STEPS.REGISTER.EMAIL_ENTRY });
-                navigate('/');
+            if (responseData.success) {
+                const success = login(responseData.token, responseData.user.role);
+                if (success) {
+                    clearTempTokens();
+                    toast.success('Регистрация завершена успешно!');
+                    updateUiState({ isRegisterMode: false, step: STEPS.REGISTER.EMAIL_ENTRY });
+                    navigate('/');
+                }
             }
         } catch (error) {
             // Ошибка уже обработана в makeApiCall
@@ -302,21 +377,24 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
     };
 
     const handleResetPassword = async () => {
-        if (formData.newPassword.length < PASSWORD_MIN_LENGTH) {
-            toast.error('Пароль должен содержать минимум 6 символов');
+        const passwordError = validateField('password', formData.newPassword);
+
+        if (passwordError) {
+            toast.error(passwordError);
             return;
         }
 
         if (formData.newPassword !== formData.confirmPassword) {
             updateErrors({ passwordMatch: true });
+            toast.error('Пароли не совпадают');
             return;
         }
 
-        const forgotPasswordUrl = `${process.env.REACT_APP_API_URL}/api/auth/reset-password`;
+        const resetPasswordUrl = `${process.env.REACT_APP_API_URL}/api/auth/reset-password`;
 
         try {
             await makeApiCall(
-                forgotPasswordUrl,
+                resetPasswordUrl,
                 {
                     email: sanitizeEmail(formData.email),
                     otp: sanitizeInputLogin(formData.otp),
@@ -326,7 +404,7 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
                 'Ошибка при обновлении пароля'
             );
 
-            toast.success('Пароль успешно обновлен');
+            toast.success('Пароль успешно обновлен!');
             updateUiState({
                 forgotPassword: false,
                 forgotPasswordStep: STEPS.FORGOT_PASSWORD.EMAIL_ENTRY
@@ -344,8 +422,8 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
                 const success = await handleSendOtp(OTP_PURPOSES.REGISTRATION);
                 if (success) updateUiState({ step: STEPS.REGISTER.OTP_VERIFICATION, resendTimer: RESEND_TIMER_DURATION });
             } else if (uiState.step === STEPS.REGISTER.OTP_VERIFICATION) {
-                await handleVerifyOtp(OTP_PURPOSES.REGISTRATION);
-                updateUiState({ step: STEPS.REGISTER.USER_DETAILS });
+                const token = await handleVerifyOtp(OTP_PURPOSES.REGISTRATION);
+                if (token) updateUiState({ step: STEPS.REGISTER.USER_DETAILS });
             } else if (uiState.step === STEPS.REGISTER.USER_DETAILS) {
                 await handleRegister();
             }
@@ -362,8 +440,8 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
                 forgotPasswordResendTimer: RESEND_TIMER_DURATION
             });
         } else if (uiState.forgotPasswordStep === STEPS.FORGOT_PASSWORD.OTP_VERIFICATION) {
-            await handleVerifyOtp(OTP_PURPOSES.PASSWORD_RESET);
-            updateUiState({ forgotPasswordStep: STEPS.FORGOT_PASSWORD.PASSWORD_UPDATE });
+            const token = await handleVerifyOtp(OTP_PURPOSES.PASSWORD_RESET);
+            if (token) updateUiState({ forgotPasswordStep: STEPS.FORGOT_PASSWORD.PASSWORD_UPDATE });
         } else if (uiState.forgotPasswordStep === STEPS.FORGOT_PASSWORD.PASSWORD_UPDATE) {
             await handleResetPassword();
         }
@@ -386,19 +464,17 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
         navigate('/');
     };
 
-    const handleCloseForm = () => {
-        if (uiState.isRegisterMode && uiState.step > STEPS.REGISTER.EMAIL_ENTRY) {
-            updateUiState({ step: STEPS.REGISTER.EMAIL_ENTRY });
+    const handleBack = () => {
+        if (uiState.forgotPassword) {
+            if (uiState.forgotPasswordStep > STEPS.FORGOT_PASSWORD.EMAIL_ENTRY) {
+                updateUiState({ forgotPasswordStep: uiState.forgotPasswordStep - 1 });
+            } else {
+                updateUiState({ forgotPassword: false });
+            }
+        } else if (uiState.isRegisterMode && uiState.step > STEPS.REGISTER.EMAIL_ENTRY) {
+            updateUiState({ step: uiState.step - 1 });
         } else {
-            navigate('/login');
-        }
-    };
-
-    const handleCloseFormPassword = () => {
-        if (uiState.forgotPasswordStep > STEPS.FORGOT_PASSWORD.EMAIL_ENTRY) {
-            updateUiState({ forgotPasswordStep: STEPS.FORGOT_PASSWORD.EMAIL_ENTRY });
-        } else {
-            navigate('/login');
+            navigate('/');
         }
     };
 
@@ -415,314 +491,378 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
         clearTempTokens();
     };
 
-    // Рендер функции для лучшей читаемости
+    const startForgotPassword = () => {
+        updateUiState({
+            forgotPassword: true,
+            forgotPasswordStep: STEPS.FORGOT_PASSWORD.EMAIL_ENTRY,
+            forgotPasswordResendTimer: -1
+        });
+        updateErrors({ otpForgotPassword: '' });
+    };
+
+    // Рендер функции
+    const renderInput = (type, placeholder, value, onChange, icon, error, maxLength) => (
+        <div className="input-group">
+            <div className="input-wrapper">
+                {icon && <span className="input-icon">{icon}</span>}
+                <input
+                    type={type}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
+                    onKeyPress={handleKeyPress}
+                    maxLength={maxLength}
+                    className={error ? 'input-error' : ''}
+                />
+            </div>
+            {error && <span className="error-message">{error}</span>}
+        </div>
+    );
+
+    const renderPasswordInput = (type, placeholder, value, onChange, error) => (
+        <div className="input-group">
+            <div className="input-wrapper">
+                <span className="input-icon"><FaLock /></span>
+                <input
+                    type={uiState.showPassword ? 'text' : 'password'}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
+                    onKeyPress={handleKeyPress}
+                    className={error ? 'input-error' : ''}
+                />
+                <span
+                    className="password-toggle"
+                    onClick={() => updateUiState({ showPassword: !uiState.showPassword })}
+                >
+                    {uiState.showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+            </div>
+            {error && <span className="error-message">{error}</span>}
+        </div>
+    );
+
     const renderRegisterStep1 = () => (
-        <div className="form-register-and-login">
-            <h2>Создайте аккаунт</h2>
-            <label>Email:</label>
-            <input
-                className="formInput"
-                type="email"
-                placeholder="Эл.почта"
-                value={formData.email}
-                onChange={(e) => updateFormData('email', sanitizeEmail(e.target.value))}
-                onKeyPress={handleKeyPress}
-            />
-            <button className="Login-register-button" type="button" onClick={handleLoginRegister}>
-                Продолжить
+        <div className="auth-form">
+            <h2>Создание аккаунта</h2>
+            <p className="form-subtitle">Введите ваш email для начала регистрации</p>
+
+            {renderInput(
+                'email',
+                'Ваш email',
+                formData.email,
+                (e) => updateFormData('email', sanitizeEmail(e.target.value)),
+                <FaEnvelope />,
+                errors.email
+            )}
+
+            <button
+                className={`auth-button ${uiState.isLoading ? 'loading' : ''}`}
+                type="button"
+                onClick={handleLoginRegister}
+                disabled={uiState.isLoading}
+            >
+                {uiState.isLoading ? 'Отправка...' : 'Продолжить'}
             </button>
         </div>
     );
 
     const renderRegisterStep2 = () => (
-        <div className="form-register-and-login">
-      <span className="form-register-and-login-arrow" onClick={handleCloseForm}>
-        ⟻ назад
-      </span>
-            <h2>Подтвердите эл.почту</h2>
-            <div className="login-step-email">
-                Мы отправили подтверждение на email: <strong>{sanitizeInputLogin(formData.email)}</strong>
-            </div>
-            <label>Введите код подтверждения</label>
-            <input
-                className="formInput"
-                type="text"
-                placeholder="Введите подтверждение"
-                value={formData.otp}
-                onChange={(e) => updateFormData('otp', sanitizeInputLogin(e.target.value))}
-                onKeyPress={handleKeyPress}
-                maxLength={OTP_LENGTH}
-            />
-            {errors.otp && <span className="otp-error">{errors.otp}</span>}
-            <button className="Login-register-button" type="button" onClick={handleLoginRegister}>
-                Подтвердите
+        <div className="auth-form">
+            <button className="back-button" onClick={handleBack}>
+                <FaArrowLeft /> Назад
             </button>
-            <div className="timer-login">
+
+            <h2>Подтверждение email</h2>
+            <p className="form-subtitle">
+                Мы отправили код подтверждения на <strong>{formData.email}</strong>
+            </p>
+
+            {renderInput(
+                'text',
+                'Введите 6-значный код',
+                formData.otp,
+                (e) => updateFormData('otp', sanitizeInputLogin(e.target.value)),
+                null,
+                errors.otp,
+                OTP_LENGTH
+            )}
+
+            <button
+                className={`auth-button ${uiState.isLoading ? 'loading' : ''}`}
+                type="button"
+                onClick={handleLoginRegister}
+                disabled={uiState.isLoading}
+            >
+                {uiState.isLoading ? 'Проверка...' : 'Подтвердить'}
+            </button>
+
+            <div className="otp-resend">
                 {uiState.resendTimer > 0 ? (
-                    <div className="timer-login-time">
-                        Повторная отправка через: <strong>{uiState.resendTimer}</strong> секунд
+                    <div className="resend-timer">
+                        Повторная отправка через: <strong>{uiState.resendTimer}с</strong>
                     </div>
                 ) : (
-                    <div className="new-otp-button">
-                        <div>Не получили код?</div>
-                        <p className="resend-otp" onClick={() => handleSendOtp(OTP_PURPOSES.REGISTRATION)}>
-                            Отправить снова
-                        </p>
-                    </div>
+                    <button className="resend-button" onClick={() => handleSendOtp(OTP_PURPOSES.REGISTRATION)}>
+                        Отправить код повторно
+                    </button>
                 )}
             </div>
         </div>
     );
 
     const renderRegisterStep3 = () => (
-        <div className="form-register-and-login">
-            <h2>Заполните форму</h2>
-            <label>Имя:</label>
-            <input
-                className="formInput"
-                type="text"
-                placeholder="Введите имя"
-                value={formData.name}
-                onChange={(e) => updateFormData('name', sanitizeInputLogin(e.target.value))}
-                onKeyPress={handleKeyPress}
-                maxLength="50"
-            />
-            <label>Email:</label>
-            <input
-                className="formInput"
-                type="email"
-                placeholder="Эл.почта"
-                value={formData.email}
-                onKeyPress={handleKeyPress}
-                readOnly
-            />
-            <div style={{ position: 'relative' }}>
-                <label>Пароль:</label>
-                <input
-                    className="formInput"
-                    type={uiState.showPassword ? 'text' : 'password'}
-                    placeholder="Введите пароль (мин. 6 символов)"
-                    value={formData.password}
-                    onChange={(e) => updateFormData('password', sanitizeInputLogin(e.target.value))}
-                    onKeyPress={handleKeyPress}
-                    minLength={PASSWORD_MIN_LENGTH}
-                />
-                <span
-                    className="span-fa-eye"
-                    onClick={() => updateUiState({ showPassword: !uiState.showPassword })}
-                >
-          {uiState.showPassword ? <FaEyeSlash /> : <FaEye />}
-        </span>
-            </div>
-            <label>Подтвердите пароль:</label>
-            <input
-                className="formInput"
-                type={uiState.showPassword ? 'text' : 'password'}
-                placeholder="Подтвердите пароль"
-                value={formData.confirmPassword}
-                onChange={(e) => updateFormData('confirmPassword', sanitizeInputLogin(e.target.value))}
-                onKeyPress={handleKeyPress}
-                minLength={PASSWORD_MIN_LENGTH}
-            />
-            {errors.passwordMatch && (
-                <span className="otp-error">Пароли не совпадают. Пожалуйста, проверьте введенные данные.</span>
+        <div className="auth-form">
+            <button className="back-button" onClick={handleBack}>
+                <FaArrowLeft /> Назад
+            </button>
+
+            <h2>Завершение регистрации</h2>
+            <p className="form-subtitle">Заполните данные для завершения регистрации</p>
+
+            {renderInput(
+                'text',
+                'Ваше имя',
+                formData.name,
+                (e) => updateFormData('name', sanitizeInputLogin(e.target.value)),
+                <FaUser />,
+                errors.name
             )}
-            <button className="Login-register-button" type="button" onClick={handleLoginRegister}>
-                Зарегистрировать
+
+            {renderPasswordInput(
+                'password',
+                'Пароль (мин. 6 символов)',
+                formData.password,
+                (e) => updateFormData('password', sanitizeInputLogin(e.target.value)),
+                errors.password
+            )}
+
+            {renderPasswordInput(
+                'password',
+                'Подтвердите пароль',
+                formData.confirmPassword,
+                (e) => updateFormData('confirmPassword', sanitizeInputLogin(e.target.value))
+            )}
+
+            {errors.passwordMatch && (
+                <span className="error-message">Пароли не совпадают</span>
+            )}
+
+            <button
+                className={`auth-button ${uiState.isLoading ? 'loading' : ''}`}
+                type="button"
+                onClick={handleLoginRegister}
+                disabled={uiState.isLoading}
+            >
+                {uiState.isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
             </button>
         </div>
     );
 
     const renderLogin = () => (
-        <div className="form-register-and-login">
-            <h2 style={{marginLeft:"0"}}>Войти в аккаунт</h2>
-            <label>Email:</label>
-            <input
-                className="formInput"
-                type="email"
-                placeholder="Эл.адрес"
-                value={formData.email}
-                onChange={(e) => updateFormData('email', sanitizeEmail(e.target.value))}
-                onKeyPress={handleKeyPress}
-            />
-            <div style={{ position: 'relative'}} className="element-label-input">
-                <label>Пароль:</label>
-                <input
-                    className="formInput"
-                    type={uiState.showPassword ? 'text' : 'password'}
-                    placeholder="Введите пароль"
-                    value={formData.password}
-                    onChange={(e) => updateFormData('password', sanitizeInputLogin(e.target.value))}
-                    onKeyPress={handleKeyPress}
-                />
-                <span
-                    className="span-fa-eye"
-                    onClick={() => updateUiState({ showPassword: !uiState.showPassword })}
-                >
-          {uiState.showPassword ? <FaEyeSlash /> : <FaEye />}
-        </span>
-            </div>
-            <button className="Login-register-button" type="button" onClick={handleLoginRegister}>
-                Авторизоваться
+        <div className="auth-form">
+            <h2>Вход в аккаунт</h2>
+            <p className="form-subtitle">Введите ваши данные для входа</p>
+
+            {renderInput(
+                'email',
+                'Ваш email',
+                formData.email,
+                (e) => updateFormData('email', sanitizeEmail(e.target.value)),
+                <FaEnvelope />,
+                errors.email
+            )}
+
+            {renderPasswordInput(
+                'password',
+                'Ваш пароль',
+                formData.password,
+                (e) => updateFormData('password', sanitizeInputLogin(e.target.value)),
+                errors.password
+            )}
+
+            <button
+                className={`auth-button ${uiState.isLoading ? 'loading' : ''}`}
+                type="button"
+                onClick={handleLoginRegister}
+                disabled={uiState.isLoading}
+            >
+                {uiState.isLoading ? 'Вход...' : 'Войти'}
             </button>
-            <div className="text-login-or-register-block newPassword">
-                <span>Забыли пароль?</span>
-                <p
-                    className="text-login-or-register"
-                    onClick={() => {
-                        updateUiState({
-                            forgotPassword: true,
-                            forgotPasswordStep: STEPS.FORGOT_PASSWORD.EMAIL_ENTRY,
-                            forgotPasswordResendTimer: -1
-                        });
-                        updateErrors({ otpForgotPassword: '' });
-                    }}
-                >
-                    Сменить пароль
-                </p>
+
+            <div className="auth-links">
+                <button className="link-button" onClick={startForgotPassword}>
+                    Забыли пароль?
+                </button>
             </div>
         </div>
     );
 
     const renderForgotPasswordStep1 = () => (
-        <div className="form-register-and-login">
+        <div className="auth-form">
+            <button className="back-button" onClick={handleBack}>
+                <FaArrowLeft /> Назад
+            </button>
+
             <h2>Восстановление пароля</h2>
-            <div style={{marginTop:"11px", marginBottom:"11px"}}>
-                Для восстановления пароля введите email указанный при регистрации
-            </div>
-            <label>Email:</label>
-            <input
-                className="formInput"
-                type="email"
-                placeholder="Эл.почта"
-                value={formData.email}
-                onChange={(e) => updateFormData('email', sanitizeEmail(e.target.value))}
-                onKeyPress={handleKeyPress}
-            />
-            <button className="Login-register-button" type="button" onClick={handleForgotPasswordFlow}>
-                Отправить OTP
+            <p className="form-subtitle">Введите email для восстановления пароля</p>
+
+            {renderInput(
+                'email',
+                'Ваш email',
+                formData.email,
+                (e) => updateFormData('email', sanitizeEmail(e.target.value)),
+                <FaEnvelope />,
+                errors.email
+            )}
+
+            <button
+                className={`auth-button ${uiState.isLoading ? 'loading' : ''}`}
+                type="button"
+                onClick={handleForgotPasswordFlow}
+                disabled={uiState.isLoading}
+            >
+                {uiState.isLoading ? 'Отправка...' : 'Отправить код'}
             </button>
         </div>
     );
 
     const renderForgotPasswordStep2 = () => (
-        <div className="form-register-and-login">
-      <span className="form-register-and-login-arrow" onClick={handleCloseFormPassword}>
-        ⟻ назад
-      </span>
-            <h2>Восстановление пароля</h2>
-            <div className="login-step-email">
-                Мы отправили подтверждение на email: <strong>{sanitizeInputLogin(formData.email)}</strong>
-            </div>
-            <label>Введите код подтверждения:</label>
-            <input
-                className="formInput"
-                type="text"
-                placeholder="Введите код"
-                value={formData.otp}
-                onChange={(e) => updateFormData('otp', sanitizeInputLogin(e.target.value))}
-                onKeyPress={handleKeyPress}
-                maxLength={OTP_LENGTH}
-            />
-            {errors.otpForgotPassword && <span className="otp-error">{errors.otpForgotPassword}</span>}
-            <button className="Login-register-button" type="button" onClick={handleForgotPasswordFlow}>
-                Подтвердите OTP
+        <div className="auth-form">
+            <button className="back-button" onClick={handleBack}>
+                <FaArrowLeft /> Назад
             </button>
-            <div className="timer-login">
+
+            <h2>Подтверждение кода</h2>
+            <p className="form-subtitle">
+                Код отправлен на <strong>{formData.email}</strong>
+            </p>
+
+            {renderInput(
+                'text',
+                'Введите 6-значный код',
+                formData.otp,
+                (e) => updateFormData('otp', sanitizeInputLogin(e.target.value)),
+                null,
+                errors.otpForgotPassword,
+                OTP_LENGTH
+            )}
+
+            <button
+                className={`auth-button ${uiState.isLoading ? 'loading' : ''}`}
+                type="button"
+                onClick={handleForgotPasswordFlow}
+                disabled={uiState.isLoading}
+            >
+                {uiState.isLoading ? 'Проверка...' : 'Подтвердить'}
+            </button>
+
+            <div className="otp-resend">
                 {uiState.forgotPasswordResendTimer > 0 ? (
-                    <div className="timer-login-time">
-                        Повторная отправка через: <strong>{uiState.forgotPasswordResendTimer}</strong> секунд
+                    <div className="resend-timer">
+                        Повторная отправка через: <strong>{uiState.forgotPasswordResendTimer}с</strong>
                     </div>
                 ) : (
-                    <div className="load-new-password">
-                        <div>Не получили код?</div>
-                        <p className="resend-otp" onClick={() => handleSendOtp(OTP_PURPOSES.PASSWORD_RESET)}>
-                            Отправить снова
-                        </p>
-                    </div>
+                    <button className="resend-button" onClick={() => handleSendOtp(OTP_PURPOSES.PASSWORD_RESET)}>
+                        Отправить код повторно
+                    </button>
                 )}
             </div>
         </div>
     );
 
     const renderForgotPasswordStep3 = () => (
-        <div className="form-register-and-login">
-            <h2>Обновление пароля</h2>
-            <label>Введите желаемый пароль:</label>
-            <input
-                className="formInput"
-                type={uiState.showPassword ? 'text' : 'password'}
-                placeholder="Новый пароль (мин. 6)"
-                value={formData.newPassword}
-                onChange={(e) => updateFormData('newPassword', sanitizeInputLogin(e.target.value))}
-                onKeyPress={handleKeyPress}
-                minLength={PASSWORD_MIN_LENGTH}
-            />
-            <div style={{ position: 'relative' }}>
-                <label>Подтвердите новый пароль:</label>
-                <input
-                    className="formInput password-yey"
-                    type={uiState.showPassword ? 'text' : 'password'}
-                    placeholder="Подтвердите новый пароль"
-                    value={formData.confirmPassword}
-                    onChange={(e) => updateFormData('confirmPassword', sanitizeInputLogin(e.target.value))}
-                    onKeyPress={handleKeyPress}
-                    minLength={PASSWORD_MIN_LENGTH}
-                />
-                <span
-                    className="span-fa-eye"
-                    onClick={() => updateUiState({ showPassword: !uiState.showPassword })}
-                >
-          {uiState.showPassword ? <FaEyeSlash /> : <FaEye />}
-        </span>
-            </div>
-            {errors.passwordMatch && (
-                <span className="otp-error">Пароли не совпадают. Пожалуйста, проверьте введенные данные.</span>
+        <div className="auth-form">
+            <button className="back-button" onClick={handleBack}>
+                <FaArrowLeft /> Назад
+            </button>
+
+            <h2>Новый пароль</h2>
+            <p className="form-subtitle">Введите новый пароль для вашего аккаунта</p>
+
+            {renderPasswordInput(
+                'password',
+                'Новый пароль (мин. 6 символов)',
+                formData.newPassword,
+                (e) => updateFormData('newPassword', sanitizeInputLogin(e.target.value)),
+                errors.password
             )}
-            <button className="Login-register-button" type="button" onClick={handleForgotPasswordFlow}>
-                Обновить пароль
+
+            {renderPasswordInput(
+                'password',
+                'Подтвердите новый пароль',
+                formData.confirmPassword,
+                (e) => updateFormData('confirmPassword', sanitizeInputLogin(e.target.value))
+            )}
+
+            {errors.passwordMatch && (
+                <span className="error-message">Пароли не совпадают</span>
+            )}
+
+            <button
+                className={`auth-button ${uiState.isLoading ? 'loading' : ''}`}
+                type="button"
+                onClick={handleForgotPasswordFlow}
+                disabled={uiState.isLoading}
+            >
+                {uiState.isLoading ? 'Обновление...' : 'Обновить пароль'}
             </button>
         </div>
     );
 
+    const getCurrentForm = () => {
+        if (uiState.forgotPassword) {
+            switch (uiState.forgotPasswordStep) {
+                case STEPS.FORGOT_PASSWORD.EMAIL_ENTRY:
+                    return renderForgotPasswordStep1();
+                case STEPS.FORGOT_PASSWORD.OTP_VERIFICATION:
+                    return renderForgotPasswordStep2();
+                case STEPS.FORGOT_PASSWORD.PASSWORD_UPDATE:
+                    return renderForgotPasswordStep3();
+                default:
+                    return renderForgotPasswordStep1();
+            }
+        } else if (uiState.isRegisterMode) {
+            switch (uiState.step) {
+                case STEPS.REGISTER.EMAIL_ENTRY:
+                    return renderRegisterStep1();
+                case STEPS.REGISTER.OTP_VERIFICATION:
+                    return renderRegisterStep2();
+                case STEPS.REGISTER.USER_DETAILS:
+                    return renderRegisterStep3();
+                default:
+                    return renderRegisterStep1();
+            }
+        } else {
+            return renderLogin();
+        }
+    };
+
     return (
-        <div className="form-login-page">
-            <form className="form">
-        <span className="formCloseLogin" type="button" onClick={handleClose}>
-          &#10006;
-        </span>
-                <hr className="hr-line"/>
+        <div className="auth-page">
+            <div className="auth-container">
+                <button className="close-button" onClick={handleClose}>
+                    <FaTimes />
+                </button>
 
-                {/* Register Flow */}
-                {uiState.isRegisterMode && uiState.step === STEPS.REGISTER.EMAIL_ENTRY && renderRegisterStep1()}
-                {uiState.isRegisterMode && uiState.step === STEPS.REGISTER.OTP_VERIFICATION && renderRegisterStep2()}
-                {uiState.isRegisterMode && uiState.step === STEPS.REGISTER.USER_DETAILS && renderRegisterStep3()}
-
-                {/* Login Flow */}
-                {!uiState.isRegisterMode && !uiState.forgotPassword && renderLogin()}
-
-                {/* Forgot Password Flow */}
-                {uiState.forgotPassword && (
-                    <div>
-                        {uiState.forgotPasswordStep === STEPS.FORGOT_PASSWORD.EMAIL_ENTRY && renderForgotPasswordStep1()}
-                        {uiState.forgotPasswordStep === STEPS.FORGOT_PASSWORD.OTP_VERIFICATION && renderForgotPasswordStep2()}
-                        {uiState.forgotPasswordStep === STEPS.FORGOT_PASSWORD.PASSWORD_UPDATE && renderForgotPasswordStep3()}
+                <div className="auth-header">
+                    <div className="logo">
+                        <h1>FLOWER<span>KZ</span></h1>
                     </div>
-                )}
+                    <p className="welcome-text">Добро пожаловать в мир цветов</p>
+                </div>
 
-                {/* Toggle between Login and Register */}
-                <div className="text-login-or-register-block">
-                    <div>
-                        {uiState.isRegisterMode ? 'У вас уже есть аккаунт?' : 'Еще нет аккаунта?'}
-                    </div>
-                    <p
-                        className="text-login-or-register"
-                        onClick={toggleMode}
-                    >
-                        {uiState.isRegisterMode ? 'Войти' : 'Зарегистрируйтесь'}
+                {getCurrentForm()}
+
+                <div className="auth-switch">
+                    <p>
+                        {uiState.isRegisterMode ? 'Уже есть аккаунт?' : 'Еще нет аккаунта?'}
+                        <button className="switch-button" onClick={toggleMode}>
+                            {uiState.isRegisterMode ? 'Войти' : 'Зарегистрироваться'}
+                        </button>
                     </p>
                 </div>
-            </form>
+            </div>
         </div>
     );
 };

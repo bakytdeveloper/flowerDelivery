@@ -13,13 +13,14 @@ import {
 // Импорты маршрутов
 import apiRoutes from './routes/index.js';
 import cleanupGuestCarts from './cron/cleanupGuestCarts.js';
+// Загружаем .env файл ДО всего остального
+dotenv.config();
 
 // ES6 модули не имеют __dirname, создаем его
 const __filename = fileURLToPath(
     import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5506;
