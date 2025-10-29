@@ -11,7 +11,8 @@ import {
     getRelatedProducts,
     toggleProductActive,
     getProductRating,
-    getProductsByOccasion
+    getProductsByOccasion,
+    getCatalogData
 } from '../controllers/productController.js';
 import {
     authenticateToken,
@@ -29,6 +30,7 @@ router.get('/occasion/:occasion', getProductsByOccasion);
 router.get('/:id', getProductById);
 router.get('/related/:productId', getRelatedProducts);
 router.get('/:id/rating', getProductRating);
+router.get('/catalog/data', getCatalogData); // Новый маршрут
 
 // Защищенные маршруты (только для администраторов)
 router.post('/', authenticateToken, requireAdmin, createProduct);

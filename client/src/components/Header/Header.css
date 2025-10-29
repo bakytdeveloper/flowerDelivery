@@ -734,3 +734,24 @@
         padding: 6px;
     }
 }
+
+
+.catalog-button {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.catalog-button:hover {
+    color: #e84393;
+}
+
+.nav-link.catalog-button.active {
+    color: #e84393;
+    font-weight: 600;
+}

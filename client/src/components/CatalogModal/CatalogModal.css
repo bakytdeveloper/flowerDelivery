@@ -1,0 +1,244 @@
+.catalog-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.catalog-modal {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 1200px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.catalog-modal-header {
+    padding: 2rem;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.catalog-modal-title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.catalog-modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.catalog-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.catalog-modal-content {
+    padding: 0;
+    max-height: calc(90vh - 100px);
+    overflow-y: auto;
+}
+
+.catalog-loading {
+    padding: 3rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.catalog-columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    height: 100%;
+}
+
+.catalog-column {
+    border-right: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.catalog-column:last-child {
+    border-right: none;
+}
+
+.column-title {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 1px solid #e9ecef;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.column-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    max-height: 400px;
+}
+
+.catalog-item {
+    padding: 0.8rem 1rem;
+    margin: 0.3rem 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #495057;
+    font-size: 0.95rem;
+    border: 1px solid transparent;
+}
+
+.catalog-item:hover {
+    background: #e3f2fd;
+    color: #1976d2;
+    border-color: #bbdefb;
+    transform: translateX(5px);
+}
+
+.no-items {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 2rem;
+    margin: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .catalog-columns {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .catalog-column:nth-child(2) {
+        border-right: none;
+    }
+
+    .catalog-column:nth-child(odd) {
+        border-right: 1px solid #e9ecef;
+    }
+}
+
+@media (max-width: 768px) {
+    .catalog-modal-overlay {
+        padding: 10px;
+    }
+
+    .catalog-modal {
+        max-height: 95vh;
+    }
+
+    .catalog-modal-header {
+        padding: 1.5rem;
+    }
+
+    .catalog-modal-title {
+        font-size: 1.5rem;
+    }
+
+    .catalog-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .catalog-column {
+        border-right: none;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .catalog-column:last-child {
+        border-bottom: none;
+    }
+
+    .column-content {
+        max-height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .catalog-modal-header {
+        padding: 1rem;
+    }
+
+    .catalog-modal-title {
+        font-size: 1.3rem;
+    }
+
+    .column-title {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .catalog-item {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Кастомный скроллбар */
+.column-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.column-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.column-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.column-content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

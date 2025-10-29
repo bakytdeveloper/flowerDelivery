@@ -30,21 +30,192 @@ const processProductImages = (product, req) => {
     };
 };
 
-// Контроллер для получения продуктов с фильтрацией и поиском
+// // Контроллер для получения продуктов с фильтрацией и поиском
+// export const getProducts = async (req, res) => {
+//     try {
+//         const {
+//             type,
+//             occasion,
+//             recipient,
+//             flowerNames,
+//             stemLength,
+//             flowerColors,
+//             search,
+//             page = 1,
+//             sortBy = 'createdAt',
+//             sortOrder = 'desc'
+//         } = req.query;
+//
+//         const userAgent = req.headers['user-agent'];
+//         const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);
+//         const limit = isMobile ? 10 : 15;
+//         const skip = (page - 1) * limit;
+//
+//         let baseQuery = {
+//             isActive: true,
+//             quantity: {
+//                 $gt: 0
+//             }
+//         };
+//
+//         // Добавляем фильтры для цветов
+//         if (type) baseQuery.type = type;
+//         if (occasion) baseQuery.occasion = occasion;
+//         if (recipient) baseQuery.recipient = recipient;
+//         if (flowerNames) baseQuery.flowerNames = { $in: Array.isArray(flowerNames) ? flowerNames : [flowerNames] };
+//         if (stemLength) baseQuery.stemLength = { $gte: parseInt(stemLength) };
+//         if (flowerColors) {
+//             baseQuery['flowerColors.name'] = { $in: Array.isArray(flowerColors) ? flowerColors : [flowerColors] };
+//         }
+//
+//         let products = [];
+//         let totalCount = 0;
+//
+//         // Сортировка
+//         const sortOptions = {};
+//         if (sortBy === 'price') {
+//             sortOptions.price = sortOrder === 'asc' ? 1 : -1;
+//         } else if (sortBy === 'soldCount') {
+//             sortOptions.soldCount = sortOrder === 'asc' ? 1 : -1;
+//         } else if (sortBy === 'rating') {
+//             // Для рейтинга нужна дополнительная логика
+//             sortOptions.averageRating = sortOrder === 'asc' ? 1 : -1;
+//         } else {
+//             sortOptions.createdAt = sortOrder === 'asc' ? 1 : -1;
+//         }
+//
+//         if (search) {
+//             const exactPhrase = escapeRegex(search.trim());
+//             const exactRegex = new RegExp(`\\b${exactPhrase}\\b`, 'i');
+//
+//             // 1️⃣ Приоритет: точное совпадение всей фразы
+//             const exactQuery = {
+//                 ...baseQuery,
+//                 $or: [{
+//                     name: exactRegex
+//                 },
+//                     {
+//                         type: exactRegex
+//                     },
+//                     {
+//                         flowerNames: exactRegex
+//                     },
+//                     {
+//                         description: exactRegex
+//                     },
+//                     {
+//                         occasion: exactRegex
+//                     },
+//                     {
+//                         recipient: exactRegex
+//                     }
+//                 ]
+//             };
+//
+//             products = await Product.find(exactQuery)
+//                 .populate('admin', 'name email')
+//                 .skip(skip)
+//                 .limit(limit)
+//                 .sort(sortOptions);
+//
+//             totalCount = await Product.countDocuments(exactQuery);
+//
+//             // 2️⃣ Fallback: полнотекстовый поиск
+//             if (totalCount === 0) {
+//                 const textQuery = {
+//                     ...baseQuery,
+//                     $text: {
+//                         $search: search
+//                     }
+//                 };
+//
+//                 products = await Product.find(textQuery)
+//                     .populate('admin', 'name email')
+//                     .skip(skip)
+//                     .limit(limit)
+//                     .sort(sortOptions);
+//
+//                 totalCount = await Product.countDocuments(textQuery);
+//             }
+//
+//             // 3️⃣ Fallback: частичное совпадение
+//             if (totalCount === 0) {
+//                 const looseRegex = new RegExp(escapeRegex(search), 'i');
+//                 const looseQuery = {
+//                     ...baseQuery,
+//                     $or: [{
+//                         name: looseRegex
+//                     },
+//                         {
+//                             type: looseRegex
+//                         },
+//                         {
+//                             flowerNames: looseRegex
+//                         },
+//                         {
+//                             description: looseRegex
+//                         },
+//                         {
+//                             occasion: looseRegex
+//                         },
+//                         {
+//                             recipient: looseRegex
+//                         }
+//                     ]
+//                 };
+//
+//                 products = await Product.find(looseQuery)
+//                     .populate('admin', 'name email')
+//                     .skip(skip)
+//                     .limit(limit)
+//                     .sort(sortOptions);
+//
+//                 totalCount = await Product.countDocuments(looseQuery);
+//             }
+//         } else {
+//             // Без поиска — обычный запрос
+//             products = await Product.find(baseQuery)
+//                 .populate('admin', 'name email')
+//                 .skip(skip)
+//                 .limit(limit)
+//                 .sort(sortOptions);
+//
+//             totalCount = await Product.countDocuments(baseQuery);
+//         }
+//
+//         // Обрабатываем изображения для всех продуктов
+//         const processedProducts = products.map(product => processProductImages(product, req));
+//
+//         res.json({
+//             products: processedProducts,
+//             totalCount,
+//             currentPage: parseInt(page),
+//             totalPages: Math.ceil(totalCount / limit),
+//             limit
+//         });
+//
+//     } catch (error) {
+//         console.error('Error fetching products:', error);
+//         res.status(500).json({
+//             message: 'Server error'
+//         });
+//     }
+// };
+
+// Упрощенный контроллер для получения продуктов (без populate)
 export const getProducts = async (req, res) => {
     try {
         const {
             type,
             occasion,
             recipient,
-            flowerNames,
-            stemLength,
-            flowerColors,
             search,
             page = 1,
             sortBy = 'createdAt',
             sortOrder = 'desc'
         } = req.query;
+
+        console.log('Query params:', { type, occasion, recipient, search }); // Для отладки
 
         const userAgent = req.headers['user-agent'];
         const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);
@@ -62,11 +233,6 @@ export const getProducts = async (req, res) => {
         if (type) baseQuery.type = type;
         if (occasion) baseQuery.occasion = occasion;
         if (recipient) baseQuery.recipient = recipient;
-        if (flowerNames) baseQuery.flowerNames = { $in: Array.isArray(flowerNames) ? flowerNames : [flowerNames] };
-        if (stemLength) baseQuery.stemLength = { $gte: parseInt(stemLength) };
-        if (flowerColors) {
-            baseQuery['flowerColors.name'] = { $in: Array.isArray(flowerColors) ? flowerColors : [flowerColors] };
-        }
 
         let products = [];
         let totalCount = 0;
@@ -77,111 +243,42 @@ export const getProducts = async (req, res) => {
             sortOptions.price = sortOrder === 'asc' ? 1 : -1;
         } else if (sortBy === 'soldCount') {
             sortOptions.soldCount = sortOrder === 'asc' ? 1 : -1;
-        } else if (sortBy === 'rating') {
-            // Для рейтинга нужна дополнительная логика
-            sortOptions.averageRating = sortOrder === 'asc' ? 1 : -1;
         } else {
             sortOptions.createdAt = sortOrder === 'asc' ? 1 : -1;
         }
 
         if (search) {
-            const exactPhrase = escapeRegex(search.trim());
-            const exactRegex = new RegExp(`\\b${exactPhrase}\\b`, 'i');
+            const searchRegex = new RegExp(escapeRegex(search), 'i');
 
-            // 1️⃣ Приоритет: точное совпадение всей фразы
-            const exactQuery = {
+            const searchQuery = {
                 ...baseQuery,
-                $or: [{
-                    name: exactRegex
-                },
-                    {
-                        type: exactRegex
-                    },
-                    {
-                        flowerNames: exactRegex
-                    },
-                    {
-                        description: exactRegex
-                    },
-                    {
-                        occasion: exactRegex
-                    },
-                    {
-                        recipient: exactRegex
-                    }
+                $or: [
+                    { name: searchRegex },
+                    { flowerNames: searchRegex },
+                    { description: searchRegex }
                 ]
             };
 
-            products = await Product.find(exactQuery)
-                .populate('admin', 'name email')
+            console.log('Search query:', searchQuery); // Для отладки
+
+            products = await Product.find(searchQuery)
                 .skip(skip)
                 .limit(limit)
                 .sort(sortOptions);
 
-            totalCount = await Product.countDocuments(exactQuery);
+            totalCount = await Product.countDocuments(searchQuery);
 
-            // 2️⃣ Fallback: полнотекстовый поиск
-            if (totalCount === 0) {
-                const textQuery = {
-                    ...baseQuery,
-                    $text: {
-                        $search: search
-                    }
-                };
-
-                products = await Product.find(textQuery)
-                    .populate('admin', 'name email')
-                    .skip(skip)
-                    .limit(limit)
-                    .sort(sortOptions);
-
-                totalCount = await Product.countDocuments(textQuery);
-            }
-
-            // 3️⃣ Fallback: частичное совпадение
-            if (totalCount === 0) {
-                const looseRegex = new RegExp(escapeRegex(search), 'i');
-                const looseQuery = {
-                    ...baseQuery,
-                    $or: [{
-                        name: looseRegex
-                    },
-                        {
-                            type: looseRegex
-                        },
-                        {
-                            flowerNames: looseRegex
-                        },
-                        {
-                            description: looseRegex
-                        },
-                        {
-                            occasion: looseRegex
-                        },
-                        {
-                            recipient: looseRegex
-                        }
-                    ]
-                };
-
-                products = await Product.find(looseQuery)
-                    .populate('admin', 'name email')
-                    .skip(skip)
-                    .limit(limit)
-                    .sort(sortOptions);
-
-                totalCount = await Product.countDocuments(looseQuery);
-            }
         } else {
             // Без поиска — обычный запрос
             products = await Product.find(baseQuery)
-                .populate('admin', 'name email')
                 .skip(skip)
                 .limit(limit)
                 .sort(sortOptions);
 
             totalCount = await Product.countDocuments(baseQuery);
         }
+
+        console.log('Found products:', products.length); // Для отладки
 
         // Обрабатываем изображения для всех продуктов
         const processedProducts = products.map(product => processProductImages(product, req));
@@ -197,7 +294,8 @@ export const getProducts = async (req, res) => {
     } catch (error) {
         console.error('Error fetching products:', error);
         res.status(500).json({
-            message: 'Server error'
+            message: 'Server error',
+            error: error.message
         });
     }
 };
@@ -283,7 +381,7 @@ export const getBestSellingProducts = async (req, res) => {
             quantity: { $gt: 0 },
             soldCount: { $gt: 0 },
         })
-            .populate('admin', 'name email')
+            // .populate('admin', 'name email')
             .sort({ soldCount: -1 })
             .limit(limit)
             .lean();
@@ -329,7 +427,7 @@ export const getNewestProducts = async (req, res) => {
                 $gt: 0
             }
         })
-            .populate('admin', 'name email')
+            // .populate('admin', 'name email')
             .sort({
                 createdAt: -1
             })
@@ -643,7 +741,7 @@ export const getProductsByOccasion = async (req, res) => {
             isActive: true,
             quantity: { $gt: 0 }
         })
-            .populate('admin', 'name email')
+            // .populate('admin', 'name email')
             .skip(skip)
             .limit(limit)
             .sort({ createdAt: -1 });
@@ -665,6 +763,55 @@ export const getProductsByOccasion = async (req, res) => {
     } catch (error) {
         console.error('Error fetching products by occasion:', error);
         res.status(500).json({
+            message: 'Server error'
+        });
+    }
+};
+
+
+// Контроллер для получения данных для каталога
+// Контроллер для получения данных для каталога
+export const getCatalogData = async (req, res) => {
+    try {
+        const baseQuery = {
+            isActive: true,
+            quantity: { $gt: 0 }
+        };
+
+        // Получаем уникальные значения для каждой колонки
+        const [
+            singleFlowers,
+            bouquetFlowers,
+            occasions,
+            recipients
+        ] = await Promise.all([
+            // Одиночные цветы (type: "single")
+            Product.distinct('name', { ...baseQuery, type: 'single' }),
+            // Букеты (type: "bouquet")
+            Product.distinct('name', { ...baseQuery, type: 'bouquet' }),
+            // Поводы
+            Product.distinct('occasion', baseQuery),
+            // Получатели
+            Product.distinct('recipient', baseQuery)
+        ]);
+
+        // Фильтруем пустые значения и сортируем
+        const processedData = {
+            singleFlowers: singleFlowers.filter(item => item && item.trim()).sort(),
+            bouquetFlowers: bouquetFlowers.filter(item => item && item.trim()).sort(),
+            occasions: occasions.filter(item => item && item.trim()).sort(),
+            recipients: recipients.filter(item => item && item.trim()).sort()
+        };
+
+        res.json({
+            success: true,
+            catalogData: processedData
+        });
+
+    } catch (error) {
+        console.error('Error fetching catalog data:', error);
+        res.status(500).json({
+            success: false,
             message: 'Server error'
         });
     }

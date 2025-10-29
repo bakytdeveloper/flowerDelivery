@@ -6,6 +6,7 @@ import { FaRegHeart, FaShoppingCart, FaUser, FaSearch, FaPhone, FaBars, FaTimes 
 import { useAuth } from '../../contexts/AuthContext';
 import { safeJwtDecode, sanitizeInput } from '../../utils/securityUtils';
 import { useNavigate } from 'react-router-dom';
+import CatalogModal from "../CatalogModal/CatalogModal";
 
 const Header = ({
                     onSearch,
@@ -15,6 +16,7 @@ const Header = ({
                 }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isCatalogOpen, setIsCatalogOpen] = useState(false); // Добавляем состояние для каталога
     const profileRef = useRef(null);
     const mobileMenuRef = useRef(null);
     const location = useLocation();
@@ -289,6 +291,14 @@ const Header = ({
         }
     };
 
+    const handleCatalogClick = () => {
+        setIsCatalogOpen(true);
+    };
+
+    const handleCloseCatalog = () => {
+        setIsCatalogOpen(false);
+    };
+
     if (isLoading) {
         return <div className="header-loading">Загрузка...</div>;
     }
@@ -322,14 +332,6 @@ const Header = ({
                                 <span>{phoneNumber}</span>
                             </button>
                         </div>
-                        {/*/!* Кнопка бургер-меню для мобильных *!/*/}
-                        {/*<button*/}
-                        {/*    className="mobile-menu-toggle"*/}
-                        {/*    onClick={handleMobileMenuToggle}*/}
-                        {/*    aria-label="Открыть меню"*/}
-                        {/*>*/}
-                        {/*    {isMobileMenuOpen ? <FaTimes /> : <FaBars />}*/}
-                        {/*</button>*/}
                     </div>
                 </div>
             </div>
@@ -469,24 +471,18 @@ const Header = ({
                         >
                             Главная
                         </Link>
-                        <Link
-                            to="/catalog"
-                            className={`none-mobile nav-link ${activePage === 'catalog' ? 'active' : ''}`}
+                        <button
+                            className="nav-link catalog-button"
+                            onClick={handleCatalogClick}
                         >
                             Каталог
-                        </Link>
+                        </button>
                         <Link
                             to="/about"
                             className={`nav-link ${activePage === 'about' ? 'active' : ''}`}
                         >
                             О нас
                         </Link>
-                        {/*<Link*/}
-                        {/*    to="/promotions"*/}
-                        {/*    className={`nav-link ${activePage === 'promotions' ? 'active' : ''}`}*/}
-                        {/*>*/}
-                        {/*    Акции*/}
-                        {/*</Link>*/}
                         <Link
                             to="/payment"
                             className={`nav-link ${activePage === 'payment' ? 'active' : ''}`}
@@ -496,6 +492,12 @@ const Header = ({
                     </div>
                 </div>
             </nav>
+
+            {/* Модальное окно каталога - ДОБАВЛЯЕМ ЭТОТ КОМПОНЕНТ */}
+            <CatalogModal
+                isOpen={isCatalogOpen}
+                onClose={handleCloseCatalog}
+            />
 
             {/* Модальное окно для пустого избранного */}
             {showNoFavoritesModal && (
