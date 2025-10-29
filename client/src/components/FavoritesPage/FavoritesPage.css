@@ -187,7 +187,7 @@
     transform: scale(1.1);
 }
 
-.product-info {
+.cart-product-info {
     padding: 1.2rem;
 }
 
@@ -382,7 +382,7 @@
         height: 160px;
     }
 
-    .product-info {
+    .cart-product-info {
         padding: 1rem;
     }
 
@@ -468,7 +468,7 @@
         gap: 0.8rem;
     }
 
-    .product-info {
+    .cart-product-info {
         padding: 0.8rem;
     }
 

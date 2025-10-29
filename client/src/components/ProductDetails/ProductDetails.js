@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import { useFavorites } from '../../hooks/useFavorites';
 import './ProductDetails.css';
 
@@ -12,7 +12,17 @@ const ProductDetails = () => {
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [quantity, setQuantity] = useState(1);
     const { toggleFavorite, isFavorite } = useFavorites();
-
+    const location = useLocation();
+    
+    // Прокрутка вверх при монтировании компонента и изменении фильтров
+    useEffect(() => {
+        // Прокручиваем страницу вверх
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth' // Плавная прокрутка
+        });
+    }, [location.search]); // Зависимость от параметров поиска
 
 
     useEffect(() => {

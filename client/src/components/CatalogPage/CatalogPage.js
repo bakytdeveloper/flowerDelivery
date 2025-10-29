@@ -218,7 +218,7 @@ const CatalogPage = () => {
                                         )}
                                     </div>
 
-                                    <div className="product-info">
+                                    <div className="cart-product-info">
                                         <h3 className="product-name">{product.name}</h3>
                                         <p className="product-description">
                                             {product.description?.length > 20
