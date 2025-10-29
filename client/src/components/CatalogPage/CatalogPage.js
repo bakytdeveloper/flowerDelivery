@@ -15,6 +15,16 @@ const CatalogPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    // Прокрутка вверх при монтировании компонента и изменении фильтров
+    useEffect(() => {
+        // Прокручиваем страницу вверх
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth' // Плавная прокрутка
+        });
+    }, [location.search]); // Зависимость от параметров поиска
+
     // Парсим параметры URL при загрузке и изменении location
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
