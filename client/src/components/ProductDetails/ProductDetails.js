@@ -13,7 +13,7 @@ const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1);
     const { toggleFavorite, isFavorite } = useFavorites();
     const location = useLocation();
-    
+
     // Прокрутка вверх при монтировании компонента и изменении фильтров
     useEffect(() => {
         // Прокручиваем страницу вверх

@@ -136,8 +136,25 @@ const FavoritesPage = () => {
     return (
         <div className="favorites-page">
             <div className="container">
+
                 {/* Заголовок как в каталоге */}
                 <div className="favorites-header">
+                    {/* Хлебные крошки */}
+                    <nav className="breadcrumb-nav breadcrumb-nav-favorites">
+                        <button
+                            className="breadcrumb-back"
+                            onClick={() => navigate(-1)}
+                        >
+                            ← Назад
+                        </button>
+                        <span className="breadcrumb-separator">/</span>
+                        <button
+                            className="breadcrumb-link"
+                            onClick={() => navigate('/catalog')}
+                        >
+                            Каталог
+                        </button>
+                    </nav>
                     <h1 className="favorites-title">Избранные товары</h1>
                     <div className="favorites-info">
                         <span className="favorites-count">
@@ -192,16 +209,16 @@ const FavoritesPage = () => {
                                                 🔥 Популярный
                                             </span>
                                         )}
-                                        <button
-                                            className="remove-favorite-btn"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleRemoveFromFavorites(product._id);
-                                            }}
-                                            title="Удалить из избранного"
-                                        >
-                                            ❌
-                                        </button>
+                                        {/*<button*/}
+                                        {/*    className="remove-favorite-btn"*/}
+                                        {/*    onClick={(e) => {*/}
+                                        {/*        e.stopPropagation();*/}
+                                        {/*        handleRemoveFromFavorites(product._id);*/}
+                                        {/*    }}*/}
+                                        {/*    title="Удалить из избранного"*/}
+                                        {/*>*/}
+                                        {/*    ❌*/}
+                                        {/*</button>*/}
                                     </div>
 
                                     <div className="cart-product-info">

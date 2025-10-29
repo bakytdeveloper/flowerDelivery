@@ -280,7 +280,7 @@
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    padding: 0.6rem 1rem;
+    padding: 0.2rem;
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
@@ -350,6 +350,10 @@
 .product-card:nth-child(6) { animation-delay: 0.35s; }
 
 /* Адаптивность */
+
+.breadcrumb-nav-favorites {
+    margin-bottom: 0;
+}
 
 /* Большие мониторы (1200px+) - 5 колонок */
 @media (min-width: 1200px) {
