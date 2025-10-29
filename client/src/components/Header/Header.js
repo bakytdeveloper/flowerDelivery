@@ -318,15 +318,15 @@ const Header = ({
                         <div className="working-hours">
                             <span>⏰ {workingHours}</span>
                         </div>
-                        <div className="header-logo">
+                        <div className="header-logo-home">
                             <div
-                                className="logo"
+                                className="logo-home"
                                 onClick={handleTitleClick}
                                 role="button"
                                 tabIndex={0}
                                 onKeyPress={(e) => e.key === 'Enter' && handleTitleClick()}
                             >
-                                <h1 className="logo-text">FLOWER<span className="logo-accent">KZ</span></h1>
+                                <h1 className="logo-text-home">FLOWER<span className="logo-accent-home">KZ</span></h1>
                             </div>
                         </div>
                         <div className="header-phone">

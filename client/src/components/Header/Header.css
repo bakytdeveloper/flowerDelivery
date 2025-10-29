@@ -79,22 +79,22 @@
 }
 
 /* Логотип */
-.header-logo .logo {
+.header-logo-home .logo-home {
     cursor: pointer;
     flex-shrink: 0;
 }
 
-.logo-text {
+.logo-text-home {
     font-size: 52px;
     font-weight: 800;
-    color: #d9fac3;
+    color: #c2fc9c !important;
     margin: 0;
     letter-spacing: -0.5px;
     white-space: nowrap;
 }
 
-.logo-accent {
-    color: #faf7f7;
+.logo-accent-home {
+    color: #faf7f7!important;
     /*background: linear-gradient(45deg, #ff6b6b, #ff8e8e) !important;*/
     -webkit-background-clip: text;
     /*-webkit-text-fill-color: transparent;*/
@@ -722,7 +722,7 @@
     }
 
     /* Убедитесь, что логотип центрируется правильно */
-    .header-logo {
+    .header-logo-home {
         margin: 0 auto;
     }
 }
