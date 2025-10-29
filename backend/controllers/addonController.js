@@ -48,6 +48,19 @@ export const getAllAddons = async (req, res) => {
     }
 };
 
+// 🔍 Получение дополнения по ID
+export const getAddonById = async (req, res) => {
+    try {
+        const addon = await Addon.findById(req.params.id);
+        if (!addon) {
+            return res.status(404).json({ error: 'Дополнение не найдено' });
+        }
+        res.json(addon);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // ✏️ Обновление дополнения
 export const updateAddon = async (req, res) => {
     try {
@@ -73,6 +86,30 @@ export const deleteAddon = async (req, res) => {
             return res.status(404).json({ error: 'Дополнение не найдено' });
         }
         res.json({ message: 'Дополнение удалено' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// 🔎 Поиск дополнений
+export const searchAddons = async (req, res) => {
+    try {
+        const { query, type } = req.query;
+        const searchConditions = { isActive: true };
+
+        if (query) {
+            searchConditions.$or = [
+                { name: { $regex: query, $options: 'i' } },
+                { description: { $regex: query, $options: 'i' } }
+            ];
+        }
+
+        if (type && type !== 'all') {
+            searchConditions.type = type;
+        }
+
+        const addons = await Addon.find(searchConditions);
+        res.json(addons);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

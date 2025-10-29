@@ -41,6 +41,21 @@ export const getAllWrappers = async (req, res) => {
 };
 
 /**
+ * Получить обертку по ID
+ */
+export const getWrapperById = async (req, res) => {
+    try {
+        const wrapper = await Wrapper.findById(req.params.id);
+        if (!wrapper) {
+            return res.status(404).json({ error: 'Обертка не найдена' });
+        }
+        res.json(wrapper);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+/**
  * Обновить обертку
  */
 export const updateWrapper = async (req, res) => {
@@ -69,6 +84,29 @@ export const deleteWrapper = async (req, res) => {
             return res.status(404).json({ error: 'Обертка не найдена' });
         }
         res.json({ message: 'Обертка удалена' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+/**
+ * Поиск оберток по названию
+ */
+export const searchWrappers = async (req, res) => {
+    try {
+        const { query } = req.query;
+        const wrappers = await Wrapper.find({
+            $and: [
+                {
+                    $or: [
+                        { name: { $regex: query, $options: 'i' } },
+                        { description: { $regex: query, $options: 'i' } }
+                    ]
+                },
+                { isActive: true }
+            ]
+        });
+        res.json(wrappers);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -16,11 +16,32 @@ import {
     authenticateToken,
     requireAdmin
 } from '../middlewares/authenticateToken.js';
+
 import {
     upload,
     processImage,
     handleUploadError
 } from '../middlewares/uploadMiddleware.js';
+
+import {
+    createAddon,
+    deleteAddon,
+    // getAddonsByType,
+    getAllAddons,
+    // getAvailableAddons,
+    updateAddon,
+    // getAddonById,
+    // searchAddons
+} from "../controllers/addonController.js";
+import {
+    createWrapper,
+    deleteWrapper,
+    getAllWrappers,
+    // getAvailableWrappers,
+    updateWrapper,
+    // getWrapperById,
+    // searchWrappers
+} from "../controllers/wrapperController.js";
 
 const router = express.Router();
 
@@ -32,6 +53,25 @@ router.get('/products/:productId', authenticateToken, requireAdmin, getProduct);
 router.put('/products/:productId', authenticateToken, requireAdmin, updateProduct);
 router.delete('/products/:productId', authenticateToken, requireAdmin, deleteProduct);
 router.put('/products/:productId/sold-count', authenticateToken, requireAdmin, updateSoldCount);
+
+// Маршруты для управления Обвёртками для цветов админа
+router.post('/wrappers', authenticateToken, requireAdmin, createWrapper);
+// router.get('/wrappers/available', getAvailableWrappers);
+router.get('/wrappers', authenticateToken, requireAdmin, getAllWrappers);
+// router.get('/wrappers/search', searchWrappers); // Поиск оберток
+// router.get('/wrappers/:id', getWrapperById); // Получение по ID
+router.put('/wrappers/:id', authenticateToken, requireAdmin, updateWrapper);
+router.delete('/wrappers/:id', authenticateToken, requireAdmin, deleteWrapper);
+
+// Маршруты для управления Дополнениями админом
+router.post('/addons', authenticateToken, requireAdmin, createAddon);
+// router.get('/addons/available', getAvailableAddons);
+// router.get('/addons/type/:type', getAddonsByType);
+router.get('/addons', authenticateToken, requireAdmin, getAllAddons);
+// router.get('/addons/search', searchAddons); // Поиск дополнений
+// router.get('/addons/:id', getAddonById); // Получение по ID
+router.put('/addons/:id', authenticateToken, requireAdmin, updateAddon);
+router.delete('/addons/:id', authenticateToken, requireAdmin, deleteAddon);
 
 // Маршруты для статистики и истории продаж
 router.get('/sales-history', authenticateToken, requireAdmin, getSalesHistory);

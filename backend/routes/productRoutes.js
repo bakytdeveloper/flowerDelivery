@@ -18,6 +18,8 @@ import {
     authenticateToken,
     requireAdmin
 } from '../middlewares/authenticateToken.js';
+import {getAvailableWrappers, getWrapperById, searchWrappers} from "../controllers/wrapperController.js";
+import {getAddonsByType, getAvailableAddons, searchAddons, getAddonById} from "../controllers/addonController.js";
 
 const router = express.Router();
 
@@ -31,6 +33,17 @@ router.get('/occasion/:occasion', getProductsByOccasion);
 router.get('/catalog/data', getCatalogData);
 router.get('/related/:productId', getRelatedProducts);
 router.get('/:id/rating', getProductRating);
+
+// Публичные маршруты для оберток
+router.get('/wrappers/available', getAvailableWrappers);
+router.get('/wrappers/search', searchWrappers);
+router.get('/wrappers/:id', getWrapperById);
+
+// Публичные маршруты для дополнений
+router.get('/addons/available', getAvailableAddons);
+router.get('/addons/type/:type', getAddonsByType);
+router.get('/addons/search', searchAddons);
+router.get('/addons/:id', getAddonById);
 
 // Маршрут для получения продукта по ID должен быть ПОСЛЕДНИМ среди GET маршрутов
 router.get('/:id', getProductById);
