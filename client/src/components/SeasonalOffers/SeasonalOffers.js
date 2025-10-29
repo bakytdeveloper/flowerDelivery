@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useFavorites } from '../../hooks/useFavorites';
 import './SeasonalOffers.css';
 
 const SeasonalOffers = () => {
@@ -8,6 +9,7 @@ const SeasonalOffers = () => {
     const [error, setError] = useState(null);
     const scrollContainerRef = useRef(null);
     const navigate = useNavigate();
+    const { toggleFavorite, isFavorite } = useFavorites();
 
     useEffect(() => {
         fetchBestSellingProducts();
@@ -76,7 +78,7 @@ const SeasonalOffers = () => {
         if (!isDragging) return;
         e.preventDefault();
         const x = e.touches[0].pageX;
-        const walk = (x - startX) * 2; // multiplier for faster scroll
+        const walk = (x - startX) * 2;
         scrollContainerRef.current.scrollLeft = scrollLeftStart - walk;
     };
 
@@ -86,6 +88,22 @@ const SeasonalOffers = () => {
 
     const handleProductClick = (productId) => {
         navigate(`/product/${productId}`);
+    };
+
+    // Функция для добавления в корзину
+    const handleAddToCart = (e, product) => {
+        e.stopPropagation();
+        console.log('Добавлено в корзину:', product);
+        // TODO: Добавить логику добавления в корзину
+    };
+
+    // Функция для добавления/удаления из избранного
+    const handleToggleFavorite = async (e, product) => {
+        e.stopPropagation();
+        const success = await toggleFavorite(product._id, isFavorite(product._id));
+        if (success) {
+            // Можно обновить локальное состояние если нужно
+        }
     };
 
     const formatPrice = (price) => {
@@ -100,7 +118,7 @@ const SeasonalOffers = () => {
         return (
             <section className="season-section">
                 <div className="container">
-                    <h2 className="season-title" style={{color:"white"}}>Хиты продаж</h2>
+                    <h2 className="season-title">Сезонные предложения</h2>
                     <div className="loading-products">
                         <div className="spinner-border text-primary" role="status">
                             <span className="visually-hidden">Загрузка...</span>
@@ -115,7 +133,7 @@ const SeasonalOffers = () => {
         return (
             <section className="season-section">
                 <div className="container">
-                    <h2 className="season-title" style={{color:"white"}}>Хиты продаж</h2>
+                    <h2 className="season-title">Сезонные предложения</h2>
                     <div className="error-message">
                         <p>Не удалось загрузить хиты продаж</p>
                         <button
@@ -138,7 +156,7 @@ const SeasonalOffers = () => {
         <section className="season-section">
             <div className="container">
                 <div className="season-header">
-                    <h2 className="season-title" style={{color:"white"}}>Сезонные предложения</h2>
+                    <h2 className="season-title">Сезонные предложения</h2>
                 </div>
 
                 <div className="season-container">
@@ -165,6 +183,7 @@ const SeasonalOffers = () => {
                                     key={product._id}
                                     className="season-product-card"
                                     onClick={() => handleProductClick(product._id)}
+                                    style={{ cursor: 'pointer' }}
                                 >
                                     <div className="product-image-container">
                                         <img
@@ -179,17 +198,24 @@ const SeasonalOffers = () => {
                                             </span>
                                         )}
                                         {product.soldCount > 0 && (
-                                            <span className="sold-badge">
-                                                🔥 Продано: {product.soldCount}
+                                            <span className="popular-badge">
+                                                🔥 Популярный
                                             </span>
                                         )}
                                     </div>
 
-                                    <div className="product-info">
+                                    <div className="cart-product-info">
                                         <h3 className="product-name">{product.name}</h3>
+                                        <p className="product-description">
+                                            {product.description?.length > 20
+                                                ? `${product.description.slice(0, 20)}...`
+                                                : product.description
+                                            }
+                                        </p>
+
                                         <div className="product-meta">
-                                            <span className="product-type">
-                                                {product.type === 'single' ? 'Одиночный цветок' : 'Букет'}
+                                            <span className={`product-type ${product.type}`}>
+                                                {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
                                             </span>
                                             <span className="product-occasion">
                                                 {product.occasion}
@@ -213,17 +239,20 @@ const SeasonalOffers = () => {
                                             )}
                                         </div>
 
-                                        {product.averageRating > 0 && (
-                                            <div className="product-rating">
-                                                <span className="stars">
-                                                    {'★'.repeat(Math.floor(product.averageRating))}
-                                                    {'☆'.repeat(5 - Math.floor(product.averageRating))}
-                                                </span>
-                                                <span className="rating-value">
-                                                    ({product.averageRating.toFixed(1)})
-                                                </span>
-                                            </div>
-                                        )}
+                                        <div className="product-actions">
+                                            <button
+                                                className="btn-add-to-cart"
+                                                onClick={(e) => handleAddToCart(e, product)}
+                                            >
+                                                В корзину
+                                            </button>
+                                            <button
+                                                className={`btn-favorite ${isFavorite(product._id) ? 'favorited' : ''}`}
+                                                onClick={(e) => handleToggleFavorite(e, product)}
+                                            >
+                                                {isFavorite(product._id) ? '❤️' : '♡'}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
