@@ -1,13 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaHome, FaSearch, FaHeart, FaShoppingCart, FaUser } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 import './MobileFooter.css';
+import CatalogModal from "../CatalogModal/CatalogModal";
 
 const MobileFooter = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { isAuthenticated, userRole, favoritesCount, cartItemsCount } = useAuth();
+    const [isCatalogOpen, setIsCatalogOpen] = useState(false); // Добавляем состояние для каталога
 
     const isActive = (path) => {
         return location.pathname === path;
@@ -42,7 +44,11 @@ const MobileFooter = () => {
     };
 
     const handleCatalogClick = () => {
-        navigate("/catalog");
+        setIsCatalogOpen(true);
+    };
+
+    const handleCloseCatalog = () => {
+        setIsCatalogOpen(false);
     };
 
     return (
@@ -105,6 +111,12 @@ const MobileFooter = () => {
                     </span>
                 </button>
             </div>
+
+            {/* Модальное окно каталога - ДОБАВЛЯЕМ ЭТОТ КОМПОНЕНТ */}
+            <CatalogModal
+                isOpen={isCatalogOpen}
+                onClose={handleCloseCatalog}
+            />
         </footer>
     );
 };
