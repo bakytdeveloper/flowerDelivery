@@ -454,22 +454,86 @@ export const getNewestProducts = async (req, res) => {
     }
 };
 
+// // Контроллер для получения продукта по ID
+// export const getProductById = async (req, res) => {
+//     try {
+//         const product = await Product.findById(req.params.id)
+//             // .populate('admin')
+//             .lean();
+//
+//         if (!product) {
+//             return res.status(404).json({
+//                 message: 'Product not found'
+//             });
+//         }
+//
+//         if (!product.isActive) {
+//             return res.status(403).json({
+//                 message: 'Product is not available'
+//             });
+//         }
+//
+//         // Обработка изображений
+//         const processedImages = product.images?.map(image =>
+//             image.startsWith('http') ? image : `${req.protocol}://${req.get('host')}/uploads/${path.basename(image)}`
+//         );
+//
+//         // Вычисление скидки
+//         const discountPercentage = product.originalPrice && product.price ?
+//             Math.round((product.originalPrice - product.price) / product.originalPrice * 100) :
+//             0;
+//
+//         // Формирование ответа
+//         const response = {
+//             ...product,
+//             images: processedImages,
+//             discountPercentage,
+//             truncatedDescription: product.description?.slice(0, 100) +
+//                 (product.description?.length > 100 ? "..." : ""),
+//             adminInfo: product.admin ? {
+//                 id: product.admin._id,
+//                 name: product.admin.name
+//             } : null
+//         };
+//
+//         res.json({
+//             success: true,
+//             product: response
+//         });
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: error.message
+//         });
+//     }
+// };
+
 // Контроллер для получения продукта по ID
 export const getProductById = async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id)
-            .populate('admin')
-            .lean();
+        const productId = req.params.id;
+
+        // Проверяем валидность ID
+        if (!productId || productId === 'undefined') {
+            return res.status(400).json({
+                success: false,
+                message: 'Неверный ID товара'
+            });
+        }
+
+        const product = await Product.findById(productId).lean();
 
         if (!product) {
             return res.status(404).json({
-                message: 'Product not found'
+                success: false,
+                message: 'Товар не найден'
             });
         }
 
         if (!product.isActive) {
             return res.status(403).json({
-                message: 'Product is not available'
+                success: false,
+                message: 'Товар временно недоступен'
             });
         }
 
@@ -479,34 +543,58 @@ export const getProductById = async (req, res) => {
         );
 
         // Вычисление скидки
-        const discountPercentage = product.originalPrice && product.price ?
+        const discountPercentage = product.originalPrice && product.originalPrice > product.price ?
             Math.round((product.originalPrice - product.price) / product.originalPrice * 100) :
+            0;
+
+        // Вычисление среднего рейтинга
+        const averageRating = product.reviews && product.reviews.length > 0 ?
+            product.reviews.reduce((acc, review) => acc + review.rating, 0) / product.reviews.length :
             0;
 
         // Формирование ответа
         const response = {
             ...product,
-            images: processedImages,
+            images: processedImages || [],
             discountPercentage,
-            truncatedDescription: product.description?.slice(0, 100) +
-                (product.description?.length > 100 ? "..." : ""),
-            adminInfo: product.admin ? {
-                id: product.admin._id,
-                name: product.admin.name
-            } : null
+            averageRating,
+            reviewCount: product.reviews?.length || 0,
+            // Так как admin это строка, просто возвращаем её как есть
+            adminInfo: {
+                id: product.admin || 'admin',
+                name: 'Администратор магазина',
+                email: 'admin@flowerkz.com'
+            }
         };
+
+        // Удаляем ненужные поля если они есть
+        delete response.__v;
+        delete response.score;
 
         res.json({
             success: true,
             product: response
         });
+
     } catch (error) {
+        console.error('Error fetching product by ID:', error);
+
+        // Более детальная обработка ошибок
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                success: false,
+                message: 'Неверный формат ID товара'
+            });
+        }
+
         res.status(500).json({
             success: false,
-            message: error.message
+            message: 'Ошибка сервера при получении товара',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };
+
 
 // Контроллер для создания продукта
 export const createProduct = async (req, res) => {

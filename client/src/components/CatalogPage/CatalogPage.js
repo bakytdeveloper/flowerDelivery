@@ -69,6 +69,25 @@ const CatalogPage = () => {
         }
     };
 
+    // Функция для обработки клика по карточке товара
+    const handleProductClick = (productId) => {
+        navigate(`/product/${productId}`);
+    };
+
+    // Функция для добавления в корзину
+    const handleAddToCart = (e, product) => {
+        e.stopPropagation(); // Останавливаем всплытие события
+        console.log('Добавлено в корзину:', product);
+        // TODO: Добавить логику добавления в корзину
+    };
+
+    // Функция для добавления в избранное
+    const handleAddToFavorite = (e, product) => {
+        e.stopPropagation(); // Останавливаем всплытие события
+        console.log('Добавлено в избранное:', product);
+        // TODO: Добавить логику добавления в избранное
+    };
+
     const clearFilters = () => {
         navigate('/catalog');
     };
@@ -164,7 +183,12 @@ const CatalogPage = () => {
                     ) : (
                         <div className="products-grid">
                             {products.map((product) => (
-                                <div key={product._id} className="product-card">
+                                <div
+                                    key={product._id}
+                                    className="product-card"
+                                    onClick={() => handleProductClick(product._id)}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     <div className="product-image-container">
                                         <img
                                             src={product.images?.[0] || '/images/placeholder-flower.jpg'}
@@ -219,10 +243,16 @@ const CatalogPage = () => {
                                         </div>
 
                                         <div className="product-actions">
-                                            <button className="btn-add-to-cart">
+                                            <button
+                                                className="btn-add-to-cart"
+                                                onClick={(e) => handleAddToCart(e, product)}
+                                            >
                                                 В корзину
                                             </button>
-                                            <button className="btn-favorite">
+                                            <button
+                                                className="btn-favorite"
+                                                onClick={(e) => handleAddToFavorite(e, product)}
+                                            >
                                                 ♡
                                             </button>
                                         </div>

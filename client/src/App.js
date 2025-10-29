@@ -737,6 +737,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'react-toastify/dist/ReactToastify.css';
 import CatalogPage from "./components/CatalogPage/CatalogPage";
+import ProductDetails from "./components/ProductDetails/ProductDetails"
 
 const AppContent = ({ children, showHeader, ...props }) => {
   const location = useLocation();
@@ -941,6 +942,8 @@ const App = () => {
                     />
                   } />
                   <Route path="/catalog" element={<CatalogPage />} />
+                  {/* Добавляем маршрут для страницы товара */}
+                  <Route path="/product/:id" element={<ProductDetails />} />
 
                   {/* Добавьте сюда другие маршруты по мере необходимости */}
                   <Route path="/about" element={<div>Страница о нас</div>} />
