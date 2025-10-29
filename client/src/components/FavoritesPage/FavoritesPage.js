@@ -1,106 +1,94 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useFavorites } from '../../hooks/useFavorites';
-import './CatalogPage.css';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { toast } from 'react-toastify';
+import './FavoritesPage.css';
 
-const CatalogPage = () => {
-    const [products, setProducts] = useState([]);
+const FavoritesPage = () => {
+    const [favoriteProducts, setFavoriteProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filters, setFilters] = useState({
-        type: '',
-        occasion: '',
-        recipient: '',
-        search: ''
-    });
-    const location = useLocation();
     const navigate = useNavigate();
-    const { toggleFavorite, isFavorite } = useFavorites();
+    const { isAuthenticated, token } = useAuth();
 
-    // Прокрутка вверх при монтировании компонента и изменении фильтров
+    // Прокрутка вверх при монтировании компонента
     useEffect(() => {
-        // Прокручиваем страницу вверх
         window.scrollTo({
             top: 0,
             left: 0,
-            behavior: 'smooth' // Плавная прокрутка
+            behavior: 'smooth'
         });
-    }, [location.search]); // Зависимость от параметров поиска
+    }, []);
 
-    // Парсим параметры URL при загрузке и изменении location
     useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        const newFilters = {
-            type: searchParams.get('type') || '',
-            occasion: searchParams.get('occasion') || '',
-            recipient: searchParams.get('recipient') || '',
-            search: searchParams.get('search') || ''
-        };
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+        fetchFavorites();
+        // eslint-disable-next-line
+    }, [isAuthenticated, navigate]);
 
-        setFilters(newFilters);
-        fetchProducts(newFilters);
-    }, [location.search]);
-
-    const fetchProducts = async (filterParams) => {
+    const fetchFavorites = async () => {
         try {
             setLoading(true);
             setError(null);
 
-            // Строим query string для фильтров
-            const queryParams = new URLSearchParams();
+            const decoded = JSON.parse(atob(token.split('.')[1]));
+            const userId = decoded.userId;
 
-            if (filterParams.type) queryParams.append('type', filterParams.type);
-            if (filterParams.occasion) queryParams.append('occasion', filterParams.occasion);
-            if (filterParams.recipient) queryParams.append('recipient', filterParams.recipient);
-            if (filterParams.search) queryParams.append('search', filterParams.search);
-
-            const url = `${process.env.REACT_APP_API_URL}/api/products?${queryParams.toString()}`;
-            const response = await fetch(url);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}/favorites`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
 
             if (!response.ok) {
-                throw new Error('Ошибка при загрузке товаров');
+                throw new Error('Ошибка при загрузке избранных товаров');
             }
 
-            const data = await response.json();
-            setProducts(data.products || []);
+            const favorites = await response.json();
+            setFavoriteProducts(favorites);
         } catch (err) {
             setError(err.message);
-            console.error('Error fetching products:', err);
+            console.error('Error fetching favorites:', err);
         } finally {
             setLoading(false);
         }
     };
 
-    // Функция для обработки клика по карточке товара
+    const handleRemoveFromFavorites = async (productId) => {
+        try {
+            const decoded = JSON.parse(atob(token.split('.')[1]));
+            const userId = decoded.userId;
+
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${userId}/favorites/${productId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при удалении из избранного');
+            }
+
+            setFavoriteProducts(prev => prev.filter(product => product._id !== productId));
+            toast.success('Товар удален из избранного');
+        } catch (error) {
+            console.error('Error removing from favorites:', error);
+            toast.error('Ошибка при удалении из избранного');
+        }
+    };
+
     const handleProductClick = (productId) => {
         navigate(`/product/${productId}`);
     };
 
-    // Функция для добавления в корзину
     const handleAddToCart = (e, product) => {
-        e.stopPropagation(); // Останавливаем всплытие события
-        console.log('Добавлено в корзину:', product);
-        // TODO: Добавить логику добавления в корзину
-    };
-
-    // Функция для добавления в избранное
-    const handleAddToFavorite = (e, product) => {
-        e.stopPropagation(); // Останавливаем всплытие события
-        console.log('Добавлено в избранное:', product);
-        // TODO: Добавить логику добавления в избранное
-    };
-
-    // Функция для добавления/удаления из избранного
-    const handleToggleFavorite = async (e, product) => {
         e.stopPropagation();
-        const success = await toggleFavorite(product._id, isFavorite(product._id));
-        if (success) {
-            // Можно обновить локальное состояние если нужно
-        }
-    };
-
-    const clearFilters = () => {
-        navigate('/catalog');
+        console.log('Добавлено в корзину:', product);
+        toast.info('Товар добавлен в корзину');
     };
 
     const formatPrice = (price) => {
@@ -111,25 +99,15 @@ const CatalogPage = () => {
         }).format(price);
     };
 
-    const getActiveFiltersText = () => {
-        const activeFilters = [];
-        if (filters.type) activeFilters.push(`Тип: ${filters.type === 'single' ? 'Одиночные' : 'Букеты'}`);
-        if (filters.occasion) activeFilters.push(`Повод: ${filters.occasion}`);
-        if (filters.recipient) activeFilters.push(`Кому: ${filters.recipient}`);
-        if (filters.search) activeFilters.push(`Поиск: "${filters.search}"`);
-
-        return activeFilters.length > 0 ? activeFilters.join(', ') : 'Все товары';
-    };
-
     if (loading) {
         return (
-            <div className="catalog-page">
+            <div className="favorites-page">
                 <div className="container">
-                    <div className="catalog-loading">
+                    <div className="favorites-loading">
                         <div className="spinner-border text-primary" role="status">
                             <span className="visually-hidden">Загрузка...</span>
                         </div>
-                        <p>Загрузка товаров...</p>
+                        <p>Загрузка избранных товаров...</p>
                     </div>
                 </div>
             </div>
@@ -138,14 +116,14 @@ const CatalogPage = () => {
 
     if (error) {
         return (
-            <div className="catalog-page">
+            <div className="favorites-page">
                 <div className="container">
-                    <div className="catalog-error">
+                    <div className="favorites-error">
                         <h2>Ошибка</h2>
                         <p>{error}</p>
                         <button
                             className="btn btn-primary"
-                            onClick={() => window.location.reload()}
+                            onClick={fetchFavorites}
                         >
                             Попробовать снова
                         </button>
@@ -156,44 +134,42 @@ const CatalogPage = () => {
     }
 
     return (
-        <div className="catalog-page">
+        <div className="favorites-page">
             <div className="container">
-                {/* Заголовок и фильтры */}
-                <div className="catalog-header">
-                    <h1 className="catalog-title">Каталог цветов</h1>
-                    <div className="catalog-filters-info">
-                        <span className="active-filters">{getActiveFiltersText()}</span>
-                        {(filters.type || filters.occasion || filters.recipient || filters.search) && (
-                            <button
-                                className="clear-filters-btn"
-                                onClick={clearFilters}
-                            >
-                                Очистить фильтры
-                            </button>
-                        )}
+                {/* Заголовок как в каталоге */}
+                <div className="favorites-header">
+                    <h1 className="favorites-title">Избранные товары</h1>
+                    <div className="favorites-info">
+                        <span className="favorites-count">
+                            {favoriteProducts.length > 0
+                                ? `У вас ${favoriteProducts.length} избранных товаров`
+                                : 'У вас пока нет избранных товаров'
+                            }
+                        </span>
                     </div>
                 </div>
 
-                {/* Результаты поиска */}
-                <div className="catalog-results">
+                {/* Контент как в каталоге */}
+                <div className="favorites-results">
                     <p className="results-count">
-                        Найдено товаров: <strong>{products.length}</strong>
+                        Найдено товаров: <strong>{favoriteProducts.length}</strong>
                     </p>
 
-                    {products.length === 0 ? (
+                    {favoriteProducts.length === 0 ? (
                         <div className="no-products">
-                            <h3>Товары не найдены</h3>
-                            <p>Попробуйте изменить параметры фильтрации</p>
+                            <div className="empty-favorites-icon">💔</div>
+                            <h3>Список избранного пуст</h3>
+                            <p>Добавляйте товары в избранное, чтобы не потерять их</p>
                             <button
                                 className="btn btn-primary"
-                                onClick={clearFilters}
+                                onClick={() => navigate('/catalog')}
                             >
-                                Показать все товары
+                                Перейти в каталог
                             </button>
                         </div>
                     ) : (
                         <div className="products-grid">
-                            {products.map((product) => (
+                            {favoriteProducts.map((product) => (
                                 <div
                                     key={product._id}
                                     className="product-card"
@@ -216,6 +192,16 @@ const CatalogPage = () => {
                                                 🔥 Популярный
                                             </span>
                                         )}
+                                        <button
+                                            className="remove-favorite-btn"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleRemoveFromFavorites(product._id);
+                                            }}
+                                            title="Удалить из избранного"
+                                        >
+                                            ❌
+                                        </button>
                                     </div>
 
                                     <div className="product-info">
@@ -261,10 +247,14 @@ const CatalogPage = () => {
                                                 В корзину
                                             </button>
                                             <button
-                                                className={`btn-favorite ${isFavorite(product._id) ? 'favorited' : ''}`}
-                                                onClick={(e) => handleToggleFavorite(e, product)}
+                                                className="btn-remove-favorite"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleRemoveFromFavorites(product._id);
+                                                }}
+                                                title="Удалить из избранного"
                                             >
-                                                {isFavorite(product._id) ? '❤️' : '♡'}
+                                                Удалить
                                             </button>
                                         </div>
                                     </div>
@@ -278,4 +268,4 @@ const CatalogPage = () => {
     );
 };
 
-export default CatalogPage;
+export default FavoritesPage;

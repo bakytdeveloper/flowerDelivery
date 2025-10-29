@@ -93,7 +93,7 @@ const sendOTP = async (email, purpose = 'registration') => {
                     </p>
                 </div>
                 <div style="background: #2c3e50; padding: 15px; text-align: center; color: white; font-size: 12px;">
-                    <p style="margin: 0;">© 2024 FlowerKZ. Все права защищены.</p>
+                    <p style="margin: 0;">© 2025 FlowerKZ. Все права защищены.</p>
                 </div>
             </div>
         ` :
@@ -118,7 +118,7 @@ const sendOTP = async (email, purpose = 'registration') => {
                     </p>
                 </div>
                 <div style="background: #2c3e50; padding: 15px; text-align: center; color: white; font-size: 12px;">
-                    <p style="margin: 0;">© 2024 FlowerKZ. Все права защищены.</p>
+                    <p style="margin: 0;">© 2025 FlowerKZ. Все права защищены.</p>
                 </div>
             </div>
         `;
@@ -127,6 +127,7 @@ const sendOTP = async (email, purpose = 'registration') => {
         console.log(`📨 Отправка email на: ${email}`);
         const info = await transporter.sendMail({
             from: `"FlowerKZ" <${process.env.SMTP_FROM}>`,
+            // from: `"FlowerKZ" <${process.env.SMTP_FROM}>`,
             to: email,
             subject: subject,
             html: html,

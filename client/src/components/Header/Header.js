@@ -394,7 +394,7 @@ const Header = ({
                             >
                                 <FaRegHeart className={`favorites-icon ${favoritesCount > 0 ? 'has-favorites' : ''}`} />
                                 {favoritesCount > 0 && (
-                                    <span className="favorites-badge">{favoritesCount}</span>
+                                    <span className="favorites-badge-count">{favoritesCount}</span>
                                 )}
                                 <span className="button-text">Избранное</span>
                             </div>
@@ -446,10 +446,12 @@ const Header = ({
                                 tabIndex={0}
                                 onKeyPress={(e) => e.key === 'Enter' && handleCartClick()}
                             >
-                                <FaShoppingCart className="cart-icon" />
-                                {cartItemsCount > 0 && (
-                                    <span className="cart-badge">{cartItemsCount}</span>
-                                )}
+                                <div className="cart-icon-wrapper">
+                                    <FaShoppingCart className="cart-icon" />
+                                    {cartItemsCount > 0 && (
+                                        <span className="cart-badge">{cartItemsCount > 99 ? '99+' : cartItemsCount}</span>
+                                    )}
+                                </div>
                                 <span className="button-text">Корзина</span>
                             </div>
                         </div>

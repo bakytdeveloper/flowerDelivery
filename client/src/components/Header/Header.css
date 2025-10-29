@@ -759,3 +759,158 @@
     color: #e84393;
     font-weight: 600;
 }
+
+
+/* Стили для избранного */
+.favorites-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #f5f6f8;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.favorites-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.favorites-icon {
+    font-size: 18px;
+    transition: color 0.3s ease;
+    flex-shrink: 0;
+    margin-right: 0;
+}
+
+.favorites-icon.has-favorites {
+    color: #e53e3e;
+}
+
+.cart-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Бейдж избранного */
+.favorites-badge-count {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: linear-gradient(135deg, #e53e3e, #fc8181) !important;
+    color: white;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold!important;
+    border: 2px solid white;
+    padding: 0 4px;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Бейдж корзины */
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #2d5016, #4a7c2a);
+    color: white;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    border: 2px solid white;
+    padding: 0 4px;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Обертка для иконки корзины */
+.cart-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #f5f6f8;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* Контейнер для иконки корзины с бейджем */
+.cart-button {
+    position: relative;
+}
+
+.cart-icon {
+    font-size: 18px;
+    transition: color 0.3s ease;
+    flex-shrink: 0;
+    margin-right: 0;
+}
+
+/* Адаптивность для бейджей */
+@media (max-width: 768px) {
+    .favorites-badge-count,
+    .cart-badge {
+        top: -6px;
+        right: -6px;
+        min-width: 16px;
+        height: 16px;
+        font-size: 9px;
+        border-width: 1.5px;
+    }
+
+    .favorites-button,
+    .cart-button {
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .favorites-badge-count,
+    .cart-badge {
+        top: -5px;
+        right: -5px;
+        min-width: 14px;
+        height: 14px;
+        font-size: 8px;
+        border-width: 1px;
+    }
+
+    .favorites-button,
+    .cart-button {
+        padding: 6px 10px;
+    }
+}

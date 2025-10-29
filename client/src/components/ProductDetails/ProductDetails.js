@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useFavorites } from '../../hooks/useFavorites';
 import './ProductDetails.css';
 
 const ProductDetails = () => {
@@ -10,6 +11,9 @@ const ProductDetails = () => {
     const [error, setError] = useState(null);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [quantity, setQuantity] = useState(1);
+    const { toggleFavorite, isFavorite } = useFavorites();
+
+
 
     useEffect(() => {
         fetchProductDetails();
@@ -70,9 +74,11 @@ const ProductDetails = () => {
         // Можно добавить уведомление или модальное окно
     };
 
-    const handleAddToFavorites = () => {
-        // TODO: Добавить логику добавления в избранное
-        console.log('Добавлено в избранное:', product);
+    const handleAddToFavorites = async () => {
+        const success = await toggleFavorite(product._id, isFavorite(product._id));
+        if (success) {
+            // Можно показать уведомление или обновить состояние
+        }
     };
 
     const handleImageClick = (index) => {
@@ -320,10 +326,10 @@ const ProductDetails = () => {
                                     {product.quantity > 0 ? '🛒 Добавить в корзину' : '❌ Нет в наличии'}
                                 </button>
                                 <button
-                                    className="btn-favorite-large"
+                                    className={`btn-favorite-large ${isFavorite(product._id) ? 'favorited' : ''}`}
                                     onClick={handleAddToFavorites}
                                 >
-                                    ♡ В избранное
+                                    {isFavorite(product._id) ? '❤️ В избранном' : '♡ В избранное'}
                                 </button>
                             </div>
 

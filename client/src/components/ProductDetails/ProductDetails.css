@@ -511,3 +511,15 @@
 .product-details-content {
     animation: fadeIn 0.6s ease;
 }
+
+.btn-favorite.favorited {
+    color: #ff6b6b;
+    background: #fff5f5;
+    border-color: #ff6b6b;
+}
+
+.btn-favorite-large.favorited {
+    background: #fff5f5;
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+}
