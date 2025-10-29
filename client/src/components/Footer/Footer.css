@@ -339,6 +339,7 @@
 
     .social-link {
         min-width: 200px;
+        width: 100%;
         justify-content: flex-start; /* Выравниваем по левому краю */
     }
 }
