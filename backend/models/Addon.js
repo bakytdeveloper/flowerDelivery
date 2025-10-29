@@ -22,6 +22,9 @@ const addonSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
+    originalPrice: {
+        type: Number
+    },
     quantity: {
         type: Number,
         required: true,

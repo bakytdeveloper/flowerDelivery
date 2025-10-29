@@ -1,12 +1,18 @@
 import express from 'express';
-import { wrapperController } from '../controllers/WrapperController.js';
+import {
+    createWrapper,
+    getAvailableWrappers,
+    getAllWrappers,
+    updateWrapper,
+    deleteWrapper
+}from '../controllers/wrapperController.js';
 
 const router = express.Router();
 
-router.post('/', wrapperController.createWrapper);
-router.get('/available', wrapperController.getAvailableWrappers);
-router.get('/', wrapperController.getAllWrappers);
-router.put('/:id', wrapperController.updateWrapper);
-router.delete('/:id', wrapperController.deleteWrapper);
+router.post('/', createWrapper);
+router.get('/available', getAvailableWrappers);
+router.get('/', getAllWrappers);
+router.put('/:id', updateWrapper);
+router.delete('/:id', deleteWrapper);
 
 export default router;

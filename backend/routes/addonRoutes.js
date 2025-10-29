@@ -1,13 +1,20 @@
 import express from 'express';
-import { addonController } from '../controllers/AddonController.js';
+import {
+    createAddon,
+    getAvailableAddons,
+    getAddonsByType,
+    getAllAddons,
+    updateAddon,
+    deleteAddon
+} from '../controllers/addonController.js';
 
 const router = express.Router();
 
-router.post('/', addonController.createAddon);
-router.get('/available', addonController.getAvailableAddons);
-router.get('/type/:type', addonController.getAddonsByType);
-router.get('/', addonController.getAllAddons);
-router.put('/:id', addonController.updateAddon);
-router.delete('/:id', addonController.deleteAddon);
+router.post('/', createAddon);
+router.get('/available', getAvailableAddons);
+router.get('/type/:type', getAddonsByType);
+router.get('/', getAllAddons);
+router.put('/:id', updateAddon);
+router.delete('/:id', deleteAddon);
 
 export default router;
