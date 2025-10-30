@@ -116,7 +116,7 @@
     position: absolute;
     top: 1rem;
     left: 1rem;
-    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52) !important;
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
@@ -181,7 +181,7 @@
 }
 
 .popular-tag {
-    background: linear-gradient(135deg, #ff9f43, #feca57);
+    background: linear-gradient(135deg, #ffa200, #f86604) !important;
     color: white;
     padding: 6px 12px;
     border-radius: 15px;

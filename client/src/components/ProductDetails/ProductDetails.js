@@ -607,7 +607,7 @@ const ProductDetails = () => {
                             <h1 className="product-title">{product.name}</h1>
                             {product.soldCount > 0 && (
                                 <span className="popular-tag">
-                                    🔥 Продано: {product.soldCount}
+                                    <span className="popular-badge-fire">🔥</span> Продано: <span style={{fontWeight:"bold"}}>{product.soldCount}</span>
                                 </span>
                             )}
                         </div>
