@@ -140,10 +140,6 @@ const HitsSection = () => {
         );
     }
 
-    if (!products || products.length === 0) {
-        return null;
-    }
-
     // ВАЖНО: Добавляем проверку на пустой массив
     if (!products || products.length === 0) {
         return null; // Секция скроется если нет товаров

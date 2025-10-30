@@ -3,6 +3,7 @@ import path from 'path';
 import {
     fileURLToPath
 } from 'url';
+import mongoose from 'mongoose'; // Добавьте эту строку
 
 const __filename = fileURLToPath(
     import.meta.url);
@@ -370,26 +371,96 @@ export const getAvailableFilters = async (req, res) => {
 
 // Контроллер для получения самых продаваемых цветов
 // Исправленная версия getBestSellingProducts
+// export const getBestSellingProducts = async (req, res) => {
+//     try {
+//         const userAgent = req.headers['user-agent'];
+//         const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);
+//         const limit = isMobile ? 8 : 12;
+//
+//         // Получаем только товары с продажами
+//         let products = await Product.find({
+//             isActive: true,
+//             quantity: { $gt: 0 },
+//             soldCount: { $gt: 0 }, // Только товары которые реально продавались
+//         })
+//             .sort({ soldCount: -1 })
+//             .limit(limit)
+//             .lean();
+//
+//         // Убираем fallback логику чтобы избежать дублирования
+//         // Если нет продаваемых товаров - возвращаем пустой массив
+//
+//         // Обрабатываем изображения
+//         const processedProducts = products.map((product) => {
+//             const processed = processProductImages(product, req);
+//             return {
+//                 ...processed,
+//                 truncatedDescription:
+//                     product.description?.slice(0, 100) +
+//                     (product.description?.length > 100 ? '...' : ''),
+//             };
+//         });
+//
+//         res.json(processedProducts);
+//     } catch (error) {
+//         console.error('Error fetching best selling products:', error);
+//         res.status(500).json({ message: 'Server error' });
+//     }
+// };
+
 export const getBestSellingProducts = async (req, res) => {
     try {
         const userAgent = req.headers['user-agent'];
         const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);
         const limit = isMobile ? 8 : 12;
 
-        // Получаем только товары с продажами
-        let products = await Product.find({
+        // 1️⃣ Приоритет 1: Самые продаваемые товары
+        let bestSellingProducts = await Product.find({
             isActive: true,
             quantity: { $gt: 0 },
-            soldCount: { $gt: 0 }, // Только товары которые реально продавались
+            soldCount: { $gt: 0 },
         })
             .sort({ soldCount: -1 })
             .limit(limit)
             .lean();
 
-        // Убираем fallback логику чтобы избежать дублирования
-        // Если нет продаваемых товаров - возвращаем пустой массив
+        let products = bestSellingProducts;
 
-        // Обрабатываем изображения
+        // 2️⃣ Если недостаточно - Приоритет 2: Новые товары
+        if (bestSellingProducts.length < limit) {
+            const additionalNeeded = limit - bestSellingProducts.length;
+            const existingProductIds = bestSellingProducts.map(p => p._id.toString());
+
+            const newProducts = await Product.find({
+                isActive: true,
+                quantity: { $gt: 0 },
+                _id: { $nin: existingProductIds }
+            })
+                .sort({ createdAt: -1 })
+                .limit(additionalNeeded)
+                .lean();
+
+            products = [...bestSellingProducts, ...newProducts];
+        }
+
+        // 3️⃣ Если всё ещё недостаточно - Приоритет 3: Случайные товары
+        if (products.length < limit) {
+            const stillNeeded = limit - products.length;
+            const existingProductIds = products.map(p => p._id.toString());
+
+            // Используем find с $nin вместо aggregate для простоты
+            const randomProducts = await Product.find({
+                isActive: true,
+                quantity: { $gt: 0 },
+                _id: { $nin: existingProductIds }
+            })
+                .limit(stillNeeded)
+                .lean();
+
+            products = [...products, ...randomProducts];
+        }
+
+        // Обработка изображений
         const processedProducts = products.map((product) => {
             const processed = processProductImages(product, req);
             return {
