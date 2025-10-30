@@ -189,7 +189,7 @@ const SeasonalOffers = () => {
                                         )}
                                         {product.soldCount > 0 && (
                                             <span className="popular-badge">
-                                                🔥 Популярный
+                                                <span className="popular-badge-fire">🔥</span> Популярный
                                             </span>
                                         )}
                                     </div>

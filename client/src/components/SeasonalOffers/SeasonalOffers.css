@@ -117,7 +117,7 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    background: linear-gradient(135deg, #ff9f43, #feca57);
+    background: linear-gradient(135deg, #ffa200, #f86604) !important;
     color: white;
     padding: 4px 10px;
     border-radius: 15px;
@@ -125,6 +125,13 @@
     font-weight: 600;
     box-shadow: 0 4px 12px rgba(255, 159, 67, 0.4);
     z-index: 2;
+}
+
+.popular-badge-fire {
+    border: none;
+    background-color: white!important;
+    padding: 3px;
+    border-radius: 50%;
 }
 
 .cart-product-info {
