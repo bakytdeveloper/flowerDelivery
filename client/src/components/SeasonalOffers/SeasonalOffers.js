@@ -9,11 +9,17 @@ const SeasonalOffers = () => {
     const [error, setError] = useState(null);
     const scrollContainerRef = useRef(null);
     const navigate = useNavigate();
-    const { toggleFavorite, isFavorite } = useFavorites();
+    const { toggleFavorite, isFavorite, fetchFavorites } = useFavorites();
 
     useEffect(() => {
         fetchBestSellingProducts();
     }, []);
+
+    // Загружаем избранные товары при монтировании
+    useEffect(() => {
+        fetchFavorites();
+    }, [fetchFavorites]);
+
 
     const fetchBestSellingProducts = async () => {
         try {
@@ -237,10 +243,11 @@ const SeasonalOffers = () => {
                                                 В корзину
                                             </button>
                                             <button
-                                                className={`btn-favorite ${isFavorite(product._id) ? 'favorited' : ''}`}
+                                                className={`favorite-heart-btn ${isFavorite(product._id) ? 'favorited' : ''}`}
                                                 onClick={(e) => handleToggleFavorite(e, product)}
+                                                title={isFavorite(product._id) ? 'Удалить из избранного' : 'Добавить в избранное'}
                                             >
-                                                {isFavorite(product._id) ? '❤️' : '♡'}
+                                                {isFavorite(product._id) ? '❤️' : '🤍'}
                                             </button>
                                         </div>
                                     </div>
