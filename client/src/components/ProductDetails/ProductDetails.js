@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useParams, useNavigate, useLocation} from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useFavorites } from '../../hooks/useFavorites';
 import './ProductDetails.css';
 
@@ -11,22 +11,27 @@ const ProductDetails = () => {
     const [error, setError] = useState(null);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [quantity, setQuantity] = useState(1);
+    const [wrappers, setWrappers] = useState([]);
+    const [addons, setAddons] = useState([]);
+    const [loadingWrappers, setLoadingWrappers] = useState(false);
+    const [loadingAddons, setLoadingAddons] = useState(false);
     const { toggleFavorite, isFavorite } = useFavorites();
     const location = useLocation();
 
     // Прокрутка вверх при монтировании компонента и изменении фильтров
     useEffect(() => {
-        // Прокручиваем страницу вверх
         window.scrollTo({
             top: 0,
             left: 0,
-            behavior: 'smooth' // Плавная прокрутка
+            behavior: 'smooth'
         });
-    }, [location.search]); // Зависимость от параметров поиска
-
+    }, [location.search]);
 
     useEffect(() => {
         fetchProductDetails();
+        fetchWrappers();
+        fetchAddons();
+        // eslint-disable-next-line
     }, [id]);
 
     const fetchProductDetails = async () => {
@@ -34,16 +39,12 @@ const ProductDetails = () => {
             setLoading(true);
             setError(null);
 
-            console.log('Fetching product with ID:', id); // Для отладки
-
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
 
             if (!response.ok) {
-                // Если статус 404, значит товар не найден
                 if (response.status === 404) {
                     throw new Error('Товар не найден');
                 }
-                // Если другой статус ошибки
                 const errorData = await response.json().catch(() => ({}));
                 throw new Error(errorData.message || `Ошибка сервера: ${response.status}`);
             }
@@ -63,6 +64,38 @@ const ProductDetails = () => {
         }
     };
 
+    const fetchWrappers = async () => {
+        try {
+            setLoadingWrappers(true);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/wrappers/available`);
+
+            if (response.ok) {
+                const wrappersData = await response.json();
+                setWrappers(wrappersData);
+            }
+        } catch (error) {
+            console.error('Error fetching wrappers:', error);
+        } finally {
+            setLoadingWrappers(false);
+        }
+    };
+
+    const fetchAddons = async () => {
+        try {
+            setLoadingAddons(true);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/addons/available`);
+
+            if (response.ok) {
+                const addonsData = await response.json();
+                setAddons(addonsData);
+            }
+        } catch (error) {
+            console.error('Error fetching addons:', error);
+        } finally {
+            setLoadingAddons(false);
+        }
+    };
+
     const formatPrice = (price) => {
         return new Intl.NumberFormat('ru-RU', {
             style: 'currency',
@@ -79,9 +112,7 @@ const ProductDetails = () => {
     };
 
     const handleAddToCart = () => {
-        // TODO: Добавить логику добавления в корзину
         console.log('Добавлено в корзину:', { product, quantity });
-        // Можно добавить уведомление или модальное окно
     };
 
     const handleAddToFavorites = async () => {
@@ -109,6 +140,315 @@ const ProductDetails = () => {
                 prev === 0 ? product.images.length - 1 : prev - 1
             );
         }
+    };
+
+    // Компонент для секции обёрток
+    const WrappersSection = () => {
+        if (loadingWrappers) {
+            return (
+                <section className="hits-section">
+                    <div className="container">
+                        <h2 className="hits-title">Обёртки</h2>
+                        <div className="loading-products">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Загрузка...</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        if (!wrappers || wrappers.length === 0) {
+            return null;
+        }
+
+        return (
+            <section className="hits-section">
+                <div className="container">
+                    <div className="hits-header">
+                        <h2 className="hits-title">Обёртки</h2>
+                    </div>
+
+                    <div className="hits-container">
+                        <button
+                            className="scroll-btn scroll-btn-left d-none d-md-flex"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const container = e.target.closest('.hits-container').querySelector('.hits-scroll-container');
+                                container.scrollBy({ left: -300, behavior: 'smooth' });
+                            }}
+                            aria-label="Прокрутить влево"
+                        >
+                            ‹
+                        </button>
+
+                        <div className="hits-scroll-container">
+                            <div className="hits-products-row">
+                                {wrappers.map((wrapper) => (
+                                    <div
+                                        key={wrapper._id}
+                                        className="hits-product-card"
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <div className="product-image-container">
+                                            <img
+                                                src={wrapper.image || '/images/placeholder-flower.jpg'}
+                                                alt={wrapper.name}
+                                                className="product-image"
+                                                loading="lazy"
+                                            />
+                                            {wrapper.originalPrice && wrapper.originalPrice > wrapper.price && (
+                                                <span className="discount-badge">
+                                                    -{Math.round((1 - wrapper.price / wrapper.originalPrice) * 100)}%
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div className="cart-product-info">
+                                            <h3 className="product-name">{wrapper.name}</h3>
+                                            <p className="product-description">
+                                                {wrapper.description?.length > 20
+                                                    ? `${wrapper.description.slice(0, 20)}...`
+                                                    : wrapper.description || 'Стильная упаковка для вашего букета'
+                                                }
+                                            </p>
+
+                                            <div className="product-price">
+                                                {wrapper.originalPrice && wrapper.originalPrice > wrapper.price ? (
+                                                    <>
+                                                        <span className="original-price">
+                                                            {formatPrice(wrapper.originalPrice)}
+                                                        </span>
+                                                        <span className="current-price">
+                                                            {formatPrice(wrapper.price)}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <span className="current-price">
+                                                        {formatPrice(wrapper.price)}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <div className="product-actions">
+                                                <button
+                                                    className="btn-add-to-cart"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        console.log('Добавлена обёртка в корзину:', wrapper);
+                                                    }}
+                                                >
+                                                    В корзину
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <button
+                            className="scroll-btn scroll-btn-right d-none d-md-flex"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const container = e.target.closest('.hits-container').querySelector('.hits-scroll-container');
+                                container.scrollBy({ left: 300, behavior: 'smooth' });
+                            }}
+                            aria-label="Прокрутить вправо"
+                        >
+                            ›
+                        </button>
+                    </div>
+
+                    <div className="scroll-indicators d-md-none">
+                        <button
+                            className="scroll-indicator-btn"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const container = document.querySelector('.hits-section:first-of-type .hits-scroll-container');
+                                container.scrollBy({ left: -300, behavior: 'smooth' });
+                            }}
+                            aria-label="Прокрутить влево"
+                        >
+                            ‹
+                        </button>
+                        <span className="scroll-hint">Проведите для прокрутки</span>
+                        <button
+                            className="scroll-indicator-btn"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const container = document.querySelector('.hits-section:first-of-type .hits-scroll-container');
+                                container.scrollBy({ left: 300, behavior: 'smooth' });
+                            }}
+                            aria-label="Прокрутить вправо"
+                        >
+                            ›
+                        </button>
+                    </div>
+                </div>
+            </section>
+        );
+    };
+
+    // Компонент для секции дополнительных товаров
+    const AddonsSection = () => {
+        if (loadingAddons) {
+            return (
+                <section className="hits-section">
+                    <div className="container">
+                        <h2 className="hits-title">Дополнительные товары</h2>
+                        <div className="loading-products">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Загрузка...</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        if (!addons || addons.length === 0) {
+            return null;
+        }
+
+        return (
+            <section className="hits-section">
+                <div className="container">
+                    <div className="hits-header">
+                        <h2 className="hits-title">Дополнительные товары</h2>
+                    </div>
+
+                    <div className="hits-container">
+                        <button
+                            className="scroll-btn scroll-btn-left d-none d-md-flex"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const container = e.target.closest('.hits-container').querySelector('.hits-scroll-container');
+                                container.scrollBy({ left: -300, behavior: 'smooth' });
+                            }}
+                            aria-label="Прокрутить влево"
+                        >
+                            ‹
+                        </button>
+
+                        <div className="hits-scroll-container">
+                            <div className="hits-products-row">
+                                {addons.map((addon) => (
+                                    <div
+                                        key={addon._id}
+                                        className="hits-product-card"
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <div className="product-image-container">
+                                            <img
+                                                src={addon.image || '/images/placeholder-flower.jpg'}
+                                                alt={addon.name}
+                                                className="product-image"
+                                                loading="lazy"
+                                            />
+                                            {addon.originalPrice && addon.originalPrice > addon.price && (
+                                                <span className="discount-badge">
+                                                    -{Math.round((1 - addon.price / addon.originalPrice) * 100)}%
+                                                </span>
+                                            )}
+                                            <span className="popular-badge">
+                                                {addon.typeLabel || 'Дополнение'}
+                                            </span>
+                                        </div>
+
+                                        <div className="cart-product-info">
+                                            <h3 className="product-name">{addon.name}</h3>
+                                            <p className="product-description">
+                                                {addon.description?.length > 20
+                                                    ? `${addon.description.slice(0, 20)}...`
+                                                    : addon.description || 'Отличное дополнение к вашему заказу'
+                                                }
+                                            </p>
+
+                                            <div className="product-meta">
+                                                <span className="product-occasion">
+                                                    {addon.typeLabel || addon.type}
+                                                </span>
+                                            </div>
+
+                                            <div className="product-price">
+                                                {addon.originalPrice && addon.originalPrice > addon.price ? (
+                                                    <>
+                                                        <span className="original-price">
+                                                            {formatPrice(addon.originalPrice)}
+                                                        </span>
+                                                        <span className="current-price">
+                                                            {formatPrice(addon.price)}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <span className="current-price">
+                                                        {formatPrice(addon.price)}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <div className="product-actions">
+                                                <button
+                                                    className="btn-add-to-cart"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        console.log('Добавлен доп. товар в корзину:', addon);
+                                                    }}
+                                                >
+                                                    В корзину
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <button
+                            className="scroll-btn scroll-btn-right d-none d-md-flex"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const container = e.target.closest('.hits-container').querySelector('.hits-scroll-container');
+                                container.scrollBy({ left: 300, behavior: 'smooth' });
+                            }}
+                            aria-label="Прокрутить вправо"
+                        >
+                            ›
+                        </button>
+                    </div>
+
+                    <div className="scroll-indicators d-md-none">
+                        <button
+                            className="scroll-indicator-btn"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const containers = document.querySelectorAll('.hits-section .hits-scroll-container');
+                                const container = containers[containers.length - 1];
+                                container.scrollBy({ left: -300, behavior: 'smooth' });
+                            }}
+                            aria-label="Прокрутить влево"
+                        >
+                            ‹
+                        </button>
+                        <span className="scroll-hint">Проведите для прокрутки</span>
+                        <button
+                            className="scroll-indicator-btn"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const containers = document.querySelectorAll('.hits-section .hits-scroll-container');
+                                const container = containers[containers.length - 1];
+                                container.scrollBy({ left: 300, behavior: 'smooth' });
+                            }}
+                            aria-label="Прокрутить вправо"
+                        >
+                            ›
+                        </button>
+                    </div>
+                </div>
+            </section>
+        );
     };
 
     if (loading) {
@@ -353,6 +693,12 @@ const ProductDetails = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Секция обёрток */}
+                <WrappersSection />
+
+                {/* Секция дополнительных товаров */}
+                <AddonsSection />
 
                 {/* Дополнительная информация */}
                 <div className="product-additional-info">
