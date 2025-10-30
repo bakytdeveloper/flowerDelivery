@@ -31,7 +31,6 @@ const ProductDetails = () => {
         fetchProductDetails();
         fetchWrappers();
         fetchAddons();
-        // eslint-disable-next-line
     }, [id]);
 
     const fetchProductDetails = async () => {
@@ -144,6 +143,11 @@ const ProductDetails = () => {
 
     // Компонент для секции обёрток
     const WrappersSection = () => {
+        // Скрываем секцию обёрток для букетов
+        if (product?.type === 'bouquet') {
+            return null;
+        }
+
         if (loadingWrappers) {
             return (
                 <section className="hits-section">
@@ -231,7 +235,7 @@ const ProductDetails = () => {
                                                 )}
                                             </div>
 
-                                            <div className="product-actions">
+                                            <div className="product-actions-wrapper">
                                                 <button
                                                     className="btn-add-to-cart"
                                                     onClick={(e) => {
@@ -389,7 +393,7 @@ const ProductDetails = () => {
                                                 )}
                                             </div>
 
-                                            <div className="product-actions">
+                                            <div className="product-actions-wrapper">
                                                 <button
                                                     className="btn-add-to-cart"
                                                     onClick={(e) => {
@@ -694,7 +698,7 @@ const ProductDetails = () => {
                     </div>
                 </div>
 
-                {/* Секция обёрток */}
+                {/* Секция обёрток (скрывается для букетов) */}
                 <WrappersSection />
 
                 {/* Секция дополнительных товаров */}

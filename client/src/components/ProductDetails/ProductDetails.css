@@ -527,3 +527,67 @@
     border-color: #ff6b6b;
     color: #ff6b6b;
 }
+
+
+/* Стили для фиксированного расположения кнопок в карточках */
+.cart-product-info {
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.product-actions-wrapper {
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+/* Обеспечиваем одинаковую высоту всех карточек */
+.hits-product-card {
+    flex: 0 0 auto;
+    width: 280px;
+    background: rgba(51, 65, 85, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.hits-product-card .cart-product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.hits-product-card .product-actions-wrapper {
+    margin-top: auto;
+}
+
+/* Убедимся, что кнопки всегда внизу */
+.btn-add-to-cart {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+.btn-add-to-cart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.product-price {
+    justify-content: space-between;
+}
