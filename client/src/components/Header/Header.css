@@ -966,8 +966,8 @@
 /* Бейдж избранного */
 .favorites-badge-count {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: -6px;
+    right: -6px;
     background: linear-gradient(135deg, #e53e3e, #fc8181);
     color: white;
     border-radius: 50%;
@@ -986,12 +986,16 @@
     font-family: Arial, sans-serif;
 }
 
+.cart-icon-wrapper {
+    background-color: #00aaff;
+}
+
 /* Бейдж корзины */
 .cart-badge {
     position: absolute;
-    top: -8px;
-    right: -8px;
-    background: linear-gradient(135deg, #2d5016, #4a7c2a);
+    top: -6px;
+    right: -6px;
+    background: linear-gradient(135deg, #2d5016, #4a7c2a) !important;
     color: white;
     border-radius: 50%;
     min-width: 20px;

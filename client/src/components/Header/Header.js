@@ -464,12 +464,13 @@ const Header = ({
                                 tabIndex={0}
                                 onKeyPress={(e) => e.key === 'Enter' && handleCartClick()}
                             >
-                                <div className="cart-icon-wrapper">
+                                {/*<div className="cart-icon-wrapper">*/}
                                     <FaShoppingCart className="cart-icon" />
                                     {cartItemsCount > 0 && (
                                         <span className="cart-badge">{cartItemsCount > 99 ? '99+' : cartItemsCount}</span>
+                                        // <span className="cart-badge">{cartItemsCount > 99 ? '99+' : cartItemsCount}</span>
                                     )}
-                                </div>
+                                {/*</div>*/}
                                 <span className="button-text">Корзина</span>
                             </div>
                         </div>
