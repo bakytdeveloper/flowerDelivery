@@ -663,7 +663,24 @@ const CartPage = () => {
     return (
         <div className="cart-page">
             <div className="container">
+
                 <div className="cart-header">
+                    {/* Хлебные крошки */}
+                    <nav className="breadcrumb-nav">
+                        <button
+                            className="breadcrumb-back"
+                            onClick={() => navigate(-1)}
+                        >
+                            ← Назад
+                        </button>
+                        <span className="breadcrumb-separator">/</span>
+                        <button
+                            className="breadcrumb-link"
+                            onClick={() => navigate('/catalog')}
+                        >
+                            Каталог
+                        </button>
+                    </nav>
                     <h1 className="cart-title">Корзина</h1>
                     {allItems.length > 0 && (
                         <button

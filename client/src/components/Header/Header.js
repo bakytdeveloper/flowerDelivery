@@ -44,6 +44,7 @@ const Header = ({
     }, [isAuthenticated]);
 
     // Функция для получения количества товаров в корзине
+// Функция для получения количества товаров в корзине
     const fetchCartItemsCount = useCallback(async () => {
         try {
             const headers = {};
@@ -63,7 +64,25 @@ const Header = ({
 
             if (response.ok) {
                 const cartData = await response.json();
-                const totalCount = cartData.items?.reduce((total, item) => total + item.quantity, 0) || 0;
+
+                // ОБНОВЛЕННЫЙ ПОДСЧЕТ: учитываем новую структуру корзины
+                let totalCount = 0;
+
+                if (cartData.cart) {
+                    // Новая структура: cart.cart.flowerItems и cart.cart.addonItems
+                    const flowerItemsCount = cartData.cart.flowerItems?.reduce((total, item) => total + item.quantity, 0) || 0;
+                    const addonItemsCount = cartData.cart.addonItems?.reduce((total, item) => total + item.quantity, 0) || 0;
+                    totalCount = flowerItemsCount + addonItemsCount;
+                } else if (cartData.flowerItems || cartData.addonItems) {
+                    // Альтернативная структура: прямые поля
+                    const flowerItemsCount = cartData.flowerItems?.reduce((total, item) => total + item.quantity, 0) || 0;
+                    const addonItemsCount = cartData.addonItems?.reduce((total, item) => total + item.quantity, 0) || 0;
+                    totalCount = flowerItemsCount + addonItemsCount;
+                } else if (cartData.items) {
+                    // Старая структура для обратной совместимости
+                    totalCount = cartData.items?.reduce((total, item) => total + item.quantity, 0) || 0;
+                }
+
                 setCartItemsCount(totalCount);
             } else if (response.status === 404) {
                 setCartItemsCount(0);
@@ -74,7 +93,9 @@ const Header = ({
         }
     }, [apiUrl, token]);
 
+
     // Функция для получения количества избранных товаров
+// Функция для получения количества избранных товаров
     const fetchFavoritesCount = useCallback(async () => {
         if (!isAuthenticated || !token) {
             setFavoritesCount(0);
@@ -108,12 +129,15 @@ const Header = ({
             }
 
             const favorites = await response.json();
-            setFavoritesCount(favorites.length || 0);
+            // Убедимся, что favorites - это массив
+            const favoritesArray = Array.isArray(favorites) ? favorites : [];
+            setFavoritesCount(favoritesArray.length || 0);
         } catch (error) {
             console.error('Error fetching favorites:', error);
             setFavoritesCount(0);
         }
     }, [token, apiUrl, isAuthenticated, userRole]);
+
 
     // Получаем количество избранных и корзины при изменении аутентификации
     useEffect(() => {
