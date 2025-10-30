@@ -158,6 +158,57 @@ const baseCartItemSchema = {
 };
 
 // Схема для цветов (с оберткой)
+// const flowerCartItemSchema = new mongoose.Schema({
+//     ...baseCartItemSchema,
+//     product: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Product',
+//         required: true
+//     },
+//     flowerType: {
+//         type: String,
+//         enum: ['single', 'bouquet'],
+//         required: true
+//     },
+//     flowerColor: {
+//         name: {
+//             type: String
+//         },
+//         value: {
+//             type: String
+//         }
+//     },
+//     flowerNames: [{
+//         type: String
+//     }],
+//     stemLength: {
+//         type: Number
+//     },
+//     // Обертка для цветов
+//     wrapper: {
+//         wrapperId: {
+//             type: mongoose.Schema.Types.ObjectId,
+//             ref: 'Wrapper'
+//         },
+//         name: {
+//             type: String
+//         },
+//         price: {
+//             type: Number,
+//             default: 0
+//         },
+//         image: {
+//             type: String
+//         }
+//     },
+//     itemType: {
+//         type: String,
+//         enum: ['flower'],
+//         default: 'flower'
+//     }
+// });
+
+// В схеме flowerCartItemSchema добавляем поле для типа упаковки
 const flowerCartItemSchema = new mongoose.Schema({
     ...baseCartItemSchema,
     product: {
@@ -171,34 +222,28 @@ const flowerCartItemSchema = new mongoose.Schema({
         required: true
     },
     flowerColor: {
-        name: {
-            type: String
-        },
-        value: {
-            type: String
-        }
+        name: { type: String },
+        value: { type: String }
     },
-    flowerNames: [{
-        type: String
-    }],
-    stemLength: {
-        type: Number
-    },
-    // Обертка для цветов
+    flowerNames: [{ type: String }],
+    stemLength: { type: Number },
+    // Обертка для цветов - изменяем логику
     wrapper: {
         wrapperId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Wrapper'
         },
-        name: {
-            type: String
-        },
+        name: { type: String },
         price: {
             type: Number,
             default: 0
         },
-        image: {
-            type: String
+        image: { type: String },
+        // Добавляем тип упаковки
+        wrapperType: {
+            type: String,
+            enum: ['per_item', 'per_order'],
+            default: 'per_item'
         }
     },
     itemType: {
@@ -254,14 +299,24 @@ const cartSchema = new mongoose.Schema({
 
 // Middleware для расчета totals
 cartSchema.pre('save', function(next) {
-    // Считаем общее количество товаров
     const flowerItemsCount = this.flowerItems.reduce((total, item) => total + item.quantity, 0);
     const addonItemsCount = this.addonItems.reduce((total, item) => total + item.quantity, 0);
     this.totalItems = flowerItemsCount + addonItemsCount;
 
-    // Считаем общую стоимость
+    // Считаем общую стоимость с учетом типа обертки
     const flowerTotal = this.flowerItems.reduce((total, item) => {
-        return total + (item.itemTotal * item.quantity);
+        let itemTotalPrice;
+
+        if (item.flowerType === 'single' && item.wrapper && item.wrapper.wrapperId) {
+            // Для одиночных цветов с оберткой: (цена цветка * количество) + цена обертки
+            itemTotalPrice = (item.price * item.quantity) + (item.wrapper.price || 0);
+        } else {
+            // Для букетов или цветов без обертки
+            const wrapperPrice = item.wrapper ? (item.wrapper.price || 0) : 0;
+            itemTotalPrice = (item.price + wrapperPrice) * item.quantity;
+        }
+
+        return total + itemTotalPrice;
     }, 0);
 
     const addonTotal = this.addonItems.reduce((total, item) => {

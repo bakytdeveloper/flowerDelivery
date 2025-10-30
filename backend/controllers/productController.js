@@ -518,59 +518,6 @@ export const getNewestProducts = async (req, res) => {
     }
 };
 
-// // Контроллер для получения продукта по ID
-// export const getProductById = async (req, res) => {
-//     try {
-//         const product = await Product.findById(req.params.id)
-//             // .populate('admin')
-//             .lean();
-//
-//         if (!product) {
-//             return res.status(404).json({
-//                 message: 'Product not found'
-//             });
-//         }
-//
-//         if (!product.isActive) {
-//             return res.status(403).json({
-//                 message: 'Product is not available'
-//             });
-//         }
-//
-//         // Обработка изображений
-//         const processedImages = product.images?.map(image =>
-//             image.startsWith('http') ? image : `${req.protocol}://${req.get('host')}/uploads/${path.basename(image)}`
-//         );
-//
-//         // Вычисление скидки
-//         const discountPercentage = product.originalPrice && product.price ?
-//             Math.round((product.originalPrice - product.price) / product.originalPrice * 100) :
-//             0;
-//
-//         // Формирование ответа
-//         const response = {
-//             ...product,
-//             images: processedImages,
-//             discountPercentage,
-//             truncatedDescription: product.description?.slice(0, 100) +
-//                 (product.description?.length > 100 ? "..." : ""),
-//             adminInfo: product.admin ? {
-//                 id: product.admin._id,
-//                 name: product.admin.name
-//             } : null
-//         };
-//
-//         res.json({
-//             success: true,
-//             product: response
-//         });
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: error.message
-//         });
-//     }
-// };
 
 // Контроллер для получения продукта по ID
 export const getProductById = async (req, res) => {

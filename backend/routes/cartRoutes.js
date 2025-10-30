@@ -5,6 +5,7 @@ import {
     updateCartItem,
     removeFromCart,
     getCart,
+    updateWrapper,
     clearCart
 } from '../controllers/cartController.js';
 import { cartAuth } from '../middlewares/cartAuth.js';
@@ -22,6 +23,9 @@ router.post('/addons', addAddonToCart);
 
 // Обновление количества товара в корзине
 router.put('/items', updateCartItem);
+
+// В файле маршрутов добавляем новый endpoint
+router.put('/wrapper', updateWrapper);
 
 // Удаление товара из корзины
 router.delete('/items', removeFromCart);

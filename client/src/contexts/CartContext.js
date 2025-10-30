@@ -188,6 +188,42 @@ export const CartProvider = ({ children }) => {
     };
 
 
+// Добавляем новую функцию для обновления обертки
+// В CartContext.js добавляем новую функцию
+    const updateWrapper = async (itemId, wrapper) => {
+        try {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            } else {
+                const sessionId = getOrCreateSessionId();
+                headers['X-Session-Id'] = sessionId;
+            }
+
+            const response = await fetch(`${apiUrl}/api/cart/wrapper`, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify({ itemId, wrapper })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                setCart(result.cart);
+                return { success: true, cart: result.cart };
+            } else {
+                const errorData = await response.json();
+                return { success: false, error: errorData.message };
+            }
+        } catch (error) {
+            console.error('Error updating wrapper:', error);
+            return { success: false, error: 'Ошибка при обновлении обертки' };
+        }
+    };
+
+
     // Удаление товара из корзины
     const removeFromCart = async (itemId, itemType) => {
         try {
@@ -268,6 +304,7 @@ export const CartProvider = ({ children }) => {
         updateCartItem,
         removeFromCart,
         clearCart,
+        updateWrapper, // Новая функция
         refreshCart: fetchCart
     };
 
