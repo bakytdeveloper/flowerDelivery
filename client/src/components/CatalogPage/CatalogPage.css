@@ -497,13 +497,13 @@
 }
 
 .favorite-heart-btn:hover {
-    background: #b5e0ee;
+    background: #0b1e24;
     transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .favorite-heart-btn.favorited {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgb(255, 252, 205);
     color: #e74c3c;
 }
 
