@@ -438,7 +438,7 @@ export const updateCartItem = async (req, res) => {
                 // Пересчитываем itemTotal с защитой от NaN
                 const item = cart.addonItems[itemIndex];
                 const itemPrice = item.price || 0;
-                item.itemTotal = itemPrice * quantity;
+                // item.itemTotal = itemPrice * quantity;
 
                 // Проверяем, что itemTotal является валидным числом
                 if (isNaN(item.itemTotal)) {

@@ -2,6 +2,7 @@ import Order from '../models/Order.js';
 import User from '../models/User.js';
 import Product from '../models/Product.js';
 import Addon from '../models/Addon.js';
+import Cart from '../models/Cart.js';
 
 import {
     transporter
@@ -26,6 +27,7 @@ async function returnProductsToStock(products) {
         }
     }
 }
+
 
 async function deductProductsFromStock(products) {
     for (const item of products) {
@@ -151,6 +153,7 @@ async function notifyAboutLowQuantity(products) {
 }
 
 // Создание заказа
+// Создание заказа
 export const createOrder = async (req, res) => {
     try {
         const { user } = req;
@@ -163,6 +166,9 @@ export const createOrder = async (req, res) => {
             guestInfo
         } = req.body;
 
+        console.log('Creating order for user:', user);
+        console.log('Order data:', { firstName, address, phoneNumber, paymentMethod, comments });
+
         // Получаем корзину
         let cart;
         if (user.userId) {
@@ -170,6 +176,8 @@ export const createOrder = async (req, res) => {
         } else {
             cart = await Cart.findOne({ sessionId: user.sessionId });
         }
+
+        console.log('Found cart:', cart);
 
         if (!cart || (cart.flowerItems.length === 0 && cart.addonItems.length === 0)) {
             return res.status(400).json({ message: 'Корзина пуста' });
@@ -214,7 +222,8 @@ export const createOrder = async (req, res) => {
                 stemLength: item.stemLength,
                 occasion: item.occasion,
                 recipient: item.recipient,
-                wrapper: item.wrapper,
+                // Очищаем wrapper если он null или пустой
+                wrapper: item.wrapper && item.wrapper.wrapperId ? item.wrapper : undefined,
                 itemTotal: item.itemTotal,
                 itemType: 'flower'
             })),
@@ -271,6 +280,7 @@ export const createOrder = async (req, res) => {
 
 
 // Получение заказов пользователя
+// Получение заказов пользователя
 export const getUserOrders = async (req, res) => {
     try {
         const { user } = req;
@@ -299,6 +309,7 @@ export const getUserOrders = async (req, res) => {
     }
 };
 
+
 // Вспомогательная функция для форматирования заказа
 const formatOrderResponse = (order) => {
     return {
@@ -317,6 +328,7 @@ const formatOrderResponse = (order) => {
         statusHistory: order.statusHistory
     };
 };
+
 
 // Контроллер для получения всех заказов (для администратора)
 export const getAllOrders = async (req, res) => {
