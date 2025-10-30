@@ -96,6 +96,7 @@ const Header = ({
 
     // Функция для получения количества избранных товаров
 // Функция для получения количества избранных товаров
+// Функция для получения количества избранных товаров
     const fetchFavoritesCount = useCallback(async () => {
         if (!isAuthenticated || !token) {
             setFavoritesCount(0);
@@ -103,22 +104,14 @@ const Header = ({
         }
 
         try {
-            const decoded = safeJwtDecode(token);
-            const userId = decoded?.userId;
-
-            if (!userId) {
-                console.error('Invalid token: userId not found');
-                setFavoritesCount(0);
-                return;
-            }
-
             // Только для customers (админы не имеют избранного)
             if (userRole !== 'customer') {
                 setFavoritesCount(0);
                 return;
             }
 
-            const response = await fetch(`${apiUrl}/api/users/${userId}/favorites`, {
+            // ИСПРАВЛЕННЫЙ URL: используем правильный endpoint
+            const response = await fetch(`${apiUrl}/api/users/favorites`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
@@ -129,6 +122,7 @@ const Header = ({
             }
 
             const favorites = await response.json();
+
             // Убедимся, что favorites - это массив
             const favoritesArray = Array.isArray(favorites) ? favorites : [];
             setFavoritesCount(favoritesArray.length || 0);

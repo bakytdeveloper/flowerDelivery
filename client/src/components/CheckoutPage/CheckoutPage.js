@@ -69,7 +69,8 @@ const CheckoutPage = () => {
             };
 
             // Добавляем информацию о пользователе если авторизован
-            if (isAuthenticated) {
+            if (isAuthenticated && user && user._id) {
+                // Используем безопасный доступ к _id
                 orderPayload.user = user._id;
             } else {
                 orderPayload.guestInfo = {
@@ -85,25 +86,27 @@ const CheckoutPage = () => {
                 body: JSON.stringify(orderPayload)
             });
 
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Ошибка при оформлении заказа');
+            }
+
             const result = await response.json();
 
-            if (response.ok) {
-                // Очищаем корзину после успешного заказа
-                await clearCart();
+            // Очищаем корзину после успешного заказа
+            await clearCart();
 
-                // Перенаправляем на страницу успеха
-                navigate('/order-success', {
-                    state: {
-                        orderId: result.order._id,
-                        orderTotal: result.order.totalAmount
-                    }
-                });
-            } else {
-                alert(result.message || 'Ошибка при оформлении заказа');
-            }
+            // Перенаправляем на страницу успеха
+            navigate('/order-success', {
+                state: {
+                    orderId: result.order._id,
+                    orderTotal: result.order.totalAmount
+                }
+            });
+
         } catch (error) {
             console.error('Error placing order:', error);
-            alert('Произошла ошибка при оформлении заказа');
+            alert(error.message || 'Произошла ошибка при оформлении заказа');
         } finally {
             setLoading(false);
         }

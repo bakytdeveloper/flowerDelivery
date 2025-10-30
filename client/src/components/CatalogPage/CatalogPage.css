@@ -476,3 +476,50 @@
 .product-card:nth-child(4) { animation-delay: 0.25s; }
 .product-card:nth-child(5) { animation-delay: 0.3s; }
 .product-card:nth-child(6) { animation-delay: 0.35s; }
+
+
+/* Стили для кнопки избранного в карточке товара */
+.favorite-heart-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.favorite-heart-btn:hover {
+    background: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.favorite-heart-btn.favorited {
+    background: rgba(255, 255, 255, 0.95);
+    color: #e74c3c;
+}
+
+.favorite-heart-btn:active {
+    transform: scale(0.95);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .favorite-heart-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        top: 8px;
+        right: 8px;
+    }
+}
