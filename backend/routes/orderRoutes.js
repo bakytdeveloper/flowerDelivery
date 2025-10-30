@@ -70,13 +70,14 @@ const router = express.Router();
 // Публичные маршруты - используем orderAuth вместо authenticateToken
 router.post('/', orderAuth, createOrder);
 
-
 // Маршруты для зарегистрированных пользователей
 router.get('/my-orders', authenticateToken, checkRole(['customer']), getUserOrders);
+router.get('/:id', orderAuth, getOrderById);
 router.get('/last-order/:userId', authenticateToken, getLastOrder);
 
 // Маршруты для администратора
 router.get('/', authenticateToken, requireAdmin, getAllOrders);
+router.put('/:id/status', authenticateToken, requireAdmin, updateOrderStatus);
 router.get('/admin/purchase-history', authenticateToken, requireAdmin, getAdminPurchaseHistory);
 router.get('/occasion/:occasion', authenticateToken, requireAdmin, getOrdersByOccasion);
 router.get('/:orderId', authenticateToken, requireAdmin, getOrderById);

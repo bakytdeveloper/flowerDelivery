@@ -1,13 +1,12 @@
 import Order from '../models/Order.js';
 import User from '../models/User.js';
 import Product from '../models/Product.js';
+import Addon from '../models/Addon.js';
+
 import {
     transporter
 } from '../smtp/otpService.js';
-import {
-    body,
-    validationResult
-} from 'express-validator';
+
 
 // Вспомогательные функции для управления складом
 async function returnProductsToStock(products) {
@@ -151,336 +150,172 @@ async function notifyAboutLowQuantity(products) {
     }
 }
 
-// Контроллер для создания заказа
-// Контроллер для создания заказа с встроенной валидацией
+// Создание заказа
 export const createOrder = async (req, res) => {
     try {
-        // Валидация вручную
-        const { firstName, phoneNumber, address, products, totalAmount } = req.body;
-
-        if (!firstName || !firstName.trim()) {
-            return res.status(400).json({
-                success: false,
-                message: 'Имя обязательно для заполнения'
-            });
-        }
-
-        if (!phoneNumber || !phoneNumber.trim()) {
-            return res.status(400).json({
-                success: false,
-                message: 'Номер телефона обязателен для заполнения'
-            });
-        }
-
-        if (!address || !address.trim()) {
-            return res.status(400).json({
-                success: false,
-                message: 'Адрес обязателен для заполнения'
-            });
-        }
-
-        if (!products || !Array.isArray(products) || products.length === 0) {
-            return res.status(400).json({
-                success: false,
-                message: 'Заказ должен содержать хотя бы один товар'
-            });
-        }
-
-        if (!totalAmount || isNaN(totalAmount)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Общая сумма должна быть числом'
-            });
-        }
-
-        // Остальной код контроллера...
+        const { user } = req;
         const {
-            user,
-            guestInfo,
-            paymentMethod,
-            comments
-        } = req.body;
-
-        let userId = null;
-        let customerName = firstName || 'Гость';
-        let customerEmail = '';
-        let userType = 'guest';
-
-        // Определяем тип пользователя
-        if (req.user) {
-            if (req.user.role === 'admin') {
-                userId = req.user.userId;
-                userType = 'admin';
-                const admin = await User.findById(userId);
-                if (admin) {
-                    customerName = admin.name;
-                    customerEmail = admin.email;
-                }
-            } else if (req.user.role === 'customer') {
-                userId = req.user.userId;
-                userType = 'customer';
-                const customer = await User.findById(userId);
-                if (customer) {
-                    customerEmail = customer.email;
-                }
-            }
-        }
-
-        // Проверяем доступность товаров
-        for (const item of products) {
-            const product = await Product.findById(item.product);
-            if (!product || !product.isActive || product.quantity < item.quantity) {
-                return res.status(400).json({
-                    message: `Товар "${product?.name}" недоступен в нужном количестве`,
-                    product: product?.name,
-                    available: product?.quantity
-                });
-            }
-        }
-
-        // Обработка пользователя (для гостей или новых пользователей)
-        try {
-            if (user && user.email && !userId) {
-                let existingUser = await User.findOne({
-                    email: user.email
-                });
-                if (!existingUser) {
-                    const newUser = new User({
-                        name: user.firstName,
-                        email: user.email,
-                        address: user.address,
-                        role: 'customer'
-                    });
-                    const savedUser = await newUser.save();
-                    userId = savedUser._id;
-                    customerName = user.firstName;
-                    customerEmail = user.email;
-                    userType = 'customer';
-                } else {
-                    userId = existingUser._id;
-                    customerName = existingUser.name;
-                    customerEmail = existingUser.email;
-                    userType = 'customer';
-                }
-            } else if (guestInfo && guestInfo.name && !userId) {
-                customerName = guestInfo.name;
-                customerEmail = guestInfo.email || '';
-                userType = 'guest';
-            }
-        } catch (error) {
-            console.error('Error handling user:', error);
-            return res.status(500).json({
-                message: 'Internal Server Error'
-            });
-        }
-
-        // Проверка наличия товаров
-        if (!products || !Array.isArray(products) || products.length === 0) {
-            return res.status(400).json({
-                message: 'No products in order'
-            });
-        }
-
-        // Проверка и обработка товаров
-        let insufficientProducts = [];
-        let orderProducts = [];
-        let calculatedTotalAmount = 0;
-
-        try {
-            const productUpdates = products.map(async (item) => {
-                const {
-                    product: productId,
-                    quantity,
-                    flowerType,
-                    flowerColor
-                } = item;
-
-                const existingProduct = await Product.findById(productId);
-                if (!existingProduct) {
-                    throw new Error(`Product not found: ${productId}`);
-                }
-
-                if (existingProduct.quantity < quantity) {
-                    insufficientProducts.push({
-                        name: existingProduct.name,
-                        available: existingProduct.quantity
-                    });
-                } else {
-                    const productItem = {
-                        product: existingProduct._id,
-                        name: existingProduct.name,
-                        flowerType: flowerType || existingProduct.type,
-                        category: existingProduct.category,
-                        description: existingProduct.description,
-                        price: existingProduct.price,
-                        quantity,
-                        flowerNames: existingProduct.flowerNames,
-                        flowerColors: existingProduct.flowerColors,
-                        stemLength: existingProduct.stemLength,
-                        occasion: existingProduct.occasion,
-                        recipient: existingProduct.recipient,
-                        admin: {
-                            id: existingProduct.admin._id,
-                            name: existingProduct.admin.name,
-                            email: existingProduct.admin.email,
-                            phoneNumber: existingProduct.admin.phoneNumber,
-                        }
-                    };
-
-                    orderProducts.push(productItem);
-                    calculatedTotalAmount += existingProduct.price * quantity;
-
-                    // Обновляем количество и счетчик продаж
-                    existingProduct.quantity -= quantity;
-                    existingProduct.soldCount += quantity;
-                    await existingProduct.save();
-                }
-            });
-
-            await Promise.all(productUpdates);
-
-            if (insufficientProducts.length > 0) {
-                return res.status(400).json({
-                    message: 'Insufficient product quantities',
-                    products: insufficientProducts
-                });
-            }
-        } catch (error) {
-            console.error('Error processing products:', error);
-            return res.status(500).json({
-                message: 'Failed to process products'
-            });
-        }
-
-        try {
-            await notifyAboutLowQuantity(products);
-        } catch (error) {
-            console.error("Error notifying about low quantity", error);
-        }
-
-        // Создание заказа
-        const order = new Order({
-            user: userId || null,
-            guestInfo: userType === 'guest' ? {
-                name: customerName,
-                email: customerEmail,
-                phone: phoneNumber
-            } : undefined,
-            userType: userType,
-            products: orderProducts,
-            totalAmount: calculatedTotalAmount,
-            firstName: customerName,
+            firstName,
             address,
             phoneNumber,
             paymentMethod,
             comments,
-            status: 'pending',
-            date: new Date()
+            guestInfo
+        } = req.body;
+
+        // Получаем корзину
+        let cart;
+        if (user.userId) {
+            cart = await Cart.findOne({ user: user.userId });
+        } else {
+            cart = await Cart.findOne({ sessionId: user.sessionId });
+        }
+
+        if (!cart || (cart.flowerItems.length === 0 && cart.addonItems.length === 0)) {
+            return res.status(400).json({ message: 'Корзина пуста' });
+        }
+
+        // Проверяем доступность товаров
+        for (const item of cart.flowerItems) {
+            const product = await Product.findById(item.product);
+            if (!product || !product.isActive || product.quantity < item.quantity) {
+                return res.status(400).json({
+                    message: `Товар "${item.name}" недоступен в нужном количестве`
+                });
+            }
+        }
+
+        for (const item of cart.addonItems) {
+            const addon = await Addon.findById(item.addonId);
+            if (!addon || !addon.isActive || addon.quantity < item.quantity) {
+                return res.status(400).json({
+                    message: `Дополнительный товар "${item.name}" недоступен в нужном количестве`
+                });
+            }
+        }
+
+        // Определяем тип пользователя
+        const userType = user.userId ? 'customer' : 'guest';
+
+        // Создаем заказ
+        const order = new Order({
+            user: user.userId || null,
+            guestInfo: userType === 'guest' ? guestInfo : undefined,
+            userType,
+            flowerItems: cart.flowerItems.map(item => ({
+                product: item.product,
+                quantity: item.quantity,
+                name: item.name,
+                flowerType: item.flowerType,
+                category: item.category,
+                price: item.price,
+                flowerNames: item.flowerNames,
+                flowerColors: item.flowerColors,
+                stemLength: item.stemLength,
+                occasion: item.occasion,
+                recipient: item.recipient,
+                wrapper: item.wrapper,
+                itemTotal: item.itemTotal,
+                itemType: 'flower'
+            })),
+            addonItems: cart.addonItems.map(item => ({
+                addonId: item.addonId,
+                quantity: item.quantity,
+                name: item.name,
+                type: item.type,
+                price: item.price,
+                itemTotal: item.itemTotal,
+                itemType: 'addon'
+            })),
+            totalAmount: cart.total,
+            firstName,
+            address,
+            phoneNumber,
+            paymentMethod,
+            comments,
+            statusHistory: [{
+                status: 'pending',
+                time: new Date()
+            }]
         });
 
-        try {
-            const newOrder = await order.save();
+        await order.save();
 
-            // Отправка email и обновление статуса отправки
-            const emailSent = await sendOrderEmail({
-                _id: newOrder._id,
-                email: customerEmail,
-                firstName: customerName,
-                address,
-                phoneNumber,
-                totalAmount: calculatedTotalAmount,
-                paymentMethod,
-                comments
-            }, orderProducts, userType);
-
-            // Обновляем запись о отправке email
-            if (emailSent) {
-                await Order.findByIdAndUpdate(newOrder._id, {
-                    emailSent: true,
-                    emailSentAt: new Date()
-                });
-            }
-
-            // Обновляем историю заказов пользователя
-            if (userId) {
-                await User.findByIdAndUpdate(userId, {
-                    $push: {
-                        orders: newOrder._id
-                    }
-                });
-            }
-
-            res.status(201).json({
-                success: true,
-                order: newOrder,
-                message: 'Order placed successfully'
-            });
-
-        } catch (error) {
-            console.error('Error placing order:', error);
-
-            try {
-                await returnProductsToStock(orderProducts);
-            } catch (rollbackError) {
-                console.error('Error returning products to stock:', rollbackError);
-            }
-
-            res.status(500).json({
-                success: false,
-                message: 'Internal server error',
-                error: error.message
+        // Обновляем количество товаров
+        for (const item of cart.flowerItems) {
+            await Product.findByIdAndUpdate(item.product, {
+                $inc: { quantity: -item.quantity, soldCount: item.quantity }
             });
         }
-    } catch (error) {
-        console.error('Error in createOrder:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error',
-            error: error.message
+
+        for (const item of cart.addonItems) {
+            await Addon.findByIdAndUpdate(item.addonId, {
+                $inc: { quantity: -item.quantity }
+            });
+        }
+
+        // Очищаем корзину
+        cart.flowerItems = [];
+        cart.addonItems = [];
+        await cart.save();
+
+        res.status(201).json({
+            message: 'Заказ успешно создан',
+            order: await formatOrderResponse(order)
         });
+    } catch (error) {
+        console.error('Error creating order:', error);
+        res.status(500).json({ message: 'Ошибка при создании заказа' });
     }
 };
 
-// Контроллер для получения заказов пользователя
+
+// Получение заказов пользователя
 export const getUserOrders = async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        const { user } = req;
 
-        if (!user) {
-            return res.status(404).json({
-                message: 'User not found'
-            });
+        let orders;
+        if (user.userId) {
+            orders = await Order.find({ user: user.userId })
+                .sort({ date: -1 })
+                .populate('flowerItems.product', 'name images')
+                .populate('addonItems.addonId', 'name image type');
+        } else {
+            // Для гостей - по sessionId (если нужно)
+            orders = await Order.find({
+                'guestInfo.phone': user.sessionId
+            }).sort({ date: -1 })
+                .populate('flowerItems.product', 'name images')
+                .populate('addonItems.addonId', 'name image type');
         }
 
-        const page = parseInt(req.query.page) || 1;
-        const perPage = 5;
-
-        const orders = await Order.find({
-            user: user._id
-        })
-            .populate('products.product', 'name price images flowerNames occasion')
-            .sort({
-                date: 'desc'
-            })
-            .skip((page - 1) * perPage)
-            .limit(perPage);
-
-        const totalOrders = await Order.countDocuments({
-            user: user._id
-        });
-        const totalPages = Math.ceil(totalOrders / perPage);
-
-        res.json({
-            orders,
-            totalOrders,
-            totalPages,
-            currentPage: page
+        res.status(200).json({
+            orders: orders.map(order => formatOrderResponse(order))
         });
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        console.error('Error getting user orders:', error);
+        res.status(500).json({ message: 'Ошибка при получении заказов' });
     }
+};
+
+// Вспомогательная функция для форматирования заказа
+const formatOrderResponse = (order) => {
+    return {
+        _id: order._id,
+        userType: order.userType,
+        flowerItems: order.flowerItems,
+        addonItems: order.addonItems,
+        totalAmount: order.totalAmount,
+        status: order.status,
+        date: order.date,
+        firstName: order.firstName,
+        address: order.address,
+        phoneNumber: order.phoneNumber,
+        paymentMethod: order.paymentMethod,
+        comments: order.comments,
+        statusHistory: order.statusHistory
+    };
 };
 
 // Контроллер для получения всех заказов (для администратора)

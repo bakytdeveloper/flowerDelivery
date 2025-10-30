@@ -305,15 +305,16 @@
 }
 
 .quantity-btn {
-    background: rgba(96, 165, 250, 0.2);
-    border: 1px solid rgba(96, 165, 250, 0.3);
-    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.2) !important;
+    border: 1px solid rgba(96, 165, 250, 0.3) !important;
+    color: #000f21 !important;
     width: 35px;
     height: 35px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 1.2rem;
     transition: all 0.3s ease;
+    font-weight: bold;
 }
 
 .quantity-btn:hover {
@@ -322,8 +323,8 @@
 }
 
 .quantity-display {
-    color: #e2e8f0;
-    font-weight: 600;
+    color: #003070;
+    font-weight: 700;
     font-size: 1.1rem;
     min-width: 30px;
     text-align: center;

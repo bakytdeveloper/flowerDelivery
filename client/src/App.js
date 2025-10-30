@@ -122,27 +122,38 @@ const App = () => {
     sessionStorage.setItem('token', token);
   };
 
+  // В App.js замените useEffect с fetchOrders на этот:
+
   useEffect(() => {
     const fetchOrders = async () => {
       const token = sessionStorage.getItem('token');
       const role = sessionStorage.getItem('role');
 
+      // Проверяем, что пользователь авторизован и имеет нужную роль
       if (!token || (role !== 'customer' && role !== 'admin')) {
         setIsLoading(false);
         return;
       }
 
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/`, {
-          headers: { Authorization: `Bearer ${token}` }
+        const headers = {
+          'Authorization': `Bearer ${token}`
+        };
+
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/my-orders`, {
+          headers: headers
         });
 
         if (!response.ok) {
+          if (response.status === 403) {
+            console.log('Доступ запрещен - пользователь не авторизован');
+            return;
+          }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        setOrders(data);
+        setOrders(data.orders || []);
       } catch (error) {
         console.error('Fetch error:', error);
         setOrders([]);
@@ -227,10 +238,10 @@ const App = () => {
                   <Route path="/catalog" element={<CatalogPage />} />
                   {/* Добавляем маршрут для страницы товара */}
                   <Route path="/product/:id" element={<ProductDetails />} />
-
+                  {/*// eslint-disable-next-line*/}
                   <Route path="/favorites" element={<FavoritesPage />} />
 
-                  // Добавить маршруты в секцию Routes
+                  {/*// Добавить маршруты в секцию Routes*/}
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/order-success" element={<OrderSuccess />} />

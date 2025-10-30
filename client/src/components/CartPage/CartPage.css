@@ -387,3 +387,38 @@
         font-size: 2rem;
     }
 }
+
+
+.item-type-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.addon-badge {
+    background: rgba(156, 39, 176, 0.9);
+}
+
+.order-item-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: #9c27b0;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.order-item-wrapper {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+}

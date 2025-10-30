@@ -11,9 +11,11 @@ export const useCart = () => {
     return context;
 };
 
+
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState({
-        items: [],
+        flowerItems: [],
+        addonItems: [],
         total: 0,
         totalItems: 0
     });
@@ -21,9 +23,20 @@ export const CartProvider = ({ children }) => {
     const { isAuthenticated, token } = useAuth();
     const apiUrl = process.env.REACT_APP_API_URL;
 
+    // Генерация sessionId для гостей
+    const getOrCreateSessionId = () => {
+        let sessionId = sessionStorage.getItem('guestSessionId');
+        if (!sessionId) {
+            sessionId = 'guest_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem('guestSessionId', sessionId);
+        }
+        return sessionId;
+    };
+
     // Загрузка корзины при монтировании
     useEffect(() => {
         fetchCart();
+        // eslint-disable-next-line
     }, [isAuthenticated, token]);
 
     const fetchCart = async () => {
@@ -33,11 +46,8 @@ export const CartProvider = ({ children }) => {
 
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            // Добавляем sessionId для гостей
-            const sessionId = sessionStorage.getItem('guestSessionId');
-            if (!token && sessionId) {
+            } else {
+                const sessionId = getOrCreateSessionId();
                 headers['X-Session-Id'] = sessionId;
             }
 
@@ -47,9 +57,9 @@ export const CartProvider = ({ children }) => {
 
             if (response.ok) {
                 const cartData = await response.json();
-                setCart(cartData);
+                setCart(cartData.cart || cartData);
             } else if (response.status === 404) {
-                setCart({ items: [], total: 0, totalItems: 0 });
+                setCart({ flowerItems: [], addonItems: [], total: 0, totalItems: 0 });
             }
         } catch (error) {
             console.error('Error fetching cart:', error);
@@ -58,9 +68,9 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    // Добавление товара в корзину
-// contexts/CartContext.js - обновленная функция addToCart
-    const addToCart = async (product, quantity = 1, options = {}) => {
+
+    // Добавление цветов в корзину
+    const addFlowerToCart = async (product, quantity = 1, options = {}) => {
         try {
             const headers = {
                 'Content-Type': 'application/json'
@@ -68,10 +78,8 @@ export const CartProvider = ({ children }) => {
 
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            const sessionId = sessionStorage.getItem('guestSessionId');
-            if (!token && sessionId) {
+            } else {
+                const sessionId = getOrCreateSessionId();
                 headers['X-Session-Id'] = sessionId;
             }
 
@@ -80,31 +88,32 @@ export const CartProvider = ({ children }) => {
                 quantity,
                 flowerType: options.flowerType || product.type,
                 flowerColor: options.flowerColor || (product.flowerColors?.[0] || null),
-                wrapper: options.wrapper || null,
-                addons: options.addons || []
+                wrapper: options.wrapper || null
             };
 
-            const response = await fetch(`${apiUrl}/api/cart/add`, {
+            const response = await fetch(`${apiUrl}/api/cart/flowers`, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify(cartItem)
             });
 
             if (response.ok) {
-                const updatedCart = await response.json();
-                setCart(updatedCart);
-                return { success: true, cart: updatedCart };
+                const result = await response.json();
+                setCart(result.cart);
+                return { success: true, cart: result.cart };
             } else {
                 const errorData = await response.json();
                 return { success: false, error: errorData.message };
             }
         } catch (error) {
-            console.error('Error adding to cart:', error);
+            console.error('Error adding flower to cart:', error);
             return { success: false, error: 'Ошибка при добавлении в корзину' };
         }
     };
-    // Обновление количества товара
-    const updateCartItem = async (itemId, quantity) => {
+
+
+    // Добавление дополнительного товара в корзину
+    const addAddonToCart = async (addon, quantity = 1) => {
         try {
             const headers = {
                 'Content-Type': 'application/json'
@@ -112,23 +121,62 @@ export const CartProvider = ({ children }) => {
 
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            const sessionId = sessionStorage.getItem('guestSessionId');
-            if (!token && sessionId) {
+            } else {
+                const sessionId = getOrCreateSessionId();
                 headers['X-Session-Id'] = sessionId;
             }
 
-            const response = await fetch(`${apiUrl}/api/cart/update/${itemId}`, {
-                method: 'PUT',
+            const cartItem = {
+                addonId: addon._id,
+                quantity
+            };
+
+            const response = await fetch(`${apiUrl}/api/cart/addons`, {
+                method: 'POST',
                 headers: headers,
-                body: JSON.stringify({ quantity })
+                body: JSON.stringify(cartItem)
             });
 
             if (response.ok) {
-                const updatedCart = await response.json();
-                setCart(updatedCart);
-                return { success: true, cart: updatedCart };
+                const result = await response.json();
+                setCart(result.cart);
+                return { success: true, cart: result.cart };
+            } else {
+                const errorData = await response.json();
+                return { success: false, error: errorData.message };
+            }
+        } catch (error) {
+            console.error('Error adding addon to cart:', error);
+            return { success: false, error: 'Ошибка при добавлении в корзину' };
+        }
+    };
+
+
+    // Обновление количества товара в корзине
+    // Обновление количества товара в корзине
+    const updateCartItem = async (itemId, quantity, itemType) => {
+        try {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            } else {
+                const sessionId = getOrCreateSessionId();
+                headers['X-Session-Id'] = sessionId;
+            }
+
+            const response = await fetch(`${apiUrl}/api/cart/items`, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify({ itemId, quantity, itemType })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                setCart(result.cart);
+                return { success: true, cart: result.cart };
             } else {
                 const errorData = await response.json();
                 return { success: false, error: errorData.message };
@@ -139,29 +187,31 @@ export const CartProvider = ({ children }) => {
         }
     };
 
+
     // Удаление товара из корзины
-    const removeFromCart = async (itemId) => {
+    const removeFromCart = async (itemId, itemType) => {
         try {
-            const headers = {};
+            const headers = {
+                'Content-Type': 'application/json'
+            };
 
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            const sessionId = sessionStorage.getItem('guestSessionId');
-            if (!token && sessionId) {
+            } else {
+                const sessionId = getOrCreateSessionId();
                 headers['X-Session-Id'] = sessionId;
             }
 
-            const response = await fetch(`${apiUrl}/api/cart/remove/${itemId}`, {
+            const response = await fetch(`${apiUrl}/api/cart/items`, {
                 method: 'DELETE',
-                headers: headers
+                headers: headers,
+                body: JSON.stringify({ itemId, itemType })
             });
 
             if (response.ok) {
-                const updatedCart = await response.json();
-                setCart(updatedCart);
-                return { success: true, cart: updatedCart };
+                const result = await response.json();
+                setCart(result.cart);
+                return { success: true, cart: result.cart };
             } else {
                 const errorData = await response.json();
                 return { success: false, error: errorData.message };
@@ -172,6 +222,7 @@ export const CartProvider = ({ children }) => {
         }
     };
 
+
     // Очистка корзины
     const clearCart = async () => {
         try {
@@ -179,10 +230,8 @@ export const CartProvider = ({ children }) => {
 
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            const sessionId = sessionStorage.getItem('guestSessionId');
-            if (!token && sessionId) {
+            } else {
+                const sessionId = getOrCreateSessionId();
                 headers['X-Session-Id'] = sessionId;
             }
 
@@ -192,9 +241,9 @@ export const CartProvider = ({ children }) => {
             });
 
             if (response.ok) {
-                const updatedCart = await response.json();
-                setCart(updatedCart);
-                return { success: true, cart: updatedCart };
+                const result = await response.json();
+                setCart(result.cart);
+                return { success: true, cart: result.cart };
             } else {
                 const errorData = await response.json();
                 return { success: false, error: errorData.message };
@@ -205,10 +254,17 @@ export const CartProvider = ({ children }) => {
         }
     };
 
+    // Совместимость со старым кодом (будет удалено после обновления всех компонентов)
+    const addToCart = async (product, quantity = 1, options = {}) => {
+        return await addFlowerToCart(product, quantity, options);
+    };
+
     const value = {
         cart,
         loading,
-        addToCart,
+        addToCart, // для обратной совместимости
+        addFlowerToCart,
+        addAddonToCart,
         updateCartItem,
         removeFromCart,
         clearCart,
