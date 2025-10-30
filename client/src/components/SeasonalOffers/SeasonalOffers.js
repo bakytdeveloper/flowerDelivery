@@ -18,24 +18,14 @@ const SeasonalOffers = () => {
     const fetchBestSellingProducts = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/bestselling`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/newest`);
 
             if (!response.ok) {
-                throw new Error('Ошибка при загрузке хитов продаж');
+                throw new Error('Ошибка при загрузке сезонных предложений');
             }
 
-            let bestSellingProducts = await response.json();
-
-            // Если нет проданных товаров, загружаем любые доступные
-            if (!bestSellingProducts || bestSellingProducts.length === 0) {
-                const fallbackResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/products/newest`);
-                if (fallbackResponse.ok) {
-                    const fallbackData = await fallbackResponse.json();
-                    bestSellingProducts = fallbackData.products || [];
-                }
-            }
-
-            setProducts(bestSellingProducts);
+            const seasonalProducts = await response.json();
+            setProducts(seasonalProducts || []);
         } catch (err) {
             setError(err.message);
             console.error('Error fetching best selling products:', err);

@@ -26,16 +26,8 @@ const HitsSection = () => {
 
             let bestSellingProducts = await response.json();
 
-            // Если нет проданных товаров, загружаем любые доступные
-            if (!bestSellingProducts || bestSellingProducts.length === 0) {
-                const fallbackResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/products/bestselling`);
-                if (fallbackResponse.ok) {
-                    const fallbackData = await fallbackResponse.json();
-                    bestSellingProducts = fallbackData.products || [];
-                }
-            }
-
-            setProducts(bestSellingProducts);
+            // Убираем fallback логику, чтобы не было дублирования
+            setProducts(bestSellingProducts || []);
         } catch (err) {
             setError(err.message);
             console.error('Error fetching best selling products:', err);
@@ -150,6 +142,11 @@ const HitsSection = () => {
 
     if (!products || products.length === 0) {
         return null;
+    }
+
+    // ВАЖНО: Добавляем проверку на пустой массив
+    if (!products || products.length === 0) {
+        return null; // Секция скроется если нет товаров
     }
 
     return (

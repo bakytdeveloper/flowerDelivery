@@ -369,33 +369,27 @@ export const getAvailableFilters = async (req, res) => {
 };
 
 // Контроллер для получения самых продаваемых цветов
+// Исправленная версия getBestSellingProducts
 export const getBestSellingProducts = async (req, res) => {
     try {
         const userAgent = req.headers['user-agent'];
         const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);
         const limit = isMobile ? 8 : 12;
 
-        // 1️⃣ Сначала получаем цветы с продажами
+        // Получаем только товары с продажами
         let products = await Product.find({
             isActive: true,
             quantity: { $gt: 0 },
-            soldCount: { $gt: 0 },
+            soldCount: { $gt: 0 }, // Только товары которые реально продавались
         })
-            // .populate('admin', 'name email')
             .sort({ soldCount: -1 })
             .limit(limit)
             .lean();
 
-        // 2️⃣ Если таких нет или их меньше лимита — добавляем случайные товары
-        if (products.length < limit) {
-            const additionalProducts = await Product.aggregate([
-                { $match: { isActive: true, quantity: { $gt: 0 } } },
-                { $sample: { size: limit - products.length } },
-            ]);
-            products = [...products, ...additionalProducts];
-        }
+        // Убираем fallback логику чтобы избежать дублирования
+        // Если нет продаваемых товаров - возвращаем пустой массив
 
-        // 3️⃣ Обрабатываем изображения и описание
+        // Обрабатываем изображения
         const processedProducts = products.map((product) => {
             const processed = processProductImages(product, req);
             return {
@@ -412,7 +406,6 @@ export const getBestSellingProducts = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
-
 
 // Контроллер для получения новейших продуктов
 export const getNewestProducts = async (req, res) => {
