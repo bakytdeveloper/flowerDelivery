@@ -377,7 +377,8 @@
     }
 
     .catalog-header {
-        padding: 1.5rem;
+        padding: 1rem;
+        margin-bottom: 2px;
     }
 
     .catalog-title {

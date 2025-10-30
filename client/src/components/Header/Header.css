@@ -517,6 +517,10 @@
         font-size: 12px;
     }
 
+    .logo-text-home {
+        font-size: 1.5rem;
+    }
+
     .none-mobile {
         display: none!important;
     }

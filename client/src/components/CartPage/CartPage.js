@@ -537,8 +537,8 @@
 
 
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import './CartPage.css';
@@ -549,6 +549,15 @@ const CartPage = () => {
     const navigate = useNavigate();
     const [updatingItems, setUpdatingItems] = useState(new Set());
     const [selectedWrapperImage, setSelectedWrapperImage] = useState(null);
+    const location = useLocation();
+    // Прокрутка вверх при монтировании компонента и изменении фильтров
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+    }, [location.search]);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('ru-RU', {

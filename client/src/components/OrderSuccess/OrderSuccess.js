@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './OrderSuccess.css';
 
@@ -6,6 +6,14 @@ const OrderSuccess = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { orderId, orderTotal } = location.state || {};
+    // Прокрутка вверх при монтировании компонента и изменении фильтров
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+    }, [location.search]);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('ru-RU', {
