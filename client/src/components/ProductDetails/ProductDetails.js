@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useFavorites } from '../../hooks/useFavorites';
+import { useCart } from '../../contexts/CartContext';
 import './ProductDetails.css';
 
 const ProductDetails = () => {
@@ -17,6 +18,7 @@ const ProductDetails = () => {
     const [loadingAddons, setLoadingAddons] = useState(false);
     const { toggleFavorite, isFavorite } = useFavorites();
     const location = useLocation();
+    const { addToCart } = useCart();
 
     // Прокрутка вверх при монтировании компонента и изменении фильтров
     useEffect(() => {
@@ -110,8 +112,38 @@ const ProductDetails = () => {
         }
     };
 
-    const handleAddToCart = () => {
-        console.log('Добавлено в корзину:', { product, quantity });
+    // Основная функция добавления в корзину с опциями
+    const handleAddToCart = async (options = {}) => {
+        const result = await addToCart(product, quantity, options);
+        if (result.success) {
+            alert('Товар добавлен в корзину!');
+        } else {
+            alert(result.error);
+        }
+    };
+
+    // Функция для добавления обёртки в корзину
+    const handleAddWrapperToCart = async (wrapper) => {
+        await handleAddToCart({
+            wrapper: {
+                wrapperId: wrapper._id
+            }
+        });
+    };
+
+    // Функция для добавления дополнения в корзину
+    const handleAddAddonToCart = async (addon) => {
+        await handleAddToCart({
+            addons: [{
+                addonId: addon._id,
+                quantity: 1
+            }]
+        });
+    };
+
+    // Функция для добавления основного товара в корзину (без опций)
+    const handleAddProductToCart = async () => {
+        await handleAddToCart();
     };
 
     const handleAddToFavorites = async () => {
@@ -240,7 +272,7 @@ const ProductDetails = () => {
                                                     className="btn-add-to-cart"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        console.log('Добавлена обёртка в корзину:', wrapper);
+                                                        handleAddWrapperToCart(wrapper);
                                                     }}
                                                 >
                                                     В корзину
@@ -398,7 +430,7 @@ const ProductDetails = () => {
                                                     className="btn-add-to-cart"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        console.log('Добавлен доп. товар в корзину:', addon);
+                                                        handleAddAddonToCart(addon);
                                                     }}
                                                 >
                                                     В корзину
@@ -674,7 +706,7 @@ const ProductDetails = () => {
                             <div className="action-buttons">
                                 <button
                                     className="btn-add-to-cart-large"
-                                    onClick={handleAddToCart}
+                                    onClick={handleAddProductToCart}
                                     disabled={!product.quantity || product.quantity <= 0}
                                 >
                                     {product.quantity > 0 ? '🛒 Добавить в корзину' : '❌ Нет в наличии'}

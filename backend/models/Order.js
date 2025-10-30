@@ -92,27 +92,28 @@ const orderItemSchema = new mongoose.Schema({
     // Общая цена за этот item
     itemTotal: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
     },
+    // Информация об администраторе (необязательная)
     admin: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
+            ref: 'User'
         },
         name: {
             type: String,
-            required: true
+            default: 'Администратор магазина'
         },
         email: {
             type: String,
-            required: true
+            default: 'admin@flowerstore.kz'
         },
         phoneNumber: {
             type: String,
-            required: true
-        },
-    },
+            default: '+7 (705) 123-45-67'
+        }
+    }
 });
 
 const statusHistorySchema = new mongoose.Schema({
@@ -164,16 +165,20 @@ const orderSchema = new mongoose.Schema({
         default: Date.now
     },
     firstName: {
-        type: String
+        type: String,
+        required: true
     },
     address: {
-        type: String
+        type: String,
+        required: true
     },
     phoneNumber: {
-        type: String
+        type: String,
+        required: true
     },
     paymentMethod: {
-        type: String
+        type: String,
+        default: 'cash'
     },
     comments: {
         type: String

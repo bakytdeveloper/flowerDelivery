@@ -152,36 +152,55 @@ async function notifyAboutLowQuantity(products) {
 }
 
 // Контроллер для создания заказа
-export const createOrder = [
-    // Валидация
-    body('firstName').notEmpty().withMessage('Имя обязательно для заполнения'),
-    body('phoneNumber').notEmpty().withMessage('Номер телефона обязателен для заполнения'),
-    body('address').notEmpty().withMessage('Адрес обязателен для заполнения'),
-    body('products').isArray({
-        min: 1
-    }).withMessage('Заказ должен содержать хотя бы один товар'),
-    body('totalAmount').isNumeric().withMessage('Общая сумма должна быть числом'),
+// Контроллер для создания заказа с встроенной валидацией
+export const createOrder = async (req, res) => {
+    try {
+        // Валидация вручную
+        const { firstName, phoneNumber, address, products, totalAmount } = req.body;
 
-    async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
+        if (!firstName || !firstName.trim()) {
             return res.status(400).json({
                 success: false,
-                message: 'Ошибка валидации',
-                errors: errors.array()
+                message: 'Имя обязательно для заполнения'
             });
         }
 
+        if (!phoneNumber || !phoneNumber.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: 'Номер телефона обязателен для заполнения'
+            });
+        }
+
+        if (!address || !address.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: 'Адрес обязателен для заполнения'
+            });
+        }
+
+        if (!products || !Array.isArray(products) || products.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Заказ должен содержать хотя бы один товар'
+            });
+        }
+
+        if (!totalAmount || isNaN(totalAmount)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Общая сумма должна быть числом'
+            });
+        }
+
+        // Остальной код контроллера...
         const {
             user,
             guestInfo,
-            products,
-            firstName,
-            address,
-            phoneNumber,
             paymentMethod,
             comments
         } = req.body;
+
         let userId = null;
         let customerName = firstName || 'Гость';
         let customerEmail = '';
@@ -276,7 +295,7 @@ export const createOrder = [
                     flowerColor
                 } = item;
 
-                const existingProduct = await Product.findById(productId).populate('admin');
+                const existingProduct = await Product.findById(productId);
                 if (!existingProduct) {
                     throw new Error(`Product not found: ${productId}`);
                 }
@@ -412,8 +431,15 @@ export const createOrder = [
                 error: error.message
             });
         }
+    } catch (error) {
+        console.error('Error in createOrder:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: error.message
+        });
     }
-];
+};
 
 // Контроллер для получения заказов пользователя
 export const getUserOrders = async (req, res) => {

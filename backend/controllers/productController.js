@@ -215,7 +215,7 @@ export const getProducts = async (req, res) => {
             sortOrder = 'desc'
         } = req.query;
 
-        console.log('Query params:', { type, occasion, recipient, search }); // Для отладки
+        // console.log('Query params:', { type, occasion, recipient, search }); // Для отладки
 
         const userAgent = req.headers['user-agent'];
         const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);

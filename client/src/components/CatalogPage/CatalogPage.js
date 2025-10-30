@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useFavorites } from '../../hooks/useFavorites';
+import { useCart } from '../../contexts/CartContext';
 import './CatalogPage.css';
 
 const CatalogPage = () => {
@@ -16,16 +17,16 @@ const CatalogPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { toggleFavorite, isFavorite } = useFavorites();
+    const { addToCart } = useCart();
 
     // Прокрутка вверх при монтировании компонента и изменении фильтров
     useEffect(() => {
-        // Прокручиваем страницу вверх
         window.scrollTo({
             top: 0,
             left: 0,
-            behavior: 'smooth' // Плавная прокрутка
+            behavior: 'smooth'
         });
-    }, [location.search]); // Зависимость от параметров поиска
+    }, [location.search]);
 
     // Парсим параметры URL при загрузке и изменении location
     useEffect(() => {
@@ -46,7 +47,6 @@ const CatalogPage = () => {
             setLoading(true);
             setError(null);
 
-            // Строим query string для фильтров
             const queryParams = new URLSearchParams();
 
             if (filterParams.type) queryParams.append('type', filterParams.type);
@@ -77,17 +77,15 @@ const CatalogPage = () => {
     };
 
     // Функция для добавления в корзину
-    const handleAddToCart = (e, product) => {
+    const handleAddToCart = async (e, product) => {
         e.stopPropagation(); // Останавливаем всплытие события
-        console.log('Добавлено в корзину:', product);
-        // TODO: Добавить логику добавления в корзину
-    };
 
-    // Функция для добавления в избранное
-    const handleAddToFavorite = (e, product) => {
-        e.stopPropagation(); // Останавливаем всплытие события
-        console.log('Добавлено в избранное:', product);
-        // TODO: Добавить логику добавления в избранное
+        const result = await addToCart(product, 1); // quantity по умолчанию 1
+        if (result.success) {
+            alert('Товар добавлен в корзину!');
+        } else {
+            alert(result.error);
+        }
     };
 
     // Функция для добавления/удаления из избранного
