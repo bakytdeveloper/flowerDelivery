@@ -181,7 +181,7 @@ const SeasonalOffers = () => {
                                     onClick={() => handleProductClick(product._id)}
                                     style={{ cursor: 'pointer' }}
                                 >
-                                    <div className="product-image-container">
+                                    <div className="product-image-container-catalog">
                                         <img
                                             src={product.images?.[0] || '/images/placeholder-flower.jpg'}
                                             alt={product.name}
@@ -200,50 +200,50 @@ const SeasonalOffers = () => {
                                         )}
                                     </div>
 
-                                    <div className="cart-product-info">
-                                        <h3 className="product-name">{product.name}</h3>
-                                        <p className="product-description">
+                                    <div className="cart-product-info-catalog">
+                                        <h3 className="product-name-catalog">{product.name}</h3>
+                                        <p className="product-description-catalog">
                                             {product.description?.length > 20
                                                 ? `${product.description.slice(0, 20)}...`
                                                 : product.description
                                             }
                                         </p>
 
-                                        <div className="product-meta">
-                                            <span className={`product-type ${product.type}`}>
+                                        <div className="product-meta-catalog">
+                                            <span className={`product-type-catalog ${product.type}`}>
                                                 {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
                                             </span>
-                                            <span className="product-occasion">
+                                            <span className="product-occasion-catalog">
                                                 {product.occasion}
                                             </span>
                                         </div>
 
-                                        <div className="product-price">
+                                        <div className="product-price-catalog">
                                             {product.originalPrice && product.originalPrice > product.price ? (
                                                 <>
-                                                    <span className="original-price">
+                                                    <span className="original-price-catalog">
                                                         {formatPrice(product.originalPrice)}
                                                     </span>
-                                                    <span className="current-price">
+                                                    <span className="current-price-catalog">
                                                         {formatPrice(product.price)}
                                                     </span>
                                                 </>
                                             ) : (
-                                                <span className="current-price">
+                                                <span className="current-price-catalog">
                                                     {formatPrice(product.price)}
                                                 </span>
                                             )}
                                         </div>
 
-                                        <div className="product-actions">
+                                        <div className="product-actions-catalog">
                                             <button
-                                                className="btn-add-to-cart"
+                                                className="btn-add-to-cart-catalog"
                                                 onClick={(e) => handleAddToCart(e, product)}
                                             >
                                                 В корзину
                                             </button>
                                             <button
-                                                className={`favorite-heart-btn ${isFavorite(product._id) ? 'favorited' : ''}`}
+                                                className={`favorite-heart-btn-catalog ${isFavorite(product._id) ? 'favorited' : ''}`}
                                                 onClick={(e) => handleToggleFavorite(e, product)}
                                                 title={isFavorite(product._id) ? 'Удалить из избранного' : 'Добавить в избранное'}
                                             >
