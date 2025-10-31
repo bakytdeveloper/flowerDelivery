@@ -288,7 +288,7 @@ const AdminPanel = () => {
                                                 <select
                                                     value={slide.backgroundType}
                                                     onChange={(e) => handleSlideChange(index, 'backgroundType', e.target.value)}
-                                                    className="form-control"
+                                                    className="form-control form-control-select"
                                                 >
                                                     <option value="color">Цвет</option>
                                                     <option value="image">Изображение</option>
@@ -414,7 +414,7 @@ const AdminPanel = () => {
                                                     <select
                                                         value={slide.fontFamilleTitle}
                                                         onChange={(e) => handleSlideChange(index, 'fontFamilleTitle', e.target.value)}
-                                                        className="form-control form-control-font-family"
+                                                        className="form-control form-control-select"
                                                     >
                                                         <option value="Arial">Arial</option>
                                                         <option value="Georgia">Georgia</option>
@@ -429,7 +429,7 @@ const AdminPanel = () => {
                                                     <select
                                                         value={slide.fontFamilleDescription}
                                                         onChange={(e) => handleSlideChange(index, 'fontFamilleDescription', e.target.value)}
-                                                        className="form-control form-control-font-family"
+                                                        className="form-control form-control-select"
                                                     >
                                                         <option value="Arial">Arial</option>
                                                         <option value="Georgia">Georgia</option>

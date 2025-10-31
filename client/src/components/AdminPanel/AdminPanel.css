@@ -55,7 +55,8 @@
 }
 
 .tab-button:hover {
-    background: #f8f9fa;
+    background: #ecedee;
+    color: #1a1a2e;
 }
 
 .tab-button.active {
@@ -218,6 +219,17 @@
 .form-control.color-picker {
     height: 50px;
     padding: 5px;
+}
+
+.form-control-select {
+    background: rgba(51, 65, 85, 0.6);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-control-select:focus {
+    background: rgba(51, 65, 85, 0.6);
+    color: white;
 }
 
 .form-row {
