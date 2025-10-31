@@ -19,6 +19,7 @@ import { CartProvider } from "./contexts/CartContext";
 import CartPage from "./components/CartPage/CartPage";
 import CheckoutPage from "./components/CheckoutPage/CheckoutPage";
 import OrderSuccess from "./components/OrderSuccess/OrderSuccess";
+import AdminPanel from './components/AdminPanel/AdminPanel';
 
 
 const AppContent = ({ children, showHeader, ...props }) => {
@@ -249,6 +250,9 @@ const App = () => {
                   {/* Добавьте сюда другие маршруты по мере необходимости */}
                   <Route path="/about" element={<div>Страница о нас</div>} />
                   <Route path="/payment" element={<div>Страница оплаты</div>} />
+
+                  <Route path="/admin" element={<AdminPanel />} />
+
 
                   {/* Fallback для несуществующих маршрутов */}
                   <Route path="*" element={
