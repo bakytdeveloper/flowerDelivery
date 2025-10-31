@@ -81,17 +81,7 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    // Цвет цветов
-    flowerColors: [{
-        name: {
-            type: String,
-            required: true
-        },
-        value: {
-            type: String,
-            required: true
-        },
-    }],
+
     // Количество проданных цветов
     soldCount: {
         type: Number,

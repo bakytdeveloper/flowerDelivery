@@ -524,3 +524,78 @@ export const updateSoldCount = async (req, res) => {
         });
     }
 };
+
+
+// Контроллер для загрузки изображений
+export const uploadImages = async (req, res) => {
+    try {
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ message: 'No files uploaded' });
+        }
+
+        const imageUrls = req.files.map(file =>
+            `${req.protocol}://${req.get('host')}/uploads/${file.filename}`
+        );
+
+        res.json({
+            message: 'Images uploaded successfully',
+            images: imageUrls
+        });
+    } catch (error) {
+        console.error('Error uploading images:', error);
+        res.status(500).json({ message: 'Error uploading images' });
+    }
+};
+
+// Контроллер для обновления продукта с полными данными
+export const updateProductFull = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const adminId = req.user.userId;
+
+        // Проверяем, что продукт принадлежит админу
+        const product = await Product.findOne({
+            _id: productId,
+            admin: adminId
+        });
+
+        if (!product) {
+            return res.status(404).json({
+                message: 'Product not found or access denied'
+            });
+        }
+
+        // Обрабатываем данные перед обновлением
+        const updateData = { ...req.body };
+
+        // Обрабатываем flowerNames - убеждаемся что это массив
+        if (updateData.flowerNames && !Array.isArray(updateData.flowerNames)) {
+            updateData.flowerNames = [updateData.flowerNames];
+        }
+
+        // Обрабатываем characteristics
+        if (updateData.characteristics && !Array.isArray(updateData.characteristics)) {
+            updateData.characteristics = [updateData.characteristics];
+        }
+
+        // Преобразуем числовые поля
+        if (updateData.price) updateData.price = Number(updateData.price);
+        if (updateData.originalPrice) updateData.originalPrice = Number(updateData.originalPrice);
+        if (updateData.stemLength) updateData.stemLength = Number(updateData.stemLength);
+        if (updateData.quantity) updateData.quantity = Number(updateData.quantity);
+        if (updateData.soldCount) updateData.soldCount = Number(updateData.soldCount);
+
+        const updatedProduct = await Product.findByIdAndUpdate(
+            productId,
+            updateData,
+            { new: true, runValidators: true }
+        );
+
+        res.json(updatedProduct);
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};

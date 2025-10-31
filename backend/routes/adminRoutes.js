@@ -10,7 +10,9 @@ import {
     getSalesStats,
     updateSoldCount,
     removeImage,
-    deleteImageByName
+    deleteImageByName,
+    uploadImages,
+    updateProductFull
 } from '../controllers/adminController.js';
 import {
     authenticateToken,
@@ -53,6 +55,10 @@ router.get('/products/:productId', authenticateToken, requireAdmin, getProduct);
 router.put('/products/:productId', authenticateToken, requireAdmin, updateProduct);
 router.delete('/products/:productId', authenticateToken, requireAdmin, deleteProduct);
 router.put('/products/:productId/sold-count', authenticateToken, requireAdmin, updateSoldCount);
+
+// Добавьте эти маршруты
+router.put('/products/:productId/full', authenticateToken, requireAdmin, updateProductFull);
+router.post('/upload', authenticateToken, requireAdmin, upload.array('images', 10), uploadImages);
 
 // Маршруты для управления Обвёртками для цветов админа
 router.post('/wrappers', authenticateToken, requireAdmin, createWrapper);

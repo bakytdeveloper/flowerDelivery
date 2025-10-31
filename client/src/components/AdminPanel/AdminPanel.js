@@ -1,6 +1,7 @@
 // src/components/AdminPanel/AdminPanel.js
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import ProductManagement from "./ProductManagement/ProductManagement";
 import { toast } from 'react-toastify';
 import './AdminPanel.css';
 
@@ -482,11 +483,9 @@ const AdminPanel = () => {
                 )}
 
                 {activeTab === 'products' && (
-                    <div className="tab-content">
-                        <h2>Управление товарами</h2>
-                        <p>Функционал управления товарами будет добавлен позже.</p>
-                    </div>
+                    <ProductManagement />
                 )}
+
 
                 {activeTab === 'orders' && (
                     <div className="tab-content">
