@@ -26,7 +26,7 @@ const cartAuth = (req, res, next) => {
             }
 
             // Обновляем валидные роли (убираем seller)
-            const validRoles = ['customer', 'admin'];
+            const validRoles = ['customer'];
             if (user && validRoles.includes(user.role)) {
                 req.user = user;
             } else {

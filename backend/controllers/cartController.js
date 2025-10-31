@@ -4,7 +4,6 @@ import Addon from '../models/Addon.js';
 import Wrapper from '../models/Wrapper.js';
 
 // Добавление цветов в корзину
-// Добавление цветов в корзину
 export const addFlowerToCart = async (req, res) => {
     try {
         const { productId, quantity, flowerType, flowerColor, wrapper } = req.body;

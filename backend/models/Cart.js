@@ -157,57 +157,6 @@ const baseCartItemSchema = {
     }
 };
 
-// Схема для цветов (с оберткой)
-// const flowerCartItemSchema = new mongoose.Schema({
-//     ...baseCartItemSchema,
-//     product: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'Product',
-//         required: true
-//     },
-//     flowerType: {
-//         type: String,
-//         enum: ['single', 'bouquet'],
-//         required: true
-//     },
-//     flowerColor: {
-//         name: {
-//             type: String
-//         },
-//         value: {
-//             type: String
-//         }
-//     },
-//     flowerNames: [{
-//         type: String
-//     }],
-//     stemLength: {
-//         type: Number
-//     },
-//     // Обертка для цветов
-//     wrapper: {
-//         wrapperId: {
-//             type: mongoose.Schema.Types.ObjectId,
-//             ref: 'Wrapper'
-//         },
-//         name: {
-//             type: String
-//         },
-//         price: {
-//             type: Number,
-//             default: 0
-//         },
-//         image: {
-//             type: String
-//         }
-//     },
-//     itemType: {
-//         type: String,
-//         enum: ['flower'],
-//         default: 'flower'
-//     }
-// });
-
 // В схеме flowerCartItemSchema добавляем поле для типа упаковки
 const flowerCartItemSchema = new mongoose.Schema({
     ...baseCartItemSchema,

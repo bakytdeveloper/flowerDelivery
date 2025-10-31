@@ -20,6 +20,7 @@ import CartPage from "./components/CartPage/CartPage";
 import CheckoutPage from "./components/CheckoutPage/CheckoutPage";
 import OrderSuccess from "./components/OrderSuccess/OrderSuccess";
 import AdminPanel from './components/AdminPanel/AdminPanel';
+import { jwtDecode } from "jwt-decode";
 
 
 const AppContent = ({ children, showHeader, ...props }) => {
@@ -140,6 +141,19 @@ const App = () => {
         const headers = {
           'Authorization': `Bearer ${token}`
         };
+        const decoded = jwtDecode(token);
+
+        // Если это админ, не пытаемся получить профиль из базы
+        if (decoded.role === 'admin') {
+          const adminUser = {
+            _id: 'admin',
+            email: decoded.email || 'admin@example.com',
+            name: 'Администратор',
+            role: 'admin'
+          };
+         
+          return adminUser;
+        }
 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/orders/my-orders`, {
           headers: headers
