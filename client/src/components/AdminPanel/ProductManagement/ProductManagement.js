@@ -519,38 +519,38 @@ const ProductManagement = () => {
 
                                 <div className="product-info">
                                     <h3 className="product-name">{product.name}</h3>
-                                    <p className="product-description">
-                                        {product.description?.length > 60
-                                            ? `${product.description.slice(0, 60)}...`
-                                            : product.description
-                                        }
-                                    </p>
+                                    {/*<p className="product-description">*/}
+                                    {/*    {product.description?.length > 60*/}
+                                    {/*        ? `${product.description.slice(0, 60)}...`*/}
+                                    {/*        : product.description*/}
+                                    {/*    }*/}
+                                    {/*</p>*/}
 
                                     <div className="product-meta">
                                         <span className={`product-type ${product.type}`}>
                                             {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
                                         </span>
-                                        <span className="product-category">{product.category}</span>
+                                        {/*<span className="product-category">{product.category}</span>*/}
                                     </div>
 
                                     <div className="product-details">
-                                        <div className="detail-item">
-                                            <span className="detail-label">Цветы:</span>
-                                            <span className="detail-value">
-                                                {Array.isArray(product.flowerNames)
-                                                    ? product.flowerNames.slice(0, 2).join(', ')
-                                                    : product.flowerNames}
-                                                {product.flowerNames?.length > 2 && '...'}
-                                            </span>
-                                        </div>
-                                        <div className="detail-item">
-                                            <span className="detail-label">Кому:</span>
-                                            <span className="detail-value">{product.recipient}</span>
-                                        </div>
-                                        <div className="detail-item">
-                                            <span className="detail-label">Длина стебля:</span>
-                                            <span className="detail-value">{product.stemLength} см</span>
-                                        </div>
+                                        {/*<div className="detail-item">*/}
+                                        {/*    <span className="detail-label">Цветы:</span>*/}
+                                        {/*    <span className="detail-value">*/}
+                                        {/*        {Array.isArray(product.flowerNames)*/}
+                                        {/*            ? product.flowerNames.slice(0, 2).join(', ')*/}
+                                        {/*            : product.flowerNames}*/}
+                                        {/*        {product.flowerNames?.length > 2 && '...'}*/}
+                                        {/*    </span>*/}
+                                        {/*</div>*/}
+                                        {/*<div className="detail-item">*/}
+                                        {/*    <span className="detail-label">Кому:</span>*/}
+                                        {/*    <span className="detail-value">{product.recipient}</span>*/}
+                                        {/*</div>*/}
+                                        {/*<div className="detail-item">*/}
+                                        {/*    <span className="detail-label">Длина стебля:</span>*/}
+                                        {/*    <span className="detail-value">{product.stemLength} см</span>*/}
+                                        {/*</div>*/}
                                         <div className="detail-item">
                                             <span className="detail-label">В наличии:</span>
                                             <span className="detail-value">{product.quantity} шт</span>
@@ -594,7 +594,7 @@ const ProductManagement = () => {
                                             className="btn-delete"
                                             onClick={() => handleDeleteClick(product)}
                                         >
-                                            Удалить
+                                            🗑️
                                         </button>
                                     </div>
                                 </div>
