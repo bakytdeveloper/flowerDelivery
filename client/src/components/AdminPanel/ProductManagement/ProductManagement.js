@@ -1,5 +1,5 @@
 // src/components/AdminPanel/ProductManagement/ProductManagement.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import './ProductManagement.css';
@@ -71,13 +71,22 @@ const ProductManagement = () => {
     }, [filters]);
 
     // Обработчики фильтров
-    const handleFilterChange = (filterName, value) => {
+    // const handleFilterChange = (filterName, value) => {
+    //     setFilters(prev => ({
+    //         ...prev,
+    //         [filterName]: value
+    //     }));
+    //     setCurrentPage(1);
+    // };
+
+    const handleFilterChange = useCallback((filterName, value) => {
         setFilters(prev => ({
             ...prev,
             [filterName]: value
         }));
         setCurrentPage(1);
-    };
+    }, []);
+
 
     const clearFilters = () => {
         setFilters({
@@ -348,7 +357,7 @@ const ProductManagement = () => {
                         placeholder="Поиск по названию..."
                         value={filters.search}
                         onChange={(e) => handleFilterChange('search', e.target.value)}
-                        className="form-control search-input"
+                        className="form-control search-input filter-group-select-input"
                     />
                 </div>
 
@@ -356,7 +365,7 @@ const ProductManagement = () => {
                     <select
                         value={filters.type}
                         onChange={(e) => handleFilterChange('type', e.target.value)}
-                        className="form-control"
+                        className="form-control filter-group-select-input"
                     >
                         <option value="">Все типы</option>
                         <option value="single">Одиночные</option>
@@ -368,7 +377,7 @@ const ProductManagement = () => {
                     <select
                         value={filters.occasion}
                         onChange={(e) => handleFilterChange('occasion', e.target.value)}
-                        className="form-control"
+                        className="form-control filter-group-select-input"
                     >
                         <option value="">Все поводы</option>
                         <option value="День рождения">День рождения</option>
@@ -384,7 +393,7 @@ const ProductManagement = () => {
                     <select
                         value={filters.isActive}
                         onChange={(e) => handleFilterChange('isActive', e.target.value)}
-                        className="form-control"
+                        className="form-control filter-group-select-input"
                     >
                         <option value="">Все статусы</option>
                         <option value="true">Активные</option>

@@ -536,7 +536,7 @@ export const removeFromFavorites = async (req, res) => {
 export const getFavorites = async (req, res) => {
     try {
         const user = await User.findById(req.user.userId)
-            .populate('favorites', 'name images price description isActive');
+            // .populate('favorites', 'name images price description isActive');
 
         if (!user) {
             return res.status(404).json({

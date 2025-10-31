@@ -13,7 +13,7 @@
 }
 
 .admin-section-header h2 {
-    color: #333;
+    color: #f8f6f6;
     margin: 0;
     font-size: 1.8rem;
 }
@@ -25,10 +25,23 @@
     gap: 15px;
     margin-bottom: 25px;
     padding: 20px;
-    background: #f8f9fa;
+    background: #182f47;
     border-radius: 8px;
     border: 1px solid #e9ecef;
+    color: #0b1e24!important;
 }
+
+
+ .filter-group-select-input {
+     background: linear-gradient(135deg, #212b32 0%, #16213e 100%);
+     color: white;
+ }
+
+.filter-group-select-input::placeholder {
+    color: white;
+    opacity: 1; /* Убедитесь, что он не полупрозрачный */
+}
+
 
 .filter-group {
     display: flex;
