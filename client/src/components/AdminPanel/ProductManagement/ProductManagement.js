@@ -24,6 +24,8 @@ const ProductManagement = () => {
     const [editingProduct, setEditingProduct] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
     const [uploadingImages, setUploadingImages] = useState(false);
+    const [imageUrlInput, setImageUrlInput] = useState('');
+    const [showUrlInput, setShowUrlInput] = useState(false);
 
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
     const limit = 12;
@@ -70,15 +72,6 @@ const ProductManagement = () => {
         fetchProducts();
     }, [filters]);
 
-    // Обработчики фильтров
-    // const handleFilterChange = (filterName, value) => {
-    //     setFilters(prev => ({
-    //         ...prev,
-    //         [filterName]: value
-    //     }));
-    //     setCurrentPage(1);
-    // };
-
     const handleFilterChange = useCallback((filterName, value) => {
         setFilters(prev => ({
             ...prev,
@@ -86,7 +79,6 @@ const ProductManagement = () => {
         }));
         setCurrentPage(1);
     }, []);
-
 
     const clearFilters = () => {
         setFilters({
@@ -133,7 +125,6 @@ const ProductManagement = () => {
 
     // Редактирование товара
     const handleEditClick = (product) => {
-        // Создаем глубокую копию продукта с правильной обработкой массивов
         const productCopy = {
             ...product,
             flowerNames: Array.isArray(product.flowerNames) ? [...product.flowerNames] : [],
@@ -144,6 +135,8 @@ const ProductManagement = () => {
         };
         setEditingProduct(productCopy);
         setShowEditModal(true);
+        setShowUrlInput(false);
+        setImageUrlInput('');
     };
 
     const handleEditChange = (field, value) => {
@@ -190,7 +183,7 @@ const ProductManagement = () => {
         handleEditChange('flowerNames', updatedFlowerNames);
     };
 
-    // Загрузка изображений
+    // Загрузка изображений (файлы)
     const handleImageUpload = async (event) => {
         const files = Array.from(event.target.files);
         if (files.length === 0) return;
@@ -225,13 +218,50 @@ const ProductManagement = () => {
             toast.error('Ошибка загрузки изображений');
         } finally {
             setUploadingImages(false);
-            event.target.value = ''; // Сброс input
+            event.target.value = '';
         }
     };
 
+    // Добавление URL изображения
+    const handleAddImageUrl = () => {
+        if (!imageUrlInput.trim()) {
+            toast.error('Введите URL изображения');
+            return;
+        }
+
+        // Простая валидация URL
+        try {
+            new URL(imageUrlInput);
+        } catch (error) {
+            toast.error('Введите корректный URL');
+            return;
+        }
+
+        const updatedImages = [...editingProduct.images, imageUrlInput.trim()];
+        handleEditChange('images', updatedImages);
+        setImageUrlInput('');
+        setShowUrlInput(false);
+        toast.success('URL изображения добавлен');
+    };
+
     const removeImage = (index) => {
+        const imageToRemove = editingProduct.images[index];
         const updatedImages = editingProduct.images.filter((_, i) => i !== index);
         handleEditChange('images', updatedImages);
+
+        // Если это загруженное изображение (не URL), можно отправить запрос на удаление с сервера
+        if (imageToRemove.includes('/uploads/')) {
+            // Опционально: удалить файл с сервера
+            // deleteImageFromServer(imageToRemove);
+        }
+    };
+
+    // Функция для определения типа изображения (URL или загруженное)
+    const getImageType = (imageUrl) => {
+        if (imageUrl.startsWith('http') && !imageUrl.includes('/uploads/')) {
+            return 'url';
+        }
+        return 'uploaded';
     };
 
     // Сохранение изменений
@@ -255,11 +285,12 @@ const ProductManagement = () => {
                 stemLength: editingProduct.stemLength ? Number(editingProduct.stemLength) : undefined,
                 quantity: editingProduct.quantity ? Number(editingProduct.quantity) : 0,
                 soldCount: editingProduct.soldCount ? Number(editingProduct.soldCount) : 0,
-                // Фильтруем пустые характеристики и названия цветов
                 characteristics: editingProduct.characteristics.filter(char =>
                     char.name && char.value && char.name.trim() !== '' && char.value.trim() !== ''
                 ),
-                flowerNames: editingProduct.flowerNames.filter(name => name && name.trim() !== '')
+                flowerNames: editingProduct.flowerNames.filter(name => name && name.trim() !== ''),
+                // Изображения уже содержат как URL, так и пути к загруженным файлам
+                images: editingProduct.images
             };
 
             const response = await fetch(`${apiUrl}/api/admin/products/${editingProduct._id}`, {
@@ -458,9 +489,9 @@ const ProductManagement = () => {
                                     </p>
 
                                     <div className="product-meta">
-                    <span className={`product-type ${product.type}`}>
-                      {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
-                    </span>
+                                        <span className={`product-type ${product.type}`}>
+                                            {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
+                                        </span>
                                         <span className="product-category">{product.category}</span>
                                     </div>
 
@@ -468,11 +499,11 @@ const ProductManagement = () => {
                                         <div className="detail-item">
                                             <span className="detail-label">Цветы:</span>
                                             <span className="detail-value">
-                        {Array.isArray(product.flowerNames)
-                            ? product.flowerNames.slice(0, 2).join(', ')
-                            : product.flowerNames}
+                                                {Array.isArray(product.flowerNames)
+                                                    ? product.flowerNames.slice(0, 2).join(', ')
+                                                    : product.flowerNames}
                                                 {product.flowerNames?.length > 2 && '...'}
-                      </span>
+                                            </span>
                                         </div>
                                         <div className="detail-item">
                                             <span className="detail-label">Кому:</span>
@@ -491,17 +522,17 @@ const ProductManagement = () => {
                                     <div className="product-price-admin">
                                         {product.originalPrice && product.originalPrice > product.price ? (
                                             <>
-                        <span className="original-price">
-                          {formatPrice(product.originalPrice)}
-                        </span>
+                                                <span className="original-price">
+                                                    {formatPrice(product.originalPrice)}
+                                                </span>
                                                 <span className="current-price">
-                          {formatPrice(product.price)}
-                        </span>
+                                                    {formatPrice(product.price)}
+                                                </span>
                                             </>
                                         ) : (
                                             <span className="current-price">
-                        {formatPrice(product.price)}
-                      </span>
+                                                {formatPrice(product.price)}
+                                            </span>
                                         )}
                                     </div>
 
@@ -808,6 +839,9 @@ const ProductManagement = () => {
                                         {editingProduct.images.map((image, index) => (
                                             <div key={index} className="image-item">
                                                 <img src={image} alt={`Preview ${index + 1}`} />
+                                                <div className="image-badge">
+                                                    {getImageType(image) === 'url' ? 'URL' : 'File'}
+                                                </div>
                                                 <button
                                                     type="button"
                                                     className="btn btn-danger btn-sm"
@@ -819,17 +853,55 @@ const ProductManagement = () => {
                                         ))}
                                     </div>
 
-                                    <div className="form-group">
-                                        <label>Загрузить изображения:</label>
-                                        <input
-                                            type="file"
-                                            multiple
-                                            accept="image/*"
-                                            onChange={handleImageUpload}
-                                            className="form-control"
-                                            disabled={uploadingImages}
-                                        />
-                                        {uploadingImages && <p>Загрузка изображений...</p>}
+                                    <div className="image-upload-options">
+                                        <div className="form-group">
+                                            <label>Загрузить изображения с компьютера:</label>
+                                            <input
+                                                type="file"
+                                                multiple
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                className="form-control"
+                                                disabled={uploadingImages}
+                                            />
+                                            {uploadingImages && <p>Загрузка изображений...</p>}
+                                        </div>
+
+                                        <div className="form-group">
+                                            {!showUrlInput ? (
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-outline btn-sm"
+                                                    onClick={() => setShowUrlInput(true)}
+                                                >
+                                                    + Добавить URL изображения
+                                                </button>
+                                            ) : (
+                                                <div className="url-input-group">
+                                                    <input
+                                                        type="text"
+                                                        value={imageUrlInput}
+                                                        onChange={(e) => setImageUrlInput(e.target.value)}
+                                                        className="form-control"
+                                                        placeholder="Введите URL изображения"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary btn-sm"
+                                                        onClick={handleAddImageUrl}
+                                                    >
+                                                        Добавить
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-outline btn-sm"
+                                                        onClick={() => setShowUrlInput(false)}
+                                                    >
+                                                        Отмена
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 
