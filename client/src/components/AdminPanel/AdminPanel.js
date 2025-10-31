@@ -413,7 +413,7 @@ const AdminPanel = () => {
                                                     <select
                                                         value={slide.fontFamilleTitle}
                                                         onChange={(e) => handleSlideChange(index, 'fontFamilleTitle', e.target.value)}
-                                                        className="form-control"
+                                                        className="form-control form-control-font-family"
                                                     >
                                                         <option value="Arial">Arial</option>
                                                         <option value="Georgia">Georgia</option>
@@ -428,7 +428,7 @@ const AdminPanel = () => {
                                                     <select
                                                         value={slide.fontFamilleDescription}
                                                         onChange={(e) => handleSlideChange(index, 'fontFamilleDescription', e.target.value)}
-                                                        className="form-control"
+                                                        className="form-control form-control-font-family"
                                                     >
                                                         <option value="Arial">Arial</option>
                                                         <option value="Georgia">Georgia</option>

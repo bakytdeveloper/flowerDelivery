@@ -211,6 +211,10 @@
     color: white!important;
 }
 
+.form-control-font-family:focus {
+    color: #0b1e24!important;
+}
+
 .form-control.color-picker {
     height: 50px;
     padding: 5px;
