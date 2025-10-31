@@ -70,6 +70,7 @@ const ProductManagement = () => {
 
     useEffect(() => {
         fetchProducts();
+        // eslint-disable-next-line
     }, [filters]);
 
     const handleFilterChange = useCallback((filterName, value) => {
@@ -318,25 +319,64 @@ const ProductManagement = () => {
         }
     };
 
-    // Переключение активности товара
+    // // Переключение активности товара
+    // const toggleProductActive = async (productId, currentStatus) => {
+    //     try {
+    //         const response = await fetch(`${apiUrl}/api/admin/products/${productId}/toggle-active`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`
+    //             }
+    //         });
+    //
+    //         if (response.ok) {
+    //             toast.success(`Товар ${!currentStatus ? 'активирован' : 'деактивирован'}`);
+    //             fetchProducts(currentPage);
+    //         } else {
+    //             throw new Error('Ошибка при изменении статуса товара');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error toggling product active:', error);
+    //         toast.error('Ошибка при изменении статуса товара');
+    //     }
+    // };
+
+    // Переключение активности товара - ИСПРАВЛЕННАЯ ВЕРСИЯ
     const toggleProductActive = async (productId, currentStatus) => {
         try {
-            const response = await fetch(`${apiUrl}/api/admin/products/${productId}/toggle-active`, {
+            // Создаем обновленные данные продукта
+            const updatedProductData = {
+                isActive: !currentStatus
+            };
+
+            const response = await fetch(`${apiUrl}/api/admin/products/${productId}`, {
                 method: 'PUT',
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                }
+                },
+                body: JSON.stringify(updatedProductData)
             });
 
             if (response.ok) {
+                // const updatedProduct = await response.json();
                 toast.success(`Товар ${!currentStatus ? 'активирован' : 'деактивирован'}`);
-                fetchProducts(currentPage);
+
+                // Обновляем локальное состояние для мгновенного отражения изменений
+                setProducts(prevProducts =>
+                    prevProducts.map(product =>
+                        product._id === productId
+                            ? { ...product, isActive: !currentStatus }
+                            : product
+                    )
+                );
             } else {
-                throw new Error('Ошибка при изменении статуса товара');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Ошибка при изменении статуса товара');
             }
         } catch (error) {
             console.error('Error toggling product active:', error);
-            toast.error('Ошибка при изменении статуса товара');
+            toast.error(error.message || 'Ошибка при изменении статуса товара');
         }
     };
 
@@ -541,6 +581,7 @@ const ProductManagement = () => {
                                             className={`btn-status ${product.isActive ? 'btn-active' : 'btn-inactive'}`}
                                             onClick={() => toggleProductActive(product._id, product.isActive)}
                                         >
+                                            {/*('isActive', e.target.checked)*/}
                                             {product.isActive ? 'Активен' : 'Неактивен'}
                                         </button>
 

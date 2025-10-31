@@ -262,6 +262,10 @@
     border: 1px solid #f5c6cb;
 }
 
+.btn-inactive, .btn-active {
+    cursor: default!important;
+}
+
 .btn-edit {
     background: #fff3cd;
     color: #856404;
