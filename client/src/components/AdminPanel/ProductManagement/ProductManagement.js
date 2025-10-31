@@ -1,6 +1,7 @@
 // src/components/AdminPanel/ProductManagement/ProductManagement.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
+import ProductForm from "../ProductForm/ProductForm";
 import { toast } from 'react-toastify';
 import './ProductManagement.css';
 
@@ -26,7 +27,9 @@ const ProductManagement = () => {
     const [uploadingImages, setUploadingImages] = useState(false);
     const [imageUrlInput, setImageUrlInput] = useState('');
     const [showUrlInput, setShowUrlInput] = useState(false);
-
+    const [modalMode, setModalMode] = useState('edit'); // 'edit' или 'create'
+    const [showProductModal, setShowProductModal] = useState(false);
+    const [currentProduct, setCurrentProduct] = useState(null);
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
     const limit = 12;
 
@@ -124,7 +127,7 @@ const ProductManagement = () => {
         }
     };
 
-    // Редактирование товара
+    // Заменяем функцию handleEditClick на:
     const handleEditClick = (product) => {
         const productCopy = {
             ...product,
@@ -134,10 +137,27 @@ const ProductManagement = () => {
                 : [],
             images: Array.isArray(product.images) ? [...product.images] : []
         };
-        setEditingProduct(productCopy);
-        setShowEditModal(true);
-        setShowUrlInput(false);
-        setImageUrlInput('');
+        setCurrentProduct(productCopy);
+        setModalMode('edit');
+        setShowProductModal(true);
+    };
+
+// Добавляем функцию для создания товара:
+    const handleCreateClick = () => {
+        setCurrentProduct(null);
+        setModalMode('create');
+        setShowProductModal(true);
+    };
+
+// Добавляем функцию обработки сохранения:
+    const handleProductSave = (savedProduct) => {
+        setShowProductModal(false);
+        setCurrentProduct(null);
+        fetchProducts(currentPage);
+
+        if (modalMode === 'create') {
+            toast.success('Товар успешно создан');
+        }
     };
 
     const handleEditChange = (field, value) => {
@@ -319,28 +339,6 @@ const ProductManagement = () => {
         }
     };
 
-    // // Переключение активности товара
-    // const toggleProductActive = async (productId, currentStatus) => {
-    //     try {
-    //         const response = await fetch(`${apiUrl}/api/admin/products/${productId}/toggle-active`, {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`
-    //             }
-    //         });
-    //
-    //         if (response.ok) {
-    //             toast.success(`Товар ${!currentStatus ? 'активирован' : 'деактивирован'}`);
-    //             fetchProducts(currentPage);
-    //         } else {
-    //             throw new Error('Ошибка при изменении статуса товара');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error toggling product active:', error);
-    //         toast.error('Ошибка при изменении статуса товара');
-    //     }
-    // };
-
     // Переключение активности товара - ИСПРАВЛЕННАЯ ВЕРСИЯ
     const toggleProductActive = async (productId, currentStatus) => {
         try {
@@ -414,7 +412,7 @@ const ProductManagement = () => {
             <div className="admin-section-header">
                 <h2>Управление товарами</h2>
                 <div className="section-actions">
-                    <button className="btn btn-primary" onClick={() => window.location.href = '/admin/products/create'}>
+                    <button className="btn btn-primary" onClick={handleCreateClick}>
                         + Добавить товар
                     </button>
                 </div>
@@ -662,320 +660,15 @@ const ProductManagement = () => {
             )}
 
             {/* Модальное окно редактирования */}
-            {showEditModal && editingProduct && (
-                <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
-                    <div className="modal-content large-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3>Редактирование товара</h3>
-                            <button className="modal-close" onClick={() => setShowEditModal(false)}>×</button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="edit-form">
-                                {/* Основная информация */}
-                                <div className="form-section">
-                                    <h4>Основная информация</h4>
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <label>Название *:</label>
-                                            <input
-                                                type="text"
-                                                value={editingProduct.name}
-                                                onChange={(e) => handleEditChange('name', e.target.value)}
-                                                className="form-control"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Категория *:</label>
-                                            <input
-                                                type="text"
-                                                value={editingProduct.category}
-                                                onChange={(e) => handleEditChange('category', e.target.value)}
-                                                className="form-control"
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label>Описание:</label>
-                                        <textarea
-                                            value={editingProduct.description}
-                                            onChange={(e) => handleEditChange('description', e.target.value)}
-                                            className="form-control"
-                                            rows="3"
-                                        />
-                                    </div>
-
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <label>Тип:</label>
-                                            <select
-                                                value={editingProduct.type}
-                                                onChange={(e) => handleEditChange('type', e.target.value)}
-                                                className="form-control"
-                                            >
-                                                <option value="single">Одиночный</option>
-                                                <option value="bouquet">Букет</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Повод:</label>
-                                            <input
-                                                type="text"
-                                                value={editingProduct.occasion}
-                                                onChange={(e) => handleEditChange('occasion', e.target.value)}
-                                                className="form-control"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <label>Кому:</label>
-                                            <input
-                                                type="text"
-                                                value={editingProduct.recipient}
-                                                onChange={(e) => handleEditChange('recipient', e.target.value)}
-                                                className="form-control"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Длина стебля (см):</label>
-                                            <input
-                                                type="number"
-                                                value={editingProduct.stemLength}
-                                                onChange={(e) => handleEditChange('stemLength', e.target.value)}
-                                                className="form-control"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Цены и количество */}
-                                <div className="form-section">
-                                    <h4>Цены и количество</h4>
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <label>Цена (₸) *:</label>
-                                            <input
-                                                type="number"
-                                                value={editingProduct.price}
-                                                onChange={(e) => handleEditChange('price', e.target.value)}
-                                                className="form-control"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Старая цена (₸):</label>
-                                            <input
-                                                type="number"
-                                                value={editingProduct.originalPrice || ''}
-                                                onChange={(e) => handleEditChange('originalPrice', e.target.value)}
-                                                className="form-control"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="form-row">
-                                        <div className="form-group">
-                                            <label>Количество:</label>
-                                            <input
-                                                type="number"
-                                                value={editingProduct.quantity}
-                                                onChange={(e) => handleEditChange('quantity', e.target.value)}
-                                                className="form-control"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Продано:</label>
-                                            <input
-                                                type="number"
-                                                value={editingProduct.soldCount}
-                                                onChange={(e) => handleEditChange('soldCount', e.target.value)}
-                                                className="form-control"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Названия цветов */}
-                                <div className="form-section">
-                                    <h4>Названия цветов</h4>
-                                    {editingProduct.flowerNames.map((flowerName, index) => (
-                                        <div key={index} className="form-row array-item">
-                                            <div className="form-group">
-                                                <input
-                                                    type="text"
-                                                    value={flowerName}
-                                                    onChange={(e) => handleFlowerNameChange(index, e.target.value)}
-                                                    className="form-control"
-                                                    placeholder={`Название цветка ${index + 1}`}
-                                                />
-                                            </div>
-                                            <button
-                                                type="button"
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() => removeFlowerName(index)}
-                                                disabled={editingProduct.flowerNames.length === 1}
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
-                                    ))}
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline btn-sm"
-                                        onClick={addFlowerName}
-                                    >
-                                        + Добавить цветок
-                                    </button>
-                                </div>
-
-                                {/* Характеристики */}
-                                <div className="form-section">
-                                    <h4>Характеристики</h4>
-                                    {editingProduct.characteristics.map((char, index) => (
-                                        <div key={index} className="form-row array-item">
-                                            <div className="form-group">
-                                                <input
-                                                    type="text"
-                                                    value={char.name}
-                                                    onChange={(e) => handleCharacteristicChange(index, 'name', e.target.value)}
-                                                    className="form-control"
-                                                    placeholder="Название характеристики"
-                                                />
-                                            </div>
-                                            <div className="form-group">
-                                                <input
-                                                    type="text"
-                                                    value={char.value}
-                                                    onChange={(e) => handleCharacteristicChange(index, 'value', e.target.value)}
-                                                    className="form-control"
-                                                    placeholder="Значение"
-                                                />
-                                            </div>
-                                            <button
-                                                type="button"
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() => removeCharacteristic(index)}
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
-                                    ))}
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline btn-sm"
-                                        onClick={addCharacteristic}
-                                    >
-                                        + Добавить характеристику
-                                    </button>
-                                </div>
-
-                                {/* Изображения */}
-                                <div className="form-section">
-                                    <h4>Изображения</h4>
-                                    <div className="images-preview">
-                                        {editingProduct.images.map((image, index) => (
-                                            <div key={index} className="image-item">
-                                                <img src={image} alt={`Preview ${index + 1}`} />
-                                                <div className="image-badge">
-                                                    {getImageType(image) === 'url' ? 'URL' : 'File'}
-                                                </div>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-danger btn-sm"
-                                                    onClick={() => removeImage(index)}
-                                                >
-                                                    ×
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="image-upload-options">
-                                        <div className="form-group">
-                                            <label>Загрузить изображения с компьютера:</label>
-                                            <input
-                                                type="file"
-                                                multiple
-                                                accept="image/*"
-                                                onChange={handleImageUpload}
-                                                className="form-control"
-                                                disabled={uploadingImages}
-                                            />
-                                            {uploadingImages && <p>Загрузка изображений...</p>}
-                                        </div>
-
-                                        <div className="form-group">
-                                            {!showUrlInput ? (
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-outline btn-sm add-image-url"
-                                                    onClick={() => setShowUrlInput(true)}
-                                                >
-                                                    + Добавить URL изображения
-                                                </button>
-                                            ) : (
-                                                <div className="url-input-group">
-                                                    <input
-                                                        type="text"
-                                                        value={imageUrlInput}
-                                                        onChange={(e) => setImageUrlInput(e.target.value)}
-                                                        className="form-control"
-                                                        placeholder="Введите URL изображения"
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-primary btn-sm"
-                                                        onClick={handleAddImageUrl}
-                                                    >
-                                                        Добавить
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-outline btn-sm"
-                                                        onClick={() => setShowUrlInput(false)}
-                                                    >
-                                                        Отмена
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Статус */}
-                                <div className="form-section">
-                                    <h4>Статус</h4>
-                                    <div className="form-group">
-                                        <label className="checkbox-label">
-                                            <input
-                                                type="checkbox"
-                                                checked={editingProduct.isActive}
-                                                onChange={(e) => handleEditChange('isActive', e.target.checked)}
-                                            />
-                                            Активный товар
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-outline" onClick={() => setShowEditModal(false)}>
-                                Отмена
-                            </button>
-                            <button
-                                className="btn btn-primary"
-                                onClick={saveProductChanges}
-                                disabled={isSaving}
-                            >
-                                {isSaving ? 'Сохранение...' : 'Сохранить'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            {showProductModal && (
+                <ProductForm
+                    initialProduct={currentProduct}
+                    onSave={handleProductSave}
+                    onCancel={() => {
+                        setShowProductModal(false);
+                        setCurrentProduct(null);
+                    }}
+                />
             )}
         </div>
     );
