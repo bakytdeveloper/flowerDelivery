@@ -55,9 +55,10 @@
 .products-stats {
     margin-bottom: 20px;
     padding: 15px;
-    background: white;
+    background: #1c3f51;
     border-radius: 8px;
     border-left: 4px solid #007bff;
+    color: white;
 }
 
 /* Сетка товаров */
@@ -498,13 +499,13 @@
     background: #0056b3;
 }
 
-.btn-outline {
+.btn-outline-management {
     background: transparent;
     color: #6c757d;
-    border: 1px solid #6c757d;
+    border: 3px solid #343b41 !important;
 }
 
-.btn-outline:hover {
+.btn-outline-management:hover {
     background: #6c757d;
     color: white;
 }

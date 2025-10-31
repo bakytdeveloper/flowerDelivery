@@ -470,7 +470,7 @@ const ProductManagement = () => {
                     </select>
                 </div>
 
-                <button className="btn btn-outline" onClick={clearFilters}>
+                <button className="btn btn-outline-management" onClick={clearFilters}>
                     Очистить
                 </button>
             </div>
