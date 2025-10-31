@@ -151,7 +151,7 @@ const App = () => {
             name: 'Администратор',
             role: 'admin'
           };
-         
+
           return adminUser;
         }
 
