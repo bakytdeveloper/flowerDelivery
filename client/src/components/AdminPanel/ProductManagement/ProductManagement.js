@@ -871,7 +871,7 @@ const ProductManagement = () => {
                                             {!showUrlInput ? (
                                                 <button
                                                     type="button"
-                                                    className="btn btn-outline btn-sm"
+                                                    className="btn btn-outline btn-sm add-image-url"
                                                     onClick={() => setShowUrlInput(true)}
                                                 >
                                                     + Добавить URL изображения
