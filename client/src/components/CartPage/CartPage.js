@@ -1,283 +1,24 @@
-// import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+// import React, {useEffect, useState} from 'react';
+// import { useNavigate, useLocation } from 'react-router-dom';
 // import { useCart } from '../../contexts/CartContext';
 // import { useAuth } from '../../contexts/AuthContext';
 // import './CartPage.css';
 //
 // const CartPage = () => {
-//     const { cart, updateCartItem, removeFromCart, clearCart, loading } = useCart();
+//     const { cart, updateCartItem, removeFromCart, clearCart, updateWrapper, loading } = useCart();
 //     const { isAuthenticated } = useAuth();
 //     const navigate = useNavigate();
 //     const [updatingItems, setUpdatingItems] = useState(new Set());
-//
-//     const formatPrice = (price) => {
-//         return new Intl.NumberFormat('ru-RU', {
-//             style: 'currency',
-//             currency: 'KZT',
-//             minimumFractionDigits: 0
-//         }).format(price);
-//     };
-//
-//     const handleQuantityChange = async (itemId, newQuantity) => {
-//         if (newQuantity < 1) return;
-//
-//         setUpdatingItems(prev => new Set(prev).add(itemId));
-//
-//         const result = await updateCartItem(itemId, newQuantity);
-//
-//         setUpdatingItems(prev => {
-//             const newSet = new Set(prev);
-//             newSet.delete(itemId);
-//             return newSet;
+//     const [selectedWrapperImage, setSelectedWrapperImage] = useState(null);
+//     const location = useLocation();
+//     // Прокрутка вверх при монтировании компонента и изменении фильтров
+//     useEffect(() => {
+//         window.scrollTo({
+//             top: 0,
+//             left: 0,
+//             behavior: 'smooth'
 //         });
-//
-//         if (!result.success) {
-//             alert(result.error);
-//         }
-//     };
-//
-//     const handleRemoveItem = async (itemId) => {
-//         if (window.confirm('Вы уверены, что хотите удалить этот товар из корзины?')) {
-//             const result = await removeFromCart(itemId);
-//             if (!result.success) {
-//                 alert(result.error);
-//             }
-//         }
-//     };
-//
-//     const handleClearCart = async () => {
-//         if (window.confirm('Вы уверены, что хотите очистить всю корзину?')) {
-//             const result = await clearCart();
-//             if (!result.success) {
-//                 alert(result.error);
-//             }
-//         }
-//     };
-//
-//     const handleCheckout = () => {
-//         if (cart.items.length === 0) {
-//             alert('Корзина пуста');
-//             return;
-//         }
-//         navigate('/checkout');
-//     };
-//
-//     const handleContinueShopping = () => {
-//         navigate('/catalog');
-//     };
-//
-//     if (loading) {
-//         return (
-//             <div className="cart-page">
-//                 <div className="container">
-//                     <div className="cart-loading">
-//                         <div className="spinner-border text-primary" role="status">
-//                             <span className="visually-hidden">Загрузка...</span>
-//                         </div>
-//                         <p>Загрузка корзины...</p>
-//                     </div>
-//                 </div>
-//             </div>
-//         );
-//     }
-//
-//     return (
-//         <div className="cart-page">
-//             <div className="container">
-//                 <div className="cart-header">
-//                     <h1 className="cart-title">Корзина</h1>
-//                     {cart.items.length > 0 && (
-//                         <button
-//                             className="btn-clear-cart"
-//                             onClick={handleClearCart}
-//                         >
-//                             Очистить корзину
-//                         </button>
-//                     )}
-//                 </div>
-//
-//                 {cart.items.length === 0 ? (
-//                     <div className="empty-cart">
-//                         <div className="empty-cart-content">
-//                             <div className="empty-cart-icon">🛒</div>
-//                             <h2>Ваша корзина пуста</h2>
-//                             <p>Добавьте товары из каталога, чтобы сделать заказ</p>
-//                             <button
-//                                 className="btn btn-primary"
-//                                 onClick={handleContinueShopping}
-//                             >
-//                                 Перейти в каталог
-//                             </button>
-//                         </div>
-//                     </div>
-//                 ) : (
-//                     <div className="cart-content">
-//                         <div className="cart-items">
-//                             {cart.items.map((item) => (
-//                                 <div key={item._id} className="cart-item">
-//                                     <div className="item-image">
-//                                         <img
-//                                             src={item.image || '/images/placeholder-flower.jpg'}
-//                                             alt={item.name}
-//                                         />
-//                                     </div>
-//
-//                                     <div className="item-details">
-//                                         <h3 className="item-name">{item.name}</h3>
-//
-//                                         <div className="item-specs">
-//                                             <span className="item-type">
-//                                                 {item.flowerType === 'single' ? '💐 Одиночный цветок' : '💮 Букет'}
-//                                             </span>
-//                                             {item.flowerNames && item.flowerNames.length > 0 && (
-//                                                 <span className="item-flowers">
-//                                                     Цветы: {item.flowerNames.join(', ')}
-//                                                 </span>
-//                                             )}
-//                                             {item.flowerColor && (
-//                                                 <span className="item-color">
-//                                                     Цвет: {item.flowerColor.name}
-//                                                 </span>
-//                                             )}
-//                                         </div>
-//
-//                                         {/* Отображение обёртки */}
-//                                         {item.wrapper && item.wrapper.wrapperId && (
-//                                             <div className="item-wrapper">
-//                                                 <span className="wrapper-label">Обёртка:</span>
-//                                                 <span className="wrapper-name">{item.wrapper.name}</span>
-//                                                 <span className="wrapper-price">
-//                                                     +{formatPrice(item.wrapper.price)}
-//                                                 </span>
-//                                             </div>
-//                                         )}
-//
-//                                         {/* Отображение дополнений */}
-//                                         {item.addons && item.addons.length > 0 && (
-//                                             <div className="item-addons">
-//                                                 <span className="addons-label">Дополнения:</span>
-//                                                 {item.addons.map((addon, index) => (
-//                                                     <div key={index} className="addon-item">
-//                                                         <span className="addon-name">{addon.name}</span>
-//                                                         <span className="addon-quantity">×{addon.quantity}</span>
-//                                                         <span className="addon-price">
-//                                                             +{formatPrice(addon.price * addon.quantity)}
-//                                                         </span>
-//                                                     </div>
-//                                                 ))}
-//                                             </div>
-//                                         )}
-//                                     </div>
-//
-//                                     <div className="item-controls">
-//                                         <div className="quantity-controls">
-//                                             <button
-//                                                 className="quantity-btn"
-//                                                 onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
-//                                                 disabled={item.quantity <= 1 || updatingItems.has(item._id)}
-//                                             >
-//                                                 -
-//                                             </button>
-//                                             <span className="quantity-display">
-//                                                 {updatingItems.has(item._id) ? (
-//                                                     <div className="mini-spinner"></div>
-//                                                 ) : (
-//                                                     item.quantity
-//                                                 )}
-//                                             </span>
-//                                             <button
-//                                                 className="quantity-btn"
-//                                                 onClick={() => handleQuantityChange(item._id, item.quantity + 1)}
-//                                                 disabled={updatingItems.has(item._id)}
-//                                             >
-//                                                 +
-//                                             </button>
-//                                         </div>
-//
-//                                         <div className="item-price">
-//                                             {formatPrice(item.itemTotal * item.quantity)}
-//                                         </div>
-//
-//                                         <button
-//                                             className="btn-remove-item"
-//                                             onClick={() => handleRemoveItem(item._id)}
-//                                             disabled={updatingItems.has(item._id)}
-//                                         >
-//                                             🗑️
-//                                         </button>
-//                                     </div>
-//                                 </div>
-//                             ))}
-//                         </div>
-//
-//                         <div className="cart-summary">
-//                             <div className="summary-card">
-//                                 <h3 className="summary-title">Итого</h3>
-//
-//                                 <div className="summary-row">
-//                                     <span>Товары ({cart.totalItems} шт.)</span>
-//                                     <span>{formatPrice(cart.total)}</span>
-//                                 </div>
-//
-//                                 <div className="summary-row">
-//                                     <span>Доставка</span>
-//                                     <span className="free-shipping">Бесплатно</span>
-//                                 </div>
-//
-//                                 <div className="summary-divider"></div>
-//
-//                                 <div className="summary-total">
-//                                     <span>Общая сумма</span>
-//                                     <span className="total-price">{formatPrice(cart.total)}</span>
-//                                 </div>
-//
-//                                 {!isAuthenticated && (
-//                                     <div className="guest-notice">
-//                                         <p>💡 Для быстрого оформления заказа рекомендуем войти в систему</p>
-//                                     </div>
-//                                 )}
-//
-//                                 <button
-//                                     className="btn-checkout"
-//                                     onClick={handleCheckout}
-//                                 >
-//                                     Перейти к оформлению
-//                                 </button>
-//
-//                                 <button
-//                                     className="btn-continue-shopping"
-//                                     onClick={handleContinueShopping}
-//                                 >
-//                                     Продолжить покупки
-//                                 </button>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// };
-//
-// export default CartPage;
-
-
-
-
-
-
-
-// import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { useCart } from '../../contexts/CartContext';
-// import { useAuth } from '../../contexts/AuthContext';
-// import './CartPage.css';
-//
-// const CartPage = () => {
-//     const { cart, updateCartItem, removeFromCart, clearCart, loading } = useCart();
-//     const { isAuthenticated } = useAuth();
-//     const navigate = useNavigate();
-//     const [updatingItems, setUpdatingItems] = useState(new Set());
+//     }, [location.search]);
 //
 //     const formatPrice = (price) => {
 //         return new Intl.NumberFormat('ru-RU', {
@@ -329,6 +70,30 @@
 //         }
 //     };
 //
+//     // Добавляем обработчики для обертки
+//     const handleRemoveWrapper = async (itemId) => {
+//         if (window.confirm('Вы уверены, что хотите удалить обертку?')) {
+//             const result = await updateWrapper(itemId, null);
+//             if (!result.success) {
+//                 alert(result.error);
+//             }
+//         }
+//     };
+//
+//     // const handleChangeWrapper = async (itemId) => {
+//     //     // Здесь можно реализовать модальное окно для выбора новой обертки
+//     //     // или перенаправить на страницу выбора обертки
+//     //     navigate('/wrappers', { state: { cartItemId: itemId } });
+//     // };
+//
+//     const handleShowWrapperImage = (wrapper) => {
+//         setSelectedWrapperImage(wrapper);
+//     };
+//
+//     const handleCloseWrapperImage = () => {
+//         setSelectedWrapperImage(null);
+//     };
+//
 //     const handleCheckout = () => {
 //         if (allItems.length === 0) {
 //             alert('Корзина пуста');
@@ -359,7 +124,24 @@
 //     return (
 //         <div className="cart-page">
 //             <div className="container">
+//
 //                 <div className="cart-header">
+//                     {/* Хлебные крошки */}
+//                     <nav className="breadcrumb-nav">
+//                         <button
+//                             className="breadcrumb-back"
+//                             onClick={() => navigate(-1)}
+//                         >
+//                             ← Назад
+//                         </button>
+//                         <span className="breadcrumb-separator">/</span>
+//                         <button
+//                             className="breadcrumb-link"
+//                             onClick={() => navigate('/catalog')}
+//                         >
+//                             Каталог
+//                         </button>
+//                     </nav>
 //                     <h1 className="cart-title">Корзина</h1>
 //                     {allItems.length > 0 && (
 //                         <button
@@ -431,14 +213,47 @@
 //                                             </div>
 //                                         )}
 //
-//                                         {/* Отображение обёртки (только для цветов) */}
+//                                         {/* Обновленное отображение обёртки (только для цветов) */}
 //                                         {item.itemType === 'flower' && item.wrapper && item.wrapper.wrapperId && (
 //                                             <div className="item-wrapper">
-//                                                 <span className="wrapper-label">Обёртка:</span>
-//                                                 <span className="wrapper-name">{item.wrapper.name}</span>
-//                                                 <span className="wrapper-price">
-//                                                     +{formatPrice(item.wrapper.price)}
-//                                                 </span>
+//                                                 <div className="wrapper-header">
+//                                                     <span className="wrapper-label">Обёртка:</span>
+//                                                     <span className="wrapper-name">{item.wrapper.name}</span>
+//                                                     <span className="wrapper-price">
+//                                                         {item.flowerType === 'single' ?
+//                                                             `+${formatPrice(item.wrapper.price)} (за заказ)` :
+//                                                             `+${formatPrice(item.wrapper.price)} за шт.`
+//                                                         }
+//                                                     </span>
+//                                                 </div>
+//
+//                                                 <div className="wrapper-preview">
+//                                                     <div
+//                                                         className="wrapper-image-thumbnail"
+//                                                         onClick={() => handleShowWrapperImage(item.wrapper)}
+//                                                     >
+//                                                         <img
+//                                                             src={item.wrapper.image || '/images/placeholder-wrapper.jpg'}
+//                                                             alt={item.wrapper.name}
+//                                                         />
+//                                                         <span className="wrapper-preview-text">👁️ Посмотреть</span>
+//                                                     </div>
+//                                                 </div>
+//
+//                                                 <div className="wrapper-controls">
+//                                                     {/*<button*/}
+//                                                     {/*    className="btn-change-wrapper"*/}
+//                                                     {/*    onClick={() => handleChangeWrapper(item._id)}*/}
+//                                                     {/*>*/}
+//                                                     {/*    Изменить*/}
+//                                                     {/*</button>*/}
+//                                                     <button
+//                                                         className="btn-remove-wrapper"
+//                                                         onClick={() => handleRemoveWrapper(item._id)}
+//                                                     >
+//                                                         Удалить
+//                                                     </button>
+//                                                 </div>
 //                                             </div>
 //                                         )}
 //                                     </div>
@@ -529,6 +344,27 @@
 //                     </div>
 //                 )}
 //             </div>
+//
+//             {/* Модальное окно для просмотра картинки обертки */}
+//             {selectedWrapperImage && (
+//                 <div className="wrapper-image-modal" onClick={handleCloseWrapperImage}>
+//                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+//                         <button className="modal-close" onClick={handleCloseWrapperImage}>
+//                             ×
+//                         </button>
+//                         <div className="modal-image-container">
+//                             <img
+//                                 src={selectedWrapperImage.image || '/images/placeholder-wrapper.jpg'}
+//                                 alt={selectedWrapperImage.name}
+//                             />
+//                         </div>
+//                         <div className="modal-info">
+//                             <h3>{selectedWrapperImage.name}</h3>
+//                             <p className="modal-price">{formatPrice(selectedWrapperImage.price)}</p>
+//                         </div>
+//                     </div>
+//                 </div>
+//             )}
 //         </div>
 //     );
 // };
@@ -537,10 +373,12 @@
 
 
 
-import React, {useEffect, useState} from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { toast } from 'react-toastify';
 import './CartPage.css';
 
 const CartPage = () => {
@@ -549,7 +387,13 @@ const CartPage = () => {
     const navigate = useNavigate();
     const [updatingItems, setUpdatingItems] = useState(new Set());
     const [selectedWrapperImage, setSelectedWrapperImage] = useState(null);
+    const [showRemoveItemModal, setShowRemoveItemModal] = useState(false);
+    const [showClearCartModal, setShowClearCartModal] = useState(false);
+    const [showRemoveWrapperModal, setShowRemoveWrapperModal] = useState(false);
+    const [itemToRemove, setItemToRemove] = useState(null);
+    const [wrapperToRemove, setWrapperToRemove] = useState(null);
     const location = useLocation();
+
     // Прокрутка вверх при монтировании компонента и изменении фильтров
     useEffect(() => {
         window.scrollTo({
@@ -587,43 +431,102 @@ const CartPage = () => {
         });
 
         if (!result.success) {
-            alert(result.error);
+            toast.error(result.error, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } else {
+            toast.success('Количество обновлено', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: true,
+            });
         }
     };
 
-    const handleRemoveItem = async (itemId, itemType) => {
-        if (window.confirm('Вы уверены, что хотите удалить этот товар из корзины?')) {
-            const result = await removeFromCart(itemId, itemType);
-            if (!result.success) {
-                alert(result.error);
-            }
+    // Удаление товара
+    const handleRemoveItemClick = (itemId, itemType) => {
+        setItemToRemove({ itemId, itemType });
+        setShowRemoveItemModal(true);
+    };
+
+    const confirmRemoveItem = async () => {
+        if (!itemToRemove) return;
+
+        const result = await removeFromCart(itemToRemove.itemId, itemToRemove.itemType);
+        setShowRemoveItemModal(false);
+        setItemToRemove(null);
+
+        if (result.success) {
+            toast.success('Товар удален из корзины', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: true,
+            });
+        } else {
+            toast.error(result.error, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+            });
         }
     };
 
-    const handleClearCart = async () => {
-        if (window.confirm('Вы уверены, что хотите очистить всю корзину?')) {
-            const result = await clearCart();
-            if (!result.success) {
-                alert(result.error);
-            }
+    // Очистка корзины
+    const handleClearCartClick = () => {
+        setShowClearCartModal(true);
+    };
+
+    const confirmClearCart = async () => {
+        const result = await clearCart();
+        setShowClearCartModal(false);
+
+        if (result.success) {
+            toast.success('Корзина очищена', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: true,
+            });
+        } else {
+            toast.error(result.error, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+            });
         }
     };
 
-    // Добавляем обработчики для обертки
-    const handleRemoveWrapper = async (itemId) => {
-        if (window.confirm('Вы уверены, что хотите удалить обертку?')) {
-            const result = await updateWrapper(itemId, null);
-            if (!result.success) {
-                alert(result.error);
-            }
-        }
+    // Удаление обёртки
+    const handleRemoveWrapperClick = (itemId) => {
+        setWrapperToRemove(itemId);
+        setShowRemoveWrapperModal(true);
     };
 
-    // const handleChangeWrapper = async (itemId) => {
-    //     // Здесь можно реализовать модальное окно для выбора новой обертки
-    //     // или перенаправить на страницу выбора обертки
-    //     navigate('/wrappers', { state: { cartItemId: itemId } });
-    // };
+    const confirmRemoveWrapper = async () => {
+        if (!wrapperToRemove) return;
+
+        const result = await updateWrapper(wrapperToRemove, null);
+        setShowRemoveWrapperModal(false);
+        setWrapperToRemove(null);
+
+        if (result.success) {
+            toast.success('Обёртка удалена', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: true,
+            });
+        } else {
+            toast.error(result.error, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+            });
+        }
+    };
 
     const handleShowWrapperImage = (wrapper) => {
         setSelectedWrapperImage(wrapper);
@@ -635,7 +538,11 @@ const CartPage = () => {
 
     const handleCheckout = () => {
         if (allItems.length === 0) {
-            alert('Корзина пуста');
+            toast.warning('Корзина пуста', {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+            });
             return;
         }
         navigate('/checkout');
@@ -663,7 +570,6 @@ const CartPage = () => {
     return (
         <div className="cart-page">
             <div className="container">
-
                 <div className="cart-header">
                     {/* Хлебные крошки */}
                     <nav className="breadcrumb-nav">
@@ -681,11 +587,13 @@ const CartPage = () => {
                             Каталог
                         </button>
                     </nav>
-                    <h1 className="cart-title">Корзина</h1>
+                    <div>
+                        <h1 className="cart-title-page">Корзина</h1>
+                    </div>
                     {allItems.length > 0 && (
                         <button
                             className="btn-clear-cart"
-                            onClick={handleClearCart}
+                            onClick={handleClearCartClick}
                         >
                             Очистить корзину
                         </button>
@@ -780,15 +688,9 @@ const CartPage = () => {
                                                 </div>
 
                                                 <div className="wrapper-controls">
-                                                    {/*<button*/}
-                                                    {/*    className="btn-change-wrapper"*/}
-                                                    {/*    onClick={() => handleChangeWrapper(item._id)}*/}
-                                                    {/*>*/}
-                                                    {/*    Изменить*/}
-                                                    {/*</button>*/}
                                                     <button
                                                         className="btn-remove-wrapper"
-                                                        onClick={() => handleRemoveWrapper(item._id)}
+                                                        onClick={() => handleRemoveWrapperClick(item._id)}
                                                     >
                                                         Удалить
                                                     </button>
@@ -828,7 +730,7 @@ const CartPage = () => {
 
                                         <button
                                             className="btn-remove-item"
-                                            onClick={() => handleRemoveItem(item._id, item.itemType)}
+                                            onClick={() => handleRemoveItemClick(item._id, item.itemType)}
                                             disabled={updatingItems.has(`${item._id}-${item.itemType}`)}
                                         >
                                             🗑️
@@ -900,6 +802,94 @@ const CartPage = () => {
                         <div className="modal-info">
                             <h3>{selectedWrapperImage.name}</h3>
                             <p className="modal-price">{formatPrice(selectedWrapperImage.price)}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Модальное окно удаления товара */}
+            {showRemoveItemModal && (
+                <div className="modal-overlay" onClick={() => setShowRemoveItemModal(false)}>
+                    <div className="modal-content confirmation-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Удаление товара</h3>
+                            <button className="modal-close" onClick={() => setShowRemoveItemModal(false)}>×</button>
+                        </div>
+                        <div className="modal-body">
+                            <p>Вы уверены, что хотите удалить этот товар из корзины?</p>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                className="btn btn-outline"
+                                onClick={() => setShowRemoveItemModal(false)}
+                            >
+                                Отмена
+                            </button>
+                            <button
+                                className="btn btn-danger"
+                                onClick={confirmRemoveItem}
+                            >
+                                Удалить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Модальное окно очистки корзины */}
+            {showClearCartModal && (
+                <div className="modal-overlay" onClick={() => setShowClearCartModal(false)}>
+                    <div className="modal-content confirmation-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Очистка корзины</h3>
+                            <button className="modal-close" onClick={() => setShowClearCartModal(false)}>×</button>
+                        </div>
+                        <div className="modal-body">
+                            <p>Вы уверены, что хотите очистить всю корзину?</p>
+                            <p className="warning-text">Это действие нельзя отменить.</p>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                className="btn btn-outline"
+                                onClick={() => setShowClearCartModal(false)}
+                            >
+                                Отмена
+                            </button>
+                            <button
+                                className="btn btn-danger"
+                                onClick={confirmClearCart}
+                            >
+                                Очистить корзину
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Модальное окно удаления обёртки */}
+            {showRemoveWrapperModal && (
+                <div className="modal-overlay" onClick={() => setShowRemoveWrapperModal(false)}>
+                    <div className="modal-content confirmation-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Удаление обёртки</h3>
+                            <button className="modal-close" onClick={() => setShowRemoveWrapperModal(false)}>×</button>
+                        </div>
+                        <div className="modal-body">
+                            <p>Вы уверены, что хотите удалить обёртку?</p>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                className="btn btn-outline"
+                                onClick={() => setShowRemoveWrapperModal(false)}
+                            >
+                                Отмена
+                            </button>
+                            <button
+                                className="btn btn-danger"
+                                onClick={confirmRemoveWrapper}
+                            >
+                                Удалить
+                            </button>
                         </div>
                     </div>
                 </div>

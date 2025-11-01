@@ -12,6 +12,7 @@ const WrapperManagement = () => {
     const [error, setError] = useState(null);
     const [showWrapperModal, setShowWrapperModal] = useState(false);
     const [currentWrapper, setCurrentWrapper] = useState(null);
+    // eslint-disable-next-line
     const [modalMode, setModalMode] = useState('create');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [wrapperToDelete, setWrapperToDelete] = useState(null);

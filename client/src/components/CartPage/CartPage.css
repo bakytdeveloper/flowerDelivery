@@ -23,10 +23,12 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.cart-title {
+.cart-title-page {
+    display: block;
     font-size: 2.5rem;
     font-weight: 700;
-    margin: 0;
+    text-align: center;
+    margin: 0 auto;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -623,7 +625,7 @@
         padding: 1.5rem;
     }
 
-    .cart-title {
+    .cart-title-page {
         font-size: 2rem;
     }
 
@@ -680,7 +682,7 @@
         margin-bottom: 1rem;
     }
 
-    .cart-title {
+    .cart-title-page {
         font-size: 1.7rem;
     }
 
@@ -723,4 +725,241 @@
     .quantity-controls {
         justify-self: center;
     }
+}
+
+
+
+/* Стили для модальных окон */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.confirmation-modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-body p {
+    margin: 0 0 10px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.warning-text {
+    color: #dc3545;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 0 20px 20px;
+}
+
+.modal-footer .btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+    min-width: 80px;
+}
+
+.modal-footer .btn-outline {
+    background: white;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+.modal-footer .btn-outline:hover {
+    background: #f8f9fa;
+    border-color: #ccc;
+}
+
+.modal-footer .btn-danger {
+    background: #dc3545;
+    border: 1px solid #dc3545;
+    color: white;
+}
+
+.modal-footer .btn-danger:hover {
+    background: #c82333;
+    border-color: #bd2130;
+}
+
+/* Стили для мини-спиннера */
+.mini-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #e91e63;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Адаптивность для модальных окон */
+@media (max-width: 768px) {
+    .modal-overlay {
+        padding: 10px;
+    }
+
+    .confirmation-modal {
+        max-width: 100%;
+        margin: 20px;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+    }
+}
+
+/* Улучшенные стили для существующих элементов */
+.btn-clear-cart {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.btn-clear-cart:hover {
+    background: #c82333;
+}
+
+.btn-remove-item, .btn-remove-wrapper {
+    transition: all 0.2s;
+}
+
+.btn-remove-item:hover, .btn-remove-wrapper:hover {
+    transform: scale(1.1);
+}
+
+/* Стили для wrapper-image-modal (если их еще нет) */
+.wrapper-image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.wrapper-image-modal .modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+}
+
+.wrapper-image-modal .modal-image-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.wrapper-image-modal .modal-image-container img {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+}
+
+.wrapper-image-modal .modal-info {
+    padding: 0 20px 20px;
+    text-align: center;
+}
+
+.wrapper-image-modal .modal-info h3 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.wrapper-image-modal .modal-price {
+    font-size: 18px;
+    font-weight: 600;
+    color: #e91e63;
 }

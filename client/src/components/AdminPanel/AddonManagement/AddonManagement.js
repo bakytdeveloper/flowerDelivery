@@ -12,6 +12,7 @@ const AddonManagement = () => {
     const [error, setError] = useState(null);
     const [showAddonModal, setShowAddonModal] = useState(false);
     const [currentAddon, setCurrentAddon] = useState(null);
+    // eslint-disable-next-line
     const [modalMode, setModalMode] = useState('create');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [addonToDelete, setAddonToDelete] = useState(null);
