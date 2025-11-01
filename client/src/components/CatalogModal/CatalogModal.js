@@ -67,6 +67,12 @@ const CatalogModal = ({ isOpen, onClose }) => {
         navigate(`/catalog?${queryParams.toString()}`);
     };
 
+    // Функция для перехода в каталог без фильтрации
+    const handleViewAllProducts = () => {
+        onClose();
+        navigate('/catalog');
+    };
+
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget) {
             onClose();
@@ -90,6 +96,18 @@ const CatalogModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
 
+                {/* Кнопка "Все товары" */}
+                <div className="catalog-modal-all-products">
+                    <button
+                        className="catalog-all-products-btn"
+                        onClick={handleViewAllProducts}
+                    >
+                        <span className="catalog-all-products-icon">🌺</span>
+                        Все товары
+                        <span className="catalog-all-products-arrow">→</span>
+                    </button>
+                </div>
+
                 {/* Содержимое модального окна */}
                 <div className="catalog-modal-content">
                     {loading ? (
@@ -103,8 +121,11 @@ const CatalogModal = ({ isOpen, onClose }) => {
                         <div className="catalog-columns">
                             {/* Колонка 1: Цветы штучно */}
                             <div className="catalog-column">
-                                <h3 className="column-title">Цветы штучно</h3>
-                                <div className="column-content">
+                                <h3 className="catalog-column-title">
+                                    <span className="catalog-column-icon">💐</span>
+                                    Цветы штучно
+                                </h3>
+                                <div className="catalog-column-content">
                                     {catalogData.singleFlowers.length > 0 ? (
                                         catalogData.singleFlowers.map((flower, index) => (
                                             <div
@@ -116,15 +137,18 @@ const CatalogModal = ({ isOpen, onClose }) => {
                                             </div>
                                         ))
                                     ) : (
-                                        <p className="no-items">Нет товаров</p>
+                                        <p className="catalog-no-items">Нет товаров</p>
                                     )}
                                 </div>
                             </div>
 
                             {/* Колонка 2: Букеты */}
                             <div className="catalog-column">
-                                <h3 className="column-title">Букеты</h3>
-                                <div className="column-content">
+                                <h3 className="catalog-column-title">
+                                    <span className="catalog-column-icon">💮</span>
+                                    Букеты
+                                </h3>
+                                <div className="catalog-column-content">
                                     {catalogData.bouquetFlowers.length > 0 ? (
                                         catalogData.bouquetFlowers.map((bouquet, index) => (
                                             <div
@@ -136,15 +160,18 @@ const CatalogModal = ({ isOpen, onClose }) => {
                                             </div>
                                         ))
                                     ) : (
-                                        <p className="no-items">Нет товаров</p>
+                                        <p className="catalog-no-items">Нет товаров</p>
                                     )}
                                 </div>
                             </div>
 
                             {/* Колонка 3: Повод */}
                             <div className="catalog-column">
-                                <h3 className="column-title">Повод</h3>
-                                <div className="column-content">
+                                <h3 className="catalog-column-title">
+                                    <span className="catalog-column-icon">🎉</span>
+                                    Повод
+                                </h3>
+                                <div className="catalog-column-content">
                                     {catalogData.occasions.length > 0 ? (
                                         catalogData.occasions.map((occasion, index) => (
                                             <div
@@ -156,15 +183,18 @@ const CatalogModal = ({ isOpen, onClose }) => {
                                             </div>
                                         ))
                                     ) : (
-                                        <p className="no-items">Нет категорий</p>
+                                        <p className="catalog-no-items">Нет категорий</p>
                                     )}
                                 </div>
                             </div>
 
                             {/* Колонка 4: Кому */}
                             <div className="catalog-column">
-                                <h3 className="column-title">Кому</h3>
-                                <div className="column-content">
+                                <h3 className="catalog-column-title">
+                                    <span className="catalog-column-icon">👤</span>
+                                    Кому
+                                </h3>
+                                <div className="catalog-column-content">
                                     {catalogData.recipients.length > 0 ? (
                                         catalogData.recipients.map((recipient, index) => (
                                             <div
@@ -176,7 +206,7 @@ const CatalogModal = ({ isOpen, onClose }) => {
                                             </div>
                                         ))
                                     ) : (
-                                        <p className="no-items">Нет категорий</p>
+                                        <p className="catalog-no-items">Нет категорий</p>
                                     )}
                                 </div>
                             </div>

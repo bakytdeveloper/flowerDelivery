@@ -1,92 +1,169 @@
+/* CatalogModal.css */
 .catalog-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 10000;
     padding: 20px;
-    animation: fadeIn 0.3s ease;
+    animation: catalog-modal-fadeIn 0.3s ease;
 }
 
-@keyframes fadeIn {
+@keyframes catalog-modal-fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
 .catalog-modal {
-    background: white;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(20px);
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow:
+            0 25px 50px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
     max-width: 1200px;
     width: 100%;
     max-height: 90vh;
     overflow: hidden;
-    animation: slideUp 0.3s ease;
+    animation: catalog-modal-slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@keyframes slideUp {
+@keyframes catalog-modal-slideUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(50px) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
 .catalog-modal-header {
     padding: 2rem;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    backdrop-filter: blur(10px);
 }
 
 .catalog-modal-title {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
 }
 
 .catalog-modal-close {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    color: #e2e8f0;
     font-size: 1.5rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
 }
 
 .catalog-modal-close:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
     transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Стили для кнопки "Все товары" */
+.catalog-modal-all-products {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.3);
+}
+
+.catalog-all-products-btn {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    color: #e2e8f0;
+    padding: 1.2rem 1.5rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(5px);
+    position: relative;
+    overflow: hidden;
+}
+
+.catalog-all-products-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.catalog-all-products-btn:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-2px);
+    box-shadow:
+            0 8px 25px rgba(102, 126, 234, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.catalog-all-products-btn:hover::before {
+    left: 100%;
+}
+
+.catalog-all-products-btn:hover .catalog-all-products-arrow {
+    transform: translateX(5px);
+}
+
+.catalog-all-products-icon {
+    font-size: 1.3rem;
+    margin-right: 0.8rem;
+}
+
+.catalog-all-products-arrow {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+    color: #667eea;
 }
 
 .catalog-modal-content {
     padding: 0;
-    max-height: calc(90vh - 100px);
+    max-height: calc(90vh - 180px);
     overflow-y: auto;
 }
 
 .catalog-loading {
     padding: 3rem;
     text-align: center;
-    color: #6c757d;
+    color: #94a3b8;
 }
 
 .catalog-columns {
@@ -94,64 +171,144 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 0;
     height: 100%;
+    background: rgba(15, 23, 42, 0.3);
 }
 
 .catalog-column {
-    border-right: 1px solid #e9ecef;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
     height: 100%;
+    transition: all 0.3s ease;
+    margin: 4px;
+}
+
+.catalog-column:hover {
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .catalog-column:last-child {
     border-right: none;
 }
 
-.column-title {
-    background: #f8f9fa;
+.catalog-column-title {
+    background: rgba(30, 41, 59, 0.8);
     padding: 1.5rem;
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 600;
-    color: #2c3e50;
-    border-bottom: 1px solid #e9ecef;
+    color: #e2e8f0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
     position: sticky;
     top: 0;
     z-index: 10;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
-.column-content {
+.catalog-column-icon {
+    font-size: 1.2rem;
+}
+
+.catalog-column-content {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 1.5rem;
     max-height: 400px;
 }
 
 .catalog-item {
-    padding: 0.8rem 1rem;
-    margin: 0.3rem 0;
-    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 0.5rem 0;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: #495057;
-    font-size: 0.95rem;
+    color: #cbd5e1;
+    font-size: 1rem;
+    font-weight: 500;
     border: 1px solid transparent;
+    background: rgba(51, 65, 85, 0.4);
+    backdrop-filter: blur(5px);
+    position: relative;
+    overflow: hidden;
+}
+
+.catalog-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
 }
 
 .catalog-item:hover {
-    background: #e3f2fd;
-    color: #1976d2;
-    border-color: #bbdefb;
-    transform: translateX(5px);
+    background: rgba(102, 126, 234, 0.2);
+    color: #e2e8f0;
+    border-color: rgba(102, 126, 234, 0.4);
+    transform: translateX(8px);
+    box-shadow:
+            0 4px 15px rgba(102, 126, 234, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.no-items {
+.catalog-item:hover::before {
+    left: 100%;
+}
+
+.catalog-no-items {
     text-align: center;
-    color: #6c757d;
+    color: #64748b;
     font-style: italic;
     padding: 2rem;
     margin: 0;
+    background: rgba(30, 41, 59, 0.3);
+    border-radius: 10px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* Кастомный скроллбар для контента колонок */
+.catalog-column-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.catalog-column-content::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 3px;
+}
+
+.catalog-column-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 3px;
+}
+
+.catalog-column-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+/* Кастомный скроллбар для основного контента */
+.catalog-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.catalog-modal-content::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 4px;
+}
+
+.catalog-modal-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 4px;
+}
+
+.catalog-modal-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #764ba2, #667eea);
 }
 
 /* Адаптивность */
@@ -165,7 +322,11 @@
     }
 
     .catalog-column:nth-child(odd) {
-        border-right: 1px solid #e9ecef;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .catalog-modal {
+        max-width: 95%;
     }
 }
 
@@ -176,6 +337,7 @@
 
     .catalog-modal {
         max-height: 95vh;
+        border-radius: 16px;
     }
 
     .catalog-modal-header {
@@ -186,21 +348,47 @@
         font-size: 1.5rem;
     }
 
+    .catalog-modal-close {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
+    }
+
+    .catalog-modal-all-products {
+        padding: 1rem 1.5rem;
+    }
+
+    .catalog-all-products-btn {
+        padding: 1rem 1.2rem;
+        font-size: 1rem;
+    }
+
     .catalog-columns {
         grid-template-columns: 1fr;
     }
 
     .catalog-column {
         border-right: none;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .catalog-column:last-child {
         border-bottom: none;
     }
 
-    .column-content {
+    .catalog-column-content {
         max-height: 200px;
+        padding: 1rem;
+    }
+
+    .catalog-column-title {
+        padding: 1.2rem;
+        font-size: 1.2rem;
+    }
+
+    .catalog-item {
+        padding: 0.9rem 1rem;
+        font-size: 0.95rem;
     }
 }
 
@@ -213,32 +401,91 @@
         font-size: 1.3rem;
     }
 
-    .column-title {
+    .catalog-modal-close {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+    }
+
+    .catalog-modal-all-products {
+        padding: 0.8rem 1rem;
+    }
+
+    .catalog-all-products-btn {
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .catalog-column-title {
         padding: 1rem;
         font-size: 1.1rem;
     }
 
     .catalog-item {
-        padding: 0.7rem 0.8rem;
+        padding: 0.8rem;
         font-size: 0.9rem;
+        margin: 0.3rem 0;
+    }
+
+    .catalog-column-content {
+        padding: 0.8rem;
     }
 }
 
-/* Кастомный скроллбар */
-.column-content::-webkit-scrollbar {
-    width: 6px;
+/* Анимации для элементов при загрузке */
+@keyframes catalog-item-fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-.column-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
+.catalog-item {
+    animation: catalog-item-fadeIn 0.4s ease forwards;
 }
 
-.column-content::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
+/* Задержки для анимации элементов */
+.catalog-column:nth-child(1) .catalog-item { animation-delay: 0.1s; }
+.catalog-column:nth-child(2) .catalog-item { animation-delay: 0.15s; }
+.catalog-column:nth-child(3) .catalog-item { animation-delay: 0.2s; }
+.catalog-column:nth-child(4) .catalog-item { animation-delay: 0.25s; }
+
+/* Эффект градиентной границы для колонок */
+.catalog-column::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.column-content::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+.catalog-column:hover::before {
+    opacity: 1;
+}
+
+/* Индикатор выбора для активных элементов */
+.catalog-item::after {
+    content: '›';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: #667eea;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.catalog-item:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(3px);
 }
