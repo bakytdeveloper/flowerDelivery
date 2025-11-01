@@ -4,6 +4,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import ProductManagement from "./ProductManagement/ProductManagement";
 import WrapperManagement from './WrapperManagement/WrapperManagement';
 import AddonManagement from './AddonManagement/AddonManagement';
+import { fontFamilies } from "../../constants/constants";
+
 import { toast } from 'react-toastify';
 import './AdminPanel.css';
 
@@ -432,11 +434,9 @@ const AdminPanel = () => {
                                                         onChange={(e) => handleSlideChange(index, 'fontFamilleTitle', e.target.value)}
                                                         className="form-control form-control-select"
                                                     >
-                                                        <option value="Arial">Arial</option>
-                                                        <option value="Georgia">Georgia</option>
-                                                        <option value="Times New Roman">Times New Roman</option>
-                                                        <option value="Verdana">Verdana</option>
-                                                        <option value="Helvetica">Helvetica</option>
+                                                        {fontFamilies.map((font, index) => (
+                                                            <option key={index} value={font}>{font}</option>
+                                                        ))}
                                                     </select>
                                                 </div>
 
@@ -447,11 +447,9 @@ const AdminPanel = () => {
                                                         onChange={(e) => handleSlideChange(index, 'fontFamilleDescription', e.target.value)}
                                                         className="form-control form-control-select"
                                                     >
-                                                        <option value="Arial">Arial</option>
-                                                        <option value="Georgia">Georgia</option>
-                                                        <option value="Times New Roman">Times New Roman</option>
-                                                        <option value="Verdana">Verdana</option>
-                                                        <option value="Helvetica">Helvetica</option>
+                                                        {fontFamilies.map((font, index) => (
+                                                            <option key={index} value={font}>{font}</option>
+                                                        ))}
                                                     </select>
                                                 </div>
                                             </div>
