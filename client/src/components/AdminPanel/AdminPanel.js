@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import ProductManagement from "./ProductManagement/ProductManagement";
+import WrapperManagement from './WrapperManagement/WrapperManagement';
+import AddonManagement from './AddonManagement/AddonManagement';
 import { toast } from 'react-toastify';
 import './AdminPanel.css';
 
@@ -10,6 +12,7 @@ const AdminPanel = () => {
     const [activeTab, setActiveTab] = useState('slider');
     const [sliderImages, setSliderImages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    // eslint-disable-next-line
     const [editingSlide, setEditingSlide] = useState(null);
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
 
@@ -39,6 +42,7 @@ const AdminPanel = () => {
 
     useEffect(() => {
         fetchSliderData();
+        // eslint-disable-next-line
     }, [token]);
 
     // Добавление нового слайда
@@ -222,6 +226,18 @@ const AdminPanel = () => {
                     onClick={() => setActiveTab('products')}
                 >
                     Управление товарами
+                </button>
+                <button
+                    className={`tab-button ${activeTab === 'wrappers' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('wrappers')}
+                >
+                    Управление обёртками
+                </button>
+                <button
+                    className={`tab-button ${activeTab === 'addons' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('addons')}
+                >
+                    Дополнительные товары
                 </button>
                 <button
                     className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`}
@@ -486,6 +502,13 @@ const AdminPanel = () => {
                     <ProductManagement />
                 )}
 
+                {activeTab === 'wrappers' && (
+                    <WrapperManagement />
+                )}
+
+                {activeTab === 'addons' && (
+                    <AddonManagement />
+                )}
 
                 {activeTab === 'orders' && (
                     <div className="tab-content">

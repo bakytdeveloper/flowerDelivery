@@ -28,21 +28,14 @@ import {
 import {
     createAddon,
     deleteAddon,
-    // getAddonsByType,
     getAllAddons,
-    // getAvailableAddons,
     updateAddon,
-    // getAddonById,
-    // searchAddons
 } from "../controllers/addonController.js";
 import {
     createWrapper,
     deleteWrapper,
     getAllWrappers,
-    // getAvailableWrappers,
     updateWrapper,
-    // getWrapperById,
-    // searchWrappers
 } from "../controllers/wrapperController.js";
 
 const router = express.Router();
@@ -62,20 +55,13 @@ router.post('/upload', authenticateToken, requireAdmin, upload.array('images', 1
 
 // Маршруты для управления Обвёртками для цветов админа
 router.post('/wrappers', authenticateToken, requireAdmin, createWrapper);
-// router.get('/wrappers/available', getAvailableWrappers);
 router.get('/wrappers', authenticateToken, requireAdmin, getAllWrappers);
-// router.get('/wrappers/search', searchWrappers); // Поиск оберток
-// router.get('/wrappers/:id', getWrapperById); // Получение по ID
 router.put('/wrappers/:id', authenticateToken, requireAdmin, updateWrapper);
 router.delete('/wrappers/:id', authenticateToken, requireAdmin, deleteWrapper);
 
 // Маршруты для управления Дополнениями админом
 router.post('/addons', authenticateToken, requireAdmin, createAddon);
-// router.get('/addons/available', getAvailableAddons);
-// router.get('/addons/type/:type', getAddonsByType);
 router.get('/addons', authenticateToken, requireAdmin, getAllAddons);
-// router.get('/addons/search', searchAddons); // Поиск дополнений
-// router.get('/addons/:id', getAddonById); // Получение по ID
 router.put('/addons/:id', authenticateToken, requireAdmin, updateAddon);
 router.delete('/addons/:id', authenticateToken, requireAdmin, deleteAddon);
 
