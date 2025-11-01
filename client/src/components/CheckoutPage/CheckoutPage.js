@@ -143,7 +143,7 @@ const CheckoutPage = () => {
                 <div className="checkout-header">
                     <h1 className="checkout-title">Оформление заказа</h1>
                     <button
-                        className="btn-back"
+                        className="btn-back btn-back-checkout-page"
                         onClick={() => navigate('/cart')}
                     >
                         ← Вернуться в корзину

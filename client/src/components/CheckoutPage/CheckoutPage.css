@@ -228,7 +228,7 @@
 
 .order-summary-section {
     position: sticky;
-    top: 2rem;
+    top: 14rem;
     height: fit-content;
     background: rgba(8, 20, 36, 0.6);
     border-radius: 17px;
@@ -458,6 +458,10 @@
         gap: 1rem;
         align-items: flex-start;
         padding: 1.5rem;
+    }
+
+    .btn-back-checkout-page {
+        margin: 0 auto;
     }
 
     .checkout-title {
