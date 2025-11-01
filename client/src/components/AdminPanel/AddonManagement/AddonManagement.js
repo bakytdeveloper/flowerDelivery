@@ -116,11 +116,11 @@ const AddonManagement = () => {
         setCurrentAddon(null);
         fetchAddons();
 
-        if (modalMode === 'create') {
-            toast.success('Дополнение успешно создано');
-        } else {
-            toast.success('Дополнение успешно обновлено');
-        }
+        // if (modalMode === 'create') {
+        //     toast.success('Дополнение успешно создано');
+        // } else {
+        //     toast.success('Дополнение успешно обновлено');
+        // }
     };
 
     // Переключение активности

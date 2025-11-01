@@ -101,11 +101,6 @@ const WrapperManagement = () => {
         setCurrentWrapper(null);
         fetchWrappers();
 
-        if (modalMode === 'create') {
-            toast.success('Обёртка успешно создана');
-        } else {
-            toast.success('Обёртка успешно обновлена');
-        }
     };
 
     // Переключение активности

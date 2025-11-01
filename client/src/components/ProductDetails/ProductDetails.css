@@ -158,6 +158,10 @@
     object-fit: cover;
 }
 
+.add-image-url {
+    color: white;
+}
+
 /* Информация о товаре */
 .product-info {
     display: flex;
@@ -180,10 +184,10 @@
     line-height: 1.2;
 }
 
-.popular-tag {
+.popular-tag-product-details {
     background: linear-gradient(135deg, #ffa200, #f86604) !important;
     color: white;
-    padding: 6px 12px;
+    padding: 10px 12px!important;
     border-radius: 15px;
     font-size: 0.8rem;
     font-weight: 600;
