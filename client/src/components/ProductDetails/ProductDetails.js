@@ -765,7 +765,7 @@ const ProductDetails = () => {
                                     onClick={handleAddProductToCart}
                                     disabled={!product.quantity || product.quantity <= 0}
                                 >
-                                    {product.quantity > 0 ? '🛒 Добавить в корзину' : '❌ Нет в наличии'}
+                                    {product.quantity > 0 ? '🛒  Добавить в корзину' : '❌ Нет в наличии'}
                                 </button>
                                 <button
                                     className={`btn-favorite-large ${isFavorite(product._id) ? 'favorited' : ''}`}
