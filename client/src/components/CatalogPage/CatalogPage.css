@@ -106,7 +106,7 @@
 /* Адаптивная сетка карточек */
 .products-grid-catalog {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 6 колонок на больших экранах */
+    grid-template-columns: repeat(5, 1fr); /* 5 колонок на больших экранах */
     gap: 1.5rem;
     margin-top: 1rem;
 }

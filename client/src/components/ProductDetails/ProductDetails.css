@@ -340,6 +340,10 @@
     margin-bottom: 1rem;
 }
 
+.product-price-catalog {
+    justify-content: space-between;
+}
+
 .btn-add-to-cart-large {
     flex: 2;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
