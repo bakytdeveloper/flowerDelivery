@@ -868,6 +868,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useFavorites } from '../../hooks/useFavorites';
 import { useCart } from '../../contexts/CartContext';
+import { occasionOptions, recipientOptions } from "../../constants/constants";
 import { toast } from 'react-toastify';
 import './ProductDetails.css';
 
@@ -886,53 +887,7 @@ const ProductDetails = () => {
     const { toggleFavorite, isFavorite } = useFavorites();
     const location = useLocation();
     const { addFlowerToCart, addAddonToCart } = useCart();
-
-    const occasionOptions = [
-        { value: 'birthday', label: 'День рождения' },
-        { value: 'jubilee', label: 'Юбилей' },
-        { value: 'wedding', label: 'Свадьба' },
-        { value: 'anniversary', label: 'Годовщина' },
-        { value: 'valentine', label: 'День святого Валентина' },
-        { value: 'womens_day', label: '8 марта' },
-        { value: 'mothers_day', label: 'День матери' },
-        { value: 'fathers_day', label: 'День отца' },
-        { value: 'baby_birth', label: 'Выписка из роддома' },
-        { value: 'graduation', label: 'Выпускной' },
-        { value: 'promotion', label: 'Повышение / новая работа' },
-        { value: 'thank_you', label: 'Благодарность' },
-        { value: 'apology', label: 'Извинение' },
-        { value: 'condolences', label: 'Сочувствие / соболезнование' },
-        { value: 'get_well', label: 'Выздоровление / поддержка' },
-        { value: 'just_because', label: 'Без повода / просто так' },
-        { value: 'romantic_evening', label: 'Романтический вечер' },
-        { value: 'love_confession', label: 'Признание в любви' },
-        { value: 'holiday', label: 'Праздник (Новый год, Курман айт, Нооруз и др.)' },
-        { value: 'business_opening', label: 'Открытие бизнеса / новоселье' }
-    ];
-
-    const recipientOptions = [
-        { value: 'woman', label: 'Женщине' },
-        { value: 'man', label: 'Мужчине' },
-        { value: 'girl', label: 'Девушке' },
-        { value: 'boy', label: 'Парню' },
-        { value: 'mother', label: 'Маме' },
-        { value: 'father', label: 'Папе' },
-        { value: 'grandmother', label: 'Бабушке' },
-        { value: 'grandfather', label: 'Дедушке' },
-        { value: 'colleague', label: 'Коллеге' },
-        { value: 'boss', label: 'Руководителю' },
-        { value: 'teacher', label: 'Учителю' },
-        { value: 'female_friend', label: 'Подруге' },
-        { value: 'male_friend', label: 'Другу' },
-        { value: 'wife', label: 'Жене' },
-        { value: 'husband', label: 'Мужу' },
-        { value: 'bride', label: 'Невесте' },
-        { value: 'newlyweds', label: 'Молодожёнам' },
-        { value: 'child', label: 'Ребёнку' },
-        { value: 'client', label: 'Клиенту / партнёру' },
-        { value: 'self', label: 'Самому себе' }
-    ];
-
+    
     // Функции для получения переведенных значений
     const getOccasionLabel = (occasionValue) => {
         const occasion = occasionOptions.find(opt => opt.value === occasionValue);

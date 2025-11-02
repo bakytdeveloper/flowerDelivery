@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { occasionOptions, recipientOptions } from "../../constants/constants";
 import './CatalogModal.css';
 
 const CatalogModal = ({ isOpen, onClose }) => {
@@ -11,6 +12,17 @@ const CatalogModal = ({ isOpen, onClose }) => {
     });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    // Функции для получения переведенных значений
+    const getOccasionLabel = (occasionValue) => {
+        const occasion = occasionOptions.find(opt => opt.value === occasionValue);
+        return occasion ? occasion.label : occasionValue;
+    };
+
+    const getRecipientLabel = (recipientValue) => {
+        const recipient = recipientOptions.find(opt => opt.value === recipientValue);
+        return recipient ? recipient.label : recipientValue;
+    };
 
     useEffect(() => {
         if (isOpen) {
@@ -179,7 +191,7 @@ const CatalogModal = ({ isOpen, onClose }) => {
                                                 className="catalog-item"
                                                 onClick={() => handleItemClick('occasions', occasion)}
                                             >
-                                                {occasion}
+                                                {getOccasionLabel(occasion)}
                                             </div>
                                         ))
                                     ) : (
@@ -202,7 +214,7 @@ const CatalogModal = ({ isOpen, onClose }) => {
                                                 className="catalog-item"
                                                 onClick={() => handleItemClick('recipients', recipient)}
                                             >
-                                                {recipient}
+                                                {getRecipientLabel(recipient)}
                                             </div>
                                         ))
                                     ) : (
