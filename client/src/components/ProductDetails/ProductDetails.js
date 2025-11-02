@@ -1677,7 +1677,7 @@ const ProductDetails = () => {
                                     >
                                         -
                                     </button>
-                                    <span className="quantity-display">{quantity}</span>
+                                    <span className="quantity-display quantity-display-color">{quantity}</span>
                                     <button
                                         className="quantity-btn"
                                         onClick={() => handleQuantityChange(1)}

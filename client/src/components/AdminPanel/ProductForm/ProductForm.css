@@ -499,6 +499,10 @@
     background: rgba(58, 79, 105, 0.8);
 }
 
+.quantity-display-color {
+    color: whitesmoke!important;
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
     .product-form-modal {
