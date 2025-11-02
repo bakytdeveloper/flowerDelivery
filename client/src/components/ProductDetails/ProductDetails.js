@@ -887,7 +887,7 @@ const ProductDetails = () => {
     const { toggleFavorite, isFavorite } = useFavorites();
     const location = useLocation();
     const { addFlowerToCart, addAddonToCart } = useCart();
-    
+
     // Функции для получения переведенных значений
     const getOccasionLabel = (occasionValue) => {
         const occasion = occasionOptions.find(opt => opt.value === occasionValue);
