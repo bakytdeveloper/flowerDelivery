@@ -61,16 +61,72 @@ const productSchema = new mongoose.Schema({
         required: true,
         enum: ['single', 'bouquet'] // одиночный цветок или букет
     },
+    // // Повод для цветов
+    // occasion: {
+    //     type: String,
+    //     required: true
+    // },
+    // // Кому предназначены цветы
+    // recipient: {
+    //     type: String,
+    //     required: true
+    // },
     // Повод для цветов
     occasion: {
         type: String,
-        required: true
+        required: true,
+        enum: [
+            'birthday',
+            'anniversary',
+            'wedding',
+            'valentine',
+            'womens_day',
+            'mothers_day',
+            'fathers_day',
+            'baby_birth',
+            'graduation',
+            'promotion',
+            'thank_you',
+            'apology',
+            'condolences',
+            'get_well',
+            'just_because',
+            'romantic_evening',
+            'love_confession',
+            'holiday',
+            'business_opening',
+            'jubilee'
+        ]
     },
-    // Кому предназначены цветы
+
+// Кому предназначены цветы
     recipient: {
         type: String,
-        required: true
+        required: true,
+        enum: [
+            'woman',
+            'man',
+            'girl',
+            'boy',
+            'mother',
+            'father',
+            'grandmother',
+            'grandfather',
+            'colleague',
+            'boss',
+            'teacher',
+            'female_friend',
+            'male_friend',
+            'wife',
+            'husband',
+            'bride',
+            'newlyweds',
+            'child',
+            'client',
+            'self'
+        ]
     },
+
     // Название цветов (роза, тюльпан и т.д.)
     flowerNames: [{
         type: String,

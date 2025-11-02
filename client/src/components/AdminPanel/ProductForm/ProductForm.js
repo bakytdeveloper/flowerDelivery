@@ -35,6 +35,53 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
         };
     }
 
+    const occasionOptions = [
+        { value: 'birthday', label: 'День рождения' },
+        { value: 'jubilee', label: 'Юбилей' },
+        { value: 'wedding', label: 'Свадьба' },
+        { value: 'anniversary', label: 'Годовщина' },
+        { value: 'valentine', label: 'День святого Валентина' },
+        { value: 'womens_day', label: '8 марта' },
+        { value: 'mothers_day', label: 'День матери' },
+        { value: 'fathers_day', label: 'День отца' },
+        { value: 'baby_birth', label: 'Выписка из роддома' },
+        { value: 'graduation', label: 'Выпускной' },
+        { value: 'promotion', label: 'Повышение / новая работа' },
+        { value: 'thank_you', label: 'Благодарность' },
+        { value: 'apology', label: 'Извинение' },
+        { value: 'condolences', label: 'Сочувствие / соболезнование' },
+        { value: 'get_well', label: 'Выздоровление / поддержка' },
+        { value: 'just_because', label: 'Без повода / просто так' },
+        { value: 'romantic_evening', label: 'Романтический вечер' },
+        { value: 'love_confession', label: 'Признание в любви' },
+        { value: 'holiday', label: 'Праздник (Новый год, Курман айт, Нооруз и др.)' },
+        { value: 'business_opening', label: 'Открытие бизнеса / новоселье' }
+    ];
+
+    const recipientOptions = [
+        { value: 'woman', label: 'Женщине' },
+        { value: 'man', label: 'Мужчине' },
+        { value: 'girl', label: 'Девушке' },
+        { value: 'boy', label: 'Парню' },
+        { value: 'mother', label: 'Маме' },
+        { value: 'father', label: 'Папе' },
+        { value: 'grandmother', label: 'Бабушке' },
+        { value: 'grandfather', label: 'Дедушке' },
+        { value: 'colleague', label: 'Коллеге' },
+        { value: 'boss', label: 'Руководителю' },
+        { value: 'teacher', label: 'Учителю' },
+        { value: 'female_friend', label: 'Подруге' },
+        { value: 'male_friend', label: 'Другу' },
+        { value: 'wife', label: 'Жене' },
+        { value: 'husband', label: 'Мужу' },
+        { value: 'bride', label: 'Невесте' },
+        { value: 'newlyweds', label: 'Молодожёнам' },
+        { value: 'child', label: 'Ребёнку' },
+        { value: 'client', label: 'Клиенту / партнёру' },
+        { value: 'self', label: 'Самому себе' }
+    ];
+
+
     const handleChange = (field, value) => {
         setProduct(prev => ({
             ...prev,
@@ -302,7 +349,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                     <select
                                         value={product.type}
                                         onChange={(e) => handleChange('type', e.target.value)}
-                                        className="form-control"
+                                        className="form-control form-control-background"
                                     >
                                         <option value="single">Одиночный цветок</option>
                                         <option value="bouquet">Букет</option>
@@ -310,27 +357,39 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                 </div>
                                 <div className="form-group">
                                     <label>Повод</label>
-                                    <input
-                                        type="text"
+                                    <select
                                         value={product.occasion}
                                         onChange={(e) => handleChange('occasion', e.target.value)}
-                                        className="form-control"
-                                        placeholder="Например: День рождения, Свадьба"
-                                    />
+                                        className="form-control form-control-background"
+                                    >
+                                        <option value="">Выберите повод</option>
+                                        {occasionOptions.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
+
                             </div>
 
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Кому</label>
-                                    <input
-                                        type="text"
+                                    <select
                                         value={product.recipient}
                                         onChange={(e) => handleChange('recipient', e.target.value)}
-                                        className="form-control"
-                                        placeholder="Например: Женщине, Мужчине, Коллеге"
-                                    />
+                                        className="form-control form-control-background"
+                                    >
+                                        <option value="">Выберите получателя</option>
+                                        {recipientOptions.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
+
                                 <div className="form-group">
                                     <label>Длина стебля (см)</label>
                                     <input
@@ -396,33 +455,36 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                         </div>
 
                         {/* Названия цветов */}
+                        {/* Названия цветов */}
                         <div className="form-section">
                             <h4>Названия цветов *</h4>
-                            {product.flowerNames.map((flowerName, index) => (
-                                <div key={index} className="form-row array-item">
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            value={flowerName}
-                                            onChange={(e) => handleFlowerNameChange(index, e.target.value)}
-                                            className="form-control"
-                                            placeholder={`Название цветка ${index + 1}`}
-                                            required={index === 0}
-                                        />
+                            <div className="flower-names-container">
+                                {product.flowerNames.map((flowerName, index) => (
+                                    <div key={index} className="flower-name-item">
+                                        <div className="flower-name-input">
+                                            <input
+                                                type="text"
+                                                value={flowerName}
+                                                onChange={(e) => handleFlowerNameChange(index, e.target.value)}
+                                                className="form-control form-control-input-name-flowers "
+                                                placeholder={`Название цветка ${index + 1}`}
+                                                required={index === 0}
+                                            />
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className="flower-name-remove-btn"
+                                            onClick={() => removeFlowerName(index)}
+                                            disabled={product.flowerNames.length === 1}
+                                        >
+                                            ×
+                                        </button>
                                     </div>
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger btn-sm"
-                                        onClick={() => removeFlowerName(index)}
-                                        disabled={product.flowerNames.length === 1}
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                             <button
                                 type="button"
-                                className="btn btn-outline btn-sm"
+                                className="btn-add-flower-type"
                                 onClick={addFlowerName}
                             >
                                 + Добавить цветок
@@ -432,43 +494,49 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                         {/* Характеристики */}
                         <div className="form-section">
                             <h4>Характеристики</h4>
-                            {product.characteristics.map((char, index) => (
-                                <div key={index} className="form-row array-item">
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            value={char.name}
-                                            onChange={(e) => handleCharacteristicChange(index, 'name', e.target.value)}
-                                            className="form-control"
-                                            placeholder="Название характеристики"
-                                        />
+                            <div className="characteristics-container">
+                                {product.characteristics.map((char, index) => (
+                                    <div key={index} className="characteristic-item">
+                                        <div className="characteristic-input-group">
+                                            <div className="characteristic-input">
+                                                <input
+                                                    type="text"
+                                                    value={char.name}
+                                                    onChange={(e) => handleCharacteristicChange(index, 'name', e.target.value)}
+                                                    className="form-control form-control-input-characteristic-flowers"
+                                                    placeholder="Название характеристики"
+                                                />
+                                            </div>
+                                            <div className="characteristic-input">
+                                                <input
+                                                    type="text"
+                                                    value={char.value}
+                                                    onChange={(e) => handleCharacteristicChange(index, 'value', e.target.value)}
+                                                    className="form-control form-control-input-characteristic-flowers"
+                                                    placeholder="Значение"
+                                                />
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className="characteristic-remove-btn"
+                                            onClick={() => removeCharacteristic(index)}
+                                        >
+                                            ×
+                                        </button>
                                     </div>
-                                    <div className="form-group">
-                                        <input
-                                            type="text"
-                                            value={char.value}
-                                            onChange={(e) => handleCharacteristicChange(index, 'value', e.target.value)}
-                                            className="form-control"
-                                            placeholder="Значение"
-                                        />
-                                    </div>
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger btn-sm"
-                                        onClick={() => removeCharacteristic(index)}
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                             <button
                                 type="button"
-                                className="btn btn-outline btn-sm"
+                                className="characteristic-add-btn"
                                 onClick={addCharacteristic}
                             >
                                 + Добавить характеристику
                             </button>
                         </div>
+
+
 
                         {/* Изображения */}
                         <div className="form-section">

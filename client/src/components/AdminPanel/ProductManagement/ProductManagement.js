@@ -33,6 +33,29 @@ const ProductManagement = () => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
     const limit = 12;
 
+    const occasionOptions = [
+        { value: 'birthday', label: 'День рождения' },
+        { value: 'jubilee', label: 'Юбилей' },
+        { value: 'wedding', label: 'Свадьба' },
+        { value: 'anniversary', label: 'Годовщина' },
+        { value: 'valentine', label: 'День святого Валентина' },
+        { value: 'womens_day', label: '8 марта' },
+        { value: 'mothers_day', label: 'День матери' },
+        { value: 'fathers_day', label: 'День отца' },
+        { value: 'baby_birth', label: 'Выписка из роддома' },
+        { value: 'graduation', label: 'Выпускной' },
+        { value: 'promotion', label: 'Повышение / новая работа' },
+        { value: 'thank_you', label: 'Благодарность' },
+        { value: 'apology', label: 'Извинение' },
+        { value: 'condolences', label: 'Сочувствие / соболезнование' },
+        { value: 'get_well', label: 'Выздоровление / поддержка' },
+        { value: 'just_because', label: 'Без повода / просто так' },
+        { value: 'romantic_evening', label: 'Романтический вечер' },
+        { value: 'love_confession', label: 'Признание в любви' },
+        { value: 'holiday', label: 'Праздник (Новый год, Курман айт, Нооруз и др.)' },
+        { value: 'business_opening', label: 'Открытие бизнеса / новоселье' }
+    ];
+
     // Загрузка товаров
     const fetchProducts = async (page = 1) => {
         try {
@@ -449,12 +472,11 @@ const ProductManagement = () => {
                         className="form-control filter-group-select-input"
                     >
                         <option value="">Все поводы</option>
-                        <option value="День рождения">День рождения</option>
-                        <option value="Свадьба">Свадьба</option>
-                        <option value="8 марта">8 марта</option>
-                        <option value="Юбилей">Юбилей</option>
-                        <option value="Любовь">Любовь</option>
-                        <option value="Соболезнование">Соболезнование</option>
+                        {occasionOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
