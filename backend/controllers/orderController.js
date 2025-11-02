@@ -30,7 +30,7 @@ async function sendOrderEmail(order, userType) {
 
         // Форматируем список цветов
         const flowerList = flowerItems.map(item => {
-            let itemInfo = `• ${item.name} - ${item.quantity} шт. × ${item.price} сом = ${item.itemTotal} сом`;
+            let itemInfo = `• ${item.name} - ${item.quantity} шт. × ${item.price} сом = ${item.itemTotal - item?.wrapper.price} сом`;
 
             if (item.flowerType) {
                 itemInfo += `\n  Тип: ${item.flowerType === 'single' ? 'Одиночный цветок' : 'Букет'}`;

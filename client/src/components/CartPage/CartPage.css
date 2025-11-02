@@ -327,7 +327,7 @@
     min-width: 40px;
     text-align: center;
     font-weight: 600;
-    color: #f1f5f9;
+    color: #f1f5f9!important;
 }
 
 .mini-spinner {
