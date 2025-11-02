@@ -9,6 +9,25 @@ import {
 } from '../smtp/otpService.js';
 
 
+// // Вспомогательные функции для управления складом
+// async function returnProductsToStock(products) {
+//     for (const item of products) {
+//         try {
+//             await Product.findByIdAndUpdate(
+//                 item.product, {
+//                     $inc: {
+//                         quantity: item.quantity
+//                     }
+//                 }, {
+//                     new: true
+//                 }
+//             );
+//         } catch (error) {
+//             console.error(`Error returning product ${item.product} to stock:`, error);
+//         }
+//     }
+// }
+
 // Вспомогательные функции для управления складом
 async function returnProductsToStock(products) {
     for (const item of products) {
@@ -28,6 +47,25 @@ async function returnProductsToStock(products) {
     }
 }
 
+
+
+// async function deductProductsFromStock(products) {
+//     for (const item of products) {
+//         try {
+//             const product = await Product.findById(item.product);
+//             if (product.quantity < item.quantity) {
+//                 throw new Error(`Insufficient quantity for product ${product.name}`);
+//             }
+//             product.quantity -= item.quantity;
+//             // Увеличиваем счетчик продаж
+//             product.soldCount += item.quantity;
+//             await product.save();
+//         } catch (error) {
+//             console.error(`Error deducting product ${item.product} from stock:`, error);
+//             throw error;
+//         }
+//     }
+// }
 
 async function deductProductsFromStock(products) {
     for (const item of products) {
@@ -154,6 +192,131 @@ async function notifyAboutLowQuantity(products) {
 
 // Создание заказа
 // Создание заказа
+// export const createOrder = async (req, res) => {
+//     try {
+//         const { user } = req;
+//         const {
+//             firstName,
+//             address,
+//             phoneNumber,
+//             paymentMethod,
+//             comments,
+//             guestInfo
+//         } = req.body;
+//
+//         console.log('Creating order for user:', user);
+//         console.log('Order data:', { firstName, address, phoneNumber, paymentMethod, comments });
+//
+//         // Получаем корзину
+//         let cart;
+//         if (user.userId) {
+//             cart = await Cart.findOne({ user: user.userId });
+//         } else {
+//             cart = await Cart.findOne({ sessionId: user.sessionId });
+//         }
+//
+//         console.log('Found cart:', cart);
+//
+//         if (!cart || (cart.flowerItems.length === 0 && cart.addonItems.length === 0)) {
+//             return res.status(400).json({ message: 'Корзина пуста' });
+//         }
+//
+//         // Проверяем доступность товаров
+//         for (const item of cart.flowerItems) {
+//             const product = await Product.findById(item.product);
+//             if (!product || !product.isActive || product.quantity < item.quantity) {
+//                 return res.status(400).json({
+//                     message: `Товар "${item.name}" недоступен в нужном количестве`
+//                 });
+//             }
+//         }
+//
+//         for (const item of cart.addonItems) {
+//             const addon = await Addon.findById(item.addonId);
+//             if (!addon || !addon.isActive || addon.quantity < item.quantity) {
+//                 return res.status(400).json({
+//                     message: `Дополнительный товар "${item.name}" недоступен в нужном количестве`
+//                 });
+//             }
+//         }
+//
+//         // Определяем тип пользователя
+//         const userType = user.userId ? 'customer' : 'guest';
+//
+//         // Создаем заказ
+//         const order = new Order({
+//             user: user.userId || null,
+//             guestInfo: userType === 'guest' ? guestInfo : undefined,
+//             userType,
+//             flowerItems: cart.flowerItems.map(item => ({
+//                 product: item.product,
+//                 quantity: item.quantity,
+//                 name: item.name,
+//                 flowerType: item.flowerType,
+//                 category: item.category,
+//                 price: item.price,
+//                 flowerNames: item.flowerNames,
+//                 flowerColors: item.flowerColors,
+//                 stemLength: item.stemLength,
+//                 occasion: item.occasion,
+//                 recipient: item.recipient,
+//                 // Очищаем wrapper если он null или пустой
+//                 wrapper: item.wrapper && item.wrapper.wrapperId ? item.wrapper : undefined,
+//                 itemTotal: item.itemTotal,
+//                 itemType: 'flower'
+//             })),
+//             addonItems: cart.addonItems.map(item => ({
+//                 addonId: item.addonId,
+//                 quantity: item.quantity,
+//                 name: item.name,
+//                 type: item.type,
+//                 price: item.price,
+//                 itemTotal: item.itemTotal,
+//                 itemType: 'addon'
+//             })),
+//             totalAmount: cart.total,
+//             firstName,
+//             address,
+//             phoneNumber,
+//             paymentMethod,
+//             comments,
+//             statusHistory: [{
+//                 status: 'pending',
+//                 time: new Date()
+//             }]
+//         });
+//
+//         await order.save();
+//
+//         // Обновляем количество товаров
+//         for (const item of cart.flowerItems) {
+//             await Product.findByIdAndUpdate(item.product, {
+//                 $inc: { quantity: -item.quantity, soldCount: item.quantity }
+//             });
+//         }
+//
+//         for (const item of cart.addonItems) {
+//             await Addon.findByIdAndUpdate(item.addonId, {
+//                 $inc: { quantity: -item.quantity }
+//             });
+//         }
+//
+//         // Очищаем корзину
+//         cart.flowerItems = [];
+//         cart.addonItems = [];
+//         await cart.save();
+//
+//         res.status(201).json({
+//             message: 'Заказ успешно создан',
+//             order: await formatOrderResponse(order)
+//         });
+//     } catch (error) {
+//         console.error('Error creating order:', error);
+//         res.status(500).json({ message: 'Ошибка при создании заказа' });
+//     }
+// };
+
+// Создание заказа
 export const createOrder = async (req, res) => {
     try {
         const { user } = req;
@@ -166,18 +329,31 @@ export const createOrder = async (req, res) => {
             guestInfo
         } = req.body;
 
-        console.log('Creating order for user:', user);
-        console.log('Order data:', { firstName, address, phoneNumber, paymentMethod, comments });
+        console.log('🛒 Создание заказа для пользователя:', {
+            userId: user.userId,
+            sessionId: user.sessionId,
+            role: user.role
+        });
+        console.log('📦 Данные заказа:', { firstName, address, phoneNumber, paymentMethod, comments });
 
-        // Получаем корзину
+        // Получаем корзину - ОБНОВЛЕННАЯ ЛОГИКА
         let cart;
-        if (user.userId) {
+        if (user.userId && user.userId !== 'admin') {
+            // Авторизованный пользователь - ищем по userId
             cart = await Cart.findOne({ user: user.userId });
+            console.log('🔍 Поиск корзины по userId:', { userId: user.userId, found: !!cart });
         } else {
+            // Гость - ищем по sessionId
             cart = await Cart.findOne({ sessionId: user.sessionId });
+            console.log('🔍 Поиск корзины по sessionId:', { sessionId: user.sessionId, found: !!cart });
         }
 
-        console.log('Found cart:', cart);
+        console.log('📋 Найдена корзина:', cart ? {
+            cartId: cart._id,
+            flowerItems: cart.flowerItems.length,
+            addonItems: cart.addonItems.length,
+            total: cart.total
+        } : 'Корзина не найдена');
 
         if (!cart || (cart.flowerItems.length === 0 && cart.addonItems.length === 0)) {
             return res.status(400).json({ message: 'Корзина пуста' });
@@ -203,11 +379,11 @@ export const createOrder = async (req, res) => {
         }
 
         // Определяем тип пользователя
-        const userType = user.userId ? 'customer' : 'guest';
+        const userType = (user.userId && user.userId !== 'admin') ? 'customer' : 'guest';
 
         // Создаем заказ
         const order = new Order({
-            user: user.userId || null,
+            user: (user.userId && user.userId !== 'admin') ? user.userId : null,
             guestInfo: userType === 'guest' ? guestInfo : undefined,
             userType,
             flowerItems: cart.flowerItems.map(item => ({
@@ -249,6 +425,7 @@ export const createOrder = async (req, res) => {
         });
 
         await order.save();
+        console.log('✅ Заказ создан:', { orderId: order._id, totalAmount: order.totalAmount });
 
         // Обновляем количество товаров
         for (const item of cart.flowerItems) {
@@ -267,26 +444,56 @@ export const createOrder = async (req, res) => {
         cart.flowerItems = [];
         cart.addonItems = [];
         await cart.save();
+        console.log('🧹 Корзина очищена');
 
         res.status(201).json({
             message: 'Заказ успешно создан',
             order: await formatOrderResponse(order)
         });
     } catch (error) {
-        console.error('Error creating order:', error);
+        console.error('❌ Ошибка при создании заказа:', error);
         res.status(500).json({ message: 'Ошибка при создании заказа' });
     }
 };
 
 
-// Получение заказов пользователя
+
+// // Получение заказов пользователя
+// // Получение заказов пользователя
+// export const getUserOrders = async (req, res) => {
+//     try {
+//         const { user } = req;
+//
+//         let orders;
+//         if (user.userId) {
+//             orders = await Order.find({ user: user.userId })
+//                 .sort({ date: -1 })
+//                 .populate('flowerItems.product', 'name images')
+//                 .populate('addonItems.addonId', 'name image type');
+//         } else {
+//             // Для гостей - по sessionId (если нужно)
+//             orders = await Order.find({
+//                 'guestInfo.phone': user.sessionId
+//             }).sort({ date: -1 })
+//                 .populate('flowerItems.product', 'name images')
+//                 .populate('addonItems.addonId', 'name image type');
+//         }
+//
+//         res.status(200).json({
+//             orders: orders.map(order => formatOrderResponse(order))
+//         });
+//     } catch (error) {
+//         console.error('Error getting user orders:', error);
+//         res.status(500).json({ message: 'Ошибка при получении заказов' });
+//     }
+// };
 // Получение заказов пользователя
 export const getUserOrders = async (req, res) => {
     try {
         const { user } = req;
 
         let orders;
-        if (user.userId) {
+        if (user.userId && user.userId !== 'admin') {
             orders = await Order.find({ user: user.userId })
                 .sort({ date: -1 })
                 .populate('flowerItems.product', 'name images')
