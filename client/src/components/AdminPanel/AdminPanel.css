@@ -44,7 +44,7 @@
 .tab-button {
     flex: 1;
     padding: 7px 10px;
-    border: none;
+    border: 2px solid #55607a;
     background: transparent;
     border-radius: 8px;
     cursor: pointer;
