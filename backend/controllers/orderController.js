@@ -268,110 +268,6 @@ async function deductProductsFromStock(products) {
     }
 }
 
-// // Функция для отправки email о новом заказе
-// async function sendOrderEmail(orderData, orderProducts, userType) {
-//     const {
-//         _id,
-//         email,
-//         firstName,
-//         address,
-//         phoneNumber,
-//         totalAmount,
-//         paymentMethod,
-//         comments
-//     } = orderData;
-//
-//     const userTypeText = {
-//         'customer': 'Зарегистрированный клиент',
-//         'admin': 'Администратор',
-//         'guest': 'Гость'
-//     } [userType] || 'Пользователь';
-//
-//     const productList = orderProducts.map(item => {
-//         let itemInfo = `- ${item.name} (${item.quantity} шт.)`;
-//
-//         // Информация о цветах
-//         if (item.flowerType) {
-//             itemInfo += ` - Тип: ${item.flowerType === 'single' ? 'Одиночный цветок' : 'Букет'}`;
-//         }
-//
-//         if (item.flowerNames && item.flowerNames.length > 0) {
-//             itemInfo += ` - Цветы: ${item.flowerNames.join(', ')}`;
-//         }
-//
-//         if (item.flowerColors && item.flowerColors.length > 0) {
-//             const colors = item.flowerColors.map(color => color.name).join(', ');
-//             itemInfo += ` - Цвета: ${colors}`;
-//         }
-//
-//         if (item.stemLength) {
-//             itemInfo += ` - Длина стебля: ${item.stemLength} см`;
-//         }
-//
-//         if (item.occasion) {
-//             itemInfo += ` - Повод: ${item.occasion}`;
-//         }
-//
-//         if (item.recipient) {
-//             itemInfo += ` - Для: ${item.recipient}`;
-//         }
-//
-//         itemInfo += ` - ${item.price * item.quantity}`;
-//
-//         return itemInfo;
-//     }).join('\n');
-//
-//     const mailOptions = {
-//         from: process.env.EMAIL_USER,
-//         to: process.env.SMTP_USER,
-//         subject: `Новый заказ цветов #${_id || '0000'} от ${userTypeText}`,
-//         html: `
-//             <h2>Поступил новый заказ цветов!</h2>
-//             <p><strong>Тип пользователя:</strong> ${userTypeText}</p>
-//             <p><strong>Клиент:</strong> ${firstName} </p>
-//             <p><strong>Эл.почта:</strong> ${email ? `${email}` : ''}</p>
-//             <p><strong>Телефон:</strong> ${phoneNumber}</p>
-//             <p><strong>Адрес доставки:</strong> ${address}</p>
-//             <p><strong>Общая сумма:</strong> ${totalAmount} сом</p>
-//             <h3>Состав заказа:</h3>
-//             <pre>${productList}</pre>
-//             <p><strong>Время заказа:</strong> ${new Date().toLocaleString('ru-RU')}</p>
-//             <p><strong>Способ оплаты:</strong> ${paymentMethod || 'Не указан'}</p>
-//             ${comments ? `<p><strong>Комментарий клиента:</strong> ${comments}</p>` : ''}
-//         `
-//     };
-//
-//     try {
-//         await transporter.sendMail(mailOptions);
-//         console.log('Email уведомление о заказе цветов отправлено администратору');
-//         return true;
-//     } catch (error) {
-//         console.error('Ошибка отправки email администратору:', error);
-//         return false;
-//     }
-// }
-//
-// // Функция для отправки уведомлений о низком количестве товаров
-// async function notifyAboutLowQuantity(products) {
-//     for (const {
-//         product,
-//         quantity
-//     } of products) {
-//         const existingProduct = await Product.findById(product);
-//         if (existingProduct && existingProduct.quantity <= 3 && existingProduct.quantity >= 1) {
-//             const admin = existingProduct.admin;
-//             if (admin && admin.email) {
-//                 const mailOptions = {
-//                     from: process.env.EMAIL_USER,
-//                     to: admin.email,
-//                     subject: `Оповещение о низком уровне запаса цветов: ${existingProduct.name}`,
-//                     text: `Дорогой ${admin.name},\n\nНастоящим сообщением, мы хотели сказать, что цветов "${existingProduct.name}" осталось мало на складе, осталось всего ${existingProduct.quantity} шт.\n\nПожалуйста, пополните запасы как можно скорее.\n\nС уважением,\nАдминистрация Цветочного Магазина`,
-//                 };
-//                 await transporter.sendMail(mailOptions);
-//             }
-//         }
-//     }
-// }
 
 // Создание заказа
 // Создание заказа (основная функция)
@@ -505,35 +401,7 @@ export const createOrder = async (req, res) => {
 };
 
 
-// // Получение заказов пользователя
-// // Получение заказов пользователя
-// export const getUserOrders = async (req, res) => {
-//     try {
-//         const { user } = req;
-//
-//         let orders;
-//         if (user.userId) {
-//             orders = await Order.find({ user: user.userId })
-//                 .sort({ date: -1 })
-//                 .populate('flowerItems.product', 'name images')
-//                 .populate('addonItems.addonId', 'name image type');
-//         } else {
-//             // Для гостей - по sessionId (если нужно)
-//             orders = await Order.find({
-//                 'guestInfo.phone': user.sessionId
-//             }).sort({ date: -1 })
-//                 .populate('flowerItems.product', 'name images')
-//                 .populate('addonItems.addonId', 'name image type');
-//         }
-//
-//         res.status(200).json({
-//             orders: orders.map(order => formatOrderResponse(order))
-//         });
-//     } catch (error) {
-//         console.error('Error getting user orders:', error);
-//         res.status(500).json({ message: 'Ошибка при получении заказов' });
-//     }
-// };
+// Получение заказов пользователя
 // Получение заказов пользователя
 export const getUserOrders = async (req, res) => {
     try {
@@ -543,19 +411,60 @@ export const getUserOrders = async (req, res) => {
         if (user.userId && user.userId !== 'admin') {
             orders = await Order.find({ user: user.userId })
                 .sort({ date: -1 })
-                .populate('flowerItems.product', 'name images')
-                .populate('addonItems.addonId', 'name image type');
+                .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type description')
+                .populate('addonItems.addonId', 'name image price type description');
         } else {
             // Для гостей - по sessionId (если нужно)
             orders = await Order.find({
                 'guestInfo.phone': user.sessionId
             }).sort({ date: -1 })
-                .populate('flowerItems.product', 'name images')
-                .populate('addonItems.addonId', 'name image type');
+                .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type description')
+                .populate('addonItems.addonId', 'name image price type description');
         }
 
+        const formattedOrders = orders.map(order => ({
+            _id: order._id,
+            userType: order.userType,
+            flowerItems: order.flowerItems.map(item => ({
+                ...item.toObject(),
+                product: item.product ? {
+                    _id: item.product._id,
+                    name: item.product.name,
+                    images: item.product.images,
+                    price: item.product.price,
+                    category: item.product.category,
+                    flowerNames: item.product.flowerNames,
+                    stemLength: item.product.stemLength,
+                    occasion: item.product.occasion,
+                    recipient: item.product.recipient,
+                    type: item.product.type,
+                    description: item.product.description
+                } : null
+            })),
+            addonItems: order.addonItems.map(item => ({
+                ...item.toObject(),
+                addonId: item.addonId ? {
+                    _id: item.addonId._id,
+                    name: item.addonId.name,
+                    image: item.addonId.image,
+                    price: item.addonId.price,
+                    type: item.addonId.type,
+                    description: item.addonId.description
+                } : null
+            })),
+            totalAmount: order.totalAmount,
+            status: order.status,
+            date: order.date,
+            firstName: order.firstName,
+            address: order.address,
+            phoneNumber: order.phoneNumber,
+            paymentMethod: order.paymentMethod,
+            comments: order.comments,
+            statusHistory: order.statusHistory
+        }));
+
         res.status(200).json({
-            orders: orders.map(order => formatOrderResponse(order))
+            orders: formattedOrders
         });
     } catch (error) {
         console.error('Error getting user orders:', error);
@@ -565,68 +474,72 @@ export const getUserOrders = async (req, res) => {
 
 
 // Вспомогательная функция для форматирования заказа
-const formatOrderResponse = (order) => {
-    return {
-        _id: order._id,
-        userType: order.userType,
-        flowerItems: order.flowerItems,
-        addonItems: order.addonItems,
-        totalAmount: order.totalAmount,
-        status: order.status,
-        date: order.date,
-        firstName: order.firstName,
-        address: order.address,
-        phoneNumber: order.phoneNumber,
-        paymentMethod: order.paymentMethod,
-        comments: order.comments,
-        statusHistory: order.statusHistory
-    };
-};
-
-
-// Контроллер для получения всех заказов (для администратора)
-export const getAllOrders = async (req, res) => {
+// Вспомогательная функция для форматирования ответа заказа
+// Вспомогательная функция для форматирования ответа заказа (упрощенная версия)
+// Вспомогательная функция для форматирования ответа заказа
+const formatOrderResponse = async (order) => {
     try {
-        const {
-            page = 1, perPage = 20, status, occasion
-        } = req.query;
-
-        let query = {};
-
-        // Фильтрация по статусу
-        if (status && status !== 'all') {
-            query.status = status;
-        }
-
-        // Фильтрация по поводу
-        if (occasion && occasion !== 'all') {
-            query['products.occasion'] = occasion;
-        }
-
-        const orders = await Order.find(query)
-            .populate('user', 'name email')
-            .populate('products.product', 'name price images flowerNames occasion recipient')
-            .sort({
-                date: 'desc'
-            })
-            .skip((page - 1) * perPage)
-            .limit(perPage);
-
-        const totalOrders = await Order.countDocuments(query);
-
-        res.json({
-            orders,
-            pagination: {
-                currentPage: parseInt(page),
-                perPage: parseInt(perPage),
-                totalOrders,
-                totalPages: Math.ceil(totalOrders / perPage)
-            }
-        });
+        // Если order уже populate, используем как есть
+        return {
+            _id: order._id,
+            userType: order.userType,
+            flowerItems: order.flowerItems.map(item => ({
+                ...item.toObject ? item.toObject() : item,
+                product: item.product ? {
+                    _id: item.product._id,
+                    name: item.product.name,
+                    images: item.product.images,
+                    price: item.product.price,
+                    category: item.product.category,
+                    flowerNames: item.product.flowerNames,
+                    stemLength: item.product.stemLength,
+                    occasion: item.product.occasion,
+                    recipient: item.product.recipient,
+                    type: item.product.type,
+                    description: item.product.description
+                } : null
+            })),
+            addonItems: order.addonItems.map(item => ({
+                ...item.toObject ? item.toObject() : item,
+                addonId: item.addonId ? {
+                    _id: item.addonId._id,
+                    name: item.addonId.name,
+                    image: item.addonId.image,
+                    price: item.addonId.price,
+                    type: item.addonId.type,
+                    description: item.addonId.description
+                } : null
+            })),
+            totalAmount: order.totalAmount,
+            status: order.status,
+            date: order.date,
+            firstName: order.firstName,
+            address: order.address,
+            phoneNumber: order.phoneNumber,
+            paymentMethod: order.paymentMethod,
+            comments: order.comments,
+            statusHistory: order.statusHistory,
+            user: order.user
+        };
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        console.error('Error in formatOrderResponse:', error);
+        // В случае ошибки возвращаем базовую структуру
+        return {
+            _id: order._id,
+            userType: order.userType,
+            flowerItems: order.flowerItems || [],
+            addonItems: order.addonItems || [],
+            totalAmount: order.totalAmount,
+            status: order.status,
+            date: order.date,
+            firstName: order.firstName,
+            address: order.address,
+            phoneNumber: order.phoneNumber,
+            paymentMethod: order.paymentMethod,
+            comments: order.comments,
+            statusHistory: order.statusHistory,
+            user: order.user
+        };
     }
 };
 
@@ -650,54 +563,82 @@ export const getOrderById = async (req, res) => {
 };
 
 // Контроллер для обновления статуса заказа
-export const updateOrderStatus = async (req, res) => {
-    const {
-        orderId
-    } = req.params;
-    const {
-        status
-    } = req.body;
+// Обновление статуса заказа с управлением складом
+// Обновление заказа (администратором)
+// export const updateOrder = async (req, res) => {
+//     try {
+//         const { orderId } = req.params;
+//         const {
+//             firstName,
+//             address,
+//             phoneNumber,
+//             paymentMethod,
+//             comments,
+//             status
+//         } = req.body;
+//
+//         console.log('🔄 Обновление заказа:', { orderId, status, firstName });
+//
+//         const order = await Order.findById(orderId);
+//         if (!order) {
+//             return res.status(404).json({
+//                 message: 'Заказ не найден'
+//             });
+//         }
+//
+//         const oldStatus = order.status;
+//
+//         // Если статус меняется на "cancelled", возвращаем товары на склад
+//         if (status === 'cancelled' && oldStatus !== 'cancelled') {
+//             console.log('🔄 Возврат товаров на склад (отмена заказа)');
+//             await returnOrderItemsToStock(order);
+//         }
+//         // Если статус был "cancelled" и меняется на другой, снова списываем товары
+//         else if (oldStatus === 'cancelled' && status !== 'cancelled') {
+//             console.log('🔄 Списываем товары со склада (возобновление заказа)');
+//             await deductOrderItemsFromStock(order);
+//         }
+//
+//         // Обновляем поля заказа
+//         order.firstName = firstName || order.firstName;
+//         order.address = address || order.address;
+//         order.phoneNumber = phoneNumber || order.phoneNumber;
+//         order.paymentMethod = paymentMethod || order.paymentMethod;
+//         order.comments = comments || order.comments;
+//
+//         // Если статус изменился, добавляем в историю
+//         if (status && status !== order.status) {
+//             order.status = status;
+//             order.statusHistory.push({
+//                 status: status,
+//                 time: new Date()
+//             });
+//         }
+//
+//         // Сохраняем заказ
+//         await order.save();
+//
+//         // Получаем обновленный заказ с populate
+//         const updatedOrder = await Order.findById(orderId)
+//             .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type description')
+//             .populate('addonItems.addonId', 'name image price type description')
+//             .populate('user', 'name email');
+//
+//         console.log('✅ Заказ успешно обновлен:', updatedOrder._id);
+//
+//         res.json({
+//             message: 'Заказ успешно обновлен',
+//             order: await formatOrderResponse(updatedOrder)
+//         });
+//     } catch (error) {
+//         console.error('❌ Ошибка при обновлении заказа:', error);
+//         res.status(500).json({
+//             message: error.message || 'Ошибка при обновлении заказа'
+//         });
+//     }
+// };
 
-    try {
-        const order = await Order.findById(orderId);
-        if (!order) {
-            return res.status(404).json({
-                message: 'Order not found'
-            });
-        }
 
-        // Если статус меняется на "cancelled", возвращаем товары на склад
-        if (status === 'cancelled' && order.status !== 'cancelled') {
-            await returnProductsToStock(order.products);
-        }
-        // Если статус был "cancelled" и меняется на другой, снова уменьшаем количество товаров
-        else if (order.status === 'cancelled' && status !== 'cancelled') {
-            await deductProductsFromStock(order.products);
-        }
-
-        const updatedOrder = await Order.findByIdAndUpdate(
-            orderId, {
-                $set: {
-                    status
-                },
-                $push: {
-                    statusHistory: {
-                        status,
-                        time: Date.now()
-                    }
-                },
-            }, {
-                new: true
-            }
-        );
-
-        res.json(updatedOrder);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};
 
 // Контроллер для обновления комментариев администратора
 export const updateAdminComments = async (req, res) => {
@@ -732,159 +673,31 @@ export const updateAdminComments = async (req, res) => {
     }
 };
 
-// Контроллер для обновления количества товара в заказе
-export const updateProductQuantity = async (req, res) => {
-    const {
-        orderId
-    } = req.params;
-    const {
-        productIndex,
-        quantity
-    } = req.body;
-
-    try {
-        const order = await Order.findById(orderId);
-        if (!order) {
-            return res.status(404).json({
-                message: 'Order not found'
-            });
-        }
-
-        const productItem = order.products[productIndex];
-        if (!productItem) {
-            return res.status(404).json({
-                message: 'Product not found in order'
-            });
-        }
-
-        const product = await Product.findById(productItem.product);
-        if (!product) {
-            return res.status(404).json({
-                message: 'Original product not found'
-            });
-        }
-
-        const quantityDifference = quantity - productItem.quantity;
-
-        if (quantityDifference > 0 && product.quantity < quantityDifference) {
-            return res.status(400).json({
-                message: 'Insufficient product quantity',
-                available: product.quantity
-            });
-        }
-
-        // Обновляем количество в заказе
-        productItem.quantity = quantity;
-
-        // Обновляем количество на складе и счетчик продаж
-        if (quantityDifference > 0) {
-            product.quantity -= quantityDifference;
-            product.soldCount += quantityDifference;
-        } else if (quantityDifference < 0) {
-            product.quantity += Math.abs(quantityDifference);
-            product.soldCount -= Math.abs(quantityDifference);
-        }
-        await product.save();
-
-        // Пересчитываем общую сумму заказа
-        order.totalAmount = order.products.reduce(
-            (total, item) => total + (item.price || 0) * (item.quantity || 0),
-            0
-        );
-
-        await order.save();
-        res.json(order);
-    } catch (error) {
-        console.error('Error updating product quantity:', error);
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};
-
-// Контроллер для удаления товара из заказа
-export const removeProductFromOrder = async (req, res) => {
-    const {
-        orderId
-    } = req.params;
-    const {
-        productIndex
-    } = req.body;
-
-    try {
-        const order = await Order.findById(orderId);
-        if (!order) {
-            return res.status(404).json({
-                message: 'Order not found'
-            });
-        }
-
-        if (productIndex < 0 || productIndex >= order.products.length) {
-            return res.status(404).json({
-                message: 'Product not found in order'
-            });
-        }
-
-        const productToRemove = order.products[productIndex];
-        order.products.splice(productIndex, 1);
-
-        // Возвращаем товар на склад и корректируем счетчик продаж
-        await Product.findByIdAndUpdate(
-            productToRemove.product, {
-                $inc: {
-                    quantity: productToRemove.quantity,
-                    soldCount: -productToRemove.quantity
-                }
-            }, {
-                new: true
-            }
-        );
-
-        // Пересчитываем общую сумму
-        order.totalAmount = order.products.reduce(
-            (total, item) => total + (item.price || 0) * (item.quantity || 0),
-            0
-        );
-
-        if (order.products.length === 0) {
-            await Order.findByIdAndDelete(orderId);
-            return res.json({
-                message: 'Order deleted as it has no products left'
-            });
-        }
-
-        await order.save();
-        res.json(order);
-    } catch (error) {
-        console.error('Error removing product from order:', error);
-        res.status(500).json({
-            message: error.message
-        });
-    }
-};
-
 // Контроллер для удаления заказа
+// Удаление заказа с возвратом товаров
 export const deleteOrder = async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id);
+        const { orderId } = req.params;
+        const order = await Order.findById(orderId);
+
         if (!order) {
-            return res.status(404).json({
-                message: 'Order not found'
-            });
+            return res.status(404).json({ message: 'Order not found' });
         }
 
-        await returnProductsToStock(order.products);
-        await Order.findByIdAndDelete(req.params.id);
-        res.json({
-            message: 'Order deleted successfully'
-        });
+        // Возвращаем все товары на склад
+        await returnOrderItemsToStock(order);
+
+        // Удаляем заказ
+        await Order.findByIdAndDelete(orderId);
+
+        res.json({ message: 'Order deleted successfully, all items returned to stock' });
     } catch (error) {
         console.error('Error deleting order:', error);
-        res.status(500).json({
-            message: 'Server error'
-        });
+        res.status(500).json({ message: 'Server error' });
     }
 };
+
+
 
 // Контроллер для получения последнего заказа пользователя
 export const getLastOrder = async (req, res) => {
@@ -1001,5 +814,554 @@ export const getOrdersByOccasion = async (req, res) => {
         res.status(500).json({
             message: error.message
         });
+    }
+};
+
+
+
+
+// Добавьте эти функции в orderController.js
+
+// Получение всех заказов с пагинацией и фильтрацией
+// Получение всех заказов с пагинацией и фильтрацией
+export const getAllOrders = async (req, res) => {
+    try {
+        const {
+            page = 1,
+            perPage = 20,
+            status,
+            startDate,
+            endDate,
+            search
+        } = req.query;
+
+        let query = {};
+
+        // Фильтрация по статусу
+        if (status && status !== 'all') {
+            query.status = status;
+        }
+
+        // Фильтрация по дате
+        if (startDate || endDate) {
+            query.date = {};
+            if (startDate) query.date.$gte = new Date(startDate);
+            if (endDate) query.date.$lte = new Date(endDate);
+        }
+
+        // Поиск по имени или телефону
+        if (search) {
+            query.$or = [
+                { firstName: { $regex: search, $options: 'i' } },
+                { phoneNumber: { $regex: search, $options: 'i' } },
+                { 'flowerItems.name': { $regex: search, $options: 'i' } }
+            ];
+        }
+
+        const orders = await Order.find(query)
+            .populate('user', 'name email')
+            .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type description')
+            .populate('addonItems.addonId', 'name image price type description')
+            .sort({ date: -1 })
+            .skip((page - 1) * perPage)
+            .limit(parseInt(perPage));
+
+        const totalOrders = await Order.countDocuments(query);
+
+        // Используем упрощенную версию formatOrderResponse
+        const formattedOrders = orders.map(order => ({
+            _id: order._id,
+            userType: order.userType,
+            flowerItems: order.flowerItems.map(item => ({
+                ...item.toObject(),
+                product: item.product ? {
+                    _id: item.product._id,
+                    name: item.product.name,
+                    images: item.product.images,
+                    price: item.product.price,
+                    category: item.product.category,
+                    flowerNames: item.product.flowerNames,
+                    stemLength: item.product.stemLength,
+                    occasion: item.product.occasion,
+                    recipient: item.product.recipient,
+                    type: item.product.type,
+                    description: item.product.description
+                } : null
+            })),
+            addonItems: order.addonItems.map(item => ({
+                ...item.toObject(),
+                addonId: item.addonId ? {
+                    _id: item.addonId._id,
+                    name: item.addonId.name,
+                    image: item.addonId.image,
+                    price: item.addonId.price,
+                    type: item.addonId.type,
+                    description: item.addonId.description
+                } : null
+            })),
+            totalAmount: order.totalAmount,
+            status: order.status,
+            date: order.date,
+            firstName: order.firstName,
+            address: order.address,
+            phoneNumber: order.phoneNumber,
+            paymentMethod: order.paymentMethod,
+            comments: order.comments,
+            statusHistory: order.statusHistory,
+            user: order.user
+        }));
+
+        res.json({
+            orders: formattedOrders,
+            pagination: {
+                currentPage: parseInt(page),
+                perPage: parseInt(perPage),
+                totalOrders,
+                totalPages: Math.ceil(totalOrders / perPage)
+            }
+        });
+    } catch (error) {
+        console.error('Error getting all orders:', error);
+        res.status(500).json({
+            message: 'Ошибка при получении заказов'
+        });
+    }
+};
+
+// Получение статистики заказов
+export const getOrdersStats = async (req, res) => {
+    try {
+        const today = new Date();
+        const startOfToday = new Date(today.setHours(0, 0, 0, 0));
+        const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+        const [
+            totalOrders,
+            pendingOrders,
+            completedOrders,
+            todayOrders,
+            weekOrders,
+            monthOrders,
+            totalRevenue
+        ] = await Promise.all([
+            Order.countDocuments(),
+            Order.countDocuments({ status: 'pending' }),
+            Order.countDocuments({ status: 'completed' }),
+            Order.countDocuments({ date: { $gte: startOfToday } }),
+            Order.countDocuments({ date: { $gte: startOfWeek } }),
+            Order.countDocuments({ date: { $gte: startOfMonth } }),
+            Order.aggregate([
+                { $match: { status: 'completed' } },
+                { $group: { _id: null, total: { $sum: '$totalAmount' } } }
+            ])
+        ]);
+
+        // Статистика по статусам
+        const statusStats = await Order.aggregate([
+            {
+                $group: {
+                    _id: '$status',
+                    count: { $sum: 1 },
+                    revenue: { $sum: '$totalAmount' }
+                }
+            }
+        ]);
+
+        res.json({
+            stats: {
+                totalOrders,
+                pendingOrders,
+                completedOrders,
+                todayOrders,
+                weekOrders,
+                monthOrders,
+                totalRevenue: totalRevenue[0]?.total || 0
+            },
+            statusStats: statusStats.reduce((acc, stat) => {
+                acc[stat._id] = { count: stat.count, revenue: stat.revenue };
+                return acc;
+            }, {})
+        });
+    } catch (error) {
+        console.error('Error getting orders stats:', error);
+        res.status(500).json({
+            message: 'Ошибка при получении статистики'
+        });
+    }
+};
+
+// Обновление заказа (администратором)
+// Обновление заказа с полной информацией
+export const updateOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const {
+            firstName,
+            address,
+            phoneNumber,
+            paymentMethod,
+            comments,
+            status
+        } = req.body;
+
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({
+                message: 'Заказ не найден'
+            });
+        }
+
+        const oldStatus = order.status;
+
+        // Если статус меняется на "cancelled", возвращаем товары на склад
+        if (status === 'cancelled' && oldStatus !== 'cancelled') {
+            await returnOrderItemsToStock(order);
+        }
+        // Если статус был "cancelled" и меняется на другой, снова списываем товары
+        else if (oldStatus === 'cancelled' && status !== 'cancelled') {
+            await deductOrderItemsFromStock(order);
+        }
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            orderId,
+            {
+                firstName,
+                address,
+                phoneNumber,
+                paymentMethod,
+                comments,
+                status,
+                $push: status !== order.status ? {
+                    statusHistory: {
+                        status,
+                        time: new Date()
+                    }
+                } : undefined
+            },
+            { new: true }
+        )
+            .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type')
+            .populate('addonItems.addonId', 'name image price type description');
+
+        res.json({
+            message: 'Заказ успешно обновлен',
+            order: await formatOrderResponse(updatedOrder)
+        });
+    } catch (error) {
+        console.error('Error updating order:', error);
+        res.status(500).json({
+            message: 'Ошибка при обновлении заказа'
+        });
+    }
+};
+
+
+// Вспомогательные функции для управления складом
+// Вспомогательная функция для возврата товаров на склад
+// Вспомогательная функция для возврата товаров на склад
+async function returnOrderItemsToStock(order) {
+    try {
+        console.log('🔄 Возврат товаров на склад для заказа:', order._id);
+
+        // Возвращаем цветы на склад
+        for (const item of order.flowerItems) {
+            if (item.product) {
+                await Product.findByIdAndUpdate(
+                    item.product,
+                    {
+                        $inc: {
+                            quantity: item.quantity,
+                            soldCount: -item.quantity
+                        }
+                    }
+                );
+                console.log(`✅ Возвращены цветы: ${item.name}, количество: ${item.quantity}`);
+            }
+        }
+
+        // Возвращаем доп. товары на склад
+        for (const item of order.addonItems) {
+            if (item.addonId) {
+                await Addon.findByIdAndUpdate(
+                    item.addonId,
+                    { $inc: { quantity: item.quantity } }
+                );
+                console.log(`✅ Возвращены доп. товары: ${item.name}, количество: ${item.quantity}`);
+            }
+        }
+
+        console.log('✅ Все товары возвращены на склад');
+    } catch (error) {
+        console.error('❌ Ошибка при возврате товаров на склад:', error);
+        throw error;
+    }
+}
+
+// Вспомогательная функция для списания товаров со склада
+async function deductOrderItemsFromStock(order) {
+    try {
+        console.log('🔄 Списываем товары со склада для заказа:', order._id);
+
+        // Списываем цветы со склада
+        for (const item of order.flowerItems) {
+            const product = await Product.findById(item.product);
+            if (!product) {
+                throw new Error(`Товар "${item.name}" не найден`);
+            }
+
+            if (product.quantity < item.quantity) {
+                throw new Error(`Недостаточно товара "${product.name}" на складе. Доступно: ${product.quantity}, требуется: ${item.quantity}`);
+            }
+
+            await Product.findByIdAndUpdate(
+                item.product,
+                {
+                    $inc: {
+                        quantity: -item.quantity,
+                        soldCount: item.quantity
+                    }
+                }
+            );
+            console.log(`✅ Списан товар: ${item.name}, количество: ${item.quantity}`);
+        }
+
+        // Списываем доп. товары со склада
+        for (const item of order.addonItems) {
+            const addon = await Addon.findById(item.addonId);
+            if (!addon) {
+                throw new Error(`Доп. товар "${item.name}" не найден`);
+            }
+
+            if (addon.quantity < item.quantity) {
+                throw new Error(`Недостаточно доп. товара "${addon.name}" на складе. Доступно: ${addon.quantity}, требуется: ${item.quantity}`);
+            }
+
+            await Addon.findByIdAndUpdate(
+                item.addonId,
+                { $inc: { quantity: -item.quantity } }
+            );
+            console.log(`✅ Списан доп. товар: ${item.name}, количество: ${item.quantity}`);
+        }
+
+        console.log('✅ Все товары списаны со склада');
+    } catch (error) {
+        console.error('❌ Ошибка при списании товаров со склада:', error);
+        throw error;
+    }
+}
+
+
+// Обновление количества товара с учетом всех типов
+export const updateProductQuantity = async (req, res) => {
+    const { orderId } = req.params;
+    const { productIndex, quantity, itemType } = req.body;
+
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        let itemsArray;
+        let productField;
+        let productModel;
+
+        if (itemType === 'flower') {
+            itemsArray = order.flowerItems;
+            productField = 'product';
+            productModel = Product;
+        } else if (itemType === 'addon') {
+            itemsArray = order.addonItems;
+            productField = 'addonId';
+            productModel = Addon;
+        } else {
+            return res.status(400).json({ message: 'Invalid item type' });
+        }
+
+        const item = itemsArray[productIndex];
+        if (!item) {
+            return res.status(404).json({ message: 'Item not found in order' });
+        }
+
+        const product = await productModel.findById(item[productField]);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        const quantityDifference = quantity - item.quantity;
+
+        // Проверяем доступность товара при увеличении количества
+        if (quantityDifference > 0 && product.quantity < quantityDifference) {
+            return res.status(400).json({
+                message: `Недостаточно товара "${product.name}" на складе`,
+                available: product.quantity
+            });
+        }
+
+        // Сохраняем старое количество для возврата на склад
+        const oldQuantity = item.quantity;
+
+        // Обновляем количество в заказе
+        item.quantity = quantity;
+
+        // Пересчитываем itemTotal
+        if (itemType === 'flower') {
+            item.itemTotal = item.price * quantity;
+            // Добавляем стоимость упаковки если есть
+            if (item.wrapper && item.wrapper.price) {
+                item.itemTotal += item.wrapper.price;
+            }
+        } else {
+            item.itemTotal = item.price * quantity;
+        }
+
+        // Обновляем количество на складе
+        if (quantityDifference !== 0) {
+            await productModel.findByIdAndUpdate(
+                item[productField],
+                {
+                    $inc: {
+                        quantity: -quantityDifference,
+                        ...(itemType === 'flower' ? { soldCount: quantityDifference } : {})
+                    }
+                }
+            );
+        }
+
+        // Пересчитываем общую сумму заказа
+        const flowersTotal = order.flowerItems.reduce((sum, item) => sum + item.itemTotal, 0);
+        const addonsTotal = order.addonItems.reduce((sum, item) => sum + item.itemTotal, 0);
+        order.totalAmount = flowersTotal + addonsTotal;
+
+        await order.save();
+
+        res.json({
+            message: 'Quantity updated successfully',
+            order: await formatOrderResponse(order)
+        });
+    } catch (error) {
+        console.error('Error updating product quantity:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+// Удаление товара из заказа
+// Удаление товара из заказа
+export const removeProductFromOrder = async (req, res) => {
+    const { orderId } = req.params;
+    const { productIndex, itemType } = req.body;
+
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        let itemsArray;
+        let productField;
+        let productModel;
+
+        if (itemType === 'flower') {
+            itemsArray = order.flowerItems;
+            productField = 'product';
+            productModel = Product;
+        } else if (itemType === 'addon') {
+            itemsArray = order.addonItems;
+            productField = 'addonId';
+            productModel = Addon;
+        } else {
+            return res.status(400).json({ message: 'Invalid item type' });
+        }
+
+        if (productIndex < 0 || productIndex >= itemsArray.length) {
+            return res.status(404).json({ message: 'Product not found in order' });
+        }
+
+        const itemToRemove = itemsArray[productIndex];
+
+        // Возвращаем товар на склад
+        await productModel.findByIdAndUpdate(
+            itemToRemove[productField],
+            {
+                $inc: {
+                    quantity: itemToRemove.quantity,
+                    ...(itemType === 'flower' ? { soldCount: -itemToRemove.quantity } : {})
+                }
+            }
+        );
+
+        // Удаляем товар из заказа
+        itemsArray.splice(productIndex, 1);
+
+        // Пересчитываем общую сумму
+        const flowersTotal = order.flowerItems.reduce((sum, item) => sum + item.itemTotal, 0);
+        const addonsTotal = order.addonItems.reduce((sum, item) => sum + item.itemTotal, 0);
+        order.totalAmount = flowersTotal + addonsTotal;
+
+        // Если заказ пустой, удаляем его
+        if (order.flowerItems.length === 0 && order.addonItems.length === 0) {
+            await Order.findByIdAndDelete(orderId);
+            return res.json({ message: 'Order deleted as it has no items left' });
+        }
+
+        await order.save();
+
+        res.json({
+            message: 'Product removed successfully',
+            order: await formatOrderResponse(order)
+        });
+    } catch (error) {
+        console.error('Error removing product from order:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Обновление статуса заказа
+export const updateOrderStatus = async (req, res) => {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    try {
+        console.log('🔄 Обновление статуса заказа:', { orderId, status });
+
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        const oldStatus = order.status;
+
+        // Если статус меняется на "cancelled", возвращаем товары на склад
+        if (status === 'cancelled' && oldStatus !== 'cancelled') {
+            console.log('🔄 Возврат товаров на склад (отмена заказа)');
+            await returnOrderItemsToStock(order);
+        }
+        // Если статус был "cancelled" и меняется на другой, снова списываем товары
+        else if (oldStatus === 'cancelled' && status !== 'cancelled') {
+            console.log('🔄 Списываем товары со склада (возобновление заказа)');
+            await deductOrderItemsFromStock(order);
+        }
+
+        // Обновляем статус
+        order.status = status;
+        order.statusHistory.push({
+            status: status,
+            time: new Date()
+        });
+
+        // Сохраняем заказ
+        await order.save();
+
+        console.log('✅ Статус заказа обновлен:', order._id);
+
+        res.json({
+            message: 'Статус заказа обновлен',
+            order: await formatOrderResponse(order)
+        });
+    } catch (error) {
+        console.error('❌ Ошибка при обновлении статуса заказа:', error);
+        res.status(500).json({ message: error.message || 'Ошибка при обновлении статуса заказа' });
     }
 };

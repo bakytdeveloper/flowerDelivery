@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import ProductManagement from "./ProductManagement/ProductManagement";
 import WrapperManagement from './WrapperManagement/WrapperManagement';
 import AddonManagement from './AddonManagement/AddonManagement';
+import OrderManagement from './OrderManagement/OrderManagement';
 import { fontFamilies } from "../../constants/constants";
 
 import { toast } from 'react-toastify';
@@ -509,10 +510,7 @@ const AdminPanel = () => {
                 )}
 
                 {activeTab === 'orders' && (
-                    <div className="tab-content">
-                        <h2>Управление заказами</h2>
-                        <p>Функционал управления заказами будет добавлен позже.</p>
-                    </div>
+                    <OrderManagement />
                 )}
             </div>
         </div>
