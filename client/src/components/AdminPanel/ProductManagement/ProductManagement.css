@@ -37,6 +37,11 @@
      color: white;
  }
 
+ .filter-group-select-input:focus {
+     background: linear-gradient(135deg, #212b32 0%, #16213e 100%);
+     color: #0654f8;
+ }
+
 .filter-group-select-input::placeholder {
     color: white;
     opacity: 1; /* Убедитесь, что он не полупрозрачный */

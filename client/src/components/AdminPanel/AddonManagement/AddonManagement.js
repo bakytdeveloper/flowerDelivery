@@ -291,17 +291,17 @@ const AddonManagement = () => {
                                     </button>
 
                                     <button
-                                        className="btn-edit"
-                                        onClick={() => handleEditClick(addon)}
-                                    >
-                                        Редактировать
-                                    </button>
-
-                                    <button
                                         className="btn-delete"
                                         onClick={() => handleDeleteClick(addon)}
                                     >
                                         🗑️
+                                    </button>
+
+                                    <button
+                                        className="btn-edit"
+                                        onClick={() => handleEditClick(addon)}
+                                    >
+                                        Редактировать
                                     </button>
                                 </div>
                             </div>

@@ -186,16 +186,16 @@ const WrapperManagement = () => {
                     <p>Создайте первую обёртку для ваших цветов</p>
                 </div>
             ) : (
-                <div className="wrappers-grid-admin">
+                <div className="addons-grid-admin">
                     {wrappers.map((wrapper) => (
-                        <div key={wrapper._id} className="wrapper-card-admin">
-                            <div className="wrapper-image-container">
+                        <div key={wrapper._id} className="addon-card-admin">
+                            <div className="addon-image-container">
                                 <img
                                     src={wrapper.image || '/images/placeholder-wrapper.jpg'}
                                     alt={wrapper.name}
-                                    className="wrapper-image"
+                                    className="addon-image"
                                 />
-                                <div className="wrapper-badges">
+                                <div className="addon-badges">
                                     {!wrapper.isActive && (
                                         <span className="status-badge inactive">Неактивна</span>
                                     )}
@@ -207,11 +207,11 @@ const WrapperManagement = () => {
                                 </div>
                             </div>
 
-                            <div className="wrapper-info">
-                                <h3 className="wrapper-name">{wrapper.name}</h3>
+                            <div className="addon-info">
+                                <h3 className="addon-name">{wrapper.name}</h3>
 
                                 {wrapper.description && (
-                                    <p className="wrapper-description">
+                                    <p className="addon-description">
                                         {wrapper.description.length > 80
                                             ? `${wrapper.description.slice(0, 80)}...`
                                             : wrapper.description
@@ -219,14 +219,14 @@ const WrapperManagement = () => {
                                     </p>
                                 )}
 
-                                <div className="wrapper-details">
+                                <div className="addon-details">
                                     <div className="detail-item">
                                         <span className="detail-label">В наличии:</span>
                                         <span className="detail-value">{wrapper.quantity} шт</span>
                                     </div>
                                 </div>
 
-                                <div className="wrapper-price-admin">
+                                <div className="addon-price-admin">
                                     {wrapper.originalPrice && wrapper.originalPrice > wrapper.price ? (
                                         <>
                                             <span className="original-price">
@@ -243,12 +243,19 @@ const WrapperManagement = () => {
                                     )}
                                 </div>
 
-                                <div className="wrapper-actions-admin">
+                                <div className="addon-actions-admin">
                                     <button
                                         className={`btn-status ${wrapper.isActive ? 'btn-active' : 'btn-inactive'}`}
                                         onClick={() => toggleWrapperActive(wrapper._id, wrapper.isActive)}
                                     >
                                         {wrapper.isActive ? 'Активна' : 'Неактивна'}
+                                    </button>
+
+                                    <button
+                                        className="btn-delete"
+                                        onClick={() => handleDeleteClick(wrapper)}
+                                    >
+                                        🗑️
                                     </button>
 
                                     <button
@@ -258,12 +265,7 @@ const WrapperManagement = () => {
                                         Редактировать
                                     </button>
 
-                                    <button
-                                        className="btn-delete"
-                                        onClick={() => handleDeleteClick(wrapper)}
-                                    >
-                                        🗑️
-                                    </button>
+
                                 </div>
                             </div>
                         </div>

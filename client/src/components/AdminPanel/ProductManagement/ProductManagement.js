@@ -582,18 +582,20 @@ const ProductManagement = () => {
                                         </button>
 
                                         <button
+                                            className="btn-delete"
+                                            onClick={() => handleDeleteClick(product)}
+                                        >
+                                            🗑️
+                                        </button>
+
+                                        <button
                                             className="btn-edit"
                                             onClick={() => handleEditClick(product)}
                                         >
                                             Редактировать
                                         </button>
 
-                                        <button
-                                            className="btn-delete"
-                                            onClick={() => handleDeleteClick(product)}
-                                        >
-                                            🗑️
-                                        </button>
+
                                     </div>
                                 </div>
                             </div>
