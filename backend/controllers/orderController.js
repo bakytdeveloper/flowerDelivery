@@ -929,62 +929,179 @@ export const getAllOrders = async (req, res) => {
 };
 
 // Получение статистики заказов
+// export const getOrdersStats = async (req, res) => {
+//     try {
+//         const today = new Date();
+//         const startOfToday = new Date(today.setHours(0, 0, 0, 0));
+//         const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+//         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+//
+//         const [
+//             totalOrders,
+//             pendingOrders,
+//             completedOrders,
+//             todayOrders,
+//             weekOrders,
+//             monthOrders,
+//             totalRevenue
+//         ] = await Promise.all([
+//             Order.countDocuments(),
+//             Order.countDocuments({ status: 'pending' }),
+//             Order.countDocuments({ status: 'completed' }),
+//             Order.countDocuments({ date: { $gte: startOfToday } }),
+//             Order.countDocuments({ date: { $gte: startOfWeek } }),
+//             Order.countDocuments({ date: { $gte: startOfMonth } }),
+//             Order.aggregate([
+//                 { $match: { status: 'completed' } },
+//                 { $group: { _id: null, total: { $sum: '$totalAmount' } } }
+//             ])
+//         ]);
+//
+//         // Статистика по статусам
+//         const statusStats = await Order.aggregate([
+//             {
+//                 $group: {
+//                     _id: '$status',
+//                     count: { $sum: 1 },
+//                     revenue: { $sum: '$totalAmount' }
+//                 }
+//             }
+//         ]);
+//
+//         res.json({
+//             stats: {
+//                 totalOrders,
+//                 pendingOrders,
+//                 completedOrders,
+//                 todayOrders,
+//                 weekOrders,
+//                 monthOrders,
+//                 totalRevenue: totalRevenue[0]?.total || 0
+//             },
+//             statusStats: statusStats.reduce((acc, stat) => {
+//                 acc[stat._id] = { count: stat.count, revenue: stat.revenue };
+//                 return acc;
+//             }, {})
+//         });
+//     } catch (error) {
+//         console.error('Error getting orders stats:', error);
+//         res.status(500).json({
+//             message: 'Ошибка при получении статистики'
+//         });
+//     }
+// };
+
+// Расширенная статистика заказов
+// Получение статистики заказов
 export const getOrdersStats = async (req, res) => {
     try {
-        const today = new Date();
-        const startOfToday = new Date(today.setHours(0, 0, 0, 0));
-        const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const now = new Date();
 
+        // Правильное вычисление дат
+        const startOfToday = new Date(now);
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay());
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+        // console.log('📅 Даты для статистики:', {
+        //     now: now.toISOString(),
+        //     startOfToday: startOfToday.toISOString(),
+        //     startOfWeek: startOfWeek.toISOString(),
+        //     startOfMonth: startOfMonth.toISOString()
+        // });
+
+        // Получаем все заказы для анализа
+        const allOrders = await Order.find({}).select('date status totalAmount').lean();
+
+        // ДЕБАГ: Выводим заказы за сегодня
+        const todayOrdersDebug = allOrders.filter(order => {
+            const orderDate = new Date(order.date);
+            return orderDate >= startOfToday;
+        });
+
+        // console.log('🔍 Заказы за сегодня:', todayOrdersDebug.map(order => ({
+        //     date: order.date,
+        //     status: order.status,
+        //     amount: order.totalAmount
+        // })));
+
+        // Основные запросы к базе данных
         const [
             totalOrders,
             pendingOrders,
-            completedOrders,
             todayOrders,
             weekOrders,
             monthOrders,
-            totalRevenue
+            revenueResult
         ] = await Promise.all([
             Order.countDocuments(),
             Order.countDocuments({ status: 'pending' }),
-            Order.countDocuments({ status: 'completed' }),
-            Order.countDocuments({ date: { $gte: startOfToday } }),
-            Order.countDocuments({ date: { $gte: startOfWeek } }),
-            Order.countDocuments({ date: { $gte: startOfMonth } }),
+            // Заказы за сегодня (любого статуса)
+            Order.countDocuments({
+                date: { $gte: startOfToday }
+            }),
+            // Заказы за неделю (любого статуса)
+            Order.countDocuments({
+                date: { $gte: startOfWeek }
+            }),
+            // Заказы за месяц (любого статуса)
+            Order.countDocuments({
+                date: { $gte: startOfMonth }
+            }),
+            // Общий доход ТОЛЬКО из завершенных заказов
             Order.aggregate([
                 { $match: { status: 'completed' } },
                 { $group: { _id: null, total: { $sum: '$totalAmount' } } }
             ])
         ]);
 
-        // Статистика по статусам
-        const statusStats = await Order.aggregate([
-            {
-                $group: {
-                    _id: '$status',
-                    count: { $sum: 1 },
-                    revenue: { $sum: '$totalAmount' }
-                }
-            }
+        // Альтернативный расчет дохода (включая другие статусы если нужно)
+        const allRevenueResult = await Order.aggregate([
+            { $match: { status: { $in: ['completed', 'inProgress'] } } }, // Можно добавить другие статусы
+            { $group: { _id: null, total: { $sum: '$totalAmount' } } }
         ]);
 
+        const totalRevenue = revenueResult[0]?.total || 0;
+        const totalRevenueIncludingProgress = allRevenueResult[0]?.total || 0;
+
+        // console.log('💰 Доход статистика:', {
+        //     completedRevenue: totalRevenue,
+        //     includingInProgress: totalRevenueIncludingProgress,
+        //     completedOrdersCount: await Order.countDocuments({ status: 'completed' }),
+        //     inProgressOrdersCount: await Order.countDocuments({ status: 'inProgress' })
+        // });
+
+        const stats = {
+            totalOrders,
+            pendingOrders,
+            todayOrders,
+            weekOrders,
+            monthOrders,
+            totalRevenue,
+            // Дополнительные поля если нужно
+            totalRevenueIncludingProgress,
+            completedOrders: await Order.countDocuments({ status: 'completed' }),
+            inProgressOrders: await Order.countDocuments({ status: 'inProgress' })
+        };
+
+        // console.log('🎯 Финальная статистика:', stats);
+
         res.json({
-            stats: {
-                totalOrders,
-                pendingOrders,
-                completedOrders,
-                todayOrders,
-                weekOrders,
-                monthOrders,
-                totalRevenue: totalRevenue[0]?.total || 0
-            },
-            statusStats: statusStats.reduce((acc, stat) => {
-                acc[stat._id] = { count: stat.count, revenue: stat.revenue };
-                return acc;
-            }, {})
+            stats,
+            debug: {
+                todayDate: now.toISOString(),
+                todayStart: startOfToday.toISOString(),
+                todayOrdersCount: todayOrders,
+                revenueCalculation: `Доход только из completed заказов: ${totalRevenue}`
+            }
         });
+
     } catch (error) {
-        console.error('Error getting orders stats:', error);
+        console.error('❌ Ошибка при получении статистики:', error);
         res.status(500).json({
             message: 'Ошибка при получении статистики'
         });
@@ -1062,7 +1179,7 @@ export const updateOrder = async (req, res) => {
 // Вспомогательная функция для возврата товаров на склад
 async function returnOrderItemsToStock(order) {
     try {
-        console.log('🔄 Возврат товаров на склад для заказа:', order._id);
+        // console.log('🔄 Возврат товаров на склад для заказа:', order._id);
 
         // Возвращаем цветы на склад
         for (const item of order.flowerItems) {

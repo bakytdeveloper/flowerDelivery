@@ -53,8 +53,10 @@ const OrderManagement = () => {
     };
 
     // Загрузка статистики
+    // Загрузка статистики
     const fetchStats = async () => {
         try {
+            console.log('🔄 Загрузка статистики...');
             const response = await fetch(`${apiUrl}/api/orders/stats/overview`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -63,10 +65,14 @@ const OrderManagement = () => {
 
             if (response.ok) {
                 const data = await response.json();
+                console.log('📊 Полученные данные статистики:', data);
+                console.log('📈 Детали stats:', data.stats);
                 setStats(data.stats);
+            } else {
+                console.error('❌ Ошибка загрузки статистики:', response.status, response.statusText);
             }
         } catch (error) {
-            console.error('Error fetching stats:', error);
+            console.error('❌ Ошибка загрузки статистики:', error);
         }
     };
 
@@ -184,12 +190,6 @@ const OrderManagement = () => {
 
             {/* Статистика */}
             <div className="stats-grid">
-                <StatsCard
-                    title="Сегодня"
-                    value={stats.todayOrders || 0}
-                    icon="📦"
-                    color="blue"
-                />
                 <StatsCard
                     title="За неделю"
                     value={stats.weekOrders || 0}
