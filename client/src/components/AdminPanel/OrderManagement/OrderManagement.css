@@ -447,7 +447,7 @@
 /* OrderManagement.css - дополнительные стили */
 
 .large-modal {
-    max-width: 800px;
+    max-width: 800px!important;
     max-height: 90vh;
     overflow-y: auto;
 }
