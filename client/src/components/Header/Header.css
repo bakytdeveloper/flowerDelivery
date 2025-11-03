@@ -84,22 +84,78 @@
     flex-shrink: 0;
 }
 
+/*.logo-text-home {*/
+/*    font-size: 52px;*/
+/*    font-weight: 800;*/
+/*    color: #62e909 !important;*/
+/*    margin: 0;*/
+/*    letter-spacing: -0.5px;*/
+/*    white-space: nowrap;*/
+/*}*/
+
+/*.logo-accent-home {*/
+/*    color: #faf7f7!important;*/
+/*    -webkit-background-clip: text;*/
+/*    !*-webkit-text-fill-color: transparent;*!*/
+/*    !*background-clip: text;*!*/
+/*}*/
+
 .logo-text-home {
     font-size: 52px;
     font-weight: 800;
-    color: #c2fc9c !important;
+    color: #62e909 !important;
     margin: 0;
     letter-spacing: -0.5px;
     white-space: nowrap;
+    text-shadow:
+            0 0 2px #62e909,
+            0 0 4px #62e909,
+            0 0 6px #4cd804;
+    animation: gentle-glow 2s ease-in-out infinite alternate;
 }
 
 .logo-accent-home {
-    color: #faf7f7!important;
-    /*background: linear-gradient(45deg, #ff6b6b, #ff8e8e) !important;*/
-    -webkit-background-clip: text;
-    /*-webkit-text-fill-color: transparent;*/
-    /*background-clip: text;*/
+    color: #faf7f7 !important;
+    text-shadow:
+            0 0 2px #ffffff,
+            0 0 4px #ffffff,
+            0 0 6px #f8f8f8;
+    animation: gentle-glow-white 1.8s ease-in-out infinite alternate;
 }
+
+@keyframes gentle-glow {
+    from {
+        text-shadow:
+                0 0 2px #62e909,
+                0 0 4px #62e909,
+                0 0 6px #4cd804;
+    }
+    to {
+        text-shadow:
+                0 0 4px #62e909,
+                0 0 6px #62e909,
+                0 0 8px #4cd804,
+                0 0 10px #4cd804;
+    }
+}
+
+@keyframes gentle-glow-white {
+    from {
+        text-shadow:
+                0 0 2px #ffffff,
+                0 0 4px #ffffff,
+                0 0 5px #f8f8f8;
+    }
+    to {
+        text-shadow:
+                0 0 4px #ffffff,
+                0 0 6px #ffffff,
+                0 0 8px #f8f8f8,
+                0 0 10px #f8f8f8;
+    }
+}
+
+
 
 /* Кнопка бургер-меню */
 .mobile-menu-toggle {
