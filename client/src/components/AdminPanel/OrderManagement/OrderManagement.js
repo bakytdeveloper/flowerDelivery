@@ -1070,8 +1070,15 @@ const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
                                                 </div>
                                             ))}
                                         </div>
+
+
                                     </div>
                                 )}
+                            </div>
+
+                            <div className="item-total-view-check">
+                                <strong>Итого сумма:</strong> {new Intl.NumberFormat('ru-RU').format(order.totalAmount)} сом
+                                {/*Итого: {new Intl.NumberFormat('ru-RU').format(item.itemTotal)} сом*/}
                             </div>
 
                             <div className="detail-section">

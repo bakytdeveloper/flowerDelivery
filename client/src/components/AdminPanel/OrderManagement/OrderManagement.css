@@ -759,6 +759,21 @@
     padding-top: 8px;
 }
 
+.item-total-view-check {
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+    color: #04f13a;
+    border-top: 1px dashed #dee2e6;
+    border-bottom: 1px dashed #dee2e6;
+    padding-top: 8px;
+    padding-right: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    background: #0b1e24;
+    border-radius: 0 0 7px 7px;
+}
+
 /* Информационные сетки */
 .info-grid {
     display: grid;
