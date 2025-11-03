@@ -14,10 +14,19 @@ const __filename = fileURLToPath(
 const __dirname = path.dirname(__filename);
 
 // Контроллер для получения всех продуктов админа
+// Контроллер для получения всех продуктов админа
 export const getAdminProducts = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { page = 1, limit = 10, search = '' } = req.query;
+        const {
+            page = 1,
+            limit = 10,
+            search = '',
+            type = '',
+            occasion = '',
+            recipient = '',
+            isActive = ''
+        } = req.query;
 
         const skip = (page - 1) * limit;
         let query = { admin: userId };
@@ -26,6 +35,28 @@ export const getAdminProducts = async (req, res) => {
         if (search) {
             query.name = { $regex: search, $options: 'i' };
         }
+
+        // Добавляем фильтр по типу
+        if (type) {
+            query.type = type;
+        }
+
+        // Добавляем фильтр по поводу
+        if (occasion) {
+            query.occasion = occasion;
+        }
+
+        // Добавляем фильтр по получателю
+        if (recipient) {
+            query.recipient = recipient;
+        }
+
+        // Добавляем фильтр по активности
+        if (isActive !== '') {
+            query.isActive = isActive === 'true';
+        }
+
+        console.log('Admin products query:', query); // Для отладки
 
         const adminProducts = await Product.find(query)
             .sort({ createdAt: -1 })
@@ -47,6 +78,7 @@ export const getAdminProducts = async (req, res) => {
         });
     }
 };
+
 
 // Контроллер для создания продукта
 export const createProduct = async (req, res) => {

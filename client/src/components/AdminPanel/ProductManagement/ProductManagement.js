@@ -66,11 +66,14 @@ const ProductManagement = () => {
             queryParams.append('page', page);
             queryParams.append('limit', limit);
 
+            // Добавляем ВСЕ параметры фильтрации
             if (filters.search) queryParams.append('search', filters.search);
             if (filters.type) queryParams.append('type', filters.type);
             if (filters.occasion) queryParams.append('occasion', filters.occasion);
             if (filters.recipient) queryParams.append('recipient', filters.recipient);
             if (filters.isActive) queryParams.append('isActive', filters.isActive);
+
+            console.log('Fetching products with params:', Object.fromEntries(queryParams)); // Для отладки
 
             const response = await fetch(`${apiUrl}/api/admin/products?${queryParams.toString()}`, {
                 headers: {
