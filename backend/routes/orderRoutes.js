@@ -36,7 +36,6 @@ router.get('/', authenticateToken, requireAdmin, getAllOrders);
 router.get('/stats/overview', authenticateToken, requireAdmin, getOrdersStats);
 router.get('/:orderId', authenticateToken, requireAdmin, getOrderById);
 router.put('/:orderId/status', authenticateToken, requireAdmin, updateOrderStatus);
-// router.put('/:orderId', authenticateToken, requireAdmin, updateOrder);
 router.put('/update-comments-admin/:orderId', authenticateToken, requireAdmin, updateAdminComments);
 router.put('/update-product-quantity/:orderId', authenticateToken, requireAdmin, updateProductQuantity);
 router.delete('/remove-product/:orderId', authenticateToken, requireAdmin, removeProductFromOrder);

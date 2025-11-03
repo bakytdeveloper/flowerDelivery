@@ -7,13 +7,17 @@
     margin-bottom: 30px;
 }
 
+.order-header-title {
+    color: white!important;
+}
+
 .order-header h2 {
     color: #333;
     margin-bottom: 5px;
 }
 
 .order-header p {
-    color: #666;
+    color: #d6d6d6;
     font-size: 16px;
 }
 
@@ -42,6 +46,10 @@
 
 .stats-icon {
     font-size: 24px;
+}
+
+.filter-group-label {
+    color: white;
 }
 
 .stats-content h3 {
