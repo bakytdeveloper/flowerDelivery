@@ -311,7 +311,7 @@
 
 .detail-section h4 {
     margin-bottom: 10px;
-    color: #333;
+    color: #cbd9f5;
     border-bottom: 2px solid #007bff;
     padding-bottom: 5px;
 }
@@ -339,7 +339,7 @@
 .item-name {
     font-weight: 600;
 
-    color: #1a1a2e;
+    color: #ececf1;
 }
 
 .item-price {
@@ -350,7 +350,7 @@
     display: flex;
     gap: 15px;
     font-size: 12px;
-    color: #666;
+    color: #eae1e1;
     margin-bottom: 8px;
 }
 
@@ -369,7 +369,7 @@
     display: flex;
     justify-content: space-between;
     padding: 8px;
-    background: #f8f9fa;
+    background: #044b92;
     border-radius: 5px;
 }
 
@@ -710,7 +710,8 @@
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 10px;
-    background: #77868a;
+    background: #012e3b;
+    color: whitesmoke;
 }
 
 .item-main-info {
@@ -722,10 +723,18 @@
 }
 
 .product-details-view {
-    background: #f8f9fa;
+    background: #012e3b;
     padding: 10px;
     border-radius: 6px;
     margin-bottom: 8px;
+    color: whitesmoke;
+    font-size: 12px!important;
+}
+
+.product-details-view span {
+    color: #cdcaca;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .product-details-view .detail-row {
@@ -735,7 +744,7 @@
 }
 
 .wrapper-details {
-    background: #fff3cd;
+    background: #1108ee;
     padding: 8px;
     border-radius: 4px;
     margin: 8px 0;
@@ -759,12 +768,12 @@
 
 .info-item {
     padding: 8px;
-    background: #f8f9fa;
+    background: #033b73;
     border-radius: 4px;
 }
 
 .comment-box {
-    background: #e7f3ff;
+    background: #022e5b;
     padding: 15px;
     border-radius: 6px;
     border-left: 4px solid #007bff;
@@ -805,24 +814,43 @@
     font-weight: bold;
 }
 
+.status-buttons-grid {
+    display: flex;
+    padding: 0;
+    justify-content: space-between;
+}
+
+.status-btn {
+    padding: 5px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    box-shadow: 3px 5px 5px rgba(226, 219, 219, 0.3);
+    margin: 20px 0;
+    justify-content: space-between;
+}
+.status-btn:hover {
+    box-shadow: 1px 3px 3px rgba(233, 229, 229, 0.2);
+}
+
 .status-pending {
     background: #fff3cd;
-    color: #856404;
+    color: #c39310;
+
 }
 
 .status-completed {
     background: #d1ecf1;
-    color: #0c5460;
+    color: #05b306;
 }
 
 .status-cancelled {
     background: #f8d7da;
-    color: #721c24;
+    color: #f80219;
 }
 
 .status-in-progress {
     background: #d4edda;
-    color: #155724;
+    color: #024c13;
 }
 
 .status-history-item {
