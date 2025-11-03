@@ -257,9 +257,9 @@
 }
 
 .product-actions-admin {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
+    /*display: grid;*/
+    /*grid-template-columns: 1fr 1fr 1fr;*/
+    /*gap: 8px;*/
 }
 
 .btn-status,

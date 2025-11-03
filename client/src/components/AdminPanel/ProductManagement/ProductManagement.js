@@ -449,7 +449,7 @@ const ProductManagement = () => {
                         placeholder="Поиск по названию..."
                         value={filters.search}
                         onChange={(e) => handleFilterChange('search', e.target.value)}
-                        className="form-control search-input filter-group-select-input"
+                        className="form-control filter-group-select-input"
                     />
                 </div>
 
@@ -492,7 +492,7 @@ const ProductManagement = () => {
                     </select>
                 </div>
 
-                <button className="btn btn-outline-management" onClick={clearFilters}>
+                <button className="btn btn-outline" onClick={clearFilters}>
                     Очистить
                 </button>
             </div>
@@ -517,16 +517,16 @@ const ProductManagement = () => {
                 </div>
             ) : (
                 <>
-                    <div className="products-grid-admin">
+                    <div className="addons-grid-admin">
                         {products.map((product) => (
-                            <div key={product._id} className="product-card-admin">
-                                <div className="product-image-container">
+                            <div key={product._id} className="addon-card-admin">
+                                <div className="addon-image-container">
                                     <img
                                         src={product.images?.[0] || '/images/placeholder-flower.jpg'}
                                         alt={product.name}
-                                        className="product-image"
+                                        className="addon-image"
                                     />
-                                    <div className="product-badges">
+                                    <div className="addon-badges">
                                         {!product.isActive && (
                                             <span className="status-badge inactive">Неактивен</span>
                                         )}
@@ -539,69 +539,45 @@ const ProductManagement = () => {
                                     </div>
                                 </div>
 
-                                <div className="product-info">
-                                    <h3 className="product-name">{product.name}</h3>
-                                    {/*<p className="product-description">*/}
-                                    {/*    {product.description?.length > 60*/}
-                                    {/*        ? `${product.description.slice(0, 60)}...`*/}
-                                    {/*        : product.description*/}
-                                    {/*    }*/}
-                                    {/*</p>*/}
-
-                                    <div className="product-meta">
-                                        <span className={`product-type ${product.type}`}>
-                                            {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
-                                        </span>
-                                        {/*<span className="product-category">{product.category}</span>*/}
-                                    </div>
-
-                                    <div className="product-details">
-                                        {/*<div className="detail-item">*/}
-                                        {/*    <span className="detail-label">Цветы:</span>*/}
-                                        {/*    <span className="detail-value">*/}
-                                        {/*        {Array.isArray(product.flowerNames)*/}
-                                        {/*            ? product.flowerNames.slice(0, 2).join(', ')*/}
-                                        {/*            : product.flowerNames}*/}
-                                        {/*        {product.flowerNames?.length > 2 && '...'}*/}
-                                        {/*    </span>*/}
-                                        {/*</div>*/}
-                                        {/*<div className="detail-item">*/}
-                                        {/*    <span className="detail-label">Кому:</span>*/}
-                                        {/*    <span className="detail-value">{product.recipient}</span>*/}
-                                        {/*</div>*/}
-                                        {/*<div className="detail-item">*/}
-                                        {/*    <span className="detail-label">Длина стебля:</span>*/}
-                                        {/*    <span className="detail-value">{product.stemLength} см</span>*/}
-                                        {/*</div>*/}
+                                <div className="addon-info">
+                                    <h3 className="addon-name">{product.name}</h3>
+                                    {product.description && (
+                                        <p className="addon-description">
+                                            {product.description.length > 80
+                                                ? `${product.description.slice(0, 80)}...`
+                                                : product.description
+                                            }
+                                        </p>
+                                    )}
+                                    <div className="addon-details">
                                         <div className="detail-item">
                                             <span className="detail-label">В наличии:</span>
                                             <span className="detail-value">{product.quantity} шт</span>
                                         </div>
                                     </div>
 
-                                    <div className="product-price-admin">
+                                    <div className="addon-price-admin">
                                         {product.originalPrice && product.originalPrice > product.price ? (
                                             <>
-                                                <span className="original-price">
-                                                    {formatPrice(product.originalPrice)}
-                                                </span>
+                                            <span className="original-price">
+                                                {formatPrice(product.originalPrice)}
+                                            </span>
                                                 <span className="current-price">
-                                                    {formatPrice(product.price)}
-                                                </span>
+                                                {formatPrice(product.price)}
+                                            </span>
                                             </>
                                         ) : (
                                             <span className="current-price">
-                                                {formatPrice(product.price)}
-                                            </span>
+                                            {formatPrice(product.price)}
+                                        </span>
                                         )}
                                     </div>
 
-                                    <div className="product-actions-admin">
+                                    <div className="addon-actions-admin">
                                         <button
                                             className={`btn-status ${product.isActive ? 'btn-active' : 'btn-inactive'}`}
                                             onClick={() => toggleProductActive(product._id, product.isActive)}
                                         >
-                                            {/*('isActive', e.target.checked)*/}
                                             {product.isActive ? 'Активен' : 'Неактивен'}
                                         </button>
 
