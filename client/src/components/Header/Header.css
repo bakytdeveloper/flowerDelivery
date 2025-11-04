@@ -120,7 +120,7 @@
             0 0 2px #ffffff,
             0 0 4px #ffffff,
             0 0 6px #f8f8f8;
-    animation: gentle-glow-white 1.8s ease-in-out infinite alternate;
+    animation: gentle-glow-white 2s ease-in-out infinite alternate;
 }
 
 @keyframes gentle-glow {

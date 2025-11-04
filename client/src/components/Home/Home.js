@@ -30,9 +30,18 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
     const [isVideoLoaded, setIsVideoLoaded] = useState(false);
     const videoRef = useRef(null);
     const carouselRef = useRef(null);
-    // const history = useHistory();
+    const [preloadMap, setPreloadMap] = useState(false);
     const location = useLocation();
-    // const navigate = useNavigate();
+
+    // Добавьте этот useEffect для предварительной загрузки карты
+    useEffect(() => {
+        // Предзагружаем карту через 2 секунды после загрузки главной страницы
+        const timer = setTimeout(() => {
+            setPreloadMap(true);
+        }, 2000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     useEffect(() => {
         if (!hasNewestProducts) {
@@ -124,45 +133,6 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
         }
     }, [currentSlide, slides]);
 
-    // const handleImageClick = async (gender) => {
-    //     const sanitizedGender = sanitizeInput(gender);
-    //     setIsFooterCatalog(true);
-    //
-    //     try {
-    //         const response = await fetch(
-    //             `${process.env.REACT_APP_API_URL}/api/homepage/check-products?gender=${encodeURIComponent(sanitizedGender)}`
-    //         );
-    //
-    //         if (!response.ok) {
-    //             throw new Error('Ошибка проверки товаров');
-    //         }
-    //
-    //         const { hasProducts } = await response.json();
-    //
-    //         if (!hasProducts && sanitizedGender !== 'Товары для всех') {
-    //             toast.info(`Товары в категории "${sanitizedGender}" отсутствуют`);
-    //             return;
-    //         }
-    //
-    //         const params = new URLSearchParams();
-    //
-    //         if (sanitizedGender === 'Аксессуары') {
-    //             params.set('category', 'Аксессуары');
-    //         } else if (sanitizedGender === 'Товары для всех') {
-    //             history.push('/catalog');
-    //             return;
-    //         } else {
-    //             params.set('gender', sanitizedGender);
-    //         }
-    //         params.set('page', '1');
-    //
-    //         history.push(`/catalog?${params.toString()}`);
-    //     } catch (error) {
-    //         console.error('Ошибка проверки товаров:', error);
-    //         toast.error('Произошла ошибка при проверке наличия товаров');
-    //     }
-    // };
-
     useEffect(() => {
         setShowSidebar(true);
         document.body.classList.remove('no-scroll');
@@ -235,10 +205,21 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
     }
 
     const safeSlides = Array.isArray(slides) ? slides : [];
-    // const safeGenderImages = Array.isArray(genderImages) ? genderImages : [];
 
     return (
         <div className="home-container" style={{ paddingBottom: '60px' }}>
+            {/* Скрытый прелоадер карты */}
+            {preloadMap && (
+                <div style={{ display: 'none' }}>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d1733.8264014302763!2d74.70850274009078!3d43.02807312173589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1z0JrQvtGA0LTQsNC5INGD0Lsu0JbQmNCR0JXQmiDQltCe0JvQqyAyMzQ!5e1!3m2!1sru!2skg!4v1761675010196!5m2!1sru!2skg"
+                        width="1"
+                        height="1"
+                        style={{ display: 'none' }}
+                        title="Preload Map"
+                    />
+                </div>
+            )}
             <div
                 id="carouselExampleCaptions"
                 className="carousel slide"
