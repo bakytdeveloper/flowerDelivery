@@ -263,7 +263,7 @@ export const login = async (req, res) => {
 
             return res.json({
                 user: {
-                    name: 'Admin',
+                    name: 'Администратор',
                     email: email,
                     role: 'admin'
                 },
