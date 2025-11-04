@@ -2,6 +2,7 @@
     width: 100%;
     min-height: 100vh;
     margin-top: 15px;
+    margin-bottom: 15px;
     background: linear-gradient(135deg, #f8fff8 0%, #f0f8f0 100%);
     border-radius: 15px;
 }
@@ -50,7 +51,7 @@
 
 /* Основной контент */
 .about-content {
-    padding: 4rem 0;
+    padding: 1rem 0 0;
 }
 
 .container {
@@ -61,9 +62,9 @@
 
 /* Секция миссии */
 .mission-section {
-    padding: 4rem 0;
+    padding: 1rem 0;
     background: white;
-    margin: 2rem auto;
+    margin: 1rem auto;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
@@ -78,7 +79,7 @@
 .mission-text h2 {
     font-size: 2.5rem;
     color: #0344ee;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     font-weight: 700;
 }
 
@@ -102,29 +103,29 @@
 
 /* Секция преимуществ */
 .advantages-section {
-    padding: 4rem 0;
-    background: linear-gradient(135deg, #f7faf7 0%, #edf7ed 100%);
+    padding: 1rem 0;
+    background: linear-gradient(135deg, #f7faf7 0%, #e7fce7 100%);
 }
 
 .section-title {
     font-size: 2.5rem;
     color: #0345f5;
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     font-weight: 700;
 }
 
 .advantages-grid {
     display: grid;
     /*grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));*/
-    grid-template-columns: repeat(4, 1fr); /* 5 колонок на больших экранах */
+    grid-template-columns: repeat(4, 1fr); /* 4 колонок на больших экранах */
 
     gap: 2rem;
 }
 
 .advantage-card {
     background: white;
-    padding: 2.5rem 2rem;
+    padding: 1rem;
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
@@ -139,7 +140,7 @@
 
 .advantage-icon {
     font-size: 3rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .advantage-card h3 {
@@ -157,7 +158,7 @@
 
 /* Секция ассортимента */
 .assortment-section {
-    padding: 4rem 0;
+    padding: 2rem 0;
     background: white;
 }
 
@@ -196,11 +197,11 @@
 }
 
 .assortment-content {
-    padding: 2rem;
+    padding: 1.5rem;
 }
 
 .assortment-content h3 {
-    color: #045cf6;
+    color: #03b32e;
     font-size: 1.5rem;
     margin-bottom: 1rem;
     font-weight: 600;
@@ -220,7 +221,7 @@
 
 .assortment-content li:before {
     content: '✓';
-    color: #053ff5;
+    color: #1fbf03;
     font-weight: bold;
     position: absolute;
     left: 0;
@@ -228,7 +229,7 @@
 
 /* Секция ценностей */
 .values-section {
-    padding: 4rem 0;
+    padding: 2rem 0;
     background: linear-gradient(135deg, #032eff 0%, #63cdfa 100%);
     color: white;
 }
@@ -264,7 +265,7 @@
 
 /* Секция команды */
 .team-section {
-    padding: 4rem 0;
+    padding: 2rem 0;
     background: white;
 }
 
@@ -301,7 +302,7 @@
 }
 
 .team-member h4 {
-    color: #4dbc04;
+    color: #3c0181;
     font-size: 1.3rem;
     margin-bottom: 0.5rem;
     font-weight: 600;
@@ -320,7 +321,7 @@
 
 /* CTA секция */
 .cta-section {
-    padding: 4rem 0;
+    padding: 4rem 0 2rem;
     background: linear-gradient(135deg, #032eff 0%, #63cdfa 100%);
     color: white;
     text-align: center;
@@ -409,6 +410,15 @@
 
     .team-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .assortment-image {
+        border-radius: 10px;
+    }
+
+    .values-section {
+        border-radius: 10px;
     }
 
     .cta-buttons {
@@ -424,6 +434,23 @@
     .container {
         padding: 0 1rem;
     }
+
+    .advantage-card {
+        padding: 0.5rem;
+    }
+
+    .team-member {
+        padding: 1rem;
+        border: 1px solid #d2d1d1;
+        border-radius: 10px;
+        width: 100%;
+        box-shadow: 2px 4px 4px #b8b5b5;
+    }
+
+    .value-item {
+        padding: 1rem;
+        box-shadow: 2px 4px 4px #758bfc;
+    }
 }
 
 @media (max-width: 480px) {
@@ -437,6 +464,6 @@
 
     .advantage-card,
     .assortment-item {
-        padding: 1.5rem;
+        padding: 0.5rem;
     }
 }
