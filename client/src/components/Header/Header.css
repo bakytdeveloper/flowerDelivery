@@ -108,50 +108,50 @@
     letter-spacing: -0.5px;
     white-space: nowrap;
     text-shadow:
+            0 0 1px #62e909,
             0 0 2px #62e909,
-            0 0 4px #62e909,
-            0 0 6px #4cd804;
+            0 0 4px #4cd804;
     animation: gentle-glow 2s ease-in-out infinite alternate;
 }
 
 .logo-accent-home {
     color: #faf7f7 !important;
     text-shadow:
+            0 0 1px #ffffff,
             0 0 2px #ffffff,
-            0 0 4px #ffffff,
-            0 0 6px #f8f8f8;
+            0 0 4px #f8f8f8;
     animation: gentle-glow-white 2s ease-in-out infinite alternate;
 }
 
 @keyframes gentle-glow {
     from {
         text-shadow:
+                0 0 1px #62e909,
                 0 0 2px #62e909,
-                0 0 4px #62e909,
-                0 0 6px #4cd804;
+                0 0 4px #4cd804;
     }
     to {
         text-shadow:
-                0 0 4px #62e909,
-                0 0 6px #62e909,
-                0 0 8px #4cd804,
-                0 0 10px #4cd804;
+                0 0 2px #62e909,
+                0 0 3px #62e909,
+                0 0 5px #4cd804,
+                0 0 6px #4cd804;
     }
 }
 
 @keyframes gentle-glow-white {
     from {
         text-shadow:
+                0 0 1px #ffffff,
                 0 0 2px #ffffff,
-                0 0 4px #ffffff,
-                0 0 5px #f8f8f8;
+                0 0 4px #f8f8f8;
     }
     to {
         text-shadow:
-                0 0 4px #ffffff,
-                0 0 6px #ffffff,
-                0 0 8px #f8f8f8,
-                0 0 10px #f8f8f8;
+                0 0 2px #ffffff,
+                0 0 3px #ffffff,
+                0 0 5px #f8f8f8,
+                0 0 6px #f8f8f8;
     }
 }
 
