@@ -10,7 +10,7 @@
 }
 
 .success-content {
-    background: white;
+    background: #078c91;
     padding: 3rem;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -42,7 +42,7 @@
 
 .success-message p {
     font-size: 1.1rem;
-    color: #7f8c8d;
+    color: #012a2d;
     line-height: 1.6;
     margin-bottom: 1rem;
     word-wrap: break-word;
@@ -92,7 +92,7 @@
     text-align: left;
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background: #f8f9ff;
+    background: #0c5c7c;
     border-radius: 12px;
     border: 1px solid #e9ecef;
     box-sizing: border-box;
@@ -100,7 +100,7 @@
 }
 
 .delivery-info h3 {
-    color: #2c3e50;
+    color: #97a6b5;
     margin-bottom: 1rem;
     text-align: center;
     font-size: 1.3rem;
@@ -116,7 +116,7 @@
 
 .delivery-info li {
     padding: 0.5rem 0;
-    color: #7f8c8d;
+    color: #d8eff1;
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
@@ -166,7 +166,7 @@
 }
 
 .btn-secondary {
-    background: white;
+    background: #858383;
     color: #667eea;
     border: 2px solid #667eea;
 }
@@ -183,7 +183,7 @@
 }
 
 .contact-info p {
-    color: #7f8c8d;
+    color: #01181a;
     margin-bottom: 0.5rem;
     font-size: 1rem;
     line-height: 1.4;
@@ -192,7 +192,7 @@
 .contact-phone {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #667eea;
+    color: #0631f1;
     text-decoration: none;
     display: inline-block;
     margin-top: 0.5rem;

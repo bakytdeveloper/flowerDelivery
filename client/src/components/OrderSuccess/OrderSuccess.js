@@ -27,10 +27,10 @@ const OrderSuccess = () => {
         navigate('/catalog');
     };
 
-    const handleTrackOrder = () => {
-        // В будущем можно добавить страницу отслеживания заказа
-        alert('Функция отслеживания заказа будет доступна в ближайшее время');
-    };
+    // const handleTrackOrder = () => {
+    //     // В будущем можно добавить страницу отслеживания заказа
+    //     alert('Функция отслеживания заказа будет доступна в ближайшее время');
+    // };
 
     return (
         <div className="order-success-page">
@@ -76,12 +76,12 @@ const OrderSuccess = () => {
                         >
                             Продолжить покупки
                         </button>
-                        <button
-                            className="btn btn-secondary"
-                            onClick={handleTrackOrder}
-                        >
-                            Отследить заказ
-                        </button>
+                        {/*<button*/}
+                        {/*    className="btn btn-secondary"*/}
+                        {/*    onClick={handleTrackOrder}*/}
+                        {/*>*/}
+                        {/*    Отследить заказ*/}
+                        {/*</button>*/}
                     </div>
 
                     <div className="contact-info">
