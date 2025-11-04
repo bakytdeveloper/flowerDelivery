@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import './InfoCardsSection.css';
 
 const InfoCardsSection = () => {
-    const [isFirstCardOpen, setIsFirstCardOpen] = useState(true);
-    const [isSecondCardOpen, setIsSecondCardOpen] = useState(true);
+    const [isFirstCardOpen, setIsFirstCardOpen] = useState(false);
+    const [isSecondCardOpen, setIsSecondCardOpen] = useState(false);
 
     const cards = [
         {

@@ -16,7 +16,6 @@
     background-size: cover;
     background-position: center;
     border-radius: 10px;
-
     height: 65vh;
 }
 
@@ -130,7 +129,7 @@
     background: none;
     margin-left: 20%;
     margin-bottom: 5%;
-    top: 15px;
+    top: 1.5rem;
     object-fit: contain;
     z-index: 1;
 
@@ -143,7 +142,8 @@
     justify-content: center;
     max-width: 90%;
     line-height: 50px;
-    margin-bottom: 40px;
+    margin-bottom: 2.5rem;
+    margin-top: 0.7rem;
 }
 
 .carousel-caption-description {
@@ -151,6 +151,7 @@
     justify-content: center;
     max-width: 90%;
     line-height: 1.3;
+    margin-top: 3rem;
     /*lineHeight: '1.5'*/
 
 }
@@ -318,12 +319,6 @@
 
     }
 
-    .carousel-caption-title-description {
-        height: 90% !important;
-        max-height: 90% !important;
-        margin-bottom: 30px; /* Добавляем отступ снизу для заголовка */
-    }
-
     .carousel-item {
         padding-bottom: 40px; /* Оставляем место для дат */
     }
@@ -460,26 +455,6 @@
         height: 170px;
     }
 
-    .carousel-caption-title-description {
-        display: block!important;
-        top: 0!important;
-        margin-right: 0;
-
-    }
-
-    .carousel-caption-title {
-        font-size: 22px!important;
-        margin-bottom: 10px;
-        line-height: 25px;
-        margin-left: 14px;
-    }
-
-    .carousel-caption-description {
-        font-size: 17px!important;
-        margin-left: 14px;
-        line-height: 1.2;
-    }
-
     .home-page-footer {
         display: none;
     }
@@ -527,15 +502,44 @@
         display: flex !important;
     }
 
+
     .carousel-caption-title-description {
-        height: 80% !important; /* 90% может быть слишком много с учетом дат */
-        max-height: 80% !important;
-        margin-bottom: 0;
+        top: 0!important;
+        height: 90% !important; /* 90% может быть слишком много с учетом дат */
+        max-height: 100% !important;
         flex-grow: 1; /* Занимает все доступное пространство */
         display: flex !important;
         flex-direction: column;
         justify-content: center;
+        margin-left: 24%;
+        padding-top: 0!important;
+
     }
+
+    .carousel-caption-title {
+        display: flex;
+        justify-content: center;
+        font-size: 22px!important;
+        max-width: 90%;
+        line-height: 22px;
+        /*margin-bottom: 0.1rem;*/
+        margin-top: 0!important;
+        top: 0!important;
+        margin-bottom: 0;
+    }
+
+    .carousel-caption-description {
+        display: flex;
+        justify-content: center;
+        max-width: 90%;
+        /*line-height: 1.3;*/
+        margin-top: 15px;
+        font-size: 17px!important;
+        /*lineHeight: '1.5'*/
+
+    }
+
+
 
     .carousel-item-image {
         width: 33% !important;
@@ -554,12 +558,12 @@
         position: absolute;
         bottom: 10px;
         left: 34% !important;
-        /*transform: translateX(-50%);*/
         width: 65%;
         margin: 0 auto;
         z-index: 1;
         padding-top: 0!important;
         margin-bottom: 20px;
+        font-size: 9px;
     }
 }
 
