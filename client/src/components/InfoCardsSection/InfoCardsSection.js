@@ -29,7 +29,7 @@ const InfoCardsSection = () => {
                     }
                 ],
                 description: "Наша команда обеспечит своевременную и быструю доставку цветов по городу и за его пределы",
-                imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                imageUrl: "https://avatars.mds.yandex.net/i?id=9928fe3a90ae359a2961f0c3905453c9_l-5231964-images-thumbs&n=13"
             }
         },
         {
@@ -59,7 +59,7 @@ const InfoCardsSection = () => {
                     }
                 ],
                 description: "В нашем блоге вы найдете немало полезной информации о цветах и правильном уходе",
-                imageUrl: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                imageUrl: "https://avatars.mds.yandex.net/i?id=d8c27b6cd1f57d7c83ea7dea008e9dc8_l-5662109-images-thumbs&ref=rim&n=13&w=1000&h=1000"
             }
         }
     ];
