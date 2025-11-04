@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useFavorites } from '../../hooks/useFavorites';
 import { useCart } from '../../contexts/CartContext';
 import './CatalogPage.css';
+import {occasionOptions} from "../../constants/constants";
 
 const CatalogPage = () => {
     const [products, setProducts] = useState([]);
@@ -18,6 +19,13 @@ const CatalogPage = () => {
     const navigate = useNavigate();
     const { toggleFavorite, isFavorite, fetchFavorites } = useFavorites();
     const { addToCart } = useCart();
+
+    // Функции для получения переведенных значений
+    const getOccasionLabel = (occasionValue) => {
+        const occasion = occasionOptions.find(opt => opt.value === occasionValue);
+        return occasion ? occasion.label : occasionValue;
+    };
+
 
     // Прокрутка вверх при монтировании компонента и изменении фильтров
     useEffect(() => {
@@ -237,7 +245,8 @@ const CatalogPage = () => {
                                                 {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
                                             </span>
                                             <span className="product-occasion-catalog">
-                                                {product.occasion}
+                                                {getOccasionLabel(product.occasion)}
+                                                {/*{product.occasion}*/}
                                             </span>
                                         </div>
 
