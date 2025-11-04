@@ -102,7 +102,7 @@
 /* Адаптивная сетка карточек */
 .products-grid-catalog {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 колонок на больших экранах */
+    grid-template-columns: repeat(4, 1fr) !important; /* 5 колонок на больших экранах */
     gap: 1.5rem;
     margin-top: 1rem;
 }
@@ -333,7 +333,7 @@
 /* Большие мониторы (1200px+) - 6 колонок */
 @media (min-width: 1200px) {
     .products-grid-catalog {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 1.5rem;
     }
 }
