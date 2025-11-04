@@ -311,7 +311,7 @@ const AdminPanel = () => {
                                                 >
                                                     <option value="color">Цвет</option>
                                                     <option value="image">Изображение</option>
-                                                    <option value="video">Видео</option>
+                                                    {/*<option value="video">Видео</option>*/}
                                                 </select>
                                             </div>
 
@@ -340,18 +340,18 @@ const AdminPanel = () => {
                                                 </div>
                                             )}
 
-                                            {slide.backgroundType === 'video' && (
-                                                <div className="form-group">
-                                                    <label>URL фонового видео:</label>
-                                                    <input
-                                                        type="text"
-                                                        value={slide.backgroundVideo}
-                                                        onChange={(e) => handleSlideChange(index, 'backgroundVideo', e.target.value)}
-                                                        placeholder="https://example.com/video.mp4"
-                                                        className="form-control"
-                                                    />
-                                                </div>
-                                            )}
+                                            {/*{slide.backgroundType === 'video' && (*/}
+                                            {/*    <div className="form-group">*/}
+                                            {/*        <label>URL фонового видео:</label>*/}
+                                            {/*        <input*/}
+                                            {/*            type="text"*/}
+                                            {/*            value={slide.backgroundVideo}*/}
+                                            {/*            onChange={(e) => handleSlideChange(index, 'backgroundVideo', e.target.value)}*/}
+                                            {/*            placeholder="https://example.com/video.mp4"*/}
+                                            {/*            className="form-control"*/}
+                                            {/*        />*/}
+                                            {/*    </div>*/}
+                                            {/*)}*/}
                                         </div>
 
                                         <div className="form-section">
