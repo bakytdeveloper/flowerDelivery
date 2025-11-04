@@ -20,6 +20,7 @@ import CartPage from "./components/CartPage/CartPage";
 import CheckoutPage from "./components/CheckoutPage/CheckoutPage";
 import OrderSuccess from "./components/OrderSuccess/OrderSuccess";
 import AdminPanel from './components/AdminPanel/AdminPanel';
+import AboutUs from './components/AboutUs/AboutUs';
 import { jwtDecode } from "jwt-decode";
 
 
@@ -260,10 +261,8 @@ const App = () => {
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/order-success" element={<OrderSuccess />} />
-
                   {/* Добавьте сюда другие маршруты по мере необходимости */}
-                  <Route path="/about" element={<div>Страница о нас</div>} />
-                  <Route path="/payment" element={<div>Страница оплаты</div>} />
+                  <Route path="/about" element={<AboutUs />} />                  <Route path="/payment" element={<div>Страница оплаты</div>} />
 
                   <Route path="/admin" element={<AdminPanel />} />
 

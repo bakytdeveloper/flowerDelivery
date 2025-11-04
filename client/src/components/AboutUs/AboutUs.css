@@ -1,0 +1,442 @@
+.about-us-container {
+    width: 100%;
+    min-height: 100vh;
+    margin-top: 15px;
+    background: linear-gradient(135deg, #f8fff8 0%, #f0f8f0 100%);
+    border-radius: 15px;
+}
+
+/* Герой секция */
+.about-hero {
+    background: linear-gradient(135deg, #032eff 0%, #63cdfa 100%);
+    color: white;
+    padding: 4rem 0 2rem;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.hero-image {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.hero-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Основной контент */
+.about-content {
+    padding: 4rem 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Секция миссии */
+.mission-section {
+    padding: 4rem 0;
+    background: white;
+    margin: 2rem auto;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.mission-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.mission-text h2 {
+    font-size: 2.5rem;
+    color: #0344ee;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.mission-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+}
+
+.mission-image {
+    text-align: center;
+}
+
+.mission-img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Секция преимуществ */
+.advantages-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #f7faf7 0%, #edf7ed 100%);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: #0345f5;
+    text-align: center;
+    margin-bottom: 3rem;
+    font-weight: 700;
+}
+
+.advantages-grid {
+    display: grid;
+    /*grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));*/
+    grid-template-columns: repeat(4, 1fr); /* 5 колонок на больших экранах */
+
+    gap: 2rem;
+}
+
+.advantage-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.advantage-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.advantage-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.advantage-card h3 {
+    font-size: 1.5rem;
+    color: #01d20c;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.advantage-card p {
+    color: #4a5568;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Секция ассортимента */
+.assortment-section {
+    padding: 4rem 0;
+    background: white;
+}
+
+.assortment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
+}
+
+.assortment-item {
+    background: #f8f9fa;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.assortment-item:hover {
+    transform: translateY(-5px);
+}
+
+.assortment-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.assortment-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.assortment-item:hover .assortment-img {
+    transform: scale(1.05);
+}
+
+.assortment-content {
+    padding: 2rem;
+}
+
+.assortment-content h3 {
+    color: #045cf6;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.assortment-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.assortment-content li {
+    padding: 0.5rem 0;
+    color: #4a5568;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.assortment-content li:before {
+    content: '✓';
+    color: #053ff5;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* Секция ценностей */
+.values-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #032eff 0%, #63cdfa 100%);
+    color: white;
+}
+
+.values-section .section-title {
+    color: white;
+}
+
+.values-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.value-item {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.value-item h4 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.value-item p {
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+/* Секция команды */
+.team-section {
+    padding: 4rem 0;
+    background: white;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    justify-items: center;
+}
+
+.team-member {
+    text-align: center;
+    padding: 2rem;
+    transition: transform 0.3s ease;
+}
+
+.team-member:hover {
+    transform: translateY(-10px);
+}
+
+.member-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 1.5rem;
+    border: 5px solid #62ef05;
+}
+
+.member-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.team-member h4 {
+    color: #4dbc04;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.team-member p {
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.team-member span {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+/* CTA секция */
+.cta-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #032eff 0%, #63cdfa 100%);
+    color: white;
+    text-align: center;
+}
+
+.cta-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.cta-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.cta-button.primary {
+    background: white;
+    color: #2d5016;
+}
+
+.cta-button.primary:hover {
+    background: #f7fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button.secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.cta-button.secondary:hover {
+    background: white;
+    color: #2d5016;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .mission-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .advantages-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .assortment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cta-button {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .advantage-card,
+    .assortment-item {
+        padding: 1.5rem;
+    }
+}
