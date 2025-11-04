@@ -16,6 +16,10 @@
     border-radius: 15px;
 }
 
+.hero-title-flower {
+    color: #03f807;
+}
+
 .hero-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -86,8 +90,9 @@
 .mission-text p {
     font-size: 1.1rem;
     line-height: 1.8;
-    color: #4a5568;
+    color: #1f386e;
     margin-bottom: 1.5rem;
+    font-family: "Comic Sans MS";
 }
 
 .mission-image {
