@@ -88,7 +88,7 @@ export const createProduct = async (req, res) => {
             description,
             price,
             originalPrice,
-            category,
+            // category,
             type,
             occasion,
             recipient,
@@ -103,7 +103,7 @@ export const createProduct = async (req, res) => {
         const adminId = req.user.userId;
 
         // Проверка обязательных полей для цветов
-        if (!name || !price || !category || !type || !occasion || !recipient || !flowerNames || !stemLength) {
+        if (!name || !price || !type || !occasion || !recipient || !flowerNames || !stemLength) {
             return res.status(400).json({
                 message: 'Необходимо заполнить все обязательные поля'
             });
@@ -128,7 +128,7 @@ export const createProduct = async (req, res) => {
             description,
             price,
             originalPrice,
-            category,
+            // category,
             type,
             occasion,
             recipient,

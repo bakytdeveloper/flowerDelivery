@@ -51,26 +51,16 @@ const productSchema = new mongoose.Schema({
     originalPrice: {
         type: Number
     },
-    category: {
-        type: String,
-        required: true
-    },
+    // category: {
+    //     type: String,
+    //     required: true
+    // },
     // Тип: одиночный цветок или букет
     type: {
         type: String,
         required: true,
         enum: ['single', 'bouquet'] // одиночный цветок или букет
     },
-    // // Повод для цветов
-    // occasion: {
-    //     type: String,
-    //     required: true
-    // },
-    // // Кому предназначены цветы
-    // recipient: {
-    //     type: String,
-    //     required: true
-    // },
     // Повод для цветов
     occasion: {
         type: String,
@@ -171,7 +161,6 @@ const productSchema = new mongoose.Schema({
 // Обновляем индексы для цветов
 productSchema.index({
     type: 1,
-    category: 1,
     occasion: 1
 });
 productSchema.index({
@@ -182,7 +171,6 @@ productSchema.index({
     name: 1,
     flowerNames: 1,
     type: 1,
-    category: 1
 });
 
 // Текстовый поиск для цветов
@@ -191,7 +179,6 @@ productSchema.index({
     flowerNames: 'text',
     type: 'text',
     description: 'text',
-    category: 'text',
     occasion: 'text',
     recipient: 'text'
 }, {
@@ -199,7 +186,6 @@ productSchema.index({
         name: 5,
         flowerNames: 4,
         type: 3,
-        category: 2,
         occasion: 2,
         recipient: 2,
         description: 1

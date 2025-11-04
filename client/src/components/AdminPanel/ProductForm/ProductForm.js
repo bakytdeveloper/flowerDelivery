@@ -1,6 +1,7 @@
 // src/components/AdminPanel/ProductManagement/ProductForm.js
 import React, { useState } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
+import { occasionOptions, recipientOptions } from "../../../constants/constants";
 import { toast } from 'react-toastify';
 import './ProductForm.css';
 
@@ -21,7 +22,6 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
             description: '',
             price: '',
             originalPrice: '',
-            category: '',
             type: 'single',
             occasion: '',
             recipient: '',
@@ -34,53 +34,6 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
             isActive: true
         };
     }
-
-    const occasionOptions = [
-        { value: 'birthday', label: 'День рождения' },
-        { value: 'jubilee', label: 'Юбилей' },
-        { value: 'wedding', label: 'Свадьба' },
-        { value: 'anniversary', label: 'Годовщина' },
-        { value: 'valentine', label: 'День святого Валентина' },
-        { value: 'womens_day', label: '8 марта' },
-        { value: 'mothers_day', label: 'День матери' },
-        { value: 'fathers_day', label: 'День отца' },
-        { value: 'baby_birth', label: 'Выписка из роддома' },
-        { value: 'graduation', label: 'Выпускной' },
-        { value: 'promotion', label: 'Повышение / новая работа' },
-        { value: 'thank_you', label: 'Благодарность' },
-        { value: 'apology', label: 'Извинение' },
-        { value: 'condolences', label: 'Сочувствие / соболезнование' },
-        { value: 'get_well', label: 'Выздоровление / поддержка' },
-        { value: 'just_because', label: 'Без повода / просто так' },
-        { value: 'romantic_evening', label: 'Романтический вечер' },
-        { value: 'love_confession', label: 'Признание в любви' },
-        { value: 'holiday', label: 'Праздник (Новый год, Курман айт, Нооруз и др.)' },
-        { value: 'business_opening', label: 'Открытие бизнеса / новоселье' }
-    ];
-
-    const recipientOptions = [
-        { value: 'woman', label: 'Женщине' },
-        { value: 'man', label: 'Мужчине' },
-        { value: 'girl', label: 'Девушке' },
-        { value: 'boy', label: 'Парню' },
-        { value: 'mother', label: 'Маме' },
-        { value: 'father', label: 'Папе' },
-        { value: 'grandmother', label: 'Бабушке' },
-        { value: 'grandfather', label: 'Дедушке' },
-        { value: 'colleague', label: 'Коллеге' },
-        { value: 'boss', label: 'Руководителю' },
-        { value: 'teacher', label: 'Учителю' },
-        { value: 'female_friend', label: 'Подруге' },
-        { value: 'male_friend', label: 'Другу' },
-        { value: 'wife', label: 'Жене' },
-        { value: 'husband', label: 'Мужу' },
-        { value: 'bride', label: 'Невесте' },
-        { value: 'newlyweds', label: 'Молодожёнам' },
-        { value: 'child', label: 'Ребёнку' },
-        { value: 'client', label: 'Клиенту / партнёру' },
-        { value: 'self', label: 'Самому себе' }
-    ];
-
 
     const handleChange = (field, value) => {
         setProduct(prev => ({
@@ -227,7 +180,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
     // Сохранение товара
     const handleSave = async () => {
         // Валидация обязательных полей
-        if (!product.name || !product.price || !product.category) {
+        if (!product.name || !product.price) {
             toast.error('Заполните обязательные поля: название, цена, категория');
             return;
         }
@@ -281,7 +234,12 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
 
             if (response.ok) {
                 const savedProduct = await response.json();
-                toast.success(isEditing ? 'Товар успешно обновлен' : 'Товар успешно создан');
+                // toast.success(isEditing ? 'Товар успешно обновлен' : 'Товар успешно создан');
+
+                    if (isEditing) {
+                        toast.success( 'Товар успешно обновлен');
+                    }
+
                 onSave(savedProduct);
             } else {
                 const errorData = await response.json();
@@ -319,17 +277,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                         placeholder="Введите название товара"
                                     />
                                 </div>
-                                <div className="form-group">
-                                    <label>Категория *</label>
-                                    <input
-                                        type="text"
-                                        value={product.category}
-                                        onChange={(e) => handleChange('category', e.target.value)}
-                                        className="form-control"
-                                        required
-                                        placeholder="Например: Розы, Букеты"
-                                    />
-                                </div>
+
                             </div>
 
                             <div className="form-group">

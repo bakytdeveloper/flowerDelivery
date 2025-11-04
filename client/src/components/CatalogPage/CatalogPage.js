@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useFavorites } from '../../hooks/useFavorites';
 import { useCart } from '../../contexts/CartContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './CatalogPage.css';
 import {occasionOptions} from "../../constants/constants";
 
@@ -25,7 +27,6 @@ const CatalogPage = () => {
         const occasion = occasionOptions.find(opt => opt.value === occasionValue);
         return occasion ? occasion.label : occasionValue;
     };
-
 
     // Прокрутка вверх при монтировании компонента и изменении фильтров
     useEffect(() => {
@@ -79,6 +80,7 @@ const CatalogPage = () => {
         } catch (err) {
             setError(err.message);
             console.error('Error fetching products:', err);
+            toast.error('Ошибка при загрузке товаров');
         } finally {
             setLoading(false);
         }
@@ -95,24 +97,76 @@ const CatalogPage = () => {
 
         const result = await addToCart(product, 1); // quantity по умолчанию 1
         if (result.success) {
-            alert('Товар добавлен в корзину!');
+            toast.success('Товар добавлен в корзину! 🛒', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } else {
-            alert(result.error);
+            toast.error(result.error || 'Ошибка при добавлении в корзину', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     // Функция для добавления/удаления из избранного
     const handleToggleFavorite = async (e, product) => {
         e.stopPropagation();
-        const success = await toggleFavorite(product._id, isFavorite(product._id));
+        const wasFavorite = isFavorite(product._id);
+        const success = await toggleFavorite(product._id, wasFavorite);
+
         if (success) {
+            if (wasFavorite) {
+                toast.info('Товар удален из избранного', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+            } else {
+                toast.success('Товар добавлен в избранное! ❤️', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+            }
             // Обновляем локальное состояние после успешного действия
             await fetchFavorites();
+        } else {
+            toast.error('Ошибка при изменении избранного', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     const clearFilters = () => {
         navigate('/catalog');
+        toast.info('Фильтры очищены', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        });
     };
 
     const formatPrice = (price) => {
@@ -246,7 +300,6 @@ const CatalogPage = () => {
                                             </span>
                                             <span className="product-occasion-catalog">
                                                 {getOccasionLabel(product.occasion)}
-                                                {/*{product.occasion}*/}
                                             </span>
                                         </div>
 

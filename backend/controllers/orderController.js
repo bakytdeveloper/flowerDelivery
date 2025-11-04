@@ -331,7 +331,6 @@ export const createOrder = async (req, res) => {
                 quantity: item.quantity,
                 name: item.name,
                 flowerType: item.flowerType,
-                category: item.category,
                 price: item.price,
                 flowerNames: item.flowerNames,
                 flowerColors: item.flowerColors,
@@ -411,14 +410,14 @@ export const getUserOrders = async (req, res) => {
         if (user.userId && user.userId !== 'admin') {
             orders = await Order.find({ user: user.userId })
                 .sort({ date: -1 })
-                .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type description')
+                .populate('flowerItems.product', 'name images price flowerNames stemLength occasion recipient type description')
                 .populate('addonItems.addonId', 'name image price type description');
         } else {
             // Для гостей - по sessionId (если нужно)
             orders = await Order.find({
                 'guestInfo.phone': user.sessionId
             }).sort({ date: -1 })
-                .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type description')
+                .populate('flowerItems.product', 'name images price flowerNames stemLength occasion recipient type description')
                 .populate('addonItems.addonId', 'name image price type description');
         }
 
@@ -432,7 +431,6 @@ export const getUserOrders = async (req, res) => {
                     name: item.product.name,
                     images: item.product.images,
                     price: item.product.price,
-                    category: item.product.category,
                     flowerNames: item.product.flowerNames,
                     stemLength: item.product.stemLength,
                     occasion: item.product.occasion,
@@ -490,7 +488,6 @@ const formatOrderResponse = async (order) => {
                     name: item.product.name,
                     images: item.product.images,
                     price: item.product.price,
-                    category: item.product.category,
                     flowerNames: item.product.flowerNames,
                     stemLength: item.product.stemLength,
                     occasion: item.product.occasion,
@@ -562,81 +559,6 @@ export const getOrderById = async (req, res) => {
     }
 };
 
-// Контроллер для обновления статуса заказа
-// Обновление статуса заказа с управлением складом
-// Обновление заказа (администратором)
-// export const updateOrder = async (req, res) => {
-//     try {
-//         const { orderId } = req.params;
-//         const {
-//             firstName,
-//             address,
-//             phoneNumber,
-//             paymentMethod,
-//             comments,
-//             status
-//         } = req.body;
-//
-//         console.log('🔄 Обновление заказа:', { orderId, status, firstName });
-//
-//         const order = await Order.findById(orderId);
-//         if (!order) {
-//             return res.status(404).json({
-//                 message: 'Заказ не найден'
-//             });
-//         }
-//
-//         const oldStatus = order.status;
-//
-//         // Если статус меняется на "cancelled", возвращаем товары на склад
-//         if (status === 'cancelled' && oldStatus !== 'cancelled') {
-//             console.log('🔄 Возврат товаров на склад (отмена заказа)');
-//             await returnOrderItemsToStock(order);
-//         }
-//         // Если статус был "cancelled" и меняется на другой, снова списываем товары
-//         else if (oldStatus === 'cancelled' && status !== 'cancelled') {
-//             console.log('🔄 Списываем товары со склада (возобновление заказа)');
-//             await deductOrderItemsFromStock(order);
-//         }
-//
-//         // Обновляем поля заказа
-//         order.firstName = firstName || order.firstName;
-//         order.address = address || order.address;
-//         order.phoneNumber = phoneNumber || order.phoneNumber;
-//         order.paymentMethod = paymentMethod || order.paymentMethod;
-//         order.comments = comments || order.comments;
-//
-//         // Если статус изменился, добавляем в историю
-//         if (status && status !== order.status) {
-//             order.status = status;
-//             order.statusHistory.push({
-//                 status: status,
-//                 time: new Date()
-//             });
-//         }
-//
-//         // Сохраняем заказ
-//         await order.save();
-//
-//         // Получаем обновленный заказ с populate
-//         const updatedOrder = await Order.findById(orderId)
-//             .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type description')
-//             .populate('addonItems.addonId', 'name image price type description')
-//             .populate('user', 'name email');
-//
-//         console.log('✅ Заказ успешно обновлен:', updatedOrder._id);
-//
-//         res.json({
-//             message: 'Заказ успешно обновлен',
-//             order: await formatOrderResponse(updatedOrder)
-//         });
-//     } catch (error) {
-//         console.error('❌ Ошибка при обновлении заказа:', error);
-//         res.status(500).json({
-//             message: error.message || 'Ошибка при обновлении заказа'
-//         });
-//     }
-// };
 
 
 
@@ -860,7 +782,7 @@ export const getAllOrders = async (req, res) => {
 
         const orders = await Order.find(query)
             .populate('user', 'name email')
-            .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type description')
+            .populate('flowerItems.product', 'name images price flowerNames stemLength occasion recipient type description')
             .populate('addonItems.addonId', 'name image price type description')
             .sort({ date: -1 })
             .skip((page - 1) * perPage)
@@ -879,7 +801,6 @@ export const getAllOrders = async (req, res) => {
                     name: item.product.name,
                     images: item.product.images,
                     price: item.product.price,
-                    category: item.product.category,
                     flowerNames: item.product.flowerNames,
                     stemLength: item.product.stemLength,
                     occasion: item.product.occasion,
@@ -1158,7 +1079,7 @@ export const updateOrder = async (req, res) => {
             },
             { new: true }
         )
-            .populate('flowerItems.product', 'name images price category flowerNames stemLength occasion recipient type')
+            .populate('flowerItems.product', 'name images price flowerNames stemLength occasion recipient type')
             .populate('addonItems.addonId', 'name image price type description');
 
         res.json({

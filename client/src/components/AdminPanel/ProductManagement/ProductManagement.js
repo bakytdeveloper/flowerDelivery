@@ -316,7 +316,7 @@ const ProductManagement = () => {
         if (!editingProduct) return;
 
         // Валидация обязательных полей
-        if (!editingProduct.name || !editingProduct.price || !editingProduct.category) {
+        if (!editingProduct.name || !editingProduct.price) {
             toast.error('Заполните обязательные поля: название, цена, категория');
             return;
         }
