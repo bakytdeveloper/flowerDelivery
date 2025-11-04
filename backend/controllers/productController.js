@@ -197,14 +197,82 @@ export const getAvailableFilters = async (req, res) => {
     }
 };
 
-// Контроллер для получения самых продаваемых цветов
+// // Контроллер для получения самых продаваемых цветов
+// export const getBestSellingProducts = async (req, res) => {
+//     try {
+//         const userAgent = req.headers['user-agent'];
+//         const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);
+//         const limit = isMobile ? 8 : 12;
+//
+//         // 1️⃣ Приоритет 1: Самые продаваемые товары
+//         let bestSellingProducts = await Product.find({
+//             isActive: true,
+//             quantity: { $gt: 0 },
+//             soldCount: { $gt: 0 },
+//         })
+//             .sort({ soldCount: -1 })
+//             .limit(limit)
+//             .lean();
+//
+//         let products = bestSellingProducts;
+//
+//         // 2️⃣ Если недостаточно - Приоритет 2: Новые товары
+//         if (bestSellingProducts.length < limit) {
+//             const additionalNeeded = limit - bestSellingProducts.length;
+//             const existingProductIds = bestSellingProducts.map(p => p._id.toString());
+//
+//             const newProducts = await Product.find({
+//                 isActive: true,
+//                 quantity: { $gt: 0 },
+//                 _id: { $nin: existingProductIds }
+//             })
+//                 .sort({ createdAt: -1 })
+//                 .limit(additionalNeeded)
+//                 .lean();
+//
+//             products = [...bestSellingProducts, ...newProducts];
+//         }
+//
+//         // 3️⃣ Если всё ещё недостаточно - Приоритет 3: Случайные товары
+//         if (products.length < limit) {
+//             const stillNeeded = limit - products.length;
+//             const existingProductIds = products.map(p => p._id.toString());
+//
+//             // Используем find с $nin вместо aggregate для простоты
+//             const randomProducts = await Product.find({
+//                 isActive: true,
+//                 quantity: { $gt: 0 },
+//                 _id: { $nin: existingProductIds }
+//             })
+//                 .limit(stillNeeded)
+//                 .lean();
+//
+//             products = [...products, ...randomProducts];
+//         }
+//
+//         // Обработка изображений
+//         const processedProducts = products.map((product) => {
+//             const processed = processProductImages(product, req);
+//             return {
+//                 ...processed,
+//                 truncatedDescription:
+//                     product.description?.slice(0, 100) +
+//                     (product.description?.length > 100 ? '...' : ''),
+//             };
+//         });
+//
+//         res.json(processedProducts);
+//     } catch (error) {
+//         console.error('Error fetching best selling products:', error);
+//         res.status(500).json({ message: 'Server error' });
+//     }
+// };
+
 export const getBestSellingProducts = async (req, res) => {
     try {
-        const userAgent = req.headers['user-agent'];
-        const isMobile = /Mobile|Android|iP(hone|od)|IEMobile/.test(userAgent);
-        const limit = isMobile ? 8 : 12;
+        const limit = 6; // фиксированное количество карточек
 
-        // 1️⃣ Приоритет 1: Самые продаваемые товары
+        // 1️⃣ Популярные товары
         let bestSellingProducts = await Product.find({
             isActive: true,
             quantity: { $gt: 0 },
@@ -216,10 +284,10 @@ export const getBestSellingProducts = async (req, res) => {
 
         let products = bestSellingProducts;
 
-        // 2️⃣ Если недостаточно - Приоритет 2: Новые товары
-        if (bestSellingProducts.length < limit) {
-            const additionalNeeded = limit - bestSellingProducts.length;
-            const existingProductIds = bestSellingProducts.map(p => p._id.toString());
+        // 2️⃣ Новые товары, если популярных недостаточно
+        if (products.length < limit) {
+            const additionalNeeded = limit - products.length;
+            const existingProductIds = products.map(p => p._id.toString());
 
             const newProducts = await Product.find({
                 isActive: true,
@@ -230,27 +298,27 @@ export const getBestSellingProducts = async (req, res) => {
                 .limit(additionalNeeded)
                 .lean();
 
-            products = [...bestSellingProducts, ...newProducts];
+            products = [...products, ...newProducts];
         }
 
-        // 3️⃣ Если всё ещё недостаточно - Приоритет 3: Случайные товары
+        // 3️⃣ Случайные товары, если всё ещё недостаточно
         if (products.length < limit) {
             const stillNeeded = limit - products.length;
             const existingProductIds = products.map(p => p._id.toString());
 
-            // Используем find с $nin вместо aggregate для простоты
-            const randomProducts = await Product.find({
-                isActive: true,
-                quantity: { $gt: 0 },
-                _id: { $nin: existingProductIds }
-            })
-                .limit(stillNeeded)
-                .lean();
+            const randomProducts = await Product.aggregate([
+                { $match: {
+                        isActive: true,
+                        quantity: { $gt: 0 },
+                        _id: { $nin: existingProductIds.map(id => new mongoose.Types.ObjectId(id)) }
+                    }},
+                { $sample: { size: stillNeeded } }
+            ]);
 
             products = [...products, ...randomProducts];
         }
 
-        // Обработка изображений
+        // Обработка изображений и описания
         const processedProducts = products.map((product) => {
             const processed = processProductImages(product, req);
             return {
@@ -267,6 +335,7 @@ export const getBestSellingProducts = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 // Контроллер для получения новейших продуктов
 export const getNewestProducts = async (req, res) => {

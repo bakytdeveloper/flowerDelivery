@@ -10,10 +10,6 @@
     border-radius: 15px;
 }
 
-/*.catalog-page.container {*/
-/*    width: 100% !important;*/
-/*}*/
-
 .catalog-header {
     text-align: center;
     margin-bottom: 2rem;
@@ -120,6 +116,9 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .product-card-catalog:hover {
@@ -133,8 +132,9 @@
 .product-image-container-catalog {
     position: relative;
     width: 100%;
-    height: 200px; /* Уменьшил высоту для 6 колонок */
+    height: 180px; /* Уменьшил высоту для 6 колонок */
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .product-image {
@@ -178,6 +178,10 @@
 
 .cart-product-info-catalog {
     padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
 }
 
 .product-name-catalog {
@@ -209,7 +213,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
 }
 
 .product-type-catalog {
@@ -232,7 +236,7 @@
     border: 1px solid rgba(168, 85, 247, 0.3);
 }
 
-.product-occasion-catalog-catalog {
+.product-occasion-catalog {
     font-size: 0.7rem;
     color: #94a3b8;
     background: rgba(148, 163, 184, 0.1);
@@ -245,7 +249,7 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    margin-bottom: 1rem;
+    /*margin-bottom: 1rem;*/
 }
 
 .original-price-catalog {
@@ -263,7 +267,8 @@
 .product-actions-catalog {
     display: flex!important;
     gap: 0.6rem;
-    margin-top: 0rem;
+    margin-top: auto;
+    padding-top: 1rem;
 }
 
 .btn-add-to-cart-catalog {
@@ -420,12 +425,12 @@
     }
 
     .product-actions-catalog {
-        flex-direction: column;
+        flex-direction: row;
     }
 
     .btn-favorite {
-        width: 100%;
-        height: 40px;
+        width: 38px;
+        height: 38px;
     }
     .catalog-results {
         padding: 1.5rem;
@@ -515,7 +520,8 @@
 .product-actions-catalog {
     display: flex;
     gap: 0.6rem;
-    margin-top: 0rem;
+    margin-top: auto;
+    padding-top: 1rem;
     align-items: center;
 }
 
