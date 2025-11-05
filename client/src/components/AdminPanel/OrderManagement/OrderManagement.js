@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import './OrderManagement.css';
+import {useLocation} from "react-router-dom";
 
 const OrderManagement = () => {
     const { token } = useAuth();
@@ -18,9 +19,20 @@ const OrderManagement = () => {
         perPage: 20
     });
     const [pagination, setPagination] = useState({});
+    const location = useLocation();
 
     // Используем правильный порт
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+
+    // Прокрутка вверх при монтировании компонента и изменении фильтров
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+    }, [location.search]);
 
     // Загрузка заказов
     const fetchOrders = async () => {
