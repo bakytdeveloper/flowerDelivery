@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import './ProfilePage.css';
+import {useLocation} from "react-router-dom";
 
 const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState('profile');
@@ -24,7 +25,7 @@ const ProfilePage = () => {
     });
     const [loading, setLoading] = useState(false);
     const [ordersLoading, setOrdersLoading] = useState(false);
-
+    const location = useLocation();
     const { token, user } = useAuth();
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
 
@@ -33,6 +34,15 @@ const ProfilePage = () => {
         fetchProfileData();
         fetchUserStats();
     }, []);
+
+    // Прокрутка вверх при монтировании компонента и изменении фильтров
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+    }, [location.search]);
 
     // Загрузка заказов при переключении на вкладку
     useEffect(() => {

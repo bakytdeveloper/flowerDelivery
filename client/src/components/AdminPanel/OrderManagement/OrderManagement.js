@@ -274,6 +274,7 @@ const OrderManagement = () => {
                 <table className="orders-table">
                     <thead>
                     <tr>
+                        <th>N˚</th>
                         <th>ID</th>
                         <th>Клиент</th>
                         <th>Телефон</th>
@@ -285,8 +286,9 @@ const OrderManagement = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {orders.map((order) => (
+                    {orders.map((order, i) => (
                         <tr key={order._id}>
+                            <td>{i + 1}.</td>
                             <td className="order-id">#{order._id.slice(-6)}</td>
                             <td>
                                 <div className="customer-info">
