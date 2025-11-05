@@ -100,10 +100,10 @@
     margin-bottom: 1rem;
 }
 
-/* Адаптивная сетка карточек */
+/* Адаптивная сетка карточек - ИСПРАВЛЕННАЯ */
 .products-grid-catalog {
     display: grid;
-    grid-template-columns: repeat(4, 1fr) !important; /* 5 колонок на больших экранах */
+    grid-template-columns: repeat(5, 1fr); /* 5 колонок по умолчанию */
     gap: 1.5rem;
     margin-top: 1rem;
 }
@@ -133,7 +133,7 @@
 .product-image-container-catalog {
     position: relative;
     width: 100%;
-    height: 180px; /* Уменьшил высоту для 6 колонок */
+    height: 180px;
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -190,7 +190,6 @@
     font-weight: 700;
     color: #f1f5f9;
     margin-bottom: 0.3rem;
-    /*line-height: 0.8;*/
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -250,7 +249,6 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    /*margin-bottom: 1rem;*/
 }
 
 .original-price-catalog {
@@ -266,10 +264,11 @@
 }
 
 .product-actions-catalog {
-    display: flex!important;
+    display: flex !important;
     gap: 0.6rem;
     margin-top: auto;
     padding-top: 1rem;
+    align-items: center;
 }
 
 .btn-add-to-cart-catalog {
@@ -277,7 +276,7 @@
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 1rem !important;
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
@@ -329,13 +328,19 @@
     margin-bottom: 1rem;
 }
 
-/* Адаптивность */
+/* Адаптивность - ИСПРАВЛЕННЫЙ ПОРЯДОК */
 
-/* Большие мониторы (1200px+) - 6 колонок */
-@media (min-width: 1200px) {
+/* Очень большие мониторы (1400px+) - 5 колонок */
+@media (min-width: 1400px) {
     .products-grid-catalog {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Большие мониторы (1200px - 1399px) - 5 колонок */
+@media (max-width: 1399px) and (min-width: 1200px) {
+    .products-grid-catalog {
+        grid-template-columns: repeat(5, 1fr);
     }
 }
 
@@ -343,7 +348,6 @@
 @media (max-width: 1199px) and (min-width: 992px) {
     .products-grid-catalog {
         grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
     }
 
     .product-image-container-catalog {
@@ -483,7 +487,6 @@
 .product-card-catalog:nth-child(5) { animation-delay: 0.3s; }
 .product-card-catalog:nth-child(6) { animation-delay: 0.35s; }
 
-
 /* Обновленные стили для кнопки избранного */
 .favorite-heart-btn-catalog {
     background: rgb(66, 75, 103);
@@ -517,33 +520,6 @@
     transform: scale(0.95);
 }
 
-/* Обновленные стили для контейнера действий */
-.product-actions-catalog {
-    display: flex;
-    gap: 0.6rem;
-    margin-top: auto;
-    padding-top: 1rem;
-    align-items: center;
-}
-
-.btn-add-to-cart-catalog {
-    flex: 1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 0.6rem 1rem!important;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.8rem;
-}
-
-.btn-add-to-cart-catalog:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
 /* Адаптивность для мобильных */
 @media (max-width: 768px) {
     .favorite-heart-btn-catalog {
@@ -560,7 +536,7 @@
 /* Для очень маленьких экранов */
 @media (max-width: 380px) {
     .product-actions-catalog {
-        flex-direction: row; /* Оставляем в строке даже на маленьких экранах */
+        flex-direction: row;
     }
 
     .favorite-heart-btn-catalog {

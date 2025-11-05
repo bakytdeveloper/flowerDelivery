@@ -196,21 +196,21 @@ const HitsSection = () => {
 
                     {/* Контейнер для карточек с горизонтальным скроллом */}
                     <div
-                        className="hits-scroll-container"
+                        className="season-scroll-container"
                         ref={scrollContainerRef}
                         onTouchStart={handleTouchStart}
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                     >
-                        <div className="hits-products-row">
+                        <div className="season-products-row">
                             {products.map((product) => (
                                 <div
                                     key={product._id}
-                                    className="hits-product-card"
+                                    className="season-product-card"
                                     onClick={() => handleProductClick(product._id)}
                                     style={{ cursor: 'pointer' }}
                                 >
-                                    <div className="product-image-container">
+                                    <div className="product-image-container-catalog">
                                         <img
                                             src={product.images?.[0] || '/images/placeholder-flower.jpg'}
                                             alt={product.name}
@@ -242,7 +242,7 @@ const HitsSection = () => {
                                             <span className={`product-type-catalog ${product.type}`}>
                                                 {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
                                             </span>
-                                            <span className="product-occasion-catalog-catalog">
+                                            <span className="product-occasion-catalog">
                                                 {product.occasion}
                                             </span>
                                         </div>
