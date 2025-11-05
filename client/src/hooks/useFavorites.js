@@ -95,6 +95,7 @@ export const useFavorites = () => {
         return favorites.some(fav => fav._id === productId);
     };
 
+// В useFavorites.js - ИСПРАВЛЕННАЯ версия fetchFavorites
     const fetchFavorites = useCallback(async () => {
         if (!isAuthenticated) {
             setFavorites([]);
@@ -102,18 +103,7 @@ export const useFavorites = () => {
         }
 
         try {
-            const decoded = jwtDecode(token);
-            // Если это админ, не пытаемся получить профиль из базы
-            if (decoded.role === 'admin') {
-                const adminUser = {
-                    _id: 'admin',
-                    email: decoded.email,
-                    name: 'Администратор',
-                    role: 'admin'
-                };
-                return adminUser;
-            }
-            // ИСПРАВЛЕННЫЙ URL: убрали userId из пути
+            // УБРАТЬ проверку на админа - она мешает получению избранных
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/favorites`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -126,12 +116,11 @@ export const useFavorites = () => {
 
             const favoritesData = await response.json();
 
-            // Обрабатываем разные структуры ответа
+            // ПРОСТАЯ обработка - предполагаем, что сервер возвращает массив
             if (Array.isArray(favoritesData)) {
                 setFavorites(favoritesData);
-            } else if (favoritesData.favorites && Array.isArray(favoritesData.favorites)) {
-                setFavorites(favoritesData.favorites);
             } else {
+                console.warn('Unexpected favorites response structure:', favoritesData);
                 setFavorites([]);
             }
         } catch (error) {
@@ -139,6 +128,7 @@ export const useFavorites = () => {
             setFavorites([]);
         }
     }, [isAuthenticated, token]);
+
 
     return {
         favorites,

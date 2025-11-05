@@ -274,10 +274,12 @@ export const removeFromFavorites = async (req, res) => {
     }
 };
 
+// В userController.js - ИСПРАВЛЕННАЯ версия getFavorites
 export const getFavorites = async (req, res) => {
     try {
         const user = await User.findById(req.user.userId)
-            // .populate('favorites', 'name images price description isActive');
+            .populate('favorites') // ДОБАВИТЬ populate для получения данных товаров
+            .exec();
 
         if (!user) {
             return res.status(404).json({
@@ -285,10 +287,10 @@ export const getFavorites = async (req, res) => {
             });
         }
 
-        // Фильтруем только активные товары
-        const activeFavorites = user.favorites.filter(item => item.isActive);
+        // УБРАТЬ фильтрацию по isActive - этого поля нет в Product
+        const favorites = user.favorites || [];
 
-        res.status(200).json(activeFavorites);
+        res.status(200).json(favorites); // Возвращаем массив товаров напрямую
     } catch (error) {
         console.error('Error fetching favorites:', error);
         res.status(500).json({

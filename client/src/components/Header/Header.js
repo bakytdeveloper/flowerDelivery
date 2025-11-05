@@ -86,18 +86,14 @@ const Header = ({
     }, [apiUrl, token]);
 
     // Функция для получения количества избранных товаров
+// В Header.js - ИСПРАВЛЕННАЯ версия fetchFavoritesCount
     const fetchFavoritesCount = useCallback(async () => {
-        if (!isAuthenticated || !token) {
+        if (!isAuthenticated || !token || userRole !== 'customer') {
             setFavoritesCount(0);
             return;
         }
 
         try {
-            if (userRole !== 'customer') {
-                setFavoritesCount(0);
-                return;
-            }
-
             const response = await fetch(`${apiUrl}/api/users/favorites`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -109,13 +105,16 @@ const Header = ({
             }
 
             const favorites = await response.json();
-            const favoritesArray = Array.isArray(favorites) ? favorites : [];
-            setFavoritesCount(favoritesArray.length || 0);
+
+            // ПРОСТАЯ обработка - считаем длину массива
+            const favoritesCount = Array.isArray(favorites) ? favorites.length : 0;
+            setFavoritesCount(favoritesCount);
         } catch (error) {
             console.error('Error fetching favorites:', error);
             setFavoritesCount(0);
         }
     }, [token, apiUrl, isAuthenticated, userRole]);
+
 
     // Получаем количество избранных и корзины при изменении аутентификации или location
     useEffect(() => {
