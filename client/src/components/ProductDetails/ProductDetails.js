@@ -3,8 +3,10 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useFavorites } from '../../hooks/useFavorites';
 import { useCart } from '../../contexts/CartContext';
 import { occasionOptions, recipientOptions } from "../../constants/constants";
+import ProductReviews from "../ProductReviews/ProductReviews";
 import { toast } from 'react-toastify';
 import './ProductDetails.css';
+
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -808,6 +810,10 @@ const ProductDetails = () => {
 
                 {/* Секция дополнительных товаров */}
                 <AddonsSection />
+
+                <div className="product-reviews-section">
+                    <ProductReviews productId={product?._id} />
+                </div>
 
                 {/* Дополнительная информация */}
                 <div className="product-additional-info">

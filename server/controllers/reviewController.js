@@ -6,6 +6,7 @@ import {
 } from '../smtp/otpService.js';
 
 // Функция для отправки уведомлений о плохом отзыве
+// Функция для отправки уведомлений о плохом отзыве
 async function notifyAboutBadReview(review, productId) {
     try {
         const product = await Product.findById(productId);
@@ -15,34 +16,61 @@ async function notifyAboutBadReview(review, productId) {
 
         if (!adminEmail) return;
 
+        // Получаем информацию о пользователе
+        const user = await User.findById(review.user);
+        const userName = user ? user.name : 'Анонимный пользователь';
+
         const mailOptions = {
             from: process.env.SMTP_FROM,
-            subject: `Получен плохой отзыв на товар ${product.name}`,
+            to: adminEmail,
+            subject: `🚨 Получен плохой отзыв на товар "${product.name}"`,
             html: `
-                <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-                    <h3>Получен плохой отзыв на товар ${product.name}</h3>
-                    <p>Оценка: ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</p>
-                    <p>Комментарий: ${review.comment}</p>
-                    <p>Дата: ${new Date(review.createdAt).toLocaleString()}</p>
-                    <p style="margin-top: 20px;">С уважением,<br>Команда сервиса</p>
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <h3 style="color: #e53e3e;">Получен плохой отзыв на товар "${product.name}"</h3>
+                    
+                    <div style="background: #fff5f5; padding: 15px; border-radius: 8px; border-left: 4px solid #e53e3e;">
+                        <p><strong>Пользователь:</strong> ${userName}</p>
+                        <p><strong>Оценка:</strong> ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)} (${review.rating}/5)</p>
+                        <p><strong>Комментарий:</strong> ${review.comment}</p>
+                        <p><strong>Дата:</strong> ${new Date(review.createdAt).toLocaleString('ru-RU')}</p>
+                        <p><strong>Товар:</strong> ${product.name} (ID: ${product._id})</p>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #f0fff4; border-radius: 8px;">
+                        <p><strong>Рекомендуемые действия:</strong></p>
+                        <ul>
+                            <li>Ответить на отзыв в системе</li>
+                            <li>Связаться с клиентом для решения проблемы</li>
+                            <li>Проверить качество товара</li>
+                        </ul>
+                    </div>
+                    
+                    <p style="margin-top: 20px; color: #718096;">
+                        С уважением,<br>
+                        Система уведомлений магазина
+                    </p>
                 </div>
             `,
-            text: `Получен плохой отзыв (${review.rating} звезд) на товар ${product.name}:
-                    Оценка: ${review.rating}/5
-                    Комментарий: ${review.comment}
-                    Дата: ${new Date(review.createdAt).toLocaleString()}`
+            text: `🚨 ПОЛУЧЕН ПЛОХОЙ ОТЗЫВ
+
+                Товар: ${product.name}
+                Пользователь: ${userName}
+                Оценка: ${review.rating}/5
+                Комментарий: ${review.comment}
+                Дата: ${new Date(review.createdAt).toLocaleString('ru-RU')}
+                
+                Требуется ваше внимание!`
         };
 
-        // Отправляем админу
-        await transporter.sendMail({
-            ...mailOptions,
-            to: adminEmail
-        });
+        await transporter.sendMail(mailOptions);
+        console.log('Bad review notification sent to admin');
     } catch (error) {
         console.error('Error sending bad review notification:', error);
     }
 }
 
+
+// Контроллер для проверки возможности оставить отзыв
 // Контроллер для проверки возможности оставить отзыв
 export const canReview = async (req, res) => {
     try {
@@ -66,20 +94,36 @@ export const canReview = async (req, res) => {
             });
         }
 
-        // Проверяем покупку товара
+        // Проверяем покупку товара в новой структуре заказа
         const orders = await Order.find({
-            user: userId,
+            $or: [
+                { user: userId },
+                { 'guestInfo.email': req.user.email }
+            ],
             status: 'completed'
-        }).populate('products.product');
+        });
 
         let hasPurchased = false;
+
         for (const order of orders) {
-            for (const item of order.products) {
-                if (item.product && item.product._id.toString() === productId) {
+            // Проверяем flowerItems
+            for (const flowerItem of order.flowerItems) {
+                if (flowerItem.product && flowerItem.product.toString() === productId) {
                     hasPurchased = true;
                     break;
                 }
             }
+
+            if (hasPurchased) break;
+
+            // Если не нашли в flowerItems, проверяем addonItems
+            for (const addonItem of order.addonItems) {
+                if (addonItem.addonId && addonItem.addonId.toString() === productId) {
+                    hasPurchased = true;
+                    break;
+                }
+            }
+
             if (hasPurchased) break;
         }
 
@@ -96,12 +140,15 @@ export const canReview = async (req, res) => {
                 _id: existingReview._id,
                 rating: existingReview.rating,
                 comment: existingReview.comment,
-                createdAt: existingReview.createdAt
+                createdAt: existingReview.createdAt,
+                ownerReply: existingReview.ownerReply,
+                ownerReplyDate: existingReview.ownerReplyDate
             } : null,
             userRole: req.user.role,
             userInfo: userInfo
         });
     } catch (error) {
+        console.error('Error in canReview:', error);
         res.status(500).json({
             message: error.message
         });
@@ -128,12 +175,9 @@ export const getProductReviews = async (req, res) => {
 };
 
 // Контроллер для создания отзыва
+// Контроллер для создания отзыва
 export const createReview = async (req, res) => {
-    const {
-        productId,
-        rating,
-        comment
-    } = req.body;
+    const { productId, rating, comment } = req.body;
     const userId = req.user.userId;
 
     // Валидация входных данных
@@ -143,28 +187,49 @@ export const createReview = async (req, res) => {
         });
     }
 
+    if (!comment || !comment.trim()) {
+        return res.status(400).json({
+            message: 'Комментарий не может быть пустым'
+        });
+    }
+
     try {
-        // Проверяем, покупал ли пользователь этот товар
+        // Проверяем, покупал ли пользователь этот товар в новой структуре
         const orders = await Order.find({
-            user: userId,
+            $or: [
+                { user: userId },
+                { 'guestInfo.email': req.user.email }
+            ],
             status: 'completed'
-        }).populate('products.product');
+        });
 
         let hasPurchased = false;
 
         for (const order of orders) {
-            for (const item of order.products) {
-                if (item.product && item.product._id.toString() === productId) {
+            // Проверяем flowerItems
+            for (const flowerItem of order.flowerItems) {
+                if (flowerItem.product && flowerItem.product.toString() === productId) {
                     hasPurchased = true;
                     break;
                 }
             }
+
+            if (hasPurchased) break;
+
+            // Проверяем addonItems
+            for (const addonItem of order.addonItems) {
+                if (addonItem.addonId && addonItem.addonId.toString() === productId) {
+                    hasPurchased = true;
+                    break;
+                }
+            }
+
             if (hasPurchased) break;
         }
 
         if (!hasPurchased) {
             return res.status(403).json({
-                message: 'Вы можете оставить отзыв только на товары, которые вы приобрели'
+                message: 'Вы можете оставить отзыв только на товары, которые вы приобрели и получили'
             });
         }
 
@@ -185,7 +250,7 @@ export const createReview = async (req, res) => {
             user: userId,
             product: productId,
             rating,
-            comment,
+            comment: comment.trim(),
             verifiedPurchase: true
         });
 
@@ -196,6 +261,9 @@ export const createReview = async (req, res) => {
             await notifyAboutBadReview(savedReview, productId);
         }
 
+        // Попulate user data for response
+        await savedReview.populate('user', 'name');
+
         res.status(201).json(savedReview);
     } catch (error) {
         console.error('Error creating review:', error);
@@ -204,6 +272,7 @@ export const createReview = async (req, res) => {
         });
     }
 };
+
 
 // Контроллер для обновления отзыва
 export const updateReview = async (req, res) => {

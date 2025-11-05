@@ -601,3 +601,11 @@
 .product-price {
     justify-content: space-between;
 }
+
+
+/* Добавьте в ProductDetails.css */
+.product-reviews-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}
