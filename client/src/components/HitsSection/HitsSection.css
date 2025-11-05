@@ -1,15 +1,15 @@
 .hits-section {
-    padding: 2rem 0;
+    padding: 1.5rem 0!important;
     background: rgba(15, 23, 42, 0.5);
     backdrop-filter: blur(10px);
-    margin: 2rem 0;
+    margin: 1rem 0;
     border-radius: 20px;
     color: #e2e8f0;
 }
 
 .hits-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .hits-title {
@@ -19,7 +19,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.1rem;
     font-family: Impact;
     letter-spacing: 2px;
     text-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
@@ -29,7 +29,8 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    /*gap: 1rem;*/
+
 }
 
 .hits-scroll-container {
@@ -49,6 +50,11 @@
 .hits-scroll-container::-webkit-scrollbar {
     display: none;
 }
+
+/*.season-products-row {*/
+/*    background: red;*/
+/*    width: 100% !important;*/
+/*}*/
 
 .hits-products-row {
     display: flex;
