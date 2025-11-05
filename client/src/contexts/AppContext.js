@@ -15,8 +15,14 @@ export const useApp = () => {
 export const AppProvider = ({ children }) => {
     const [favoritesCount, setFavoritesCount] = useState(0);
     const [cartItemsCount, setCartItemsCount] = useState(0);
-    const { isAuthenticated, token, userRole } = useAuth();
+    const { isAuthenticated, token, userRole, logout } = useAuth();
     const apiUrl = process.env.REACT_APP_API_URL;
+
+    // Функция для полного сброса состояния при выходе
+    const resetAppState = useCallback(() => {
+        setFavoritesCount(0);
+        setCartItemsCount(0);
+    }, []);
 
     // Функция для обновления счетчика избранных
     const updateFavoritesCount = useCallback(async () => {
@@ -84,13 +90,21 @@ export const AppProvider = ({ children }) => {
         }
     }, [apiUrl, token]);
 
+    // Функция для выхода с очисткой состояния
+    const logoutWithCleanup = useCallback(() => {
+        resetAppState();
+        logout();
+    }, [resetAppState, logout]);
+
     const value = {
         favoritesCount,
         cartItemsCount,
         updateFavoritesCount,
         updateCartCount,
         setFavoritesCount,
-        setCartItemsCount
+        setCartItemsCount,
+        resetAppState,
+        logout: logoutWithCleanup // Переопределяем logout
     };
 
     return (

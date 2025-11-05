@@ -3,7 +3,7 @@ import './Header.css';
 import { Link, useLocation } from 'react-router-dom';
 import { FaRegHeart, FaShoppingCart, FaUser, FaSearch, FaPhone, FaBars, FaTimes } from "react-icons/fa";
 import { useAuth } from '../../contexts/AuthContext';
-import { useApp } from '../../contexts/AppContext'; // ДОБАВИТЬ
+import { useApp } from '../../contexts/AppContext';
 
 // eslint-disable-next-line
 import { sanitizeInput } from '../../utils/securityUtils';
@@ -25,13 +25,11 @@ const Header = ({
     const [activePage, setActivePage] = useState('');
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
     const [showNoFavoritesModal, setShowNoFavoritesModal] = useState(false);
-    // const [favoritesCount, setFavoritesCount] = useState(0);
-    // const [cartItemsCount, setCartItemsCount] = useState(0);
     const navigate = useNavigate();
-    const { isAuthenticated, userRole, token, logout, isLoading } = useAuth();
+    const { isAuthenticated, userRole, token, isLoading } = useAuth();
 
-    // ИСПОЛЬЗУЕМ ОБЩЕЕ СОСТОЯНИЕ
-    const { favoritesCount, cartItemsCount, updateFavoritesCount, updateCartCount } = useApp();
+    // ИСПОЛЬЗУЕМ ОБЩЕЕ СОСТОЯНИЕ - ВКЛЮЧАЕМ logout из AppContext
+    const { favoritesCount, cartItemsCount, updateFavoritesCount, updateCartCount, logout } = useApp();
 
     // Режим работы магазина
     const workingHours = "Пн-Вс: 9:00 - 21:00";
@@ -50,6 +48,9 @@ const Header = ({
         updateCartCount();
         if (isAuthenticated && userRole === 'customer') {
             updateFavoritesCount();
+        } else {
+            // При выходе из аккаунта сбрасываем счетчик избранных
+            // Это гарантирует, что favoritesCount будет 0 для неавторизованных пользователей
         }
     }, [isAuthenticated, userRole, location.pathname, updateCartCount, updateFavoritesCount]);
 
@@ -108,8 +109,6 @@ const Header = ({
         }
     }, [isAuthenticated, userRole, navigate, location.pathname]);
 
-    // УДАЛЕНЫ ИНТЕРВАЛЫ - они вызывали бесконечные перерисовки
-
     // Обработчики событий
     const handleSearchChange = (e) => {
         const sanitizedValue = sanitizeInput(e.target.value);
@@ -159,8 +158,9 @@ const Header = ({
         setIsProfileOpen(false);
     };
 
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ: используем logout из AppContext
     const handleLogoutClick = () => {
-        logout();
+        logout(); // Теперь это logout из AppContext с очисткой счетчиков
         toast.success('Вы успешно вышли из системы');
         navigate("/");
         setIsProfileOpen(false);
@@ -171,6 +171,12 @@ const Header = ({
     };
 
     const handleFavoritesClick = () => {
+        // Проверяем авторизацию перед переходом в избранное
+        if (!isAuthenticated) {
+            navigate("/login");
+            return;
+        }
+
         if (favoritesCount > 0) {
             navigate('/favorites');
         } else {

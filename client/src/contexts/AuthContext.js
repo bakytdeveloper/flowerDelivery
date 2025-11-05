@@ -19,20 +19,14 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [cartItems, setCartItems] = useState([]);
-    const [user, setUser] = useState(null); // Добавляем состояние для user
-    // eslint-disable-next-line
-    const [favoritesCount, setFavoritesCount] = useState(0);
-    // eslint-disable-next-line
-    const [cartItemsCount, setCartItemsCount] = useState(0);
+    const [user, setUser] = useState(null);
 
     // Функция для проверки валидности токена
     const validateToken = useCallback((token) => {
         if (!token) return false;
         try {
             const decoded = jwtDecode(token);
-            // Проверяем expiration time если есть
             if (decoded.exp && Date.now() >= decoded.exp * 1000) {
-                // console.log('Token expired');
                 return false;
             }
             return true;
@@ -41,8 +35,7 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    // В AuthContext.js обновляем функцию fetchUserInfo:
-// Функция для получения информации о пользователе
+    // Функция для получения информации о пользователе
     const fetchUserInfo = useCallback(async (token) => {
         try {
             const decoded = jwtDecode(token);
@@ -70,7 +63,6 @@ export const AuthProvider = ({ children }) => {
                 return userData;
             } else {
                 console.error('Failed to fetch user info, status:', response.status);
-                // Если endpoint не доступен, используем данные из токена
                 const decoded = jwtDecode(token);
                 const userFromToken = {
                     _id: decoded.userId || decoded._id,
@@ -83,7 +75,6 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Error fetching user info:', error);
-            // В случае ошибки также используем данные из токена
             const decoded = jwtDecode(token);
             const userFromToken = {
                 _id: decoded.userId || decoded._id,
@@ -96,8 +87,16 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    // Функция для очистки корзины
-    const clearCart = useCallback(() => {
+    // Функция для полной очистки состояния при выходе
+    const clearAuthState = useCallback(() => {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem('status');
+        sessionStorage.removeItem('guestSessionId'); // Очищаем guest session
+        setToken(null);
+        setIsAuthenticated(false);
+        setUserRole(null);
+        setUser(null);
         setCartItems([]);
     }, []);
 
@@ -105,37 +104,21 @@ export const AuthProvider = ({ children }) => {
         const storedToken = sessionStorage.getItem('token');
         const storedRole = sessionStorage.getItem('role');
 
-        // console.log('AuthProvider mounted, storedToken:', !!storedToken, 'storedRole:', storedRole);
-
         if (storedToken && validateToken(storedToken)) {
             setToken(storedToken);
             setIsAuthenticated(true);
             setUserRole(storedRole);
-
-            // Получаем информацию о пользователе
             fetchUserInfo(storedToken);
-
-            // console.log('User authenticated on mount, isAuthenticated:', true);
         } else {
-            // Удаляем невалидный токен
             if (storedToken) {
-                sessionStorage.removeItem('token');
-                sessionStorage.removeItem('role');
-                // console.log('Invalid token removed');
+                clearAuthState();
             }
-            setIsAuthenticated(false);
-            setUserRole(null);
-            setToken(null);
-            setUser(null);
-            setCartItems([]);
         }
 
         setIsLoading(false);
-    }, [validateToken, fetchUserInfo]);
+    }, [validateToken, fetchUserInfo, clearAuthState]);
 
     const login = useCallback(async (newToken, role) => {
-        // console.log('Login called with token:', !!newToken, 'role:', role);
-
         if (validateToken(newToken)) {
             sessionStorage.setItem('token', newToken);
             sessionStorage.setItem('role', role);
@@ -143,44 +126,31 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(true);
             setUserRole(role);
 
-            // Получаем информацию о пользователе после логина
-            const userInfo = await fetchUserInfo(newToken);
+            // Очищаем guest session при входе
+            sessionStorage.removeItem('guestSessionId');
 
-            // console.log('Login successful, isAuthenticated set to true');
+            const userInfo = await fetchUserInfo(newToken);
             return { success: true, user: userInfo };
         }
-        // console.log('Login failed: invalid token');
         return { success: false, user: null };
     }, [validateToken, fetchUserInfo]);
 
     const logout = useCallback(() => {
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('role');
-        sessionStorage.removeItem('status');
-        setToken(null);
-        setIsAuthenticated(false);
-        setUserRole(null);
-        setUser(null);
-        setCartItems([]);
-        // console.log('Logout successful, isAuthenticated set to false');
-    }, []);
+        clearAuthState();
+    }, [clearAuthState]);
 
     const value = {
         isAuthenticated,
         userRole,
         token,
-        user, // Добавляем user в контекст
+        user,
         cartItems,
         setCartItems,
         login,
         logout,
         isLoading,
-        clearCart,
-        favoritesCount,
-        cartItemsCount
+        clearAuthState
     };
-
-    // console.log('AuthProvider render, isAuthenticated:', isAuthenticated, 'userRole:', userRole, 'user:', user);
 
     return (
         <AuthContext.Provider value={value}>
