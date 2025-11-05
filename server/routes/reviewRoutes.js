@@ -6,13 +6,15 @@ import {
     updateReview,
     addAdminReply,
     updateAdminReply,
-    deleteReview
+    deleteReview,
+    deleteReviewImage
 } from '../controllers/reviewController.js';
 import {
     authenticateToken,
     checkRole,
     requireAdmin
 } from '../middlewares/authenticateToken.js';
+import { upload, processImage, handleUploadError } from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
 
@@ -23,9 +25,30 @@ router.get('/product/:productId', getProductReviews);
 router.get('/can-review/:productId', authenticateToken, canReview);
 
 // Маршруты для создания и управления отзывами (только customers)
-router.post('/', authenticateToken, checkRole(['customer']), createReview);
-router.put('/:id', authenticateToken, checkRole(['customer']), updateReview);
+router.post(
+    '/',
+    authenticateToken,
+    checkRole(['customer']),
+    upload.array('images', 1), // Только 1 изображение
+    processImage,
+    handleUploadError,
+    createReview
+);
+
+router.put(
+    '/:id',
+    authenticateToken,
+    checkRole(['customer']),
+    upload.array('images', 1), // Только 1 изображение
+    processImage,
+    handleUploadError,
+    updateReview
+);
+
 router.delete('/:id', authenticateToken, deleteReview);
+
+// Маршрут для удаления изображения из отзыва
+router.delete('/:reviewId/images/:imageId', authenticateToken, checkRole(['customer']), deleteReviewImage);
 
 // Маршруты для администратора (ответы на отзывы)
 router.post('/:id/reply', authenticateToken, requireAdmin, addAdminReply);

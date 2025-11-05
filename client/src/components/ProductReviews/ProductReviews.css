@@ -573,3 +573,162 @@
         gap: 0.25rem;
     }
 }
+
+/* Стили для загрузки одного изображения */
+.image-upload-section {
+    margin: 1rem 0;
+}
+
+.image-upload-label {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: #4299e1;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.image-upload-label:hover:not(:disabled) {
+    background: #3182ce;
+}
+
+.image-upload-label:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+}
+
+.image-upload-input {
+    display: none;
+}
+
+.image-preview-single {
+    margin: 1rem 0;
+}
+
+.image-preview {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 28px;
+    height: 28px;
+    background: #f56565;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.remove-image-btn:hover {
+    background: #e53e3e;
+}
+
+.image-upload-hint {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-top: 0.5rem;
+}
+
+/* Стили для изображений в отзывах */
+.review-images {
+    margin-top: 1rem;
+}
+
+.images-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.review-image-item {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-image-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.review-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.delete-image-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: #f56565;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.review-image-item:hover .delete-image-btn {
+    opacity: 1;
+}
+
+.delete-image-btn:hover {
+    background: #e53e3e;
+}
+
+/* Действия пользователя для своего отзыва */
+.user-review-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-delete-user {
+    background: #f56565;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-delete-user:hover {
+    background: #e53e3e;
+}
+

@@ -24,6 +24,51 @@ const ProductReviews = ({ productId }) => {
     const [isSubmittingReview, setIsSubmittingReview] = useState(false);
     const [isSubmittingAdminReply, setIsSubmittingAdminReply] = useState(false);
 
+    // Состояния для изображений
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
+
+    // Функции для работы с изображением
+    const handleImageSelect = (e) => {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        // Проверяем размер файла
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Файл слишком большой (макс. 5MB)');
+            return;
+        }
+
+        // Проверяем тип файла
+        if (!file.type.startsWith('image/')) {
+            toast.error('Файл не является изображением');
+            return;
+        }
+
+        // Освобождаем предыдущее превью
+        if (selectedImage) {
+            URL.revokeObjectURL(selectedImage.preview);
+        }
+
+        // Создаем новое превью
+        const newImage = {
+            file,
+            preview: URL.createObjectURL(file),
+            id: Math.random().toString(36).substr(2, 9)
+        };
+
+        setSelectedImage(newImage);
+        e.target.value = ''; // Сбрасываем input
+    };
+
+    const removeImage = () => {
+        if (selectedImage) {
+            URL.revokeObjectURL(selectedImage.preview);
+            setSelectedImage(null);
+        }
+    };
+
     useEffect(() => {
         const token = sessionStorage.getItem('token');
         setIsLoggedIn(!!token);
@@ -65,8 +110,6 @@ const ProductReviews = ({ productId }) => {
                 }
             );
 
-            console.log('Review ability response:', response.data); // Для отладки
-
             setHasCompletedPurchase(response.data.hasPurchased);
             setUserRole(response.data.userRole);
 
@@ -77,19 +120,12 @@ const ProductReviews = ({ productId }) => {
                     comment: response.data.existingReview.comment
                 });
             } else {
-                // Сбрасываем форму, если отзыва нет
                 setNewReview({ rating: 5, comment: '' });
             }
         } catch (error) {
             console.error('Error checking review ability:', error);
-            console.error('Error details:', error.response?.data); // Для отладки
-
             setHasCompletedPurchase(false);
             setUserRole(null);
-
-            if (error.response?.status === 403) {
-                toast.error('У вас нет прав для оставления отзыва на этот товар');
-            }
         } finally {
             setIsLoading(false);
         }
@@ -102,17 +138,27 @@ const ProductReviews = ({ productId }) => {
         }
 
         setIsSubmittingReview(true);
+        setIsUploading(true);
+
         try {
+            const formData = new FormData();
+            formData.append('productId', productId);
+            formData.append('rating', newReview.rating);
+            formData.append('comment', newReview.comment);
+
+            // Добавляем изображение, если есть
+            if (selectedImage) {
+                formData.append('images', selectedImage.file);
+            }
+
             if (userReview) {
                 await axios.put(
                     `${process.env.REACT_APP_API_URL}/api/reviews/${userReview._id}`,
-                    {
-                        rating: newReview.rating,
-                        comment: newReview.comment
-                    },
+                    formData,
                     {
                         headers: {
-                            Authorization: `Bearer ${sessionStorage.getItem('token')}`
+                            'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                            'Content-Type': 'multipart/form-data'
                         }
                     }
                 );
@@ -120,29 +166,32 @@ const ProductReviews = ({ productId }) => {
             } else {
                 await axios.post(
                     `${process.env.REACT_APP_API_URL}/api/reviews`,
-                    {
-                        productId,
-                        rating: newReview.rating,
-                        comment: newReview.comment
-                    },
+                    formData,
                     {
                         headers: {
-                            Authorization: `Bearer ${sessionStorage.getItem('token')}`
+                            'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+                            'Content-Type': 'multipart/form-data'
                         }
                     }
                 );
                 toast.success('Отзыв успешно добавлен!');
             }
 
+            // Сбрасываем состояние
             setNewReview({ rating: 5, comment: '' });
+            if (selectedImage) {
+                URL.revokeObjectURL(selectedImage.preview);
+                setSelectedImage(null);
+            }
             setIsEditing(false);
             fetchReviews();
-            checkReviewAbility(); // Обновляем статус возможности отзыва
+            checkReviewAbility();
         } catch (error) {
             console.error('Error submitting review:', error);
             toast.error(error.response?.data?.message || 'Ошибка при отправке отзыва');
         } finally {
             setIsSubmittingReview(false);
+            setIsUploading(false);
         }
     };
 
@@ -152,6 +201,12 @@ const ProductReviews = ({ productId }) => {
 
     const handleCancelEdit = () => {
         setIsEditing(false);
+        // Освобождаем память от превью
+        if (selectedImage) {
+            URL.revokeObjectURL(selectedImage.preview);
+            setSelectedImage(null);
+        }
+
         if (userReview) {
             setNewReview({
                 rating: userReview.rating,
@@ -159,6 +214,53 @@ const ProductReviews = ({ productId }) => {
             });
         } else {
             setNewReview({ rating: 5, comment: '' });
+        }
+    };
+
+    const handleDeleteImage = async (reviewId, imageId) => {
+        try {
+            await axios.delete(
+                `${process.env.REACT_APP_API_URL}/api/reviews/${reviewId}/images/${imageId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+                    }
+                }
+            );
+            toast.success('Изображение удалено');
+            fetchReviews();
+            if (userReview && userReview._id === reviewId) {
+                checkReviewAbility();
+            }
+        } catch (error) {
+            console.error('Error deleting image:', error);
+            toast.error('Ошибка при удалении изображения');
+        }
+    };
+
+    const handleDeleteReview = async (reviewId) => {
+        if (!window.confirm('Вы уверены, что хотите удалить этот отзыв?')) {
+            return;
+        }
+
+        try {
+            await axios.delete(
+                `${process.env.REACT_APP_API_URL}/api/reviews/${reviewId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem('token')}`
+                    }
+                }
+            );
+            toast.success('Отзыв успешно удален!');
+            fetchReviews();
+            if (userReview && userReview._id === reviewId) {
+                setUserReview(null);
+                setNewReview({ rating: 5, comment: '' });
+            }
+        } catch (error) {
+            console.error('Error deleting review:', error);
+            toast.error(error.response?.data?.message || 'Ошибка при удалении отзыва');
         }
     };
 
@@ -216,32 +318,6 @@ const ProductReviews = ({ productId }) => {
         setAdminReplyText('');
         setReplyingToReviewId(null);
         setEditingAdminReplyId(null);
-    };
-
-    const handleDeleteReview = async (reviewId) => {
-        if (!window.confirm('Вы уверены, что хотите удалить этот отзыв?')) {
-            return;
-        }
-
-        try {
-            await axios.delete(
-                `${process.env.REACT_APP_API_URL}/api/reviews/${reviewId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${sessionStorage.getItem('token')}`
-                    }
-                }
-            );
-            toast.success('Отзыв успешно удален!');
-            fetchReviews();
-            if (userReview && userReview._id === reviewId) {
-                setUserReview(null);
-                setNewReview({ rating: 5, comment: '' });
-            }
-        } catch (error) {
-            console.error('Error deleting review:', error);
-            toast.error(error.response?.data?.message || 'Ошибка при удалении отзыва');
-        }
     };
 
     const RatingStars = ({ rating, size = 'medium' }) => {
@@ -337,6 +413,40 @@ const ProductReviews = ({ productId }) => {
                                 </div>
                             </div>
 
+                            {/* Секция загрузки изображения */}
+                            <div className="image-upload-section">
+                                <label className="image-upload-label">
+                                    <span>📷 Добавить фото (опционально)</span>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageSelect}
+                                        className="image-upload-input"
+                                        disabled={isUploading || selectedImage}
+                                    />
+                                </label>
+
+                                {selectedImage && (
+                                    <div className="image-preview-single">
+                                        <div className="image-preview">
+                                            <img src={selectedImage.preview} alt="Preview" />
+                                            <button
+                                                type="button"
+                                                className="remove-image-btn"
+                                                onClick={removeImage}
+                                                disabled={isUploading}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="image-upload-hint">
+                                    {selectedImage ? '1/1 изображение' : 'Макс. 1 изображение · 5MB'}
+                                </div>
+                            </div>
+
                             <div className="form-actions">
                                 <button
                                     className="btn-submit"
@@ -367,12 +477,20 @@ const ProductReviews = ({ productId }) => {
                         <div className="user-review-card">
                             <div className="review-card-header">
                                 <h4>Ваш отзыв</h4>
-                                <button
-                                    className="btn-edit"
-                                    onClick={handleEditReview}
-                                >
-                                    Редактировать
-                                </button>
+                                <div className="user-review-actions">
+                                    <button
+                                        className="btn-edit"
+                                        onClick={handleEditReview}
+                                    >
+                                        Редактировать
+                                    </button>
+                                    <button
+                                        className="btn-delete-user"
+                                        onClick={() => handleDeleteReview(userReview._id)}
+                                    >
+                                        Удалить отзыв
+                                    </button>
+                                </div>
                             </div>
                             <div className="review-card-content">
                                 <div className="review-meta">
@@ -383,6 +501,30 @@ const ProductReviews = ({ productId }) => {
                                     <span className="verified-badge">✓ Подтвержденная покупка</span>
                                 </div>
                                 <p className="review-comment">{userReview.comment}</p>
+
+                                {/* Отображение изображения в отзыве пользователя */}
+                                {userReview.images && userReview.images.length > 0 && (
+                                    <div className="review-images">
+                                        <div className="images-grid">
+                                            {userReview.images.map((image, imgIndex) => (
+                                                <div key={image._id || imgIndex} className="review-image-item">
+                                                    <img
+                                                        src={`${process.env.REACT_APP_API_URL}${image.url}`}
+                                                        alt={`Фото отзыва`}
+                                                        onClick={() => window.open(`${process.env.REACT_APP_API_URL}${image.url}`, '_blank')}
+                                                    />
+                                                    <button
+                                                        className="delete-image-btn"
+                                                        onClick={() => handleDeleteImage(userReview._id, image._id)}
+                                                        title="Удалить изображение"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
 
                                 {userReview.ownerReply && (
                                     <div className="owner-reply">
@@ -453,6 +595,23 @@ const ProductReviews = ({ productId }) => {
                             <div className="review-content">
                                 <p className="review-text">{review.comment}</p>
                             </div>
+
+                            {/* Отображение изображений в отзывах */}
+                            {review.images && review.images.length > 0 && (
+                                <div className="review-images">
+                                    <div className="images-grid">
+                                        {review.images.map((image, imgIndex) => (
+                                            <div key={image._id || imgIndex} className="review-image-item">
+                                                <img
+                                                    src={`${process.env.REACT_APP_API_URL}${image.url}`}
+                                                    alt={`Фото отзыва`}
+                                                    onClick={() => window.open(`${process.env.REACT_APP_API_URL}${image.url}`, '_blank')}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Ответ владельца */}
                             {review.ownerReply && (
