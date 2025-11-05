@@ -21,6 +21,7 @@ import CheckoutPage from "./components/CheckoutPage/CheckoutPage";
 import OrderSuccess from "./components/OrderSuccess/OrderSuccess";
 import AdminPanel from './components/AdminPanel/AdminPanel';
 import AboutUs from './components/AboutUs/AboutUs';
+import ProfilePage from './components/ProfilePage/ProfilePage';
 import { jwtDecode } from "jwt-decode";
 
 
@@ -265,6 +266,8 @@ const App = () => {
                   <Route path="/about" element={<AboutUs />} />                  <Route path="/payment" element={<div>Страница оплаты</div>} />
 
                   <Route path="/admin" element={<AdminPanel />} />
+
+                  <Route path="/profile" element={<ProfilePage />} />
 
 
                   {/* Fallback для несуществующих маршрутов */}
