@@ -3,6 +3,8 @@ import './Header.css';
 import { Link, useLocation } from 'react-router-dom';
 import { FaRegHeart, FaShoppingCart, FaUser, FaSearch, FaPhone, FaBars, FaTimes } from "react-icons/fa";
 import { useAuth } from '../../contexts/AuthContext';
+import { useApp } from '../../contexts/AppContext'; // ДОБАВИТЬ
+
 // eslint-disable-next-line
 import { sanitizeInput } from '../../utils/securityUtils';
 import { useNavigate } from 'react-router-dom';
@@ -23,10 +25,13 @@ const Header = ({
     const [activePage, setActivePage] = useState('');
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
     const [showNoFavoritesModal, setShowNoFavoritesModal] = useState(false);
-    const [favoritesCount, setFavoritesCount] = useState(0);
-    const [cartItemsCount, setCartItemsCount] = useState(0);
+    // const [favoritesCount, setFavoritesCount] = useState(0);
+    // const [cartItemsCount, setCartItemsCount] = useState(0);
     const navigate = useNavigate();
     const { isAuthenticated, userRole, token, logout, isLoading } = useAuth();
+
+    // ИСПОЛЬЗУЕМ ОБЩЕЕ СОСТОЯНИЕ
+    const { favoritesCount, cartItemsCount, updateFavoritesCount, updateCartCount } = useApp();
 
     // Режим работы магазина
     const workingHours = "Пн-Вс: 9:00 - 21:00";
@@ -40,91 +45,13 @@ const Header = ({
         }
     }, [isAuthenticated]);
 
-    // Функция для получения количества товаров в корзине
-    const fetchCartItemsCount = useCallback(async () => {
-        try {
-            const headers = {};
-            if (token) {
-                headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            // Добавляем sessionId для гостей
-            const sessionId = sessionStorage.getItem('guestSessionId');
-            if (!token && sessionId) {
-                headers['X-Session-Id'] = sessionId;
-            }
-
-            const response = await fetch(`${apiUrl}/api/cart`, {
-                headers: headers
-            });
-
-            if (response.ok) {
-                const cartData = await response.json();
-
-                let totalCount = 0;
-
-                if (cartData.cart) {
-                    const flowerItemsCount = cartData.cart.flowerItems?.reduce((total, item) => total + item.quantity, 0) || 0;
-                    const addonItemsCount = cartData.cart.addonItems?.reduce((total, item) => total + item.quantity, 0) || 0;
-                    totalCount = flowerItemsCount + addonItemsCount;
-                } else if (cartData.flowerItems || cartData.addonItems) {
-                    const flowerItemsCount = cartData.flowerItems?.reduce((total, item) => total + item.quantity, 0) || 0;
-                    const addonItemsCount = cartData.addonItems?.reduce((total, item) => total + item.quantity, 0) || 0;
-                    totalCount = flowerItemsCount + addonItemsCount;
-                } else if (cartData.items) {
-                    totalCount = cartData.items?.reduce((total, item) => total + item.quantity, 0) || 0;
-                }
-
-                setCartItemsCount(totalCount);
-            } else if (response.status === 404) {
-                setCartItemsCount(0);
-            }
-        } catch (error) {
-            console.error('Error fetching cart count:', error);
-            setCartItemsCount(0);
-        }
-    }, [apiUrl, token]);
-
-    // Функция для получения количества избранных товаров
-// В Header.js - ИСПРАВЛЕННАЯ версия fetchFavoritesCount
-    const fetchFavoritesCount = useCallback(async () => {
-        if (!isAuthenticated || !token || userRole !== 'customer') {
-            setFavoritesCount(0);
-            return;
-        }
-
-        try {
-            const response = await fetch(`${apiUrl}/api/users/favorites`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const favorites = await response.json();
-
-            // ПРОСТАЯ обработка - считаем длину массива
-            const favoritesCount = Array.isArray(favorites) ? favorites.length : 0;
-            setFavoritesCount(favoritesCount);
-        } catch (error) {
-            console.error('Error fetching favorites:', error);
-            setFavoritesCount(0);
-        }
-    }, [token, apiUrl, isAuthenticated, userRole]);
-
-
-    // Получаем количество избранных и корзины при изменении аутентификации или location
+    // Обновляем счетчики при изменении аутентификации или location
     useEffect(() => {
-        fetchCartItemsCount();
+        updateCartCount();
         if (isAuthenticated && userRole === 'customer') {
-            fetchFavoritesCount();
-        } else {
-            setFavoritesCount(0);
+            updateFavoritesCount();
         }
-    }, [isAuthenticated, userRole, location.pathname]); // Добавляем location.pathname для обновления при навигации
+    }, [isAuthenticated, userRole, location.pathname, updateCartCount, updateFavoritesCount]);
 
     // Устанавливаем активную страницу
     useEffect(() => {
@@ -405,7 +332,7 @@ const Header = ({
                                 )}
                             </div>
 
-                            {/* Корзина */}
+                            {/* Корзина - теперь используем cartItemsCount из контекста */}
                             <div
                                 className="cart-button"
                                 onClick={handleCartClick}

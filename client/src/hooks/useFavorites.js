@@ -1,11 +1,13 @@
+// hooks/useFavorites.js
 import { useState, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useApp } from '../contexts/AppContext'; // ДОБАВИТЬ
 import { toast } from 'react-toastify';
-import {jwtDecode} from "jwt-decode";
 
 export const useFavorites = () => {
     const [favorites, setFavorites] = useState([]);
     const { isAuthenticated, token } = useAuth();
+    const { updateFavoritesCount } = useApp(); // ДОБАВИТЬ
 
     const addToFavorites = async (productId) => {
         if (!isAuthenticated) {
@@ -14,7 +16,6 @@ export const useFavorites = () => {
         }
 
         try {
-            // ИСПРАВЛЕННЫЙ URL: убрали userId из пути
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/favorites`, {
                 method: 'POST',
                 headers: {
@@ -37,7 +38,10 @@ export const useFavorites = () => {
                 setFavorites(result);
             }
 
-            toast.success('Товар добавлен в избранное');
+            // ОБНОВЛЯЕМ СЧЕТЧИК В ШАПКЕ
+            updateFavoritesCount();
+
+            // toast.success('Товар добавлен в избранное');
             return true;
         } catch (error) {
             console.error('Error adding to favorites:', error);
@@ -50,7 +54,6 @@ export const useFavorites = () => {
         if (!isAuthenticated) return false;
 
         try {
-            // ИСПРАВЛЕННЫЙ URL: убрали userId из пути
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/favorites/${productId}`, {
                 method: 'DELETE',
                 headers: {
@@ -74,7 +77,10 @@ export const useFavorites = () => {
                 setFavorites(prev => prev.filter(fav => fav._id !== productId));
             }
 
-            toast.success('Товар удален из избранного');
+            // ОБНОВЛЯЕМ СЧЕТЧИК В ШАПКЕ
+            updateFavoritesCount();
+
+            // toast.success('Товар удален из избранного');
             return true;
         } catch (error) {
             console.error('Error removing from favorites:', error);
@@ -83,6 +89,7 @@ export const useFavorites = () => {
         }
     };
 
+    // Остальной код остается без изменений...
     const toggleFavorite = async (productId, isCurrentlyFavorite) => {
         if (isCurrentlyFavorite) {
             return await removeFromFavorites(productId);
@@ -95,7 +102,6 @@ export const useFavorites = () => {
         return favorites.some(fav => fav._id === productId);
     };
 
-// В useFavorites.js - ИСПРАВЛЕННАЯ версия fetchFavorites
     const fetchFavorites = useCallback(async () => {
         if (!isAuthenticated) {
             setFavorites([]);
@@ -103,7 +109,6 @@ export const useFavorites = () => {
         }
 
         try {
-            // УБРАТЬ проверку на админа - она мешает получению избранных
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/favorites`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -116,7 +121,6 @@ export const useFavorites = () => {
 
             const favoritesData = await response.json();
 
-            // ПРОСТАЯ обработка - предполагаем, что сервер возвращает массив
             if (Array.isArray(favoritesData)) {
                 setFavorites(favoritesData);
             } else {
@@ -128,7 +132,6 @@ export const useFavorites = () => {
             setFavorites([]);
         }
     }, [isAuthenticated, token]);
-
 
     return {
         favorites,

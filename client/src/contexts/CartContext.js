@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { useApp } from './AppContext'; // ДОБАВИТЬ
 
 const CartContext = createContext();
 
@@ -21,6 +22,7 @@ export const CartProvider = ({ children }) => {
     });
     const [loading, setLoading] = useState(false);
     const { isAuthenticated, token } = useAuth();
+    const { updateCartCount } = useApp(); // ДОБАВИТЬ
     const apiUrl = process.env.REACT_APP_API_URL;
 
     // Генерация sessionId для гостей
@@ -100,6 +102,10 @@ export const CartProvider = ({ children }) => {
             if (response.ok) {
                 const result = await response.json();
                 setCart(result.cart);
+
+                // ОБНОВЛЯЕМ СЧЕТЧИК В ШАПКЕ
+                updateCartCount();
+
                 return { success: true, cart: result.cart };
             } else {
                 const errorData = await response.json();
@@ -247,6 +253,10 @@ export const CartProvider = ({ children }) => {
             if (response.ok) {
                 const result = await response.json();
                 setCart(result.cart);
+
+                // ОБНОВЛЯЕМ СЧЕТЧИК В ШАПКЕ
+                updateCartCount();
+
                 return { success: true, cart: result.cart };
             } else {
                 const errorData = await response.json();

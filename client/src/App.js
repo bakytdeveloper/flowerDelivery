@@ -8,6 +8,8 @@ import Home from "./components/Home/Home";
 import LoadingSpinner from "./LoadingSpinner";
 import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './contexts/AuthContext';
+import { CartProvider } from "./contexts/CartContext";
+import { AppProvider } from './contexts/AppContext'; // ДОБАВЛЕН
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
@@ -15,7 +17,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import CatalogPage from "./components/CatalogPage/CatalogPage";
 import ProductDetails from "./components/ProductDetails/ProductDetails"
 import FavoritesPage from "./components/FavoritesPage/FavoritesPage";
-import { CartProvider } from "./contexts/CartContext";
 import CartPage from "./components/CartPage/CartPage";
 import CheckoutPage from "./components/CheckoutPage/CheckoutPage";
 import OrderSuccess from "./components/OrderSuccess/OrderSuccess";
@@ -197,92 +198,94 @@ const App = () => {
 
   return (
       <AuthProvider>
-        <CartProvider>
-        <Router>
-          <ToastContainer style={{zIndex:"999999"}} />
-          <Routes>
-            {/* Отдельный маршрут для логина без общей структуры */}
-            <Route path="/login" element={
-              <LoginRegister
-                  showHeader={showHeader}
-                  setShowHeader={setShowHeader}
-                  setShowSidebar={setShowSidebar}
-              />
-            } />
+        <AppProvider> {/* ДОБАВЛЕН - должен быть ВНУТРИ AuthProvider и СНАРУЖИ CartProvider */}
+          <CartProvider>
+            <Router>
+              <ToastContainer style={{zIndex:"999999"}} />
+              <Routes>
+                {/* Отдельный маршрут для логина без общей структуры */}
+                <Route path="/login" element={
+                  <LoginRegister
+                      showHeader={showHeader}
+                      setShowHeader={setShowHeader}
+                      setShowSidebar={setShowSidebar}
+                  />
+                } />
 
-            {/* Все остальные маршруты с общей структурой (Header, Footer и т.д.) */}
-            <Route path="*" element={
-              <AppContent
-                  isLoading={isLoading}
-                  showHeader={showHeader}
-                  cartItems={cartItems}
-                  showSidebar={showSidebar}
-                  setShowSidebar={setShowSidebar}
-                  selectedOption={selectedOption}
-                  selectedGender={selectedGender}
-                  selectedCategory={selectedCategory}
-                  selectedType={selectedType}
-                  setSelectedGender={setSelectedGender}
-                  setSelectedCategory={setSelectedCategory}
-                  setSelectedType={setSelectedType}
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
-                  handleSearch={handleSearch}
-                  resetFilter={resetFilter}
-                  setCurrentPage={setCurrentPage}
-                  activeComponent={activeComponent}
-                  setActiveComponent={setActiveComponent}
-                  isFooterCatalog={isFooterCatalog}
-                  setIsFooterCatalog={setIsFooterCatalog}
-                  setProducts={setProducts}
-                  showContactInfo={showContactInfo}
-                  showFooter={showFooter}
-              >
-                {/* Вложенные маршруты внутри AppContent */}
-                <Routes>
-                  <Route path="/" exact element={
-                    <Home
-                        setIsFooterCatalog={setIsFooterCatalog}
-                        setShowSidebar={setShowSidebar}
-                        setSelectedGender={setSelectedGender}
-                        setSelectedCategory={setSelectedCategory}
-                        setSelectedType={setSelectedType}
-                        setSearchTerm={setSearchTerm}
-                        setCartItems={setCartItems}
-                        cartItems={cartItems}
-                    />
-                  } />
-                  <Route path="/catalog" element={<CatalogPage />} />
-                  {/* Добавляем маршрут для страницы товара */}
-                  <Route path="/product/:id" element={<ProductDetails />} />
-                  {/*// eslint-disable-next-line*/}
-                  <Route path="/favorites" element={<FavoritesPage />} />
+                {/* Все остальные маршруты с общей структурой (Header, Footer и т.д.) */}
+                <Route path="*" element={
+                  <AppContent
+                      isLoading={isLoading}
+                      showHeader={showHeader}
+                      cartItems={cartItems}
+                      showSidebar={showSidebar}
+                      setShowSidebar={setShowSidebar}
+                      selectedOption={selectedOption}
+                      selectedGender={selectedGender}
+                      selectedCategory={selectedCategory}
+                      selectedType={selectedType}
+                      setSelectedGender={setSelectedGender}
+                      setSelectedCategory={setSelectedCategory}
+                      setSelectedType={setSelectedType}
+                      searchTerm={searchTerm}
+                      setSearchTerm={setSearchTerm}
+                      handleSearch={handleSearch}
+                      resetFilter={resetFilter}
+                      setCurrentPage={setCurrentPage}
+                      activeComponent={activeComponent}
+                      setActiveComponent={setActiveComponent}
+                      isFooterCatalog={isFooterCatalog}
+                      setIsFooterCatalog={setIsFooterCatalog}
+                      setProducts={setProducts}
+                      showContactInfo={showContactInfo}
+                      showFooter={showFooter}
+                  >
+                    {/* Вложенные маршруты внутри AppContent */}
+                    <Routes>
+                      <Route path="/" exact element={
+                        <Home
+                            setIsFooterCatalog={setIsFooterCatalog}
+                            setShowSidebar={setShowSidebar}
+                            setSelectedGender={setSelectedGender}
+                            setSelectedCategory={setSelectedCategory}
+                            setSelectedType={setSelectedType}
+                            setSearchTerm={setSearchTerm}
+                            setCartItems={setCartItems}
+                            cartItems={cartItems}
+                        />
+                      } />
+                      <Route path="/catalog" element={<CatalogPage />} />
+                      {/* Добавляем маршрут для страницы товара */}
+                      <Route path="/product/:id" element={<ProductDetails />} />
+                      {/*// eslint-disable-next-line*/}
+                      <Route path="/favorites" element={<FavoritesPage />} />
 
-                  {/*// Добавить маршруты в секцию Routes*/}
-                  <Route path="/cart" element={<CartPage />} />
-                  <Route path="/checkout" element={<CheckoutPage />} />
-                  <Route path="/order-success" element={<OrderSuccess />} />
-                  {/* Добавьте сюда другие маршруты по мере необходимости */}
-                  <Route path="/about" element={<AboutUs />} />                  <Route path="/payment" element={<div>Страница оплаты</div>} />
+                      {/*// Добавить маршруты в секцию Routes*/}
+                      <Route path="/cart" element={<CartPage />} />
+                      <Route path="/checkout" element={<CheckoutPage />} />
+                      <Route path="/order-success" element={<OrderSuccess />} />
+                      {/* Добавьте сюда другие маршруты по мере необходимости */}
+                      <Route path="/about" element={<AboutUs />} />
+                      <Route path="/payment" element={<div>Страница оплаты</div>} />
 
-                  <Route path="/admin" element={<AdminPanel />} />
+                      <Route path="/admin" element={<AdminPanel />} />
 
-                  <Route path="/profile" element={<ProfilePage />} />
+                      <Route path="/profile" element={<ProfilePage />} />
 
-
-                  {/* Fallback для несуществующих маршрутов */}
-                  <Route path="*" element={
-                    <div style={{ padding: '2rem', textAlign: 'center' }}>
-                      <h2>Страница не найдена</h2>
-                      <p>Запрошенная страница не существует.</p>
-                    </div>
-                  } />
-                </Routes>
-              </AppContent>
-            } />
-          </Routes>
-        </Router>
-        </CartProvider>
+                      {/* Fallback для несуществующих маршрутов */}
+                      <Route path="*" element={
+                        <div style={{ padding: '2rem', textAlign: 'center' }}>
+                          <h2>Страница не найдена</h2>
+                          <p>Запрошенная страница не существует.</p>
+                        </div>
+                      } />
+                    </Routes>
+                  </AppContent>
+                } />
+              </Routes>
+            </Router>
+          </CartProvider>
+        </AppProvider>
       </AuthProvider>
   );
 };
