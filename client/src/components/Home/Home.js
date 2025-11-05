@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from "react-router-dom";
 import './Home.css';
-// import NewestProducts from './NewestProducts/NewestProducts';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingSpinner from "../../LoadingSpinner";
@@ -10,9 +9,7 @@ import WhyChooseUs from "../WhyChooseUs/WhyChooseUs";
 import SeasonalOffers from "../SeasonalOffers/SeasonalOffers";
 import MapSection from "../MapSection/MapSection";
 import InfoCardsSection from "../InfoCardsSection/InfoCardsSection";
-// import { genderTitles } from "../../constants/constants";
-// import { sanitizeInput } from "../../utils/securityUtils";
-// import { useNavigate } from 'react-router-dom';
+
 
 const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, setSelectedGender, setSearchTerm, setSelectedCategory, setSelectedType }) => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -106,32 +103,32 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
         // eslint-disable-next-line
     }, [slides.length, isManualSwitch]);
 
-    useEffect(() => {
-        const videoElement = videoRef.current;
-
-        if (slides[currentSlide]?.backgroundType === 'video' && videoElement) {
-            setIsVideoLoaded(false);
-            videoElement?.load();
-
-            const handleCanPlay = () => {
-                setIsVideoLoaded(true);
-                videoElement.play().catch(e => console.log('Autoplay prevented:', e));
-            };
-
-            const handleError = () => {
-                console.error('Video loading error');
-                setIsVideoLoaded(false);
-            };
-
-            videoElement?.addEventListener('canplay', handleCanPlay);
-            videoElement?.addEventListener('error', handleError);
-
-            return () => {
-                videoElement?.removeEventListener('canplay', handleCanPlay);
-                videoElement?.removeEventListener('error', handleError);
-            };
-        }
-    }, [currentSlide, slides]);
+    // useEffect(() => {
+    //     const videoElement = videoRef.current;
+    //
+    //     if (slides[currentSlide]?.backgroundType === 'video' && videoElement) {
+    //         setIsVideoLoaded(false);
+    //         videoElement?.load();
+    //
+    //         const handleCanPlay = () => {
+    //             setIsVideoLoaded(true);
+    //             videoElement.play().catch(e => console.log('Autoplay prevented:', e));
+    //         };
+    //
+    //         const handleError = () => {
+    //             console.error('Video loading error');
+    //             setIsVideoLoaded(false);
+    //         };
+    //
+    //         videoElement?.addEventListener('canplay', handleCanPlay);
+    //         videoElement?.addEventListener('error', handleError);
+    //
+    //         return () => {
+    //             videoElement?.removeEventListener('canplay', handleCanPlay);
+    //             videoElement?.removeEventListener('error', handleError);
+    //         };
+    //     }
+    // }, [currentSlide, slides]);
 
     useEffect(() => {
         setShowSidebar(true);
@@ -233,24 +230,24 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
                 }}
                 ref={carouselRef}
             >
-                {safeSlides[currentSlide]?.backgroundType === 'video' && (
-                    <video
-                        ref={videoRef}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="auto"
-                        className="home-video"
-                        style={{
-                            opacity: isVideoLoaded ? 1 : 0,
-                            transition: 'opacity 0.5s ease-in-out'
-                        }}
-                    >
-                        <source src={safeSlides[currentSlide]?.backgroundVideo} type="video/mp4" />
-                        Ваш браузер не поддерживает видео.
-                    </video>
-                )}
+                {/*{safeSlides[currentSlide]?.backgroundType === 'video' && (*/}
+                {/*    <video*/}
+                {/*        ref={videoRef}*/}
+                {/*        autoPlay*/}
+                {/*        muted*/}
+                {/*        loop*/}
+                {/*        playsInline*/}
+                {/*        preload="auto"*/}
+                {/*        className="home-video"*/}
+                {/*        style={{*/}
+                {/*            opacity: isVideoLoaded ? 1 : 0,*/}
+                {/*            transition: 'opacity 0.5s ease-in-out'*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        <source src={safeSlides[currentSlide]?.backgroundVideo} type="video/mp4" />*/}
+                {/*        Ваш браузер не поддерживает видео.*/}
+                {/*    </video>*/}
+                {/*)}*/}
 
                 <div className="carousel-indicators">
                     {safeSlides.map((_, index) => (

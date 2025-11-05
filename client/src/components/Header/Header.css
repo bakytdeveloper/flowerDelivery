@@ -84,22 +84,6 @@
     flex-shrink: 0;
 }
 
-/*.logo-text-home {*/
-/*    font-size: 52px;*/
-/*    font-weight: 800;*/
-/*    color: #62e909 !important;*/
-/*    margin: 0;*/
-/*    letter-spacing: -0.5px;*/
-/*    white-space: nowrap;*/
-/*}*/
-
-/*.logo-accent-home {*/
-/*    color: #faf7f7!important;*/
-/*    -webkit-background-clip: text;*/
-/*    !*-webkit-text-fill-color: transparent;*!*/
-/*    !*background-clip: text;*!*/
-/*}*/
-
 .logo-text-home {
     font-size: 52px;
     font-weight: 800;
