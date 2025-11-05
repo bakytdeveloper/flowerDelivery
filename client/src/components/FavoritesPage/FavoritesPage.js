@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import './FavoritesPage.css';
+import {useCart} from "../../contexts/CartContext";
 
 const FavoritesPage = () => {
     const [favoriteProducts, setFavoriteProducts] = useState([]);
@@ -11,6 +12,7 @@ const FavoritesPage = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { isAuthenticated, token } = useAuth();
+    const { addToCart } = useCart();
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -77,10 +79,30 @@ const FavoritesPage = () => {
         navigate(`/product/${productId}`);
     };
 
-    const handleAddToCart = (e, product) => {
-        e.stopPropagation();
-        console.log('Добавлено в корзину:', product);
-        toast.info('Товар добавлен в корзину');
+    // Функция для добавления в корзину
+    const handleAddToCart = async (e, product) => {
+        e.stopPropagation(); // Останавливаем всплытие события
+
+        const result = await addToCart(product, 1); // quantity по умолчанию 1
+        if (result.success) {
+            toast.success('Товар добавлен в корзину! 🛒', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } else {
+            toast.error(result.error || 'Ошибка при добавлении в корзину', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        }
     };
 
     const formatPrice = (price) => {
