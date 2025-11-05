@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '../../hooks/useFavorites';
 import './HitsSection.css';
+import {useCart} from "../../contexts/CartContext";
+import {toast} from "react-toastify";
 
 const HitsSection = () => {
     const [products, setProducts] = useState([]);
@@ -10,6 +12,7 @@ const HitsSection = () => {
     const scrollContainerRef = useRef(null);
     const navigate = useNavigate();
     const { toggleFavorite, isFavorite, fetchFavorites } = useFavorites();
+    const { addToCart } = useCart();
 
     useEffect(() => {
         fetchBestSellingProducts();
@@ -89,10 +92,29 @@ const HitsSection = () => {
     };
 
     // Функция для добавления в корзину
-    const handleAddToCart = (e, product) => {
-        e.stopPropagation();
-        console.log('Добавлено в корзину:', product);
-        // TODO: Добавить логику добавления в корзину
+    const handleAddToCart = async (e, product) => {
+        e.stopPropagation(); // Останавливаем всплытие события
+
+        const result = await addToCart(product, 1); // quantity по умолчанию 1
+        if (result.success) {
+            toast.success('Товар добавлен в корзину! 🛒', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } else {
+            toast.error(result.error || 'Ошибка при добавлении в корзину', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        }
     };
 
     // Функция для добавления/удаления из избранного
@@ -104,6 +126,8 @@ const HitsSection = () => {
             await fetchFavorites();
         }
     };
+
+
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('ru-RU', {
@@ -151,6 +175,7 @@ const HitsSection = () => {
     if (!products || products.length === 0) {
         return null; // Секция скроется если нет товаров
     }
+
 
     return (
         <section className="hits-section">
