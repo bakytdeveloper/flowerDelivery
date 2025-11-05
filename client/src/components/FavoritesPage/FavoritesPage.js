@@ -1,3 +1,4 @@
+// FavoritesPage.js - АЛЬТЕРНАТИВНАЯ УПРОЩЕННАЯ ВЕРСИЯ
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -11,13 +12,8 @@ const FavoritesPage = () => {
     const navigate = useNavigate();
     const { isAuthenticated, token } = useAuth();
 
-    // Прокрутка вверх при монтировании компонента
     useEffect(() => {
-        window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth'
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }, []);
 
     useEffect(() => {
@@ -26,10 +22,8 @@ const FavoritesPage = () => {
             return;
         }
         fetchFavorites();
-        // eslint-disable-next-line
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate, token]);
 
-    // В FavoritesPage.js - УПРОЩЕННАЯ обработка ответа
     const fetchFavorites = async () => {
         try {
             setLoading(true);
@@ -46,11 +40,7 @@ const FavoritesPage = () => {
             }
 
             const favorites = await response.json();
-
-            // ПРОСТАЯ логика - если это массив, используем его
-            let favoritesArray = Array.isArray(favorites) ? favorites : [];
-
-            setFavoriteProducts(favoritesArray);
+            setFavoriteProducts(Array.isArray(favorites) ? favorites : []);
         } catch (err) {
             setError(err.message);
             console.error('Error fetching favorites:', err);
@@ -61,7 +51,6 @@ const FavoritesPage = () => {
 
     const handleRemoveFromFavorites = async (productId) => {
         try {
-            // ИСПРАВЛЕННЫЙ URL: убрали userId из пути
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/favorites/${productId}`, {
                 method: 'DELETE',
                 headers: {
@@ -73,15 +62,8 @@ const FavoritesPage = () => {
                 throw new Error('Ошибка при удалении из избранного');
             }
 
-            const result = await response.json();
-
-            // Обновляем состояние на основе ответа сервера
-            if (result.favorites && Array.isArray(result.favorites)) {
-                setFavoriteProducts(result.favorites);
-            } else {
-                // Или просто фильтруем локально
-                setFavoriteProducts(prev => prev.filter(product => product._id !== productId));
-            }
+            // ПРОСТОЙ ПОДХОД: После удаления заново загружаем весь список
+            await fetchFavorites();
 
             toast.success('Товар удален из избранного');
         } catch (error) {
@@ -90,6 +72,7 @@ const FavoritesPage = () => {
         }
     };
 
+    // Остальной код компонента без изменений...
     const handleProductClick = (productId) => {
         navigate(`/product/${productId}`);
     };
@@ -108,59 +91,18 @@ const FavoritesPage = () => {
         }).format(price);
     };
 
-    if (loading) {
-        return (
-            <div className="favorites-page">
-                <div className="container">
-                    <div className="favorites-loading">
-                        <div className="spinner-border text-primary" role="status">
-                            <span className="visually-hidden">Загрузка...</span>
-                        </div>
-                        <p>Загрузка избранных товаров...</p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="favorites-page">
-                <div className="container">
-                    <div className="favorites-error">
-                        <h2>Ошибка</h2>
-                        <p>{error}</p>
-                        <button
-                            className="btn btn-primary"
-                            onClick={fetchFavorites}
-                        >
-                            Попробовать снова
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
+    // Остальная разметка без изменений...
     return (
         <div className="favorites-page">
             <div className="container">
-
-                {/* Заголовок как в каталоге */}
+                {/* Заголовок */}
                 <div className="favorites-header">
-                    {/* Хлебные крошки */}
                     <nav className="breadcrumb-nav breadcrumb-nav-favorites">
-                        <button
-                            className="breadcrumb-back"
-                            onClick={() => navigate(-1)}
-                        >
+                        <button className="breadcrumb-back" onClick={() => navigate(-1)}>
                             ← Назад
                         </button>
                         <span className="breadcrumb-separator">/</span>
-                        <button
-                            className="breadcrumb-link"
-                            onClick={() => navigate('/catalog')}
-                        >
+                        <button className="breadcrumb-link" onClick={() => navigate('/catalog')}>
                             Каталог
                         </button>
                     </nav>
@@ -175,7 +117,7 @@ const FavoritesPage = () => {
                     </div>
                 </div>
 
-                {/* Контент как в каталоге */}
+                {/* Контент */}
                 <div className="favorites-results">
                     <p className="results-count">
                         Найдено товаров: <strong>{favoriteProducts.length}</strong>
@@ -186,10 +128,7 @@ const FavoritesPage = () => {
                             <div className="empty-favorites-icon">💔</div>
                             <h3>Список избранного пуст</h3>
                             <p>Добавляйте товары в избранное, чтобы не потерять их</p>
-                            <button
-                                className="btn btn-primary"
-                                onClick={() => navigate('/catalog')}
-                            >
+                            <button className="btn btn-primary" onClick={() => navigate('/catalog')}>
                                 Перейти в каталог
                             </button>
                         </div>
@@ -202,6 +141,7 @@ const FavoritesPage = () => {
                                     onClick={() => handleProductClick(product._id)}
                                     style={{ cursor: 'pointer' }}
                                 >
+                                    {/* Карточка товара */}
                                     <div className="product-image-container">
                                         <img
                                             src={product.images?.[0] || '/images/placeholder-flower.jpg'}
