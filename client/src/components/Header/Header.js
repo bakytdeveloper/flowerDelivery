@@ -171,7 +171,13 @@ const Header = ({
 
     // Перенаправление админа в админ-панель
     useEffect(() => {
-        if (isAuthenticated && userRole === 'admin' && location.pathname !== '/admin') {
+        // Разрешаем админу доступ к определенным страницам
+        const allowedPaths = ['/admin', '/catalog', '/product', '/'];
+        const currentPath = location.pathname;
+
+        if (isAuthenticated && userRole === 'admin' &&
+            !allowedPaths.some(path => currentPath.startsWith(path)) &&
+            currentPath !== '/admin') {
             navigate("/admin");
         }
     }, [isAuthenticated, userRole, navigate, location.pathname]);
