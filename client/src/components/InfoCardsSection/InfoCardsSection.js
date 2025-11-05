@@ -78,7 +78,7 @@ const InfoCardsSection = () => {
                                 className="info-card-header"
                                 onClick={card.toggle}
                             >
-                                <h3 className="info-card-title info-card-title-color">{card.title}</h3>
+                                <h3 className="info-card-title">{card.title}</h3>
                                 <span className="toggle-icon">
                                     {card.isOpen ? '−' : '+'}
                                 </span>
