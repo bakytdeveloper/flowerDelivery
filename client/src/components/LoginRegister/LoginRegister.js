@@ -841,7 +841,7 @@ const LoginRegister = ({ setShowSidebar, setShowHeader }) => {
     return (
         <div className="auth-page">
             <div className="auth-container">
-                <button className="close-button" onClick={handleClose}>
+                <button className="close-button close-button-login-page" onClick={handleClose}>
                     <FaTimes />
                 </button>
 

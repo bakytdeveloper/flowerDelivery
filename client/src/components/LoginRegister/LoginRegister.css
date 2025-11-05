@@ -32,19 +32,19 @@
     }
 }
 
-.close-button {
+.close-button-login-page {
     position: absolute;
     top: 20px;
     right: 20px;
     background: none;
     border: none;
     font-size: 1.5rem;
-    color: #6c757d;
+    color: #6c757d!important;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
-.close-button:hover {
+.close-button-login-page:hover {
     color: #e74c3c;
 }
 
