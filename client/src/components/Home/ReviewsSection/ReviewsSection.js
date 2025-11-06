@@ -6,6 +6,8 @@ const ReviewsSection = () => {
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedReview, setSelectedReview] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const scrollContainerRef = useRef(null);
 
     useEffect(() => {
@@ -94,6 +96,16 @@ const ReviewsSection = () => {
         return text.substr(0, maxLength) + '...';
     };
 
+    const handleReviewClick = (review) => {
+        setSelectedReview(review);
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+        setSelectedReview(null);
+    };
+
     if (isLoading) {
         return (
             <section className="reviews-section">
@@ -151,7 +163,11 @@ const ReviewsSection = () => {
                     >
                         <div className="reviews-scroll-wrapper">
                             {reviews.map((review) => (
-                                <div key={review._id} className="review-card-compact">
+                                <div
+                                    key={review._id}
+                                    className="review-card-compact"
+                                    onClick={() => handleReviewClick(review)}
+                                >
                                     <div className="review-card-header">
                                         <div className="reviewer-info-compact">
                                             <div className="reviewer-name-compact">
@@ -166,7 +182,7 @@ const ReviewsSection = () => {
 
                                     <div className="review-content-compact">
                                         <p className="review-text-compact">
-                                            {truncateText(review.comment, 100)}
+                                            {truncateText(review.comment, 20)}
                                         </p>
 
                                         {review.images && review.images.length > 0 && (
@@ -185,7 +201,7 @@ const ReviewsSection = () => {
                                                     <span className="reply-author-compact">💼 Ответ магазина</span>
                                                 </div>
                                                 <p className="reply-text-compact">
-                                                    {truncateText(review.ownerReply, 80)}
+                                                    {truncateText(review.ownerReply, 20)}
                                                 </p>
                                             </div>
                                         )}
@@ -204,26 +220,60 @@ const ReviewsSection = () => {
                         ›
                     </button>
                 </div>
-
-                {/*/!* Индикаторы прокрутки для мобильных *!/*/}
-                {/*<div className="scroll-indicators d-md-none ">*/}
-                {/*    <button*/}
-                {/*        className="scroll-indicator-btn"*/}
-                {/*        onClick={scrollLeft}*/}
-                {/*        aria-label="Прокрутить влево"*/}
-                {/*    >*/}
-                {/*        ‹*/}
-                {/*    </button>*/}
-                {/*    <span className="scroll-hint">Проведите для прокрутки</span>*/}
-                {/*    <button*/}
-                {/*        className="scroll-indicator-btn"*/}
-                {/*        onClick={scrollRight}*/}
-                {/*        aria-label="Прокрутить вправо"*/}
-                {/*    >*/}
-                {/*        ›*/}
-                {/*    </button>*/}
-                {/*</div>*/}
             </div>
+
+            {/* Модальное окно для полного просмотра отзыва */}
+            {showModal && selectedReview && (
+                <div className="review-modal-overlay" onClick={closeModal}>
+                    <div className="review-modal-content" onClick={(e) => e.stopPropagation()}>
+                        <button className="review-modal-close" onClick={closeModal}>
+                            ×
+                        </button>
+
+                        <div className="review-modal-header">
+                            <div className="reviewer-info-modal">
+                                <div className="reviewer-name-modal">
+                                    {selectedReview.user?.name || 'Аноним'}
+                                </div>
+                                <div className="review-date-modal">
+                                    {formatDate(selectedReview.createdAt)}
+                                </div>
+                            </div>
+                            <RatingStars rating={selectedReview.rating} />
+                        </div>
+
+                        <div className="review-modal-body">
+                            <div className="review-text-modal">
+                                {selectedReview.comment}
+                            </div>
+
+                            {selectedReview.images && selectedReview.images.length > 0 && (
+                                <div className="review-images-modal">
+                                    {selectedReview.images.map((image, index) => (
+                                        <div key={index} className="review-image-modal">
+                                            <img
+                                                src={`${process.env.REACT_APP_API_URL}${image.url}`}
+                                                alt={`Фото отзыва ${index + 1}`}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {selectedReview.ownerReply && (
+                                <div className="owner-reply-modal">
+                                    <div className="reply-header-modal">
+                                        <span className="reply-author-modal">💼 Ответ магазина</span>
+                                    </div>
+                                    <p className="reply-text-modal">
+                                        {selectedReview.ownerReply}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 };
