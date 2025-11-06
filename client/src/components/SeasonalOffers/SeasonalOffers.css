@@ -415,6 +415,10 @@
         height: 150px;
     }
 
+    .product-actions-wrapper {
+        padding: 0!important;
+    }
+
     .product-name-catalog {
         font-size: 0.9rem;
     }
