@@ -252,9 +252,9 @@ const ProductDetails = () => {
 
         if (loadingWrappers) {
             return (
-                <section className="hits-section">
+                <section className="season-section">
                     <div className="container">
-                        <h2 className="hits-title">Обёртки</h2>
+                        <h2 className="season-title">Обёртки</h2>
                         <div className="loading-products">
                             <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Загрузка...</span>
@@ -270,18 +270,18 @@ const ProductDetails = () => {
         }
 
         return (
-            <section className="hits-section">
+            <section className="season-section">
                 <div className="container">
-                    <div className="hits-header">
-                        <h2 className="hits-title">Обёртки</h2>
+                    <div className="season-header">
+                        <h2 className="season-title">Обёртки</h2>
                     </div>
 
-                    <div className="hits-container">
+                    <div className="season-container">
                         <button
                             className="scroll-btn scroll-btn-left d-none d-md-flex"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const container = e.target.closest('.hits-container').querySelector('.hits-scroll-container');
+                                const container = e.target.closest('.season-container').querySelector('.season-scroll-container');
                                 container.scrollBy({ left: -300, behavior: 'smooth' });
                             }}
                             aria-label="Прокрутить влево"
@@ -289,12 +289,12 @@ const ProductDetails = () => {
                             ‹
                         </button>
 
-                        <div className="hits-scroll-container">
-                            <div className="hits-products-row">
+                        <div className="season-scroll-container">
+                            <div className="season-products-row">
                                 {wrappers.map((wrapper) => (
                                     <div
                                         key={wrapper._id}
-                                        className="hits-product-card"
+                                        className="season-product-card"
                                         style={{ cursor: 'pointer' }}
                                     >
                                         <div className="product-image-container">
@@ -358,7 +358,7 @@ const ProductDetails = () => {
                             className="scroll-btn scroll-btn-right d-none d-md-flex"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const container = e.target.closest('.hits-container').querySelector('.hits-scroll-container');
+                                const container = e.target.closest('.season-container').querySelector('.season-scroll-container');
                                 container.scrollBy({ left: 300, behavior: 'smooth' });
                             }}
                             aria-label="Прокрутить вправо"
@@ -372,7 +372,7 @@ const ProductDetails = () => {
                             className="scroll-indicator-btn"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const container = document.querySelector('.hits-section:first-of-type .hits-scroll-container');
+                                const container = document.querySelector('.season-section:first-of-type .season-scroll-container');
                                 container.scrollBy({ left: -300, behavior: 'smooth' });
                             }}
                             aria-label="Прокрутить влево"
@@ -384,7 +384,7 @@ const ProductDetails = () => {
                             className="scroll-indicator-btn"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const container = document.querySelector('.hits-section:first-of-type .hits-scroll-container');
+                                const container = document.querySelector('.season-section:first-of-type .season-scroll-container');
                                 container.scrollBy({ left: 300, behavior: 'smooth' });
                             }}
                             aria-label="Прокрутить вправо"
@@ -401,9 +401,9 @@ const ProductDetails = () => {
     const AddonsSection = () => {
         if (loadingAddons) {
             return (
-                <section className="hits-section">
+                <section className="season-section">
                     <div className="container">
-                        <h2 className="hits-title">Дополнительные товары</h2>
+                        <h2 className="season-title">Дополнительные товары</h2>
                         <div className="loading-products">
                             <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Загрузка...</span>
@@ -419,18 +419,18 @@ const ProductDetails = () => {
         }
 
         return (
-            <section className="hits-section">
+            <section className="season-section">
                 <div className="container">
-                    <div className="hits-header">
-                        <h2 className="hits-title">Дополнительные товары</h2>
+                    <div className="season-header">
+                        <h2 className="season-title">Дополнительные товары</h2>
                     </div>
 
-                    <div className="hits-container">
+                    <div className="season-container">
                         <button
                             className="scroll-btn scroll-btn-left d-none d-md-flex"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const container = e.target.closest('.hits-container').querySelector('.hits-scroll-container');
+                                const container = e.target.closest('.season-container').querySelector('.season-scroll-container');
                                 container.scrollBy({ left: -300, behavior: 'smooth' });
                             }}
                             aria-label="Прокрутить влево"
@@ -438,12 +438,12 @@ const ProductDetails = () => {
                             ‹
                         </button>
 
-                        <div className="hits-scroll-container">
-                            <div className="hits-products-row">
+                        <div className="season-scroll-container">
+                            <div className="season-products-row">
                                 {addons.map((addon) => (
                                     <div
                                         key={addon._id}
-                                        className="hits-product-card"
+                                        className="season-product-card"
                                         style={{ cursor: 'pointer' }}
                                     >
                                         <div className="product-image-container">
@@ -516,7 +516,7 @@ const ProductDetails = () => {
                             className="scroll-btn scroll-btn-right d-none d-md-flex"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const container = e.target.closest('.hits-container').querySelector('.hits-scroll-container');
+                                const container = e.target.closest('.season-container').querySelector('.season-scroll-container');
                                 container.scrollBy({ left: 300, behavior: 'smooth' });
                             }}
                             aria-label="Прокрутить вправо"
@@ -530,7 +530,7 @@ const ProductDetails = () => {
                             className="scroll-indicator-btn"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const containers = document.querySelectorAll('.hits-section .hits-scroll-container');
+                                const containers = document.querySelectorAll('.season-section .season-scroll-container');
                                 const container = containers[containers.length - 1];
                                 container.scrollBy({ left: -300, behavior: 'smooth' });
                             }}
@@ -543,7 +543,7 @@ const ProductDetails = () => {
                             className="scroll-indicator-btn"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const containers = document.querySelectorAll('.hits-section .hits-scroll-container');
+                                const containers = document.querySelectorAll('.season-section .season-scroll-container');
                                 const container = containers[containers.length - 1];
                                 container.scrollBy({ left: 300, behavior: 'smooth' });
                             }}

@@ -10,7 +10,7 @@
 }
 
 .success-content {
-    background: #078c91;
+    background: #4fb1f3;
     padding: 3rem;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -49,7 +49,7 @@
 }
 
 .order-details {
-    background: #f8f9fa;
+    background: #0259b0 !important;
     padding: 1.5rem;
     border-radius: 12px;
     margin-bottom: 2rem;
@@ -92,7 +92,7 @@
     text-align: left;
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background: #0c5c7c;
+    background: #0259b0;
     border-radius: 12px;
     border: 1px solid #e9ecef;
     box-sizing: border-box;
@@ -304,16 +304,16 @@
     }
 
     .success-actions {
-        flex-direction: column;
         gap: 0.8rem;
         margin-bottom: 1.5rem;
     }
 
-    .btn {
-        width: 100%;
-        padding: 0.9rem 1.5rem;
-        font-size: 0.95rem;
-        min-width: auto;
+    .btn-primary-for-catalog {
+        display: block;
+        width: 100% !important;
+        padding: 0.9rem 0.3rem;
+        font-size: 0.75rem;
+        /*min-width: auto!important;*/
     }
 
     .contact-info {
@@ -360,10 +360,10 @@
         font-size: 0.9rem;
     }
 
-    .btn {
-        padding: 0.8rem 1.25rem;
-        font-size: 0.9rem;
-    }
+    /*.btn {*/
+    /*    padding: 0.8rem 1.25rem;*/
+    /*    font-size: 0.9rem;*/
+    /*}*/
 
     .contact-phone {
         font-size: 1rem;

@@ -610,3 +610,251 @@
     padding-top: 2rem;
     border-top: 1px solid #e2e8f0;
 }
+
+
+/* Стили для горизонтального скролла отзывов */
+.product-reviews-section {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reviews-scroll-section {
+    position: relative;
+    margin: 2rem 0;
+}
+
+.reviews-scroll-container {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding: 1rem 0.5rem;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(96, 165, 250, 0.5) rgba(30, 41, 59, 0.3);
+}
+
+.reviews-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.reviews-scroll-container::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.3);
+    border-radius: 4px;
+}
+
+.reviews-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(96, 165, 250, 0.5);
+    border-radius: 4px;
+}
+
+.reviews-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(96, 165, 250, 0.7);
+}
+
+.review-card-horizontal {
+    flex: 0 0 auto;
+    width: 320px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.review-card-horizontal:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    border-color: rgba(96, 165, 250, 0.3);
+}
+
+.review-header-horizontal {
+    display: flex;
+    justify-content: between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.reviewer-info-horizontal {
+    flex: 1;
+}
+
+.reviewer-name-horizontal {
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.review-date-horizontal {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.review-rating-horizontal {
+    display: flex;
+    gap: 0.2rem;
+}
+
+.star-horizontal {
+    color: #f6ad55;
+    font-size: 1rem;
+}
+
+.review-content-horizontal {
+    margin-bottom: 1rem;
+}
+
+.review-text-horizontal {
+    color: #e2e8f0;
+    line-height: 1.5;
+    font-size: 0.9rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.review-images-horizontal {
+    margin: 1rem 0;
+}
+
+.review-image-item-horizontal {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.review-image-item-horizontal:hover {
+    transform: scale(1.1);
+    border-color: rgba(96, 165, 250, 0.5);
+}
+
+.review-image-item-horizontal img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.owner-reply-horizontal {
+    background: rgba(96, 165, 250, 0.1);
+    border-left: 3px solid #60a5fa;
+    padding: 1rem;
+    border-radius: 0 8px 8px 0;
+    margin-top: 1rem;
+}
+
+.owner-reply-header-horizontal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.reply-author-horizontal {
+    font-weight: 600;
+    color: #60a5fa;
+    font-size: 0.8rem;
+}
+
+.reply-date-horizontal {
+    color: #94a3b8;
+    font-size: 0.7rem;
+}
+
+.reply-text-horizontal {
+    color: #cbd5e1;
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.scroll-btn-reviews {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(96, 165, 250, 0.8);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.scroll-btn-reviews:hover {
+    background: rgba(96, 165, 250, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.scroll-btn-reviews-left {
+    left: -20px;
+}
+
+.scroll-btn-reviews-right {
+    right: -20px;
+}
+
+/* Адаптивность для горизонтальных отзывов */
+@media (max-width: 768px) {
+    .review-card-horizontal {
+        width: 280px;
+    }
+
+    .scroll-btn-reviews {
+        display: none;
+    }
+
+    .reviews-scroll-container {
+        padding: 1rem 0;
+    }
+}
+
+/* Стили для формы отзыва в темной теме */
+.review-form-dark {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.review-form-dark h4 {
+    color: #f1f5f9;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+/* Стили для состояния без отзывов */
+.no-reviews-dark {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #94a3b8;
+}
+
+.no-reviews-dark-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+
+.no-reviews-dark h4 {
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+}
+
+.no-reviews-dark p {
+    color: #94a3b8;
+    margin: 0;
+}

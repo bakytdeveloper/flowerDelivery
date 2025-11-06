@@ -71,10 +71,10 @@ const OrderSuccess = () => {
 
                     <div className="success-actions">
                         <button
-                            className="btn btn-primary"
+                            className="btn btn-primary btn-primary-for-catalog"
                             onClick={handleContinueShopping}
                         >
-                            Продолжить покупки
+                            В каталог
                         </button>
                         {/*<button*/}
                         {/*    className="btn btn-secondary"*/}
