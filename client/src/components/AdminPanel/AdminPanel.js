@@ -279,7 +279,7 @@ const AdminPanel = () => {
                                     <div className="slide-header">
                                         <h3>Слайд {index + 1}</h3>
                                         <button
-                                            className="btn btn-danger btn-sm"
+                                            className="btn btn-danger btn-sm slide-editor-delete-slide"
                                             onClick={() => handleDeleteSlide(index)}
                                             disabled={isLoading}
                                         >

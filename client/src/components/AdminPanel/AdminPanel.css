@@ -1,17 +1,16 @@
 /* src/components/AdminPanel/AdminPanel.css */
 .admin-panel {
     min-height: 100vh;
-    /*background-color: #f8f9fa;*/
     padding: 20px;
     width: 100%;
     margin: 15px 0;
     border-radius: 15px;
-    background: rgba(15, 23, 42, 0.15); /* Темный полупрозрачный фон */
-
+    background: rgba(15, 23, 42, 0.15);
+    box-sizing: border-box;
 }
 
 .admin-header {
-    background: rgba(30, 41, 59, 0.8); /* Темный полупрозрачный фон */
+    background: rgba(30, 41, 59, 0.8);
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -33,25 +32,28 @@
 
 .admin-tabs {
     display: flex;
-    background: rgba(30, 41, 59, 0.8); /* Темный полупрозрачный фон */
+    background: rgba(30, 41, 59, 0.8);
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 20px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .tab-button {
     flex: 1;
-    padding: 7px 10px;
+    min-width: 150px;
+    padding: 12px 15px;
     border: 2px solid #55607a;
     background: transparent;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     transition: all 0.3s ease;
     color: #daecf5;
+    text-align: center;
 }
 
 .tab-button:hover {
@@ -61,20 +63,23 @@
 
 .tab-button.active {
     background: #007bff;
-    color: white!important;
+    color: white !important;
+    border-color: #007bff;
 }
 
 .admin-content {
-    background: rgba(30, 41, 59, 0.8) !important; /* Темный полупрозрачный фон */
-
+    background: rgba(30, 41, 59, 0.8) !important;
     border-radius: 10px;
     padding: 30px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .slider-management {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
+    overflow: hidden;
 }
 
 .section-header {
@@ -84,20 +89,24 @@
     margin-bottom: 30px;
     padding-bottom: 20px;
     border-bottom: 2px solid #e9ecef;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .section-header h2 {
     color: #d7f0f5;
     margin: 0;
+    font-size: 1.5rem;
 }
 
 .section-actions {
     display: flex;
     gap: 15px;
+    flex-wrap: wrap;
 }
 
 .btn {
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -107,6 +116,7 @@
     text-decoration: none;
     display: inline-block;
     text-align: center;
+    min-width: 120px;
 }
 
 .btn-primary {
@@ -116,6 +126,7 @@
 
 .btn-primary:hover {
     background: #0056b3;
+    transform: translateY(-2px);
 }
 
 .btn-success {
@@ -125,34 +136,41 @@
 
 .btn-success:hover {
     background: #1e7e34;
+    transform: translateY(-2px);
 }
 
-.btn-danger {
+.slide-editor-delete-slide {
     background: #dc3545;
     color: white;
+    width: auto !important;
 }
 
 .btn-danger:hover {
     background: #c82333;
+    transform: translateY(-2px);
 }
 
 .btn-sm {
     padding: 8px 16px;
     font-size: 12px;
+    min-width: 80px;
 }
 
 .slides-container {
     display: flex;
     flex-direction: column;
     gap: 30px;
+    width: 100%;
 }
 
 .slide-editor {
     border: 2px solid #e9ecef;
     border-radius: 10px;
     padding: 25px;
-    background: rgba(3, 22, 69, 0.55); /* Темный полупрозрачный фон */
-
+    background: rgba(3, 22, 69, 0.55);
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .slide-header {
@@ -162,21 +180,30 @@
     margin-bottom: 20px;
     padding-bottom: 15px;
     border-bottom: 1px solid #dee2e6;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .slide-header h3 {
     color: white;
     margin: 0;
+    font-size: 1.3rem;
 }
 
+/* ОСНОВНЫЕ ИСПРАВЛЕНИЯ ДЛЯ FORM-SECTION */
 .slide-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .form-section {
     grid-column: span 1;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .form-section h4 {
@@ -184,10 +211,13 @@
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-bottom: 1px solid #dee2e6;
+    font-size: 1.1rem;
 }
 
 .form-group {
     margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .form-group label {
@@ -195,6 +225,7 @@
     margin-bottom: 8px;
     font-weight: 500;
     color: #dae9f8;
+    font-size: 14px;
 }
 
 .form-control {
@@ -204,31 +235,42 @@
     border-radius: 6px;
     font-size: 14px;
     transition: border-color 0.3s ease;
+    box-sizing: border-box;
+    background: rgba(51, 65, 85, 0.6);
+    color: white;
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
 }
 
 .form-control:focus {
     outline: none;
     border-color: #3e97f6;
-    color: white!important;
-}
-
-.form-control-font-family:focus {
-    color: #0b1e24!important;
+    color: white !important;
+    background: rgba(51, 65, 85, 0.8);
 }
 
 .form-control.color-picker {
     height: 50px;
     padding: 5px;
+    min-height: auto;
 }
 
 .form-control-select {
     background: rgba(51, 65, 85, 0.6);
     color: white;
     border: 2px solid rgba(255, 255, 255, 0.1);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23ffffff' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 40px;
 }
 
 .form-control-select:focus {
-    background: rgba(51, 65, 85, 0.6);
+    background: rgba(51, 65, 85, 0.8);
     color: white;
 }
 
@@ -236,11 +278,14 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 textarea.form-control {
     resize: vertical;
     min-height: 80px;
+    font-family: inherit;
 }
 
 .slide-preview {
@@ -248,6 +293,8 @@ textarea.form-control {
     border-radius: 8px;
     overflow: hidden;
     margin-top: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .preview-background {
@@ -257,6 +304,7 @@ textarea.form-control {
     align-items: center;
     justify-content: center;
     max-height: 500px;
+    width: 100%;
 }
 
 .preview-video {
@@ -268,23 +316,28 @@ textarea.form-control {
 .preview-content {
     text-align: center;
     padding: 20px;
-    max-width: 80%;
+    max-width: 90%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .preview-content h3 {
     margin: 0 0 10px 0;
     font-size: 24px;
+    word-wrap: break-word;
 }
 
 .preview-content p {
     margin: 0 0 15px 0;
     font-size: 16px;
+    word-wrap: break-word;
 }
 
 .preview-dates {
     font-size: 14px;
     color: #c3c3c3;
     font-style: italic;
+    word-wrap: break-word;
 }
 
 .empty-state {
@@ -307,33 +360,90 @@ textarea.form-control {
     color: #888888;
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
+/* АДАПТИВНЫЕ СТИЛИ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
+@media (max-width: 1200px) {
     .admin-panel {
-        padding: 10px;
+        padding: 15px;
     }
 
-    .admin-tabs {
-        flex-direction: column;
+    .admin-content {
+        padding: 20px;
+    }
+
+    .slide-content {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    .slide-content {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .form-section {
+        grid-column: span 1;
     }
 
     .section-header {
         flex-direction: column;
-        gap: 15px;
         align-items: flex-start;
     }
 
     .section-actions {
         width: 100%;
-        justify-content: space-between;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-panel {
+        padding: 10px;
+        margin: 10px 0;
     }
 
-    .slide-content {
-        grid-template-columns: 1fr;
+    .admin-header {
+        padding: 20px;
+    }
+
+    .admin-header h1 {
+        font-size: 2rem;
+    }
+
+    .admin-tabs {
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 8px;
+    }
+
+    .tab-button {
+        min-width: 140px;
+        flex: none;
+        padding: 10px 5px!important;
+        font-size: 13px;
+    }
+
+    .admin-content {
+        padding: 15px;
+    }
+
+    .slide-editor {
+        padding: 15px;
     }
 
     .form-row {
         grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .btn {
+        min-width: 100px;
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+
+    .section-actions {
+        gap: 10px;
     }
 
     .preview-content h3 {
@@ -343,4 +453,123 @@ textarea.form-control {
     .preview-content p {
         font-size: 14px;
     }
+
+    .form-control {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-panel {
+        padding: 5px;
+    }
+
+    .admin-header {
+        padding: 15px;
+    }
+
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .admin-header p {
+        font-size: 1rem;
+    }
+
+    .tab-button {
+        min-width: 120px;
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .admin-content {
+        padding: 10px;
+    }
+
+    .slide-editor {
+        padding: 12px;
+    }
+
+    .slide-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .slide-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .form-section h4 {
+        font-size: 1rem;
+    }
+
+    .btn {
+        min-width: 90px;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .preview-background {
+        min-height: 150px;
+    }
+
+    .preview-content {
+        padding: 15px;
+    }
+
+    .preview-content h3 {
+        font-size: 16px;
+    }
+
+    .preview-content p {
+        font-size: 13px;
+    }
+}
+
+/* Дополнительные утилитарные классы для лучшего отображения */
+.form-control-full-width {
+    width: 100% !important;
+}
+
+.no-overflow {
+    overflow: hidden;
+}
+
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.scrollable-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* Стили для скроллбара в Webkit браузерах */
+.admin-content::-webkit-scrollbar,
+.slides-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.admin-content::-webkit-scrollbar-track,
+.slides-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.admin-content::-webkit-scrollbar-thumb,
+.slides-container::-webkit-scrollbar-thumb {
+    background: rgba(96, 165, 250, 0.5);
+    border-radius: 3px;
+}
+
+.admin-content::-webkit-scrollbar-thumb:hover,
+.slides-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(96, 165, 250, 0.7);
 }
