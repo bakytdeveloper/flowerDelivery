@@ -301,6 +301,7 @@ const Header = ({
                             </div>
 
                             {/* Профиль */}
+                            {/* Профиль */}
                             <div className="profile-container" ref={profileRef}>
                                 <button
                                     className="profile-button"
@@ -308,18 +309,21 @@ const Header = ({
                                 >
                                     <FaUser className="profile-icon" />
                                     <span className="profile-text">
-                                        {isAuthenticated ? 'Профиль' : 'Войти'}
-                                    </span>
+            {isAuthenticated ? (userRole === 'admin' ? 'Админ' : 'Профиль') : 'Войти'}
+        </span>
                                 </button>
 
                                 {isProfileOpen && isAuthenticated && (
                                     <div className="profile-dropdown">
-                                        <button
-                                            onClick={handleProfileClick}
-                                            className="dropdown-item"
-                                        >
-                                            Мой профиль
-                                        </button>
+                                        {/* Показываем "Мой профиль" только для обычных пользователей */}
+                                        {userRole !== 'admin' && (
+                                            <button
+                                                onClick={handleProfileClick}
+                                                className="dropdown-item"
+                                            >
+                                                Мой профиль
+                                            </button>
+                                        )}
                                         {userRole === 'admin' && (
                                             <Link
                                                 to="/admin"
@@ -337,7 +341,7 @@ const Header = ({
                                     </div>
                                 )}
                             </div>
-
+                            
                             {/* Корзина - теперь используем cartItemsCount из контекста */}
                             <div
                                 className="cart-button"
