@@ -313,7 +313,7 @@
 
 .status-pending {
     background-color: #fff3cd;
-    color: #856404;
+    color: #f39301;
 }
 
 .status-in-progress {
@@ -528,6 +528,10 @@
     cursor: not-allowed;
 }
 
+.button-edit-profile {
+    width: 100%;
+}
+
 /* ОСНОВНОЕ ИЗМЕНЕНИЕ: Mobile layout */
 @media (max-width: 768px) {
     .profile-page {
@@ -611,6 +615,12 @@
 
     .modal-footer button {
         width: 100%;
+    }
+
+    .btn-primary-edit-profile {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+
     }
 }
 

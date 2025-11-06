@@ -324,13 +324,15 @@ const ProfilePage = () => {
                                         />
                                     </div>
 
-                                    <button
-                                        type="submit"
-                                        className="btn-primary"
-                                        disabled={loading}
-                                    >
-                                        {loading ? 'Сохранение...' : 'Сохранить изменения'}
-                                    </button>
+                                    <div className="button-edit-profile">
+                                        <button
+                                            type="submit"
+                                            className="btn-primary btn-primary-edit-profile"
+                                            disabled={loading}
+                                        >
+                                            {loading ? 'Сохранение...' : 'Сохранить изменения'}
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         )}
