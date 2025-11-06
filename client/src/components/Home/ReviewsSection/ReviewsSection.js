@@ -9,6 +9,48 @@ const ReviewsSection = () => {
     const [selectedReview, setSelectedReview] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const scrollContainerRef = useRef(null);
+    const modalRef = useRef(null);
+
+    // Блокировка скролла при открытии модального окна
+    useEffect(() => {
+        if (showModal) {
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = '15px'; // Для компенсации скроллбара
+        } else {
+            document.body.style.overflow = 'unset';
+            document.body.style.paddingRight = '0';
+        }
+
+        return () => {
+            document.body.style.overflow = 'unset';
+            document.body.style.paddingRight = '0';
+        };
+    }, [showModal]);
+
+    // Обработчик клика вне модального окна
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
+                closeModal();
+            }
+        };
+
+        const handleEscapeKey = (event) => {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        };
+
+        if (showModal) {
+            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('keydown', handleEscapeKey);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscapeKey);
+        };
+    }, [showModal]);
 
     useEffect(() => {
         fetchRecentReviews();
@@ -103,7 +145,9 @@ const ReviewsSection = () => {
 
     const closeModal = () => {
         setShowModal(false);
-        setSelectedReview(null);
+        setTimeout(() => {
+            setSelectedReview(null);
+        }, 300); // Даем время для анимации закрытия
     };
 
     if (isLoading) {
@@ -223,54 +267,65 @@ const ReviewsSection = () => {
             </div>
 
             {/* Модальное окно для полного просмотра отзыва */}
-            {showModal && selectedReview && (
-                <div className="review-modal-overlay" onClick={closeModal}>
-                    <div className="review-modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="review-modal-close" onClick={closeModal}>
+            {showModal && (
+                <div className={`review-modal-overlay ${showModal ? 'active' : ''}`}>
+                    <div
+                        className={`review-modal-content ${showModal ? 'active' : ''}`}
+                        ref={modalRef}
+                    >
+                        <button
+                            className="review-modal-close"
+                            onClick={closeModal}
+                            aria-label="Закрыть модальное окно"
+                        >
                             ×
                         </button>
 
-                        <div className="review-modal-header">
-                            <div className="reviewer-info-modal">
-                                <div className="reviewer-name-modal">
-                                    {selectedReview.user?.name || 'Аноним'}
-                                </div>
-                                <div className="review-date-modal">
-                                    {formatDate(selectedReview.createdAt)}
-                                </div>
-                            </div>
-                            <RatingStars rating={selectedReview.rating} />
-                        </div>
-
-                        <div className="review-modal-body">
-                            <div className="review-text-modal">
-                                {selectedReview.comment}
-                            </div>
-
-                            {selectedReview.images && selectedReview.images.length > 0 && (
-                                <div className="review-images-modal">
-                                    {selectedReview.images.map((image, index) => (
-                                        <div key={index} className="review-image-modal">
-                                            <img
-                                                src={`${process.env.REACT_APP_API_URL}${image.url}`}
-                                                alt={`Фото отзыва ${index + 1}`}
-                                            />
+                        {selectedReview && (
+                            <>
+                                <div className="review-modal-header">
+                                    <div className="reviewer-info-modal">
+                                        <div className="reviewer-name-modal">
+                                            {selectedReview.user?.name || 'Аноним'}
                                         </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {selectedReview.ownerReply && (
-                                <div className="owner-reply-modal">
-                                    <div className="reply-header-modal">
-                                        <span className="reply-author-modal">💼 Ответ магазина</span>
+                                        <div className="review-date-modal">
+                                            {formatDate(selectedReview.createdAt)}
+                                        </div>
                                     </div>
-                                    <p className="reply-text-modal">
-                                        {selectedReview.ownerReply}
-                                    </p>
+                                    <RatingStars rating={selectedReview.rating} />
                                 </div>
-                            )}
-                        </div>
+
+                                <div className="review-modal-body">
+                                    <div className="review-text-modal">
+                                        {selectedReview.comment}
+                                    </div>
+
+                                    {selectedReview.images && selectedReview.images.length > 0 && (
+                                        <div className="review-images-modal">
+                                            {selectedReview.images.map((image, index) => (
+                                                <div key={index} className="review-image-modal">
+                                                    <img
+                                                        src={`${process.env.REACT_APP_API_URL}${image.url}`}
+                                                        alt={`Фото отзыва ${index + 1}`}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {selectedReview.ownerReply && (
+                                        <div className="owner-reply-modal">
+                                            <div className="reply-header-modal">
+                                                <span className="reply-author-modal">💼 Ответ магазина</span>
+                                            </div>
+                                            <p className="reply-text-modal">
+                                                {selectedReview.ownerReply}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             )}
