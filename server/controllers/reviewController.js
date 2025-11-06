@@ -229,7 +229,7 @@ export const createReview = async (req, res) => {
     const { productId, rating, comment } = req.body;
     const userId = req.user.userId;
 
-    if (!productId || !rating || typeof rating !== 'number' || rating < 1 || rating > 5) {
+    if (!productId || !rating || rating < 1 || rating > 5) {
         return res.status(400).json({
             message: 'Неверные данные отзыва. Убедитесь, что оценка от 1 до 5 и productId указан'
         });
@@ -357,6 +357,8 @@ export const updateReview = async (req, res) => {
         const oldRating = review.rating;
         review.rating = req.body.rating || review.rating;
         review.comment = req.body.comment || review.comment;
+
+        console.log("review.rating", review.rating)
 
         // Обрабатываем новое загруженное изображение (заменяем старое)
         if (req.files && req.files.length > 0) {

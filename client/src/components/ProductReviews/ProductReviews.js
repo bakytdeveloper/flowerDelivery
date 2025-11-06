@@ -242,10 +242,10 @@ const ProductReviews = ({ productId }) => {
                 {[1, 2, 3, 4, 5].map((star) => (
                     <span
                         key={star}
-                        className={`star ${star <= rating ? 'filled' : 'empty'}`}
+                        className={`star ${star <= rating ? 'filled' : ''}`}
                     >
-                        ★
-                    </span>
+                    ★
+                </span>
                 ))}
             </div>
         );
@@ -306,12 +306,12 @@ const ProductReviews = ({ productId }) => {
                                     ))}
                                 </div>
                                 <span className="rating-text-dark">
-                                    {newReview.rating === 5 && 'Отлично'}
+        {newReview.rating === 5 && 'Отлично'}
                                     {newReview.rating === 4 && 'Хорошо'}
                                     {newReview.rating === 3 && 'Удовлетворительно'}
                                     {newReview.rating === 2 && 'Плохо'}
                                     {newReview.rating === 1 && 'Ужасно'}
-                                </span>
+    </span>
                             </div>
 
                             <div className="comment-field-dark">

@@ -394,3 +394,77 @@
     line-height: 1.5;
     margin: 0;
 }
+
+
+.simple-stars-selector {
+    display: flex;
+    gap: 5px;
+}
+
+.star-selector {
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-selector.selected {
+    color: #ffd700;
+}
+
+.star-selector:hover {
+    color: #ffd700;
+}
+
+
+/* Стили для звезд рейтинга */
+.rating-stars {
+    display: flex;
+    gap: 2px;
+}
+
+.rating-stars.small {
+    font-size: 14px;
+}
+
+.rating-stars.medium {
+    font-size: 18px;
+}
+
+.star {
+    color: #555; /* Цвет пустых звезд */
+    transition: color 0.2s ease;
+}
+
+.star.filled {
+    color: #ffd700; /* Золотой цвет для заполненных звезд */
+}
+
+/* Стили для выбора рейтинга */
+.stars-selector-dark {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+.stars-selector-dark input[type="radio"] {
+    display: none;
+}
+
+.stars-selector-dark label {
+    cursor: pointer;
+    font-size: 24px;
+    color: #555;
+    transition: color 0.2s ease;
+}
+
+.stars-selector-dark input[type="radio"]:checked ~ label,
+.stars-selector-dark label:hover,
+.stars-selector-dark label:hover ~ label {
+    color: #ffd700;
+}
+
+.stars-selector-dark input[type="radio"]:checked + label {
+    color: #ffd700;
+}
