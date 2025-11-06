@@ -11,22 +11,6 @@ const ReviewsSection = () => {
     const scrollContainerRef = useRef(null);
     const modalRef = useRef(null);
 
-    // Блокировка скролла при открытии модального окна
-    useEffect(() => {
-        if (showModal) {
-            document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = '15px'; // Для компенсации скроллбара
-        } else {
-            document.body.style.overflow = 'unset';
-            document.body.style.paddingRight = '0';
-        }
-
-        return () => {
-            document.body.style.overflow = 'unset';
-            document.body.style.paddingRight = '0';
-        };
-    }, [showModal]);
-
     // Обработчик клика вне модального окна
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -180,91 +164,93 @@ const ReviewsSection = () => {
     }
 
     return (
-        <section className="reviews-section">
-            <div className="container">
-                <div className="reviews-header">
-                    <h2 className="reviews-title">Отзывы наших клиентов</h2>
-                    <p className="reviews-subtitle">Что говорят покупатели о наших цветах</p>
-                </div>
-
-                <div className="reviews-container">
-                    {/* Кнопка прокрутки влево для десктопа */}
-                    <button
-                        className="scroll-btn scroll-btn-left d-none d-md-flex"
-                        onClick={scrollLeft}
-                        aria-label="Прокрутить влево"
-                    >
-                        ‹
-                    </button>
-
-                    {/* Контейнер для карточек с горизонтальным скроллом */}
-                    <div
-                        className="reviews-scroll-container"
-                        ref={scrollContainerRef}
-                        onTouchStart={handleTouchStart}
-                        onTouchMove={handleTouchMove}
-                        onTouchEnd={handleTouchEnd}
-                    >
-                        <div className="reviews-scroll-wrapper">
-                            {reviews.map((review) => (
-                                <div
-                                    key={review._id}
-                                    className="review-card-compact"
-                                    onClick={() => handleReviewClick(review)}
-                                >
-                                    <div className="review-card-header">
-                                        <div className="reviewer-info-compact">
-                                            <div className="reviewer-name-compact">
-                                                {review.user?.name || 'Аноним'}
-                                            </div>
-                                            <div className="review-date-compact">
-                                                {formatDate(review.createdAt)}
-                                            </div>
-                                        </div>
-                                        <RatingStars rating={review.rating} />
-                                    </div>
-
-                                    <div className="review-content-compact">
-                                        <p className="review-text-compact">
-                                            {truncateText(review.comment, 20)}
-                                        </p>
-
-                                        {review.images && review.images.length > 0 && (
-                                            <div className="review-image-compact">
-                                                <img
-                                                    src={`${process.env.REACT_APP_API_URL}${review.images[0].url}`}
-                                                    alt="Фото отзыва"
-                                                    loading="lazy"
-                                                />
-                                            </div>
-                                        )}
-
-                                        {review.ownerReply && (
-                                            <div className="owner-reply-compact">
-                                                <div className="reply-header-compact">
-                                                    <span className="reply-author-compact">💼 Ответ магазина</span>
-                                                </div>
-                                                <p className="reply-text-compact">
-                                                    {truncateText(review.ownerReply, 20)}
-                                                </p>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+        <>
+            <section className="reviews-section">
+                <div className="container">
+                    <div className="reviews-header">
+                        <h2 className="reviews-title">Отзывы наших клиентов</h2>
+                        <p className="reviews-subtitle">Что говорят покупатели о наших цветах</p>
                     </div>
 
-                    {/* Кнопка прокрутки вправо для десктопа */}
-                    <button
-                        className="scroll-btn scroll-btn-right d-none d-md-flex"
-                        onClick={scrollRight}
-                        aria-label="Прокрутить вправо"
-                    >
-                        ›
-                    </button>
+                    <div className="reviews-container">
+                        {/* Кнопка прокрутки влево для десктопа */}
+                        <button
+                            className="scroll-btn scroll-btn-left d-none d-md-flex"
+                            onClick={scrollLeft}
+                            aria-label="Прокрутить влево"
+                        >
+                            ‹
+                        </button>
+
+                        {/* Контейнер для карточек с горизонтальным скроллом */}
+                        <div
+                            className="reviews-scroll-container"
+                            ref={scrollContainerRef}
+                            onTouchStart={handleTouchStart}
+                            onTouchMove={handleTouchMove}
+                            onTouchEnd={handleTouchEnd}
+                        >
+                            <div className="reviews-scroll-wrapper">
+                                {reviews.map((review) => (
+                                    <div
+                                        key={review._id}
+                                        className="review-card-compact"
+                                        onClick={() => handleReviewClick(review)}
+                                    >
+                                        <div className="review-card-header">
+                                            <div className="reviewer-info-compact">
+                                                <div className="reviewer-name-compact">
+                                                    {review.user?.name || 'Аноним'}
+                                                </div>
+                                                <div className="review-date-compact">
+                                                    {formatDate(review.createdAt)}
+                                                </div>
+                                            </div>
+                                            <RatingStars rating={review.rating} />
+                                        </div>
+
+                                        <div className="review-content-compact">
+                                            <p className="review-text-compact">
+                                                {truncateText(review.comment, 20)}
+                                            </p>
+
+                                            {review.images && review.images.length > 0 && (
+                                                <div className="review-image-compact">
+                                                    <img
+                                                        src={`${process.env.REACT_APP_API_URL}${review.images[0].url}`}
+                                                        alt="Фото отзыва"
+                                                        loading="lazy"
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {review.ownerReply && (
+                                                <div className="owner-reply-compact">
+                                                    <div className="reply-header-compact">
+                                                        <span className="reply-author-compact">💼 Ответ магазина</span>
+                                                    </div>
+                                                    <p className="reply-text-compact">
+                                                        {truncateText(review.ownerReply, 20)}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Кнопка прокрутки вправо для десктопа */}
+                        <button
+                            className="scroll-btn scroll-btn-right d-none d-md-flex"
+                            onClick={scrollRight}
+                            aria-label="Прокрутить вправо"
+                        >
+                            ›
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </section>
 
             {/* Модальное окно для полного просмотра отзыва */}
             {showModal && (
@@ -329,7 +315,7 @@ const ReviewsSection = () => {
                     </div>
                 </div>
             )}
-        </section>
+        </>
     );
 };
 
