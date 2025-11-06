@@ -139,9 +139,9 @@ const HitsSection = () => {
 
     if (loading) {
         return (
-            <section className="hits-section">
+            <section className="season-section">
                 <div className="container">
-                    <h2 className="hits-title">Хиты продаж</h2>
+                    <h2 className="season-title">Хиты продаж</h2>
                     <div className="loading-products">
                         <div className="spinner-border text-primary" role="status">
                             <span className="visually-hidden">Загрузка...</span>
@@ -154,9 +154,9 @@ const HitsSection = () => {
 
     if (error) {
         return (
-            <section className="hits-section">
+            <section className="season-section">
                 <div className="container">
-                    <h2 className="hits-title">Хиты продаж</h2>
+                    <h2 className="season-title">Хиты продаж</h2>
                     <div className="error-message">
                         <p>Не удалось загрузить хиты продаж</p>
                         <button
@@ -178,13 +178,13 @@ const HitsSection = () => {
 
 
     return (
-        <section className="hits-section">
+        <section className="season-section">
             <div className="container">
-                <div className="hits-header">
-                    <h2 className="hits-title">Хиты продаж</h2>
+                <div className="season-header">
+                    <h2 className="season-title">Хиты продаж</h2>
                 </div>
 
-                <div className="hits-container">
+                <div className="season-container">
                     {/* Кнопка прокрутки влево для десктопа */}
                     <button
                         className="scroll-btn scroll-btn-left d-none d-md-flex"
@@ -206,7 +206,7 @@ const HitsSection = () => {
                             {products.map((product) => (
                                 <div
                                     key={product._id}
-                                    className="season-product-card"
+                                    className="season-product-card season-product-card-home"
                                     onClick={() => handleProductClick(product._id)}
                                     style={{ cursor: 'pointer' }}
                                 >

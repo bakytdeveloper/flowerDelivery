@@ -481,7 +481,8 @@
 
     .spec-value {
         text-align: left;
-        margin-top: 12px;
+        margin-top: 7px;
+        line-height: 20px;
     }
 }
 

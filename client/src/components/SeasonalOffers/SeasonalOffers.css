@@ -398,7 +398,7 @@
     }
 
     .season-title {
-        font-size: 2rem;
+        font-size: 1.2rem!important;
     }
 
     .season-products-row {
@@ -407,8 +407,9 @@
     }
 
     .season-product-card {
-        width: 220px;
-        height: 400px;
+        width: 220px!important;
+        height: auto!important;
+        /*height: 400px;*/
     }
 
     .product-image-container-catalog {
@@ -429,10 +430,10 @@
 }
 
 @media (max-width: 576px) {
-    .season-product-card {
-        width: 200px;
-        height: 380px;
-    }
+    /*.season-product-card {*/
+    /*    width: 240px;*/
+    /*    height: 380px;*/
+    /*}*/
 
     .product-image-container-catalog {
         height: 140px;
