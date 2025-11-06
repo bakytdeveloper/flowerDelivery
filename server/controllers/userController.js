@@ -277,6 +277,15 @@ export const removeFromFavorites = async (req, res) => {
 // В userController.js - ИСПРАВЛЕННАЯ версия getFavorites
 export const getFavorites = async (req, res) => {
     try {
+
+        // Проверяем, что userId является валидным ObjectId
+        if (!req.user.userId || !mongoose.Types.ObjectId.isValid(req.user.userId)) {
+            return res.status(400).json({
+                message: 'Некорректный идентификатор пользователя'
+            });
+        }
+
+
         const user = await User.findById(req.user.userId)
             .populate('favorites') // ДОБАВИТЬ populate для получения данных товаров
             .exec();

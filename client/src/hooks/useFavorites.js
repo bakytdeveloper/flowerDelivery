@@ -6,11 +6,14 @@ import { toast } from 'react-toastify';
 
 export const useFavorites = () => {
     const [favorites, setFavorites] = useState([]);
-    const { isAuthenticated, token } = useAuth();
+    const { isAuthenticated, token, user } = useAuth();
     const { updateFavoritesCount } = useApp(); // ДОБАВИТЬ
 
+    // Проверяем, является ли пользователь админом
+    const isAdmin = user?.role === 'admin';
+
     const addToFavorites = async (productId) => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated || isAdmin) {
             toast.error('Для добавления в избранное необходимо авторизоваться');
             return false;
         }
@@ -51,7 +54,7 @@ export const useFavorites = () => {
     };
 
     const removeFromFavorites = async (productId) => {
-        if (!isAuthenticated) return false;
+        if (!isAuthenticated || isAdmin) return false;
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/favorites/${productId}`, {
@@ -91,6 +94,10 @@ export const useFavorites = () => {
 
     // Остальной код остается без изменений...
     const toggleFavorite = async (productId, isCurrentlyFavorite) => {
+        if (isAdmin) {
+            toast.error('Администраторы не могут добавлять товары в избранное');
+            return false;
+        }
         if (isCurrentlyFavorite) {
             return await removeFromFavorites(productId);
         } else {
@@ -99,11 +106,12 @@ export const useFavorites = () => {
     };
 
     const isFavorite = (productId) => {
+        if (isAdmin) return false; // Админы не имеют избранных
         return favorites.some(fav => fav._id === productId);
     };
 
     const fetchFavorites = useCallback(async () => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated || isAdmin) {
             setFavorites([]);
             return;
         }
@@ -131,6 +139,7 @@ export const useFavorites = () => {
             console.error('Error fetching favorites:', error);
             setFavorites([]);
         }
+        // eslint-disable-next-line
     }, [isAuthenticated, token]);
 
     return {

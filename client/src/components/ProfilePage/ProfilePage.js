@@ -17,6 +17,11 @@ const ProfilePage = () => {
         newPassword: '',
         confirmPassword: ''
     });
+    const [showPasswords, setShowPasswords] = useState({
+        currentPassword: false,
+        newPassword: false,
+        confirmPassword: false
+    });
     const [orders, setOrders] = useState([]);
     const [userStats, setUserStats] = useState({
         totalOrders: 0,
@@ -28,6 +33,14 @@ const ProfilePage = () => {
     const location = useLocation();
     const { token, user } = useAuth();
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
+
+    // Функция для переключения видимости пароля
+    const togglePasswordVisibility = (field) => {
+        setShowPasswords(prev => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
+    };
 
     // Загрузка данных профиля
     useEffect(() => {
@@ -183,6 +196,12 @@ const ProfilePage = () => {
                 currentPassword: '',
                 newPassword: '',
                 confirmPassword: ''
+            });
+            // Сбрасываем видимость паролей
+            setShowPasswords({
+                currentPassword: false,
+                newPassword: false,
+                confirmPassword: false
             });
         } catch (error) {
             console.error('Error updating password:', error);
@@ -341,39 +360,66 @@ const ProfilePage = () => {
                             <div className="tab-content">
                                 <h2>Смена пароля</h2>
                                 <form onSubmit={handlePasswordUpdate} className="profile-form">
-                                    <div className="form-group">
+                                    <div className="form-group password-input-group">
                                         <label htmlFor="currentPassword">Текущий пароль</label>
-                                        <input
-                                            type="password"
-                                            id="currentPassword"
-                                            value={passwordData.currentPassword}
-                                            onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
-                                            required
-                                        />
+                                        <div className="password-input-wrapper">
+                                            <input
+                                                type={showPasswords.currentPassword ? "text" : "password"}
+                                                id="currentPassword"
+                                                value={passwordData.currentPassword}
+                                                onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                className="password-toggle-btn"
+                                                onClick={() => togglePasswordVisibility('currentPassword')}
+                                            >
+                                                {showPasswords.currentPassword ? '🙈' : '👁️'}
+                                            </button>
+                                        </div>
                                     </div>
 
-                                    <div className="form-group">
+                                    <div className="form-group password-input-group">
                                         <label htmlFor="newPassword">Новый пароль</label>
-                                        <input
-                                            type="password"
-                                            id="newPassword"
-                                            value={passwordData.newPassword}
-                                            onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
-                                            required
-                                            minLength="6"
-                                        />
+                                        <div className="password-input-wrapper">
+                                            <input
+                                                type={showPasswords.newPassword ? "text" : "password"}
+                                                id="newPassword"
+                                                value={passwordData.newPassword}
+                                                onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                                                required
+                                                minLength="6"
+                                            />
+                                            <button
+                                                type="button"
+                                                className="password-toggle-btn"
+                                                onClick={() => togglePasswordVisibility('newPassword')}
+                                            >
+                                                {showPasswords.newPassword ? '🙈' : '👁️'}
+                                            </button>
+                                        </div>
                                     </div>
 
-                                    <div className="form-group">
+                                    <div className="form-group password-input-group">
                                         <label htmlFor="confirmPassword">Подтвердите новый пароль</label>
-                                        <input
-                                            type="password"
-                                            id="confirmPassword"
-                                            value={passwordData.confirmPassword}
-                                            onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
-                                            required
-                                            minLength="6"
-                                        />
+                                        <div className="password-input-wrapper">
+                                            <input
+                                                type={showPasswords.confirmPassword ? "text" : "password"}
+                                                id="confirmPassword"
+                                                value={passwordData.confirmPassword}
+                                                onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                                                required
+                                                minLength="6"
+                                            />
+                                            <button
+                                                type="button"
+                                                className="password-toggle-btn"
+                                                onClick={() => togglePasswordVisibility('confirmPassword')}
+                                            >
+                                                {showPasswords.confirmPassword ? '🙈' : '👁️'}
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <button

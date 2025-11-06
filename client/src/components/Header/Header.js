@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Header.css';
 import { Link, useLocation } from 'react-router-dom';
 import { FaRegHeart, FaShoppingCart, FaUser, FaSearch, FaPhone, FaBars, FaTimes } from "react-icons/fa";
@@ -23,10 +23,10 @@ const Header = ({
     const mobileMenuRef = useRef(null);
     const location = useLocation();
     const [activePage, setActivePage] = useState('');
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
     const [showNoFavoritesModal, setShowNoFavoritesModal] = useState(false);
     const navigate = useNavigate();
-    const { isAuthenticated, userRole, token, isLoading } = useAuth();
+    const { isAuthenticated, userRole, isLoading } = useAuth();
 
     // ИСПОЛЬЗУЕМ ОБЩЕЕ СОСТОЯНИЕ - ВКЛЮЧАЕМ logout из AppContext
     const { favoritesCount, cartItemsCount, updateFavoritesCount, updateCartCount, logout } = useApp();
@@ -397,23 +397,23 @@ const Header = ({
 
             {/* Модальное окно для пустого избранного */}
             {showNoFavoritesModal && (
-                <div className="modal-overlay" onClick={handleModalClick}>
-                    <div className="modal-content">
-                        <div className="modal-header">
+                <div className="modal-overlay-favorite" onClick={handleModalClick}>
+                    <div className="modal-content-favorite">
+                        <div className="modal-header-favorite">
                             <h2>Информация</h2>
                             <button
-                                className="modal-close"
+                                className="modal-close-favorite"
                                 onClick={handleCloseModal}
                             >
                                 ×
                             </button>
                         </div>
-                        <div className="modal-body">
+                        <div className="modal-body-favorite">
                             <h4>У вас нет избранных товаров.</h4>
                         </div>
-                        <div className="modal-footer">
+                        <div className="modal-footer-favorite">
                             <button
-                                className="modal-button"
+                                className="modal-button-favorite"
                                 onClick={handleCloseModal}
                             >
                                 ОК
