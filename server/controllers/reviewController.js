@@ -108,14 +108,14 @@ async function notifyAboutBadReview(review, productId) {
             `,
             text: `🚨 ПОЛУЧЕН ПЛОХОЙ ОТЗЫВ
 
-Товар: ${product.name}
-Пользователь: ${userName}
-Оценка: ${review.rating}/5
-Комментарий: ${review.comment}
-${hasPhotos ? `Фотографии: Приложено фото к отзыву` : ''}
-Дата: ${new Date(review.createdAt).toLocaleString('ru-RU')}
-
-Требуется ваше внимание!`
+                Товар: ${product.name}
+                Пользователь: ${userName}
+                Оценка: ${review.rating}/5
+                Комментарий: ${review.comment}
+                ${hasPhotos ? `Фотографии: Приложено фото к отзыву` : ''}
+                Дата: ${new Date(review.createdAt).toLocaleString('ru-RU')}
+                
+                Требуется ваше внимание!`
         };
 
         await transporter.sendMail(mailOptions);
@@ -124,6 +124,24 @@ ${hasPhotos ? `Фотографии: Приложено фото к отзыву
         console.error('Error sending bad review notification:', error);
     }
 }
+
+// В reviewController.js добавьте этот контроллер
+export const getRecentReviews = async (req, res) => {
+    try {
+        const reviews = await Review.find({})
+            .populate('user', 'name')
+            .populate('product', 'name')
+            .sort({ createdAt: -1 })
+            .limit(10);
+
+        res.json(reviews);
+    } catch (error) {
+        console.error('Error fetching recent reviews:', error);
+        res.status(500).json({
+            message: 'Ошибка при получении отзывов'
+        });
+    }
+};
 
 // Контроллер для проверки возможности оставить отзыв
 export const canReview = async (req, res) => {

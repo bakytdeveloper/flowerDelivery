@@ -7,7 +7,8 @@ import {
     addAdminReply,
     updateAdminReply,
     deleteReview,
-    deleteReviewImage
+    deleteReviewImage,
+    getRecentReviews
 } from '../controllers/reviewController.js';
 import {
     authenticateToken,
@@ -23,6 +24,9 @@ router.get('/product/:productId', getProductReviews);
 
 // Защищенные маршруты для проверки возможности отзыва
 router.get('/can-review/:productId', authenticateToken, canReview);
+
+router.get('/recent', getRecentReviews);
+
 
 // Маршруты для создания и управления отзывами (только customers)
 router.post(

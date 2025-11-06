@@ -295,24 +295,24 @@ const HitsSection = () => {
                     </button>
                 </div>
 
-                {/* Индикаторы прокрутки для мобильных */}
-                <div className="scroll-indicators d-md-none">
-                    <button
-                        className="scroll-indicator-btn"
-                        onClick={scrollLeft}
-                        aria-label="Прокрутить влево"
-                    >
-                        ‹
-                    </button>
-                    <span className="scroll-hint">Проведите для прокрутки</span>
-                    <button
-                        className="scroll-indicator-btn"
-                        onClick={scrollRight}
-                        aria-label="Прокрутить вправо"
-                    >
-                        ›
-                    </button>
-                </div>
+                {/*/!* Индикаторы прокрутки для мобильных *!/*/}
+                {/*<div className="scroll-indicators d-md-none">*/}
+                {/*    <button*/}
+                {/*        className="scroll-indicator-btn"*/}
+                {/*        onClick={scrollLeft}*/}
+                {/*        aria-label="Прокрутить влево"*/}
+                {/*    >*/}
+                {/*        ‹*/}
+                {/*    </button>*/}
+                {/*    <span className="scroll-hint">Проведите для прокрутки</span>*/}
+                {/*    <button*/}
+                {/*        className="scroll-indicator-btn"*/}
+                {/*        onClick={scrollRight}*/}
+                {/*        aria-label="Прокрутить вправо"*/}
+                {/*    >*/}
+                {/*        ›*/}
+                {/*    </button>*/}
+                {/*</div>*/}
             </div>
         </section>
     );

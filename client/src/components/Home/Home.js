@@ -9,6 +9,7 @@ import WhyChooseUs from "../WhyChooseUs/WhyChooseUs";
 import SeasonalOffers from "../SeasonalOffers/SeasonalOffers";
 import MapSection from "../MapSection/MapSection";
 import InfoCardsSection from "../InfoCardsSection/InfoCardsSection";
+import ReviewsSection from "./ReviewsSection/ReviewsSection";
 
 
 const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, setSelectedGender, setSearchTerm, setSelectedCategory, setSelectedType }) => {
@@ -378,6 +379,9 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
 
             {/* Секция сезонных предложений */}
             <SeasonalOffers />
+
+            {/* Новая секция с отзывами */}
+            <ReviewsSection />
 
             {/* Новая секция с информационными карточками */}
             <InfoCardsSection />
