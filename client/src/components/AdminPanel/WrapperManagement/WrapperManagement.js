@@ -1,315 +1,526 @@
-// src/components/AdminPanel/WrapperManagement/WrapperManagement.js
-import React, { useState, useEffect } from 'react';
+// src/components/AdminPanel/WrapperManagement/WrapperForm.js
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
-import WrapperForm from './WrapperForm';
 import { toast } from 'react-toastify';
-import './WrapperManagement.css';
+import './WrapperForm.css';
 
-const WrapperManagement = () => {
+const WrapperForm = ({ onSave, onCancel, initialWrapper = null }) => {
     const { token } = useAuth();
-    const [wrappers, setWrappers] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [showWrapperModal, setShowWrapperModal] = useState(false);
-    const [currentWrapper, setCurrentWrapper] = useState(null);
-    // eslint-disable-next-line
-    const [modalMode, setModalMode] = useState('create');
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [wrapperToDelete, setWrapperToDelete] = useState(null);
+    const [wrapper, setWrapper] = useState(initialWrapper || getDefaultWrapper());
+    const [isSaving, setIsSaving] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [imageUrlInput, setImageUrlInput] = useState('');
+    const [showUrlInput, setShowUrlInput] = useState(false);
+    const [uploadMethod, setUploadMethod] = useState('file'); // 'file' или 'url'
+    const [localImagePreview, setLocalImagePreview] = useState(null);
+    const [imageLoadError, setImageLoadError] = useState(false);
+    const fileInputRef = useRef(null);
 
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
+    const isEditing = !!initialWrapper;
 
-    // Загрузка обёрток
-    const fetchWrappers = async () => {
-        try {
-            setLoading(true);
-            setError(null);
+    function getDefaultWrapper() {
+        return {
+            name: '',
+            description: '',
+            price: '',
+            originalPrice: '',
+            quantity: 10,
+            image: '',
+            isActive: true
+        };
+    }
 
-            const response = await fetch(`${apiUrl}/api/admin/wrappers`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+    // Функция для получения корректного URL изображения
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) {
+            return '/images/placeholder-wrapper.jpg';
+        }
 
-            if (!response.ok) {
-                throw new Error('Ошибка при загрузке обёрток');
-            }
+        // Если это уже полный URL (http, https, data URI)
+        if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+            return imagePath;
+        }
 
-            const data = await response.json();
-            setWrappers(data || []);
-        } catch (err) {
-            setError(err.message);
-            console.error('Error fetching wrappers:', err);
-        } finally {
-            setLoading(false);
+        // Если это абсолютный путь на сервере
+        if (imagePath.startsWith('/')) {
+            return `${apiUrl}${imagePath}`;
+        }
+
+        // Если это относительный путь (имя файла)
+        return `${apiUrl}/uploads/${imagePath}`;
+    };
+
+    const handleChange = (field, value) => {
+        setWrapper(prev => ({
+            ...prev,
+            [field]: value
+        }));
+        // Сбрасываем ошибку загрузки изображения при изменении
+        if (field === 'image') {
+            setImageLoadError(false);
         }
     };
 
+    // Сброс ошибки при открытии модального окна
     useEffect(() => {
-        fetchWrappers();
-        // eslint-disable-next-line
-    }, []);
+        if (initialWrapper?.image) {
+            setImageLoadError(false);
+        }
+    }, [initialWrapper]);
 
-    // Создание обёртки
-    const handleCreateClick = () => {
-        setCurrentWrapper(null);
-        setModalMode('create');
-        setShowWrapperModal(true);
-    };
+    // Загрузка изображения через файл
+    const handleImageUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
 
-    // Редактирование обёртки
-    const handleEditClick = (wrapper) => {
-        setCurrentWrapper(wrapper);
-        setModalMode('edit');
-        setShowWrapperModal(true);
-    };
+        // Проверка типа файла
+        if (!file.type.startsWith('image/')) {
+            toast.error('Пожалуйста, выберите файл изображения');
+            return;
+        }
 
-    // Удаление обёртки
-    const handleDeleteClick = (wrapper) => {
-        setWrapperToDelete(wrapper);
-        setShowDeleteModal(true);
-    };
+        // Проверка размера файла (максимум 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Размер файла не должен превышать 5MB');
+            return;
+        }
 
-    const confirmDelete = async () => {
-        if (!wrapperToDelete) return;
+        // Создаем предпросмотр для локального файла
+        const previewUrl = URL.createObjectURL(file);
+        setLocalImagePreview(previewUrl);
+        setImageLoadError(false);
 
         try {
-            const response = await fetch(`${apiUrl}/api/admin/wrappers/${wrapperToDelete._id}`, {
-                method: 'DELETE',
+            setUploadingImage(true);
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('itemType', 'wrapper');
+
+            const response = await fetch(`${apiUrl}/api/admin/upload-wrapper-addon-image`, {
+                method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
-                }
+                },
+                body: formData
             });
 
             if (response.ok) {
-                toast.success('Обёртка успешно удалена');
-                fetchWrappers();
+                const data = await response.json();
+                // Очищаем локальный предпросмотр после загрузки на сервер
+                if (localImagePreview) {
+                    URL.revokeObjectURL(localImagePreview);
+                }
+                setLocalImagePreview(null);
+                handleChange('image', data.imageUrl);
+                toast.success('Изображение успешно загружено');
+                setUploadMethod('file');
             } else {
-                throw new Error('Ошибка при удалении обёртки');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Ошибка загрузки изображения');
             }
         } catch (error) {
-            console.error('Error deleting wrapper:', error);
-            toast.error('Ошибка при удалении обёртки');
+            console.error('Error uploading image:', error);
+            toast.error(error.message || 'Ошибка загрузки изображения');
+            // Очищаем предпросмотр при ошибке
+            if (localImagePreview) {
+                URL.revokeObjectURL(localImagePreview);
+                setLocalImagePreview(null);
+            }
         } finally {
-            setShowDeleteModal(false);
-            setWrapperToDelete(null);
+            setUploadingImage(false);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
         }
     };
 
-    // Сохранение обёртки
-    const handleWrapperSave = (savedWrapper) => {
-        setShowWrapperModal(false);
-        setCurrentWrapper(null);
-        fetchWrappers();
+    // Добавление URL изображения
+    const handleAddImageUrl = async () => {
+        if (!imageUrlInput.trim()) {
+            toast.error('Введите URL изображения');
+            return;
+        }
 
-    };
-
-    // Переключение активности
-    const toggleWrapperActive = async (wrapperId, currentStatus) => {
         try {
-            const updatedWrapperData = {
-                isActive: !currentStatus
-            };
+            // Валидируем URL
+            new URL(imageUrlInput);
 
-            const response = await fetch(`${apiUrl}/api/admin/wrappers/${wrapperId}`, {
-                method: 'PUT',
+            // Очищаем локальный предпросмотр при использовании URL
+            if (localImagePreview) {
+                URL.revokeObjectURL(localImagePreview);
+                setLocalImagePreview(null);
+            }
+
+            setImageLoadError(false);
+
+            // Отправляем URL на сервер для валидации
+            setUploadingImage(true);
+            const response = await fetch(`${apiUrl}/api/admin/upload-wrapper-addon-image`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(updatedWrapperData)
+                body: JSON.stringify({
+                    imageUrl: imageUrlInput.trim(),
+                    itemType: 'wrapper'
+                })
             });
 
             if (response.ok) {
-                toast.success(`Обёртка ${!currentStatus ? 'активирована' : 'деактивирована'}`);
-                fetchWrappers();
+                const data = await response.json();
+                handleChange('image', data.imageUrl);
+                setImageUrlInput('');
+                setShowUrlInput(false);
+                setUploadMethod('url');
+                toast.success('URL изображения добавлен');
             } else {
                 const errorData = await response.json();
-                throw new Error(errorData.message || 'Ошибка при изменении статуса обёртки');
+                throw new Error(errorData.message || 'Ошибка валидации URL');
             }
         } catch (error) {
-            console.error('Error toggling wrapper active:', error);
-            toast.error(error.message || 'Ошибка при изменении статуса обёртки');
+            console.error('Error adding image URL:', error);
+            toast.error(error.message || 'Введите корректный URL изображения');
+        } finally {
+            setUploadingImage(false);
         }
     };
 
-    // Форматирование цены
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('ru-RU', {
-            style: 'currency',
-            currency: 'KZT',
-            minimumFractionDigits: 0
-        }).format(price);
+    // Удаление изображения
+    const handleRemoveImage = () => {
+        // Очищаем локальный предпросмотр
+        if (localImagePreview) {
+            URL.revokeObjectURL(localImagePreview);
+            setLocalImagePreview(null);
+        }
+        handleChange('image', '');
+        setUploadMethod('file');
+        setImageLoadError(false);
+        toast.info('Изображение удалено');
     };
 
-    if (loading && wrappers.length === 0) {
-        return (
-            <div className="wrapper-management">
-                <div className="admin-section-header">
-                    <h2>Управление обёртками</h2>
-                </div>
-                <div className="loading-spinner">
-                    <div className="spinner"></div>
-                    <p>Загрузка обёрток...</p>
-                </div>
-            </div>
-        );
-    }
+    // Обработчик ошибки загрузки изображения
+    const handleImageError = () => {
+        console.error('Failed to load image:', wrapper.image);
+        setImageLoadError(true);
+    };
+
+    // Очистка при размонтировании
+    useEffect(() => {
+        return () => {
+            if (localImagePreview) {
+                URL.revokeObjectURL(localImagePreview);
+            }
+        };
+    }, [localImagePreview]);
+
+    // Обработчик отправки формы
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await handleSave();
+    };
+
+    // Сохранение обёртки
+    const handleSave = async () => {
+        // Валидация обязательных полей
+        if (!wrapper.name.trim()) {
+            toast.error('Введите название обёртки');
+            return;
+        }
+
+        if (!wrapper.price || Number(wrapper.price) <= 0) {
+            toast.error('Введите корректную цену');
+            return;
+        }
+
+        if (!wrapper.image) {
+            toast.error('Добавьте изображение обёртки');
+            return;
+        }
+
+        try {
+            setIsSaving(true);
+
+            // Подготовка данных - убеждаемся, что все поля корректны
+            const wrapperData = {
+                name: wrapper.name.trim(),
+                description: wrapper.description.trim(),
+                price: Number(wrapper.price),
+                quantity: wrapper.quantity ? Number(wrapper.quantity) : 10,
+                image: wrapper.image,
+                isActive: Boolean(wrapper.isActive)
+            };
+
+            // Добавляем originalPrice только если он указан и больше 0
+            if (wrapper.originalPrice && Number(wrapper.originalPrice) > 0) {
+                wrapperData.originalPrice = Number(wrapper.originalPrice);
+            }
+
+            const url = isEditing
+                ? `${apiUrl}/api/admin/wrappers/${wrapper._id}`
+                : `${apiUrl}/api/admin/wrappers`;
+
+            const method = isEditing ? 'PUT' : 'POST';
+
+            console.log('Sending wrapper data:', wrapperData);
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(wrapperData)
+            });
+
+            if (response.ok) {
+                const savedWrapper = await response.json();
+                toast.success(isEditing ? 'Обёртка успешно обновлена' : 'Обёртка успешно создана');
+                onSave(savedWrapper);
+            } else {
+                const errorData = await response.json();
+                console.error('Server error response:', errorData);
+                throw new Error(errorData.message || `Ошибка ${response.status} при сохранении обёртки`);
+            }
+        } catch (error) {
+            console.error('Error saving wrapper:', error);
+            toast.error(error.message || 'Ошибка при сохранении обёртки');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const imagePreviewUrl = localImagePreview || getImageUrl(wrapper.image);
 
     return (
-        <div className="wrapper-management">
-            <div className="admin-section-header">
-                <h2>Управление обёртками</h2>
-                <div className="section-actions">
-                    <button className="btn btn-primary" onClick={handleCreateClick}>
-                        + Добавить обёртку
-                    </button>
-                </div>
-            </div>
+        <div className="modal-overlay" onClick={onCancel}>
+            <div className="modal-content medium-modal wrapper-form-modal" onClick={(e) => e.stopPropagation()}>
+                <form onSubmit={handleSubmit}>
+                    <div className="modal-header">
+                        <h3 className="wrapper-form-modal-title">{isEditing ? 'Редактирование обёртки' : 'Создание новой обёртки'}</h3>
+                        <button type="button" className="modal-close" onClick={onCancel}>×</button>
+                    </div>
+                    <div className="modal-body">
+                        <div className="edit-form">
+                            {/* Основная информация */}
+                            <div className="form-section">
+                                <h4>Основная информация</h4>
+                                <div className="form-group">
+                                    <label htmlFor="name">Название *</label>
+                                    <input
+                                        id="name"
+                                        type="text"
+                                        value={wrapper.name}
+                                        onChange={(e) => handleChange('name', e.target.value)}
+                                        className="form-control"
+                                        required
+                                        placeholder="Введите название обёртки"
+                                        disabled={isSaving}
+                                    />
+                                </div>
 
-            {/* Статистика */}
-            <div className="wrappers-stats">
-                <p>Всего обёрток: <strong>{wrappers.length}</strong></p>
-            </div>
-
-            {/* Сетка обёрток */}
-            {error ? (
-                <div className="error-message">
-                    <p>{error}</p>
-                    <button className="btn btn-primary" onClick={fetchWrappers}>
-                        Попробовать снова
-                    </button>
-                </div>
-            ) : wrappers.length === 0 ? (
-                <div className="no-wrappers">
-                    <h3>Обёртки не найдены</h3>
-                    <p>Создайте первую обёртку для ваших цветов</p>
-                </div>
-            ) : (
-                <div className="addons-grid-admin">
-                    {wrappers.map((wrapper) => (
-                        <div key={wrapper._id} className="addon-card-admin">
-                            <div className="addon-image-container">
-                                <img
-                                    src={wrapper.image || '/images/placeholder-wrapper.jpg'}
-                                    alt={wrapper.name}
-                                    className="addon-image"
-                                />
-                                <div className="addon-badges">
-                                    {!wrapper.isActive && (
-                                        <span className="status-badge inactive">Неактивна</span>
-                                    )}
-                                    {wrapper.originalPrice && wrapper.originalPrice > wrapper.price && (
-                                        <span className="discount-badge">
-                                            -{Math.round((1 - wrapper.price / wrapper.originalPrice) * 100)}%
-                                        </span>
-                                    )}
+                                <div className="form-group">
+                                    <label htmlFor="description">Описание</label>
+                                    <textarea
+                                        id="description"
+                                        value={wrapper.description}
+                                        onChange={(e) => handleChange('description', e.target.value)}
+                                        className="form-control"
+                                        rows="3"
+                                        placeholder="Описание обёртки"
+                                        disabled={isSaving}
+                                    />
                                 </div>
                             </div>
 
-                            <div className="addon-info">
-                                <h3 className="addon-name">{wrapper.name}</h3>
-
-                                {wrapper.description && (
-                                    <p className="addon-description">
-                                        {wrapper.description.length > 80
-                                            ? `${wrapper.description.slice(0, 80)}...`
-                                            : wrapper.description
-                                        }
-                                    </p>
-                                )}
-
-                                <div className="addon-details">
-                                    <div className="detail-item">
-                                        <span className="detail-label">В наличии:</span>
-                                        <span className="detail-value">{wrapper.quantity} шт</span>
+                            {/* Цены и количество */}
+                            <div className="form-section">
+                                <h4>Цены и количество</h4>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="price">Цена (₸) *</label>
+                                        <input
+                                            id="price"
+                                            type="number"
+                                            value={wrapper.price}
+                                            onChange={(e) => handleChange('price', e.target.value)}
+                                            className="form-control"
+                                            required
+                                            min="0"
+                                            step="1"
+                                            placeholder="Текущая цена"
+                                            disabled={isSaving}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="originalPrice">Старая цена (₸)</label>
+                                        <input
+                                            id="originalPrice"
+                                            type="number"
+                                            value={wrapper.originalPrice || ''}
+                                            onChange={(e) => handleChange('originalPrice', e.target.value)}
+                                            className="form-control"
+                                            min="0"
+                                            step="1"
+                                            placeholder="Цена до скидки"
+                                            disabled={isSaving}
+                                        />
                                     </div>
                                 </div>
 
-                                <div className="addon-price-admin">
-                                    {wrapper.originalPrice && wrapper.originalPrice > wrapper.price ? (
-                                        <>
-                                            <span className="original-price">
-                                                {formatPrice(wrapper.originalPrice)}
-                                            </span>
-                                            <span className="current-price">
-                                                {formatPrice(wrapper.price)}
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <span className="current-price">
-                                            {formatPrice(wrapper.price)}
-                                        </span>
-                                    )}
+                                <div className="form-group">
+                                    <label htmlFor="quantity">Количество в наличии</label>
+                                    <input
+                                        id="quantity"
+                                        type="number"
+                                        value={wrapper.quantity}
+                                        onChange={(e) => handleChange('quantity', e.target.value)}
+                                        className="form-control"
+                                        min="0"
+                                        step="1"
+                                        placeholder="Количество обёрток"
+                                        disabled={isSaving}
+                                    />
                                 </div>
+                            </div>
 
-                                <div className="addon-actions-admin">
-                                    <button
-                                        className={`btn-status ${wrapper.isActive ? 'btn-active' : 'btn-inactive'}`}
-                                        onClick={() => toggleWrapperActive(wrapper._id, wrapper.isActive)}
-                                    >
-                                        {wrapper.isActive ? 'Активна' : 'Неактивна'}
-                                    </button>
+                            {/* Изображение */}
+                            <div className="form-section">
+                                <h4>Изображение *</h4>
 
-                                    <button
-                                        className="btn-delete"
-                                        onClick={() => handleDeleteClick(wrapper)}
-                                    >
-                                        🗑️
-                                    </button>
+                                {(imagePreviewUrl && !imageLoadError) ? (
+                                    <div className="image-preview">
+                                        <img
+                                            src={imagePreviewUrl}
+                                            alt="Preview"
+                                            onError={handleImageError}
+                                        />
+                                        <div className="image-source-badge">
+                                            {localImagePreview ? 'Локальный файл' : (wrapper.image?.startsWith('http') ? 'URL' : 'Файл')}
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger btn-sm"
+                                            onClick={handleRemoveImage}
+                                            disabled={isSaving || uploadingImage}
+                                        >
+                                            Удалить
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="image-error">
+                                        <p>❌ Не удалось загрузить изображение</p>
+                                        <button
+                                            type="button"
+                                            className="btn btn-outline btn-sm"
+                                            onClick={() => setImageLoadError(false)}
+                                        >
+                                            Попробовать снова
+                                        </button>
+                                    </div>
+                                )}
 
-                                    <button
-                                        className="btn-edit"
-                                        onClick={() => handleEditClick(wrapper)}
-                                    >
-                                        Редактировать
-                                    </button>
+                                <div className="image-upload-options">
+                                    {/* Загрузка файла */}
+                                    <div className="form-group">
+                                        <label htmlFor="file-upload">Загрузить изображение с компьютера:</label>
+                                        <input
+                                            id="file-upload"
+                                            ref={fileInputRef}
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageUpload}
+                                            className="form-control"
+                                            disabled={isSaving || uploadingImage}
+                                        />
+                                        {uploadingImage && <p>Загрузка изображения...</p>}
+                                    </div>
 
+                                    {/* Или через URL */}
+                                    <div className="form-group">
+                                        <label>Или используйте URL изображения:</label>
+                                        {!showUrlInput ? (
+                                            <button
+                                                type="button"
+                                                className="btn btn-outline btn-sm add-image-url"
+                                                onClick={() => setShowUrlInput(true)}
+                                                disabled={isSaving || uploadingImage}
+                                            >
+                                                + Добавить URL изображения
+                                            </button>
+                                        ) : (
+                                            <div className="url-input-group">
+                                                <input
+                                                    type="text"
+                                                    value={imageUrlInput}
+                                                    onChange={(e) => setImageUrlInput(e.target.value)}
+                                                    className="form-control"
+                                                    placeholder="Введите URL изображения (https://...)"
+                                                    disabled={isSaving || uploadingImage}
+                                                />
+                                                <div className="url-input-buttons">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary btn-sm"
+                                                        onClick={handleAddImageUrl}
+                                                        disabled={isSaving || uploadingImage}
+                                                    >
+                                                        {uploadingImage ? 'Проверка...' : 'Добавить'}
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-outline btn-sm"
+                                                        onClick={() => setShowUrlInput(false)}
+                                                        disabled={uploadingImage}
+                                                    >
+                                                        Отмена
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
 
+                            {/* Статус */}
+                            <div className="form-section">
+                                <h4>Статус</h4>
+                                <div className="form-group">
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            checked={wrapper.isActive}
+                                            onChange={(e) => handleChange('isActive', e.target.checked)}
+                                            disabled={isSaving}
+                                        />
+                                        Активная обёртка
+                                    </label>
                                 </div>
                             </div>
                         </div>
-                    ))}
-                </div>
-            )}
-
-            {/* Модальное окно удаления */}
-            {showDeleteModal && wrapperToDelete && (
-                <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3>Подтверждение удаления</h3>
-                            <button className="modal-close" onClick={() => setShowDeleteModal(false)}>×</button>
-                        </div>
-                        <div className="modal-body">
-                            <p>Вы уверены, что хотите удалить обёртку <strong>"{wrapperToDelete.name}"</strong>?</p>
-                            <p className="warning-text">Это действие нельзя отменить.</p>
-                        </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-outline" onClick={() => setShowDeleteModal(false)}>
-                                Отмена
-                            </button>
-                            <button className="btn btn-danger" onClick={confirmDelete}>
-                                Удалить
-                            </button>
-                        </div>
                     </div>
-                </div>
-            )}
-
-            {/* Модальное окно формы обёртки */}
-            {showWrapperModal && (
-                <WrapperForm
-                    initialWrapper={currentWrapper}
-                    onSave={handleWrapperSave}
-                    onCancel={() => {
-                        setShowWrapperModal(false);
-                        setCurrentWrapper(null);
-                    }}
-                />
-            )}
+                    <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-outline"
+                            onClick={onCancel}
+                            disabled={isSaving}
+                        >
+                            Отмена
+                        </button>
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={isSaving || uploadingImage}
+                        >
+                            {isSaving ? 'Сохранение...' : (isEditing ? 'Сохранить' : 'Создать обёртку')}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };
 
-export default WrapperManagement;
+export default WrapperForm;

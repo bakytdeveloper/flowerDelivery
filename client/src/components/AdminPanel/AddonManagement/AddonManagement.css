@@ -340,6 +340,20 @@
     transform: translateY(-1px);
 }
 
+.addon-form-modal {
+    padding: 0;
+}
+
+.upload-warning {
+    background: #fff3cd;
+    color: #856404;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-top: 8px;
+    border: 1px solid #ffeaa7;
+}
+
 /* Адаптивность */
 @media (max-width: 1200px) {
     .addons-grid-admin {
