@@ -7,51 +7,21 @@ import {
 } from '../smtp/otpService.js';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { deleteImageFiles, createThumbnail } from '../middlewares/uploadMiddleware.js';
 
-// Функция для создания миниатюр
-async function createThumbnail(imagePath, filename) {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Функция для удаления файлов изображений отзыва (адаптированная для структуры Review)
+function deleteReviewImageFiles(image) {
     try {
-        const sharp = await import('sharp');
-        const thumbnailsDir = path.join('uploads', 'thumbnails');
-
-        if (!fs.existsSync(thumbnailsDir)) {
-            fs.mkdirSync(thumbnailsDir, { recursive: true });
-        }
-
-        const thumbnailPath = path.join(thumbnailsDir, `thumb_${filename}`);
-
-        await sharp.default(imagePath)
-            .resize(300, 300, {
-                fit: 'inside',
-                withoutEnlargement: true
-            })
-            .jpeg({ quality: 80 })
-            .toFile(thumbnailPath);
-
-        return `/uploads/thumbnails/thumb_${filename}`;
-    } catch (error) {
-        console.error('Error creating thumbnail:', error);
-        return null;
-    }
-}
-
-// Функция для удаления файлов изображений
-function deleteImageFiles(image) {
-    try {
-        // Удаляем основное изображение
-        if (image.filename && fs.existsSync(path.join('uploads', image.filename))) {
-            fs.unlinkSync(path.join('uploads', image.filename));
-        }
-        // Удаляем миниатюру
-        if (image.thumbnailUrl) {
-            const thumbFilename = path.basename(image.thumbnailUrl);
-            const thumbPath = path.join('uploads', 'thumbnails', thumbFilename);
-            if (fs.existsSync(thumbPath)) {
-                fs.unlinkSync(thumbPath);
-            }
+        if (image.filename) {
+            // Используем функцию из мидлвеара для удаления файлов
+            deleteImageFiles(image.filename);
         }
     } catch (fileError) {
-        console.error('Error deleting image files:', fileError);
+        console.error('Error deleting review image files:', fileError);
     }
 }
 
@@ -113,7 +83,7 @@ async function notifyAboutBadReview(review, productId) {
                 Оценка: ${review.rating}/5
                 Комментарий: ${review.comment}
                 ${hasPhotos ? `Фотографии: Приложено фото к отзыву` : ''}
-                Дата: ${new Date(review.createdAt).toLocaleString('ru-RU')}
+                Дата: ${new Date(review.createdAt).toLocaleDateString('ru-RU')}
                 
                 Требуется ваше внимание!`
         };
@@ -125,7 +95,7 @@ async function notifyAboutBadReview(review, productId) {
     }
 }
 
-// В reviewController.js добавьте этот контроллер
+// Контроллер для получения последних отзывов
 export const getRecentReviews = async (req, res) => {
     try {
         const reviews = await Review.find({})
@@ -311,12 +281,14 @@ export const createReview = async (req, res) => {
         const reviewImages = [];
         if (req.files && req.files.length > 0) {
             const file = req.files[0]; // Берем только первый файл
-            const thumbnailUrl = await createThumbnail(file.path, file.filename);
+
+            // Используем миниатюру из мидлвеара, если она создана
+            const thumbnailUrl = req.thumbnailUrl || await createThumbnail(file.path, file.filename);
 
             reviewImages.push({
-                url: `/uploads/${file.filename}`,
-                filename: file.filename,
-                thumbnailUrl: thumbnailUrl
+                url: req.imageUrl, // Теперь это путь к миниатюре в uploads/thumbnails
+                filename: path.basename(req.imageUrl), // Берем имя файла из URL
+                thumbnailUrl: req.thumbnailUrl
             });
         }
 
@@ -344,9 +316,8 @@ export const createReview = async (req, res) => {
         if (req.files && req.files.length > 0) {
             req.files.forEach(file => {
                 try {
-                    if (fs.existsSync(file.path)) {
-                        fs.unlinkSync(file.path);
-                    }
+                    // Используем функцию из мидлвеара для удаления файлов
+                    deleteImageFiles(file.filename);
                 } catch (fileError) {
                     console.error('Error deleting uploaded file:', fileError);
                 }
@@ -376,23 +347,25 @@ export const updateReview = async (req, res) => {
         review.rating = req.body.rating || review.rating;
         review.comment = req.body.comment || review.comment;
 
-        console.log("review.rating", review.rating)
+        console.log("review.rating", review.rating);
 
         // Обрабатываем новое загруженное изображение (заменяем старое)
         if (req.files && req.files.length > 0) {
             // Удаляем старые файлы изображений
             if (review.images && review.images.length > 0) {
-                review.images.forEach(image => deleteImageFiles(image));
+                review.images.forEach(image => deleteReviewImageFiles(image));
             }
 
             const file = req.files[0]; // Берем только первый файл
-            const thumbnailUrl = await createThumbnail(file.path, file.filename);
+
+            // Используем миниатюру из мидлвеара, если она создана
+            const thumbnailUrl = req.thumbnailUrl || await createThumbnail(file.path, file.filename);
 
             // Заменяем изображение
             review.images = [{
-                url: `/uploads/${file.filename}`,
-                filename: file.filename,
-                thumbnailUrl: thumbnailUrl
+                url: req.imageUrl,
+                filename: path.basename(req.imageUrl),
+                thumbnailUrl: req.thumbnailUrl
             }];
         }
 
@@ -437,7 +410,7 @@ export const deleteReviewImage = async (req, res) => {
         }
 
         // Удаляем файлы с диска
-        deleteImageFiles(imageToDelete);
+        deleteReviewImageFiles(imageToDelete);
 
         // Удаляем изображение из массива
         review.images.pull(imageId);
@@ -540,7 +513,7 @@ export const deleteReview = async (req, res) => {
 
         // Удаляем связанные файлы изображений
         if (review.images && review.images.length > 0) {
-            review.images.forEach(image => deleteImageFiles(image));
+            review.images.forEach(image => deleteReviewImageFiles(image));
         }
 
         await Review.findOneAndDelete(query);

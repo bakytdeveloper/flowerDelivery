@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import User from '../models/User.js';
 import Order from '../models/Order.js';
+import mongoose from 'mongoose';
 
 // Контроллер для получения профиля пользователя
 export const getProfile = async (req, res) => {

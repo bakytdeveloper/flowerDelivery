@@ -217,7 +217,7 @@ const ReviewsSection = () => {
                                             {review.images && review.images.length > 0 && (
                                                 <div className="review-image-compact">
                                                     <img
-                                                        src={`${process.env.REACT_APP_API_URL}${review.images[0].url}`}
+                                                        src={`${process.env.REACT_APP_API_URL}${review.images[0].thumbnailUrl || review.images[0].url}`}
                                                         alt="Фото отзыва"
                                                         loading="lazy"
                                                     />
@@ -291,7 +291,7 @@ const ReviewsSection = () => {
                                             {selectedReview.images.map((image, index) => (
                                                 <div key={index} className="review-image-modal">
                                                     <img
-                                                        src={`${process.env.REACT_APP_API_URL}${image.url}`}
+                                                        src={`${process.env.REACT_APP_API_URL}${image.thumbnailUrl || image.url}`}
                                                         alt={`Фото отзыва ${index + 1}`}
                                                     />
                                                 </div>

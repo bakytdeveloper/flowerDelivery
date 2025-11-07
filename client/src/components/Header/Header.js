@@ -383,12 +383,12 @@ const Header = ({
                         >
                             О нас
                         </Link>
-                        <Link
-                            to="/payment"
-                            className={`nav-link ${activePage === 'payment' ? 'active' : ''}`}
-                        >
-                            Оплата
-                        </Link>
+                        {/*<Link*/}
+                        {/*    to="/payment"*/}
+                        {/*    className={`nav-link ${activePage === 'payment' ? 'active' : ''}`}*/}
+                        {/*>*/}
+                        {/*    Оплата*/}
+                        {/*</Link>*/}
                     </div>
                 </div>
             </nav>

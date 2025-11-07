@@ -6,21 +6,18 @@ import dotenv from 'dotenv';
 import compression from 'compression';
 import cron from 'node-cron';
 import path from 'path';
-import {
-    fileURLToPath
-} from 'url';
+import { fileURLToPath } from 'url';
 
 // Импорты маршрутов
 import apiRoutes from './routes/index.js';
 import cleanupGuestCarts from './cron/cleanupGuestCarts.js';
+
 // Загружаем .env файл ДО всего остального
 dotenv.config();
 
 // ES6 модули не имеют __dirname, создаем его
-const __filename = fileURLToPath(
-    import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 
 const app = express();
 const PORT = process.env.PORT || 5506;
@@ -37,9 +34,21 @@ app.use(bodyParser.urlencoded({
 app.use(express.json());
 app.use(compression());
 
-// Статические файлы
-const uploadDir = 'uploads';
-app.use('/uploads', express.static(uploadDir));
+// ОПТИМИЗИРОВАННЫЙ КОД ДЛЯ СТАТИЧЕСКИХ ФАЙЛОВ:
+// Убедимся, что директории существуют
+const uploadsDir = path.join(__dirname, 'uploads');
+const thumbnailsDir = path.join(__dirname, 'uploads', 'thumbnails');
+
+import fs from 'fs';
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+if (!fs.existsSync(thumbnailsDir)) {
+    fs.mkdirSync(thumbnailsDir, { recursive: true });
+}
+
+// Обслуживание статических файлов - ОДНА строка вместо нескольких
+app.use('/uploads', express.static(uploadsDir));
 
 // Подключение к MongoDB
 mongoose.connect(process.env.MONGODB_URI)
@@ -61,15 +70,7 @@ mongoose.connection.on('disconnected', () => {
 // Регистрация маршрутов API
 app.use('/api', apiRoutes);
 
-// // Обработка несуществующих маршрутов (ИСПРАВЛЕННАЯ ВЕРСИЯ)
-// app.use('*', (req, res) => {
-//     res.status(404).json({
-//         success: false,
-//         message: 'Route not found',
-//         path: req.originalUrl
-//     });
-// });
-
+// Обработка несуществующих маршрутов
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -112,5 +113,6 @@ process.on('SIGTERM', async () => {
 // Запуск сервера
 app.listen(PORT, () => {
     console.log(`🚀 БАКЫТ, СЕРВЕР РАБОТАЕТ НА ${PORT} ПОРТУ!!!`);
-    console.log(`🔗 API доступно по: http://localhost:${PORT}/api`);
+    console.log(`🔗 API доступно по: http://localhost:${PORT}/`);
+    console.log(`📁 Статические файлы доступны по: http://localhost:${PORT}/uploads/`);
 });

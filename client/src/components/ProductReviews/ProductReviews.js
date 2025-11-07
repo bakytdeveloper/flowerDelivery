@@ -251,6 +251,16 @@ const ProductReviews = ({ productId }) => {
         );
     };
 
+    // Функция для получения URL изображения (с приоритетом миниатюры)
+    const getImageUrl = (image) => {
+        return image.thumbnailUrl || image.url;
+    };
+
+    // Функция для получения URL полноразмерного изображения
+    const getFullImageUrl = (image) => {
+        return image.url;
+    };
+
     if (isLoading) {
         return (
             <div className="reviews-loading-dark">
@@ -306,12 +316,12 @@ const ProductReviews = ({ productId }) => {
                                     ))}
                                 </div>
                                 <span className="rating-text-dark">
-        {newReview.rating === 5 && 'Отлично'}
+                                    {newReview.rating === 5 && 'Отлично'}
                                     {newReview.rating === 4 && 'Хорошо'}
                                     {newReview.rating === 3 && 'Удовлетворительно'}
                                     {newReview.rating === 2 && 'Плохо'}
                                     {newReview.rating === 1 && 'Ужасно'}
-    </span>
+                                </span>
                             </div>
 
                             <div className="comment-field-dark">
@@ -418,9 +428,9 @@ const ProductReviews = ({ productId }) => {
                                             {userReview.images.map((image, imgIndex) => (
                                                 <div key={image._id || imgIndex} className="review-image-item-horizontal">
                                                     <img
-                                                        src={`${process.env.REACT_APP_API_URL}${image.url}`}
+                                                        src={`${process.env.REACT_APP_API_URL}${getImageUrl(image)}`}
                                                         alt={`Фото отзыва`}
-                                                        onClick={() => window.open(`${process.env.REACT_APP_API_URL}${image.url}`, '_blank')}
+                                                        onClick={() => window.open(`${process.env.REACT_APP_API_URL}${getFullImageUrl(image)}`, '_blank')}
                                                     />
                                                 </div>
                                             ))}
@@ -507,9 +517,9 @@ const ProductReviews = ({ productId }) => {
                                             {review.images.map((image, imgIndex) => (
                                                 <div key={image._id || imgIndex} className="review-image-item-horizontal">
                                                     <img
-                                                        src={`${process.env.REACT_APP_API_URL}${image.url}`}
+                                                        src={`${process.env.REACT_APP_API_URL}${getImageUrl(image)}`}
                                                         alt={`Фото отзыва`}
-                                                        onClick={() => window.open(`${process.env.REACT_APP_API_URL}${image.url}`, '_blank')}
+                                                        onClick={() => window.open(`${process.env.REACT_APP_API_URL}${getFullImageUrl(image)}`, '_blank')}
                                                     />
                                                 </div>
                                             ))}
