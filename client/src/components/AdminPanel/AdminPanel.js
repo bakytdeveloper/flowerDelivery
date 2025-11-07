@@ -154,16 +154,14 @@ const AdminPanel = () => {
     };
 
     // Предпросмотр слайда
+    // Предпросмотр слайда
     const SlidePreview = ({ slide, index }) => (
         <div className="slide-preview">
-            <div
-                className="preview-background"
-                style={{
-                    backgroundColor: slide.backgroundType === 'color' ? slide.backgroundColor : 'transparent',
-                    backgroundImage: slide.backgroundType === 'image' && slide.backgroundImage ? `url(${slide.backgroundImage})` : 'none',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                }}
+            <div className="preview-slider-container"
+                 style={{
+                     backgroundColor: slide.backgroundType === 'color' ? slide.backgroundColor : 'transparent',
+                     backgroundImage: slide.backgroundType === 'image' && slide.backgroundImage ? `url(${slide.backgroundImage})` : 'none',
+                 }}
             >
                 {slide.backgroundType === 'video' && slide.backgroundVideo && (
                     <video
@@ -175,33 +173,57 @@ const AdminPanel = () => {
                     />
                 )}
 
-                {slide.promotions?.[0] && (
-                    <div className="preview-content">
-                        <h3
-                            style={{
-                                color: slide.colorTitle,
-                                fontFamily: slide.fontFamilleTitle,
-                                fontSize: slide.fontSizeTitle
-                            }}
-                        >
-                            {slide.promotions[0].title || 'Заголовок'}
-                        </h3>
-                        <p
-                            style={{
-                                color: slide.colorDescription,
-                                fontFamily: slide.fontFamilleDescription,
-                                fontSize: slide.fontSizeDescription
-                            }}
-                        >
-                            {slide.promotions[0].description || 'Описание'}
-                        </p>
-                        {slide.promotions[0].startDate && slide.promotions[0].endDate && (
-                            <div className="preview-dates">
-                                {slide.promotions[0].startDate} - {slide.promotions[0].endDate}
+                <div className="preview-slide-content">
+                    {/* Левое изображение слайда */}
+                    {slide.url && (
+                        <div className="preview-slide-image">
+                            <img
+                                src={slide.url}
+                                className="preview-slide-img"
+                                alt={`Slide ${index + 1}`}
+                            />
+                        </div>
+                    )}
+
+                    {/* Текстовая часть - теперь выровнена сверху */}
+                    {slide.promotions?.[0] && (
+                        <div className="preview-text-content">
+                            <div
+                                className="preview-title"
+                                style={{
+                                    color: slide.colorTitle || '#000000',
+                                    fontSize: slide.fontSizeTitle || '16px',
+                                    fontFamily: slide.fontFamilleTitle || 'Arial',
+                                }}
+                            >
+                                {slide.promotions[0].title || 'Заголовок'}
                             </div>
-                        )}
-                    </div>
-                )}
+                            <div
+                                className="preview-description"
+                                style={{
+                                    color: slide.colorDescription || '#000000',
+                                    fontSize: slide.fontSizeDescription || '14px',
+                                    fontFamily: slide.fontFamilleDescription || 'Arial',
+                                }}
+                            >
+                                {slide.promotions[0].description || 'Описание'}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Блок с датами */}
+                    {slide.promotions?.[0]?.startDate && slide.promotions?.[0]?.endDate && (
+                        <div
+                            className="preview-dates-container"
+                            style={{
+                                color: slide.colorTitle || '#000000',
+                                fontFamily: slide.fontFamilleTitle || 'Arial',
+                            }}
+                        >
+                            Акция с {slide.promotions[0].startDate} по {slide.promotions[0].endDate}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

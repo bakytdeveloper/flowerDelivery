@@ -573,3 +573,215 @@ textarea.form-control {
 .slides-container::-webkit-scrollbar-thumb:hover {
     background: rgba(96, 165, 250, 0.7);
 }
+
+
+/* Добавьте эти стили в AdminPanel.css */
+
+/* Стили для предпросмотра слайдера */
+.slide-preview {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    background: #f8f9fa;
+}
+
+.preview-background {
+    min-height: 220px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-height: 500px;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Основной контейнер предпросмотра - имитация слайдера */
+.preview-slider-container {
+    position: relative;
+    width: 100%;
+    height: 200px; /* Уменьшенная высота для предпросмотра */
+    overflow: hidden;
+    margin: 0 auto;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* Контент слайда */
+.preview-slide-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Левая часть с изображением - как на главной странице */
+.preview-slide-image {
+    width: 27% !important;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.preview-slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Текстовая часть - как на главной странице */
+.preview-text-content {
+    /*height: 100% !important; !* 90% может быть слишком много с учетом дат *!*/
+    /*max-height: 100% !important;*/
+    flex-grow: 1; /* Занимает все доступное пространство */
+    display: flex !important;
+    flex-direction: column;
+    /*justify-content: center;*/
+    margin-left: 33%;
+    padding-top: 0!important;
+    margin-top: 5%;
+    top: 5%!important;
+    margin-bottom: auto;
+}
+
+.preview-title {
+    display: flex;
+    justify-content: center;
+    font-size: 22px!important;
+    max-width: 90%;
+    line-height: 22px;
+    /*margin-bottom: 0.1rem;*/
+    margin-top: 0!important;
+    top: 0!important;
+    margin-bottom: 0;
+}
+
+.preview-description {
+    display: flex;
+    justify-content: center;
+    max-width: 90%;
+    /*line-height: 1.3;*/
+    margin-top: 15px;
+    font-size: 17px!important;
+}
+
+/* Блок с датами */
+.preview-dates-container {
+    position: absolute;
+    bottom: 10px;
+    left: 34% !important;
+    width: 65%;
+    margin: 0 auto;
+    z-index: 1;
+    padding-top: 0!important;
+    margin-bottom: 10px;
+    font-size: 8px;
+}
+
+
+/* Адаптивные стили для мобильного предпросмотра */
+@media (max-width: 768px) {
+    .preview-slider-container {
+        height: 150px; /* Еще меньше для мобильных */
+    }
+
+    .preview-slide-image {
+        width: 33% !important;
+    }
+
+    .preview-text-content {
+        top: 0!important;
+        height: 90% !important; /* 90% может быть слишком много с учетом дат */
+        max-height: 100% !important;
+        flex-grow: 1; /* Занимает все доступное пространство */
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 24%;
+        padding-top: 0!important;
+    }
+
+    .preview-title {
+        display: flex;
+        justify-content: center;
+        font-size: 22px!important;
+        max-width: 90%;
+        line-height: 22px;
+        /*margin-bottom: 0.1rem;*/
+        margin-top: 0!important;
+        top: 0!important;
+        margin-bottom: 0;
+    }
+
+    .preview-description {
+        display: flex;
+        justify-content: center;
+        max-width: 90%;
+        /*line-height: 1.3;*/
+        margin-top: 15px;
+        font-size: 17px!important;
+    }
+
+    .preview-dates-container {
+        position: absolute;
+        bottom: 10px;
+        left: 34% !important;
+        width: 65%;
+        margin: 0 auto;
+        z-index: 1;
+        padding-top: 0!important;
+        margin-bottom: 10px;
+        font-size: 9px;
+    }
+}
+
+/* Стили для видео-фона (если понадобится в будущем) */
+.preview-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+
+/* В AdminPanel.css добавьте */
+@media (max-width: 768px) {
+    .preview-slider-container {
+        height: 120px;
+    }
+
+    .preview-title {
+        font-size: 12px;
+    }
+
+    .preview-description {
+        font-size: 10px;
+    }
+
+    .preview-dates-container {
+        font-size: 8px;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 480px) {
+    .preview-slider-container {
+        height: 100px;
+    }
+
+    .preview-text-content {
+        margin-left: 40%;
+        width: 55%;
+    }
+}
