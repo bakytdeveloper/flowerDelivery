@@ -314,7 +314,7 @@ const AdminPanel = () => {
                                             <h4>Основные настройки</h4>
 
                                             <div className="form-group">
-                                                <label>URL изображения:</label>
+                                                <label>URL левой картинки:</label>
                                                 <input
                                                     type="text"
                                                     value={slide.url}
