@@ -20,6 +20,7 @@ const AdminPanel = () => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
 
     // Загрузка данных слайдера
+    // Загрузка данных слайдера
     const fetchSliderData = async () => {
         try {
             setIsLoading(true);
@@ -31,7 +32,25 @@ const AdminPanel = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                setSliderImages(data.sliderImages || []);
+
+                // Обрабатываем даты при загрузке
+                const processedSlides = data.sliderImages?.map(slide => {
+                    const processedSlide = { ...slide };
+
+                    if (processedSlide.promotions?.[0]) {
+                        const promotion = { ...processedSlide.promotions[0] };
+
+                        // Форматируем даты для отображения
+                        promotion.startDate = formatDateForInput(promotion.startDate);
+                        promotion.endDate = formatDateForInput(promotion.endDate);
+
+                        processedSlide.promotions = [promotion];
+                    }
+
+                    return processedSlide;
+                }) || [];
+
+                setSliderImages(processedSlides);
             } else {
                 throw new Error('Ошибка загрузки данных');
             }
@@ -125,9 +144,34 @@ const AdminPanel = () => {
     };
 
     // Сохранение изменений
+    // Сохранение изменений
     const handleSaveChanges = async () => {
         try {
             setIsLoading(true);
+
+            // Подготавливаем данные для отправки
+            const slidesForServer = sliderImages.map(slide => {
+                const preparedSlide = { ...slide };
+
+                // Обрабатываем даты промо-акции
+                if (preparedSlide.promotions?.[0]) {
+                    const promotion = { ...preparedSlide.promotions[0] };
+
+                    // Если дата в формате yyyy-MM-dd, преобразуем в ISO с временем
+                    if (promotion.startDate && promotion.startDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                        promotion.startDate = `${promotion.startDate}T00:00:00.000Z`;
+                    }
+
+                    if (promotion.endDate && promotion.endDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                        promotion.endDate = `${promotion.endDate}T23:59:59.000Z`;
+                    }
+
+                    preparedSlide.promotions = [promotion];
+                }
+
+                return preparedSlide;
+            });
+
             const response = await fetch(`${apiUrl}/api/homepage`, {
                 method: 'POST',
                 headers: {
@@ -135,7 +179,7 @@ const AdminPanel = () => {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    sliderImages: sliderImages.filter(slide => slide.url.trim() !== '')
+                    sliderImages: slidesForServer.filter(slide => slide.url.trim() !== '')
                 })
             });
 
@@ -153,7 +197,44 @@ const AdminPanel = () => {
         }
     };
 
-    // Предпросмотр слайда
+    // Функция для преобразования ISO даты в формат yyyy-MM-dd
+    const formatDateForInput = (isoDateString) => {
+        if (!isoDateString) return '';
+
+        try {
+            // Если дата уже в формате yyyy-MM-dd, возвращаем как есть
+            if (isoDateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                return isoDateString;
+            }
+
+            // Если дата в ISO формате, извлекаем только дату
+            const date = new Date(isoDateString);
+            return date.toISOString().split('T')[0];
+        } catch (error) {
+            console.error('Error formatting date:', error);
+            return '';
+        }
+    };
+
+    // Функция для отображения дат в читаемом формате (без времени)
+    const formatDateForDisplay = (isoDateString) => {
+        if (!isoDateString) return '';
+
+        try {
+            // Если дата уже в формате yyyy-MM-dd, возвращаем как есть
+            if (isoDateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                return isoDateString;
+            }
+
+            // Если дата в ISO формате, извлекаем только дату
+            const date = new Date(isoDateString);
+            return date.toISOString().split('T')[0];
+        } catch (error) {
+            console.error('Error formatting date for display:', error);
+            return '';
+        }
+    };
+
     // Предпросмотр слайда
     const SlidePreview = ({ slide, index }) => (
         <div className="slide-preview">
@@ -220,7 +301,7 @@ const AdminPanel = () => {
                                 fontFamily: slide.fontFamilleTitle || 'Arial',
                             }}
                         >
-                            Акция с {slide.promotions[0].startDate} по {slide.promotions[0].endDate}
+                            Акция с {formatDateForDisplay(slide.promotions[0].startDate)} по {formatDateForDisplay(slide.promotions[0].endDate)}
                         </div>
                     )}
                 </div>
@@ -231,6 +312,7 @@ const AdminPanel = () => {
     if (isLoading && sliderImages.length === 0) {
         return <div className="admin-panel-loading">Загрузка...</div>;
     }
+
 
     return (
         <div className="admin-panel">
@@ -406,7 +488,7 @@ const AdminPanel = () => {
                                                     <label>Дата начала:</label>
                                                     <input
                                                         type="date"
-                                                        value={slide.promotions?.[0]?.startDate || ''}
+                                                        value={formatDateForInput(slide.promotions?.[0]?.startDate) || ''}
                                                         onChange={(e) => handleSlideChange(index, 'promotions.startDate', e.target.value)}
                                                         className="form-control"
                                                     />
@@ -416,7 +498,7 @@ const AdminPanel = () => {
                                                     <label>Дата окончания:</label>
                                                     <input
                                                         type="date"
-                                                        value={slide.promotions?.[0]?.endDate || ''}
+                                                        value={formatDateForInput(slide.promotions?.[0]?.endDate) || ''}
                                                         onChange={(e) => handleSlideChange(index, 'promotions.endDate', e.target.value)}
                                                         className="form-control"
                                                     />

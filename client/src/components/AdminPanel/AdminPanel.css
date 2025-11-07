@@ -677,42 +677,59 @@ textarea.form-control {
 .preview-dates-container {
     position: absolute;
     bottom: 10px;
-    left: 34% !important;
+    left: 47% !important;
     width: 65%;
     margin: 0 auto;
     z-index: 1;
     padding-top: 0!important;
     margin-bottom: 10px;
-    font-size: 8px;
+    font-size: 9px;
 }
 
 
 /* Адаптивные стили для мобильного предпросмотра */
 @media (max-width: 768px) {
     .preview-slider-container {
-        height: 150px; /* Еще меньше для мобильных */
+        /*height: auto !important;*/
+        height: 150px!important; /* Минимальная высота */
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 40px;
+    }
+    .preview-slide-content {
+        position: absolute;
+        height: 100%;
+
+    }
+    .preview-slide-image {
+        width: 30% !important;
+        height: 100% !important;
     }
 
-    .preview-slide-image {
-        width: 33% !important;
+
+    .preview-slide-img {
+        width: 100%;
+        height: 100% !important;
+        object-fit: cover;
     }
+
 
     .preview-text-content {
-        top: 0!important;
-        height: 90% !important; /* 90% может быть слишком много с учетом дат */
-        max-height: 100% !important;
         flex-grow: 1; /* Занимает все доступное пространство */
         display: flex !important;
         flex-direction: column;
-        justify-content: center;
-        margin-left: 24%;
+        /*justify-content: center;*/
+        margin-left: 33%;
         padding-top: 0!important;
+        margin-top: 5%;
+        top: 5%!important;
+        margin-bottom: auto;
     }
 
     .preview-title {
         display: flex;
         justify-content: center;
-        font-size: 22px!important;
+        font-size: 18px!important;
         max-width: 90%;
         line-height: 22px;
         /*margin-bottom: 0.1rem;*/
@@ -727,19 +744,19 @@ textarea.form-control {
         max-width: 90%;
         /*line-height: 1.3;*/
         margin-top: 15px;
-        font-size: 17px!important;
+        font-size: 12px!important;
     }
 
     .preview-dates-container {
         position: absolute;
         bottom: 10px;
-        left: 34% !important;
+        left: 39% !important;
         width: 65%;
         margin: 0 auto;
         z-index: 1;
         padding-top: 0!important;
         margin-bottom: 10px;
-        font-size: 9px;
+        font-size: 8px;
     }
 }
 
