@@ -19,6 +19,26 @@ const WrapperManagement = () => {
 
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
 
+    // Функция для получения корректного URL изображения
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) {
+            return '/images/placeholder-wrapper.jpg';
+        }
+
+        // Если это уже полный URL (включая base64)
+        if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+            return imagePath;
+        }
+
+        // Если это путь к файлу на сервере
+        if (imagePath.startsWith('/')) {
+            return `${apiUrl}${imagePath}`;
+        }
+
+        // Если это относительный путь
+        return `${apiUrl}/uploads/${imagePath}`;
+    };
+
     // Загрузка обёрток
     const fetchWrappers = async () => {
         try {
@@ -101,7 +121,6 @@ const WrapperManagement = () => {
         setShowWrapperModal(false);
         setCurrentWrapper(null);
         fetchWrappers();
-
     };
 
     // Переключение активности
@@ -191,9 +210,12 @@ const WrapperManagement = () => {
                         <div key={wrapper._id} className="addon-card-admin">
                             <div className="addon-image-container">
                                 <img
-                                    src={wrapper.image || '/images/placeholder-wrapper.jpg'}
+                                    src={getImageUrl(wrapper.image)}
                                     alt={wrapper.name}
                                     className="addon-image"
+                                    onError={(e) => {
+                                        e.target.src = '/images/placeholder-wrapper.jpg';
+                                    }}
                                 />
                                 <div className="addon-badges">
                                     {!wrapper.isActive && (
@@ -264,8 +286,6 @@ const WrapperManagement = () => {
                                     >
                                         Редактировать
                                     </button>
-
-
                                 </div>
                             </div>
                         </div>
