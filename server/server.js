@@ -245,7 +245,7 @@ cron.schedule('0 5 * * * *', cleanupGuestCarts);
 
 // ДОБАВЬТЕ ЭТОТ CRON JOB ДЛЯ ОЧИСТКИ В 2:00 НОЧИ
 // cron.schedule('*/5 * * * *', async () => {
-cron.schedule('0 3 * * *', async () => {
+cron.schedule('0 2 * * *', async () => {
     console.log('🌙 Запуск ночной очистки товаров с нулевым количеством (2:00)...');
     try {
         const result = await findAndDeleteZeroQuantityProducts();
