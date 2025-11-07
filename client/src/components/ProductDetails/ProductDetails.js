@@ -7,7 +7,6 @@ import ProductReviews from "../ProductReviews/ProductReviews";
 import { toast } from 'react-toastify';
 import './ProductDetails.css';
 
-
 const ProductDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -23,6 +22,28 @@ const ProductDetails = () => {
     const { toggleFavorite, isFavorite } = useFavorites();
     const location = useLocation();
     const { addFlowerToCart, addAddonToCart } = useCart();
+
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
+
+    // Функция для получения корректного URL изображения
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) {
+            return '/images/placeholder-flower.jpg';
+        }
+
+        // Если это уже полный URL (включая base64)
+        if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+            return imagePath;
+        }
+
+        // Если это путь к файлу на сервере
+        if (imagePath.startsWith('/')) {
+            return `${apiUrl}${imagePath}`;
+        }
+
+        // Если это относительный путь
+        return `${apiUrl}/uploads/${imagePath}`;
+    };
 
     // Функции для получения переведенных значений
     const getOccasionLabel = (occasionValue) => {
@@ -56,7 +77,7 @@ const ProductDetails = () => {
             setLoading(true);
             setError(null);
 
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
+            const response = await fetch(`${apiUrl}/api/products/${id}`);
 
             if (!response.ok) {
                 if (response.status === 404) {
@@ -84,7 +105,7 @@ const ProductDetails = () => {
     const fetchWrappers = async () => {
         try {
             setLoadingWrappers(true);
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/wrappers/available`);
+            const response = await fetch(`${apiUrl}/api/products/wrappers/available`);
 
             if (response.ok) {
                 const wrappersData = await response.json();
@@ -100,7 +121,7 @@ const ProductDetails = () => {
     const fetchAddons = async () => {
         try {
             setLoadingAddons(true);
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/addons/available`);
+            const response = await fetch(`${apiUrl}/api/products/addons/available`);
 
             if (response.ok) {
                 const addonsData = await response.json();
@@ -299,10 +320,13 @@ const ProductDetails = () => {
                                     >
                                         <div className="product-image-container">
                                             <img
-                                                src={wrapper.image || '/images/placeholder-flower.jpg'}
+                                                src={getImageUrl(wrapper.image)}
                                                 alt={wrapper.name}
                                                 className="product-image"
                                                 loading="lazy"
+                                                onError={(e) => {
+                                                    e.target.src = '/images/placeholder-wrapper.jpg';
+                                                }}
                                             />
                                             {wrapper.originalPrice && wrapper.originalPrice > wrapper.price && (
                                                 <span className="discount-badge">
@@ -366,7 +390,7 @@ const ProductDetails = () => {
                             ›
                         </button>
                     </div>
-                    
+
                 </div>
             </section>
         );
@@ -423,10 +447,13 @@ const ProductDetails = () => {
                                     >
                                         <div className="product-image-container">
                                             <img
-                                                src={addon.image || '/images/placeholder-flower.jpg'}
+                                                src={getImageUrl(addon.image)}
                                                 alt={addon.name}
                                                 className="product-image"
                                                 loading="lazy"
+                                                onError={(e) => {
+                                                    e.target.src = '/images/placeholder-addon.jpg';
+                                                }}
                                             />
                                             {addon.originalPrice && addon.originalPrice > addon.price && (
                                                 <span className="discount-badge">
@@ -434,7 +461,11 @@ const ProductDetails = () => {
                                                 </span>
                                             )}
                                             <span className="popular-badge">
-                                                {addon.typeLabel || 'Дополнение'}
+                                                {addon.type === 'soft_toy' ? '🧸' :
+                                                    addon.type === 'candy_box' ? '🍬' :
+                                                        addon.type === 'chocolate' ? '🍫' :
+                                                            addon.type === 'card' ? '💌' :
+                                                                addon.type === 'perfume' ? '💎' : '🎁'}
                                             </span>
                                         </div>
 
@@ -449,7 +480,11 @@ const ProductDetails = () => {
 
                                             <div className="product-meta-catalog">
                                                 <span className="product-occasion-catalog">
-                                                    {addon.typeLabel || addon.type}
+                                                    {addon.type === 'soft_toy' ? 'Мягкая игрушка' :
+                                                        addon.type === 'candy_box' ? 'Коробка конфет' :
+                                                            addon.type === 'chocolate' ? 'Шоколад' :
+                                                                addon.type === 'card' ? 'Открытка' :
+                                                                    addon.type === 'perfume' ? 'Парфюм' : 'Другое'}
                                                 </span>
                                             </div>
 
@@ -574,9 +609,12 @@ const ProductDetails = () => {
                     <div className="product-gallery">
                         <div className="main-image-container">
                             <img
-                                src={product.images?.[selectedImageIndex] || '/images/placeholder-flower.jpg'}
+                                src={getImageUrl(product.images?.[selectedImageIndex])}
                                 alt={product.name}
                                 className="main-image"
+                                onError={(e) => {
+                                    e.target.src = '/images/placeholder-flower.jpg';
+                                }}
                             />
                             {product.images && product.images.length > 1 && (
                                 <>
@@ -610,8 +648,11 @@ const ProductDetails = () => {
                                         onClick={() => handleImageClick(index)}
                                     >
                                         <img
-                                            src={image}
+                                            src={getImageUrl(image)}
                                             alt={`${product.name} ${index + 1}`}
+                                            onError={(e) => {
+                                                e.target.src = '/images/placeholder-flower.jpg';
+                                            }}
                                         />
                                     </div>
                                 ))}
@@ -767,7 +808,7 @@ const ProductDetails = () => {
                 <div className="product-additional-info">
                     <div className="info-section">
                         <h3>🚚 Доставка</h3>
-                        <p>Бесплатная доставка по городу при заказе от 5000 ₸. Срок доставки: 1-2 часа.</p>
+                        <p>Бесплатная доставка по городу при заказе от 5000 ₸. Срок доставка: 1-2 часа.</p>
                     </div>
                     <div className="info-section">
                         <h3>🔄 Возврат</h3>
@@ -784,7 +825,3 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
-
-
-
-
