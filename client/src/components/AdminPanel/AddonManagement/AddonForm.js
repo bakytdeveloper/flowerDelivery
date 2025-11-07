@@ -1,5 +1,5 @@
 // src/components/AdminPanel/AddonManagement/AddonForm.js
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import '../WrapperManagement/WrapperForm.css';
@@ -40,6 +40,34 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
             isActive: true
         };
     }
+
+    // Функция для получения корректного URL изображения
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) {
+            return '/images/placeholder-addon.jpg';
+        }
+
+        // Если это уже полный URL (включая base64)
+        if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+            return imagePath;
+        }
+
+        // Если это путь к файлу на сервере
+        if (imagePath.startsWith('/')) {
+            return `${apiUrl}${imagePath}`;
+        }
+
+        // Если это относительный путь
+        return `${apiUrl}/uploads/${imagePath}`;
+    };
+
+    // Инициализация формы при редактировании
+    useEffect(() => {
+        if (initialAddon && initialAddon.image) {
+            // Если есть существующее изображение, устанавливаем его для предпросмотра
+            setLocalImagePreview(getImageUrl(initialAddon.image));
+        }
+    }, [initialAddon]);
 
     const handleChange = (field, value) => {
         setAddon(prev => ({
@@ -83,6 +111,9 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
             setImageUrlInput('');
             setShowUrlInput(false);
         }
+
+        // Очищаем существующее изображение из данных
+        handleChange('image', '');
     };
 
     // Активация поля URL
@@ -96,11 +127,14 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
-            if (localImagePreview) {
+            if (localImagePreview && localImagePreview.startsWith('blob:')) {
                 URL.revokeObjectURL(localImagePreview);
                 setLocalImagePreview(null);
             }
         }
+
+        // Очищаем существующее изображение из данных
+        handleChange('image', '');
     };
 
     // Отмена ввода URL
@@ -108,6 +142,11 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
         setShowUrlInput(false);
         setImageUrlInput('');
         setUploadMethod('file');
+
+        // Восстанавливаем предпросмотр существующего изображения при редактировании
+        if (initialAddon && initialAddon.image && !selectedFile) {
+            setLocalImagePreview(getImageUrl(initialAddon.image));
+        }
     };
 
     // Удаление изображения
@@ -120,7 +159,9 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
 
         // Очищаем локальный предпросмотр
         if (localImagePreview) {
-            URL.revokeObjectURL(localImagePreview);
+            if (localImagePreview.startsWith('blob:')) {
+                URL.revokeObjectURL(localImagePreview);
+            }
             setLocalImagePreview(null);
         }
 
@@ -155,6 +196,8 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
     };
 
     // Сохранение дополнения
+
+// Сохранение дополнения
     const handleSave = async () => {
         // Валидация обязательных полей
         if (!isFormValid()) {
@@ -167,6 +210,23 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
             setUploadingImage(true);
 
             let finalImageUrl = addon.image;
+            let shouldDeleteOldImage = false;
+            let oldImageUrl = null;
+
+            // Если редактируем и изображение изменилось, запоминаем старое для удаления
+            if (isEditing && initialAddon && initialAddon.image) {
+                const imageChanged =
+                    (selectedFile && initialAddon.image !== finalImageUrl) ||
+                    (showUrlInput && imageUrlInput.trim() && initialAddon.image !== finalImageUrl) ||
+                    (!selectedFile && !showUrlInput && initialAddon.image !== finalImageUrl);
+
+                if (imageChanged &&
+                    !initialAddon.image.startsWith('http') &&
+                    !initialAddon.image.startsWith('data:')) {
+                    shouldDeleteOldImage = true;
+                    oldImageUrl = initialAddon.image;
+                }
+            }
 
             // Если выбран файл - загружаем его
             if (selectedFile) {
@@ -212,6 +272,11 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
                     return;
                 }
             }
+            // Если редактируем и изображение не менялось - используем существующее
+            else if (isEditing && initialAddon.image && !selectedFile && !showUrlInput) {
+                finalImageUrl = initialAddon.image;
+                shouldDeleteOldImage = false; // Не удаляем если не менялось
+            }
 
             // Подготовка данных - преобразуем в числа
             const addonData = {
@@ -221,6 +286,11 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
                 originalPrice: addon.originalPrice ? Number(addon.originalPrice) : undefined,
                 quantity: Number(addon.quantity) || 0
             };
+
+            // Если нужно удалить старое изображение, добавляем флаг
+            if (shouldDeleteOldImage && oldImageUrl) {
+                addonData._oldImageToDelete = oldImageUrl;
+            }
 
             // Проверяем, что числовые поля корректны
             if (isNaN(addonData.price) || addonData.price < 0) {
@@ -253,7 +323,7 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
                 toast.success(isEditing ? 'Дополнение успешно обновлено' : 'Дополнение успешно создано');
 
                 // Очищаем локальный предпросмотр после сохранения
-                if (localImagePreview) {
+                if (localImagePreview && localImagePreview.startsWith('blob:')) {
                     URL.revokeObjectURL(localImagePreview);
                     setLocalImagePreview(null);
                 }
@@ -275,26 +345,23 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
     // Получение URL для предпросмотра
     const getPreviewImage = () => {
         if (localImagePreview) {
-            return localImagePreview; // Локальный предпросмотр файла
-        }
-        if (addon.image && !addon.image.startsWith('blob:')) {
-            return addon.image; // Уже загруженное изображение
+            return localImagePreview; // Локальный предпросмотр файла или существующее изображение
         }
         return null;
     };
 
     // Очистка при размонтировании
-    React.useEffect(() => {
+    useEffect(() => {
         return () => {
             // Очищаем локальные URL при размонтировании компонента
-            if (localImagePreview) {
+            if (localImagePreview && localImagePreview.startsWith('blob:')) {
                 URL.revokeObjectURL(localImagePreview);
             }
         };
     }, [localImagePreview]);
 
     const previewImage = getPreviewImage();
-    const hasImageSource = selectedFile || (showUrlInput && imageUrlInput.trim()) || addon.image;
+    const hasImageSource = selectedFile || (showUrlInput && imageUrlInput.trim()) || addon.image || (initialAddon && initialAddon.image);
 
     return (
         <div className="modal-overlay" onClick={onCancel}>
@@ -398,10 +465,13 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
 
                             {previewImage && (
                                 <div className="image-preview">
-                                    <img src={previewImage} alt="Preview"
-                                         onError={(e) => {
-                                             e.target.src = '/images/placeholder-addon.jpg';
-                                         }} />
+                                    <img
+                                        src={previewImage}
+                                        alt="Preview"
+                                        onError={(e) => {
+                                            e.target.src = '/images/placeholder-addon.jpg';
+                                        }}
+                                    />
                                     <div className="image-source-badge">
                                         {selectedFile ? 'Файл (будет загружен)' :
                                             showUrlInput && imageUrlInput ? 'URL (будет проверен)' :

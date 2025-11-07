@@ -156,9 +156,38 @@ const handleUploadError = (error, req, res, next) => {
     next();
 };
 
+// Функция для получения физического пути файла по URL
+const getImageFilePath = (imageUrl) => {
+    try {
+        if (!imageUrl) return null;
+
+        // Извлекаем имя файла из URL
+        const filename = path.basename(imageUrl);
+
+        // Пробуем найти файл в обеих директориях
+        const wrapperPath = path.join(wrappersDir, filename);
+        const addonPath = path.join(addonsDir, filename);
+
+        // Проверяем существование файлов
+        if (fs.existsSync(wrapperPath)) {
+            return wrapperPath;
+        }
+        if (fs.existsSync(addonPath)) {
+            return addonPath;
+        }
+
+        return null;
+    } catch (error) {
+        console.error('Error getting image file path:', error);
+        return null;
+    }
+};
+
+
 export {
     upload,
     processWrapperAddonImage,
     handleUploadError,
-    deleteWrapperAddonImage
+    deleteWrapperAddonImage,
+    getImageFilePath
 };

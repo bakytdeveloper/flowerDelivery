@@ -1,4 +1,5 @@
 import Wrapper from '../models/Wrapper.js';
+import { deleteWrapperAddonImage, getImageFilePath } from '../middlewares/wrapperAddonUploadMiddleware.js';
 
 /**
  * Создать новую обертку
@@ -60,34 +61,62 @@ export const getWrapperById = async (req, res) => {
  */
 export const updateWrapper = async (req, res) => {
     try {
+        const oldWrapper = await Wrapper.findById(req.params.id);
+        if (!oldWrapper) {
+            return res.status(404).json({ error: 'Обертка не найдена' });
+        }
+
+        // Если изображение изменилось и старое изображение было локальным файлом
+        if (req.body.image && oldWrapper.image !== req.body.image) {
+            // Проверяем, было ли старое изображение локальным файлом (не URL)
+            if (oldWrapper.image &&
+                !oldWrapper.image.startsWith('http') &&
+                !oldWrapper.image.startsWith('data:') &&
+                getImageFilePath(oldWrapper.image)) {
+                console.log(`🗑️ Удаляем старое изображение обёртки: ${oldWrapper.image}`);
+                deleteWrapperAddonImage(oldWrapper.image);
+            }
+        }
+
         const wrapper = await Wrapper.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true, runValidators: true }
         );
-        if (!wrapper) {
-            return res.status(404).json({ error: 'Обертка не найдена' });
-        }
+
         res.json(wrapper);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
+
 /**
  * Удалить обертку
  */
 export const deleteWrapper = async (req, res) => {
     try {
-        const wrapper = await Wrapper.findByIdAndDelete(req.params.id);
+        const wrapper = await Wrapper.findById(req.params.id);
         if (!wrapper) {
             return res.status(404).json({ error: 'Обертка не найдена' });
         }
+
+        // Удаляем связанное изображение если оно локальное
+        if (wrapper.image &&
+            !wrapper.image.startsWith('http') &&
+            !wrapper.image.startsWith('data:') &&
+            getImageFilePath(wrapper.image)) {
+            console.log(`🗑️ Удаляем изображение при удалении обёртки: ${wrapper.image}`);
+            deleteWrapperAddonImage(wrapper.image);
+        }
+
+        await Wrapper.findByIdAndDelete(req.params.id);
         res.json({ message: 'Обертка удалена' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 /**
  * Поиск оберток по названию
