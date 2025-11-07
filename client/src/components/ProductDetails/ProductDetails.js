@@ -366,32 +366,7 @@ const ProductDetails = () => {
                             ›
                         </button>
                     </div>
-
-                    {/*<div className="scroll-indicators d-md-none">*/}
-                    {/*    <button*/}
-                    {/*        className="scroll-indicator-btn"*/}
-                    {/*        onClick={(e) => {*/}
-                    {/*            e.preventDefault();*/}
-                    {/*            const container = document.querySelector('.season-section:first-of-type .season-scroll-container');*/}
-                    {/*            container.scrollBy({ left: -300, behavior: 'smooth' });*/}
-                    {/*        }}*/}
-                    {/*        aria-label="Прокрутить влево"*/}
-                    {/*    >*/}
-                    {/*        ‹*/}
-                    {/*    </button>*/}
-                    {/*    <span className="scroll-hint">Проведите для прокрутки</span>*/}
-                    {/*    <button*/}
-                    {/*        className="scroll-indicator-btn"*/}
-                    {/*        onClick={(e) => {*/}
-                    {/*            e.preventDefault();*/}
-                    {/*            const container = document.querySelector('.season-section:first-of-type .season-scroll-container');*/}
-                    {/*            container.scrollBy({ left: 300, behavior: 'smooth' });*/}
-                    {/*        }}*/}
-                    {/*        aria-label="Прокрутить вправо"*/}
-                    {/*    >*/}
-                    {/*        ›*/}
-                    {/*    </button>*/}
-                    {/*</div>*/}
+                    
                 </div>
             </section>
         );
@@ -525,33 +500,6 @@ const ProductDetails = () => {
                         </button>
                     </div>
 
-                    {/*<div className="scroll-indicators d-md-none">*/}
-                    {/*    <button*/}
-                    {/*        className="scroll-indicator-btn"*/}
-                    {/*        onClick={(e) => {*/}
-                    {/*            e.preventDefault();*/}
-                    {/*            const containers = document.querySelectorAll('.season-section .season-scroll-container');*/}
-                    {/*            const container = containers[containers.length - 1];*/}
-                    {/*            container.scrollBy({ left: -300, behavior: 'smooth' });*/}
-                    {/*        }}*/}
-                    {/*        aria-label="Прокрутить влево"*/}
-                    {/*    >*/}
-                    {/*        ‹*/}
-                    {/*    </button>*/}
-                    {/*    <span className="scroll-hint">Проведите для прокрутки</span>*/}
-                    {/*    <button*/}
-                    {/*        className="scroll-indicator-btn"*/}
-                    {/*        onClick={(e) => {*/}
-                    {/*            e.preventDefault();*/}
-                    {/*            const containers = document.querySelectorAll('.season-section .season-scroll-container');*/}
-                    {/*            const container = containers[containers.length - 1];*/}
-                    {/*            container.scrollBy({ left: 300, behavior: 'smooth' });*/}
-                    {/*        }}*/}
-                    {/*        aria-label="Прокрутить вправо"*/}
-                    {/*    >*/}
-                    {/*        ›*/}
-                    {/*    </button>*/}
-                    {/*</div>*/}
                 </div>
             </section>
         );
