@@ -20,6 +20,28 @@ const ProductReviews = ({ productId }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
 
+    // Состояния для модального окна отзывов
+    const [selectedReview, setSelectedReview] = useState(null);
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
+    // Функции для работы с модальным окном отзывов
+    const openReviewModal = (review, event) => {
+        event.stopPropagation();
+        setSelectedReview(review);
+        setIsReviewModalOpen(true);
+    };
+
+    const closeReviewModal = () => {
+        setSelectedReview(null);
+        setIsReviewModalOpen(false);
+    };
+
+    // Функция для обрезки текста (максимум 20 символов)
+    const truncateText = (text, maxLength = 20) => {
+        if (!text) return '';
+        return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+    };
+
     // Функции для работы с изображением
     const handleImageSelect = (e) => {
         const file = e.target.files[0];
@@ -226,7 +248,7 @@ const ProductReviews = ({ productId }) => {
 
     // Функции для горизонтального скролла
     const scrollReviews = (direction) => {
-        const container = document.querySelector('.reviews-scroll-container');
+        const container = document.querySelector('.reviews-scroll-container-dark');
         if (container) {
             const scrollAmount = 400;
             container.scrollBy({
@@ -238,11 +260,11 @@ const ProductReviews = ({ productId }) => {
 
     const RatingStars = ({ rating, size = 'medium' }) => {
         return (
-            <div className={`rating-stars ${size}`}>
+            <div className={`rating-stars-dark ${size}`}>
                 {[1, 2, 3, 4, 5].map((star) => (
                     <span
                         key={star}
-                        className={`star ${star <= rating ? 'filled' : ''}`}
+                        className={`star-dark ${star <= rating ? 'filled-dark' : ''}`}
                     >
                     ★
                 </span>
@@ -257,14 +279,18 @@ const ProductReviews = ({ productId }) => {
     };
 
     // Функция для получения URL полноразмерного изображения
+    // Функция для получения URL полноразмерного изображения
     const getFullImageUrl = (image) => {
-        return image.url;
+        // Все изображения хранятся только с префиксом thumb_ в папке thumbnails
+        // Используем тот же URL что и для миниатюр
+        return image.thumbnailUrl || image.url;
     };
+
 
     if (isLoading) {
         return (
             <div className="reviews-loading-dark">
-                <div className="spinner"></div>
+                <div className="spinner-dark"></div>
                 <p>Загрузка отзывов...</p>
             </div>
         );
@@ -287,7 +313,7 @@ const ProductReviews = ({ productId }) => {
             {isLoggedIn && hasCompletedPurchase && (
                 <div className="review-form-dark">
                     {!userReview || isEditing ? (
-                        <div className={`review-form-content ${isEditing ? 'editing' : ''}`}>
+                        <div className={`review-form-content-dark ${isEditing ? 'editing-dark' : ''}`}>
                             <h4>{isEditing ? 'Редактировать отзыв' : 'Оставьте ваш отзыв'}</h4>
 
                             <div className="rating-selector-dark">
@@ -423,14 +449,14 @@ const ProductReviews = ({ productId }) => {
                                 <p className="review-comment-dark">{userReview.comment}</p>
 
                                 {userReview.images && userReview.images.length > 0 && (
-                                    <div className="review-images-horizontal">
-                                        <div className="images-grid-horizontal">
+                                    <div className="review-images-horizontal-dark">
+                                        <div className="images-grid-horizontal-dark">
                                             {userReview.images.map((image, imgIndex) => (
-                                                <div key={image._id || imgIndex} className="review-image-item-horizontal">
+                                                <div key={image._id || imgIndex} className="review-image-item-horizontal-dark">
                                                     <img
                                                         src={`${process.env.REACT_APP_API_URL}${getImageUrl(image)}`}
                                                         alt={`Фото отзыва`}
-                                                        onClick={() => window.open(`${process.env.REACT_APP_API_URL}${getFullImageUrl(image)}`, '_blank')}
+                                                        onClick={(e) => openReviewModal(userReview, e)}
                                                     />
                                                 </div>
                                             ))}
@@ -445,7 +471,7 @@ const ProductReviews = ({ productId }) => {
 
             {/* Уведомления о статусе */}
             {isLoggedIn && !hasCompletedPurchase && userRole !== 'admin' && (
-                <div className="review-notice-dark info">
+                <div className="review-notice-dark info-dark">
                     <div className="notice-icon-dark">ℹ️</div>
                     <div className="notice-content-dark">
                         <strong>Вы можете оставить отзыв после покупки</strong>
@@ -455,7 +481,7 @@ const ProductReviews = ({ productId }) => {
             )}
 
             {!isLoggedIn && (
-                <div className="review-notice-dark warning">
+                <div className="review-notice-dark warning-dark">
                     <div className="notice-icon-dark">🔒</div>
                     <div className="notice-content-dark">
                         <strong>Войдите, чтобы оставить отзыв</strong>
@@ -465,17 +491,17 @@ const ProductReviews = ({ productId }) => {
             )}
 
             {/* Горизонтальный скролл отзывов */}
-            <div className="reviews-scroll-section">
+            <div className="reviews-scroll-section-dark">
                 {filteredReviews.length > 0 && (
                     <>
                         <button
-                            className="scroll-btn-reviews scroll-btn-reviews-left"
+                            className="scroll-btn-reviews-dark scroll-btn-reviews-left-dark"
                             onClick={() => scrollReviews('left')}
                         >
                             ‹
                         </button>
                         <button
-                            className="scroll-btn-reviews scroll-btn-reviews-right"
+                            className="scroll-btn-reviews-dark scroll-btn-reviews-right-dark"
                             onClick={() => scrollReviews('right')}
                         >
                             ›
@@ -483,43 +509,44 @@ const ProductReviews = ({ productId }) => {
                     </>
                 )}
 
-                <div className="reviews-scroll-container">
+                <div className="reviews-scroll-container-dark">
                     {filteredReviews.length === 0 ? (
                         <div className="no-reviews-dark">
-                            <div className="no-reviews-dark-icon">💬</div>
+                            <div className="no-reviews-icon-dark">💬</div>
                             <h4>Пока нет отзывов</h4>
                             <p>Будьте первым, кто поделится впечатлениями!</p>
                         </div>
                     ) : (
                         filteredReviews.map((review) => (
-                            <div key={review._id} className="review-card-horizontal">
-                                <div className="review-header-horizontal">
-                                    <div className="reviewer-info-horizontal">
-                                        <div className="reviewer-name-horizontal">
+                            <div key={review._id} className="review-card-horizontal-dark" onClick={(e) => openReviewModal(review, e)}>
+                                <div className="review-header-horizontal-dark">
+                                    <div className="reviewer-info-horizontal-dark">
+                                        <div className="reviewer-name-horizontal-dark">
                                             {review.user ? review.user.name : 'Анонимный пользователь'}
                                         </div>
-                                        <div className="review-date-horizontal">
+                                        <div className="review-date-horizontal-dark">
                                             {new Date(review.createdAt).toLocaleDateString('ru-RU')}
                                         </div>
                                     </div>
-                                    <div className="review-rating-horizontal">
+                                    <div className="review-rating-horizontal-dark">
                                         <RatingStars rating={review.rating} size="small" />
                                     </div>
                                 </div>
 
-                                <div className="review-content-horizontal">
-                                    <p className="review-text-horizontal">{review.comment}</p>
+                                <div className="review-content-horizontal-dark">
+                                    <p className="review-text-horizontal-dark">
+                                        {truncateText(review.comment)}
+                                    </p>
                                 </div>
 
                                 {review.images && review.images.length > 0 && (
-                                    <div className="review-images-horizontal">
-                                        <div className="images-grid-horizontal">
+                                    <div className="review-images-horizontal-dark">
+                                        <div className="images-grid-horizontal-dark">
                                             {review.images.map((image, imgIndex) => (
-                                                <div key={image._id || imgIndex} className="review-image-item-horizontal">
+                                                <div key={image._id || imgIndex} className="review-image-item-horizontal-dark">
                                                     <img
                                                         src={`${process.env.REACT_APP_API_URL}${getImageUrl(image)}`}
                                                         alt={`Фото отзыва`}
-                                                        onClick={() => window.open(`${process.env.REACT_APP_API_URL}${getFullImageUrl(image)}`, '_blank')}
                                                     />
                                                 </div>
                                             ))}
@@ -528,14 +555,13 @@ const ProductReviews = ({ productId }) => {
                                 )}
 
                                 {review.ownerReply && (
-                                    <div className="owner-reply-horizontal">
-                                        <div className="owner-reply-header-horizontal">
-                                            <span className="reply-author-horizontal">💼 Ответ магазина</span>
-                                            <span className="reply-date-horizontal">
-                                                {new Date(review.ownerReplyDate).toLocaleDateString('ru-RU')}
-                                            </span>
+                                    <div className="owner-reply-horizontal-dark">
+                                        <div className="owner-reply-header-horizontal-dark">
+                                            <span className="reply-author-horizontal-dark">💼 Ответ магазина</span>
                                         </div>
-                                        <p className="reply-text-horizontal">{review.ownerReply}</p>
+                                        <p className="reply-text-horizontal-dark">
+                                            {truncateText(review.ownerReply)}
+                                        </p>
                                     </div>
                                 )}
                             </div>
@@ -543,6 +569,66 @@ const ProductReviews = ({ productId }) => {
                     )}
                 </div>
             </div>
+
+            {/* Модальное окно для просмотра отзыва */}
+            {isReviewModalOpen && selectedReview && (
+                <div className="review-modal-overlay-dark" onClick={closeReviewModal}>
+                    <div className="review-modal-content-dark" onClick={(e) => e.stopPropagation()}>
+                        <button className="review-modal-close-dark" onClick={closeReviewModal}>
+                            ×
+                        </button>
+
+                        <div className="review-modal-header-dark">
+                            <div className="review-modal-user-info-dark">
+                                <div className="review-modal-user-name-dark">
+                                    {selectedReview.user ? selectedReview.user.name : 'Анонимный пользователь'}
+                                </div>
+                                <div className="review-modal-date-dark">
+                                    {new Date(selectedReview.createdAt).toLocaleDateString('ru-RU')}
+                                </div>
+                            </div>
+                            <div className="review-modal-rating-dark">
+                                <RatingStars rating={selectedReview.rating} size="large" />
+                            </div>
+                        </div>
+
+                        <div className="review-modal-body-dark">
+                            <div className="review-modal-comment-dark">
+                                {selectedReview.comment}
+                            </div>
+
+                            {selectedReview.images && selectedReview.images.length > 0 && (
+                                <div className="review-modal-images-dark">
+                                    <h4 className="review-modal-images-title-dark">Фотографии отзыва</h4>
+                                    <div className="review-modal-images-grid-dark">
+                                        {selectedReview.images.map((image, index) => (
+                                            <div key={index} className="review-modal-image-item-dark">
+                                                <img
+                                                    src={`${process.env.REACT_APP_API_URL}${getFullImageUrl(image)}`}
+                                                    alt={`Фото отзыва ${index + 1}`}
+                                                    onClick={() => window.open(`${process.env.REACT_APP_API_URL}${getFullImageUrl(image)}`, '_blank')}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {selectedReview.ownerReply && (
+                                <div className="review-modal-owner-reply-dark">
+                                    <div className="review-modal-reply-header-dark">
+                                        <span className="review-modal-reply-author-dark">💼 Ответ магазина</span>
+                                        <span className="review-modal-reply-date-dark">
+                                            {new Date(selectedReview.ownerReplyDate).toLocaleDateString('ru-RU')}
+                                        </span>
+                                    </div>
+                                    <p className="review-modal-reply-text-dark">{selectedReview.ownerReply}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
