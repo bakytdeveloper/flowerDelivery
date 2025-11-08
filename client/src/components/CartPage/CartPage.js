@@ -349,7 +349,10 @@ const CartPage = () => {
                                         </div>
 
                                         <div className="item-price">
-                                            {formatPrice(item.itemTotal * item.quantity)}
+                                            {item.itemType === 'addon'
+                                                ? formatPrice(item.price * item.quantity) // Для доп. товаров: цена * количество
+                                                : formatPrice(item.itemTotal * item.quantity) // Для цветов: используем itemTotal
+                                            }
                                         </div>
 
                                         <button

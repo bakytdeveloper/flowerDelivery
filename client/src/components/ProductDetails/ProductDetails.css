@@ -858,3 +858,29 @@
     color: #94a3b8;
     margin: 0;
 }
+
+
+
+
+/* Стили для иконок типов дополнительных товаров */
+.addon-type-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+/* Улучшенные стили для карточек с курсором pointer */
+.season-product-card {
+    transition: all 0.3s ease;
+}
+
+.season-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Адаптивность для новых страниц */
+@media (max-width: 768px) {
+    .product-additional-info {
+        grid-template-columns: 1fr;
+    }
+}

@@ -23,6 +23,8 @@ import OrderSuccess from "./components/OrderSuccess/OrderSuccess";
 import AdminPanel from './components/AdminPanel/AdminPanel';
 import AboutUs from './components/AboutUs/AboutUs';
 import ProfilePage from './components/ProfilePage/ProfilePage';
+import WrapperDetails from './components/ProductDetails/WrapperDetails';
+import AddonDetails from './components/ProductDetails/AddonDetails';
 import { jwtDecode } from "jwt-decode";
 
 
@@ -271,6 +273,10 @@ const App = () => {
                       <Route path="/admin" element={<AdminPanel />} />
 
                       <Route path="/profile" element={<ProfilePage />} />
+
+                      // В компоненте Routes добавьте:
+                      <Route path="/wrapper/:id" element={<WrapperDetails />} />
+                      <Route path="/addon/:id" element={<AddonDetails />} />
 
                       {/* Fallback для несуществующих маршрутов */}
                       <Route path="*" element={

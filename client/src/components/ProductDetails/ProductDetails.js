@@ -317,6 +317,7 @@ const ProductDetails = () => {
                                         key={wrapper._id}
                                         className="season-product-card"
                                         style={{ cursor: 'pointer' }}
+                                        onClick={() => navigate(`/wrapper/${wrapper._id}`)}
                                     >
                                         <div className="product-image-container">
                                             <img
@@ -444,6 +445,7 @@ const ProductDetails = () => {
                                         key={addon._id}
                                         className="season-product-card"
                                         style={{ cursor: 'pointer' }}
+                                        onClick={() => navigate(`/addon/${addon._id}`)}
                                     >
                                         <div className="product-image-container">
                                             <img

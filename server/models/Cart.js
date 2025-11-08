@@ -1,135 +1,3 @@
-// import mongoose from 'mongoose';
-//
-// const cartItemSchema = new mongoose.Schema({
-//     product: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'Product',
-//         required: true
-//     },
-//     quantity: {
-//         type: Number,
-//         required: true,
-//         min: 1
-//     },
-//     flowerType: {
-//         type: String,
-//         enum: ['single', 'bouquet'],
-//         required: true
-//     },
-//     flowerColor: {
-//         name: {
-//             type: String
-//         },
-//         value: {
-//             type: String
-//         }
-//     },
-//     price: {
-//         type: Number,
-//         required: true
-//     },
-//     name: {
-//         type: String,
-//         required: true
-//     },
-//     image: {
-//         type: String
-//     },
-//     flowerNames: [{
-//         type: String
-//     }],
-//     stemLength: {
-//         type: Number
-//     },
-//     // Новые поля для обертки и дополнений
-//     wrapper: {
-//         wrapperId: {
-//             type: mongoose.Schema.Types.ObjectId,
-//             ref: 'Wrapper'
-//         },
-//         name: {
-//             type: String
-//         },
-//         price: {
-//             type: Number,
-//             default: 0
-//         },
-//         image: {
-//             type: String
-//         }
-//     },
-//     addons: [{
-//         addonId: {
-//             type: mongoose.Schema.Types.ObjectId,
-//             ref: 'Addon'
-//         },
-//         name: {
-//             type: String
-//         },
-//         type: {
-//             type: String
-//         },
-//         price: {
-//             type: Number
-//         },
-//         image: {
-//             type: String
-//         },
-//         quantity: {
-//             type: Number,
-//             default: 1
-//         }
-//     }],
-//     // Общая цена для этого item (продукт + обертка + дополнения)
-//     itemTotal: {
-//         type: Number,
-//         required: true
-//     }
-// });
-//
-// const cartSchema = new mongoose.Schema({
-//     user: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'User'
-//     },
-//     sessionId: {
-//         type: String
-//     },
-//     items: [cartItemSchema],
-//     total: {
-//         type: Number,
-//         default: 0
-//     },
-//     totalItems: {
-//         type: Number,
-//         default: 0
-//     },
-//     lastUpdated: {
-//         type: Date,
-//         default: Date.now
-//     }
-// });
-//
-// // Middleware для расчета totals
-// cartSchema.pre('save', function(next) {
-//     this.totalItems = this.items.reduce((total, item) => total + item.quantity, 0);
-//
-//     this.total = this.items.reduce((total, item) => {
-//         return total + (item.itemTotal * item.quantity);
-//     }, 0);
-//
-//     this.lastUpdated = Date.now();
-//     next();
-// });
-//
-// cartSchema.index({ user: 1 }, { sparse: true });
-// cartSchema.index({ sessionId: 1 }, { sparse: true });
-//
-// export default mongoose.model('Cart', cartSchema);
-
-
-
-
 import mongoose from 'mongoose';
 
 // Базовая схема для элемента корзины
@@ -149,15 +17,9 @@ const baseCartItemSchema = {
     },
     image: {
         type: String
-    },
-    // Общая цена для этого item
-    itemTotal: {
-        type: Number,
-        required: true
     }
 };
 
-// В схеме flowerCartItemSchema добавляем поле для типа упаковки
 const flowerCartItemSchema = new mongoose.Schema({
     ...baseCartItemSchema,
     product: {
@@ -176,7 +38,6 @@ const flowerCartItemSchema = new mongoose.Schema({
     },
     flowerNames: [{ type: String }],
     stemLength: { type: Number },
-    // Обертка для цветов - изменяем логику
     wrapper: {
         wrapperId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -188,7 +49,6 @@ const flowerCartItemSchema = new mongoose.Schema({
             default: 0
         },
         image: { type: String },
-        // Добавляем тип упаковки
         wrapperType: {
             type: String,
             enum: ['per_item', 'per_order'],
@@ -199,10 +59,14 @@ const flowerCartItemSchema = new mongoose.Schema({
         type: String,
         enum: ['flower'],
         default: 'flower'
+    },
+    // Добавляем расчет itemTotal для цветов
+    itemTotal: {
+        type: Number,
+        required: true
     }
 });
 
-// Схема для дополнительных товаров (без привязки к цветам)
 const addonCartItemSchema = new mongoose.Schema({
     ...baseCartItemSchema,
     addonId: {
@@ -218,7 +82,8 @@ const addonCartItemSchema = new mongoose.Schema({
         type: String,
         enum: ['addon'],
         default: 'addon'
-    }
+    },
+    // Убираем itemTotal из схемы доп. товаров - будем вычислять динамически
 });
 
 const cartSchema = new mongoose.Schema({
@@ -229,7 +94,6 @@ const cartSchema = new mongoose.Schema({
     sessionId: {
         type: String
     },
-    // Разделяем items на цветы и дополнения
     flowerItems: [flowerCartItemSchema],
     addonItems: [addonCartItemSchema],
     total: {
@@ -248,11 +112,12 @@ const cartSchema = new mongoose.Schema({
 
 // Middleware для расчета totals
 cartSchema.pre('save', function(next) {
+    // Общее количество товаров
     const flowerItemsCount = this.flowerItems.reduce((total, item) => total + item.quantity, 0);
     const addonItemsCount = this.addonItems.reduce((total, item) => total + item.quantity, 0);
     this.totalItems = flowerItemsCount + addonItemsCount;
 
-    // Считаем общую стоимость с учетом типа обертки
+    // Считаем общую стоимость цветов
     const flowerTotal = this.flowerItems.reduce((total, item) => {
         let itemTotalPrice;
 
@@ -265,11 +130,17 @@ cartSchema.pre('save', function(next) {
             itemTotalPrice = (item.price + wrapperPrice) * item.quantity;
         }
 
+        // Сохраняем itemTotal для отображения на фронтенде
+        item.itemTotal = itemTotalPrice / item.quantity; // Цена за единицу
+
         return total + itemTotalPrice;
     }, 0);
 
+    // Считаем общую стоимость дополнительных товаров
     const addonTotal = this.addonItems.reduce((total, item) => {
-        return total + (item.itemTotal * item.quantity);
+        // Для доп. товаров: цена * количество
+        const itemTotal = item.price * item.quantity;
+        return total + itemTotal;
     }, 0);
 
     this.total = flowerTotal + addonTotal;
