@@ -534,14 +534,14 @@ async function notifyAdminAboutProductDeletion(product, itemType = 'flower') {
         }[itemType] || 'Товар';
 
         // Проверяем, настроен ли email
-        if (!process.env.EMAIL_USER || !process.env.ADMIN_EMAIL) {
+        if (!process.env.EMAIL_USER || !process.env.SMTP_USER) {
             console.log('⚠️ Email не настроен, пропускаем отправку уведомления');
             return;
         }
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            to: process.env.ADMIN_EMAIL,
+            to: process.env.SMTP_USER,
             subject: `🗑️ АВТОМАТИЧЕСКОЕ УДАЛЕНИЕ: ${product.name}`,
             html: `
                 <!DOCTYPE html>

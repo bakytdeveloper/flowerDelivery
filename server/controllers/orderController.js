@@ -219,7 +219,7 @@ async function sendOrderEmail(order, userType) {
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            to: process.env.ADMIN_EMAIL,
+            to: process.env.SMTP_USER,
             subject: `🎉 НОВЫЙ ЗАКАЗ ЦВЕТОВ #${_id}`,
             html: `
                 <!DOCTYPE html>
@@ -332,7 +332,7 @@ async function notifyAboutLowQuantity(items, itemType = 'flower') {
 
             const mailOptions = {
                 from: process.env.EMAIL_USER,
-                to: process.env.ADMIN_EMAIL,
+                to: process.env.SMTP_USER,
                 subject: `⚠️ НИЗКИЙ УРОВЕНЬ ЗАПАСОВ - ${lowStockItems.length} товаров`,
                 html: `
                     <!DOCTYPE html>

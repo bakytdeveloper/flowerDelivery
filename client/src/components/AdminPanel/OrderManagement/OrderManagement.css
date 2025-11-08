@@ -237,7 +237,7 @@
 
 .status-pending {
     background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-    color: #ffffff;
+    color: #ffffff!important;
 }
 
 .status-in-progress {

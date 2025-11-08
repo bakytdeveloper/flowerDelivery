@@ -31,7 +31,7 @@ async function notifyAboutBadReview(review, productId) {
         const product = await Product.findById(productId);
         if (!product) return;
 
-        const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+        const adminEmail = process.env.SMTP_USER || process.env.SMTP_USER;
 
         if (!adminEmail) return;
 

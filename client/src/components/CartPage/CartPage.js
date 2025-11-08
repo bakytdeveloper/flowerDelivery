@@ -18,6 +18,28 @@ const CartPage = () => {
     const [wrapperToRemove, setWrapperToRemove] = useState(null);
     const location = useLocation();
 
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
+
+    // Функция для получения корректного URL изображения
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) {
+            return '/images/placeholder-addon.jpg';
+        }
+
+        // Если это уже полный URL (включая base64)
+        if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+            return imagePath;
+        }
+
+        // Если это путь к файлу на сервере
+        if (imagePath.startsWith('/')) {
+            return `${apiUrl}${imagePath}`;
+        }
+
+        // Если это относительный путь
+        return `${apiUrl}/uploads/${imagePath}`;
+    };
+
     // Прокрутка вверх при монтировании компонента и изменении фильтров
     useEffect(() => {
         window.scrollTo({
@@ -35,10 +57,31 @@ const CartPage = () => {
         }).format(price);
     };
 
+    // Функция для получения переведенного типа доп. товара
+    const getAddonTypeLabel = (type) => {
+        switch (type) {
+            case 'soft_toy': return '🧸 Мягкая игрушка';
+            case 'candy_box': return '🍬 Коробка конфет';
+            case 'chocolate': return '🍫 Шоколад';
+            case 'card': return '💌 Открытка';
+            case 'perfume': return '💎 Парфюм';
+            default: return '🎁 Дополнительный товар';
+        }
+    };
+
     // Объединяем все товары для отображения
     const allItems = [
-        ...cart.flowerItems.map(item => ({ ...item, itemType: 'flower' })),
-        ...cart.addonItems.map(item => ({ ...item, itemType: 'addon' }))
+        ...cart.flowerItems.map(item => ({
+            ...item,
+            itemType: 'flower',
+            image: getImageUrl(item.image)
+        })),
+        ...cart.addonItems.map(item => ({
+            ...item,
+            itemType: 'addon',
+            image: getImageUrl(item.image),
+            typeLabel: getAddonTypeLabel(item.type)
+        }))
     ];
 
     const handleQuantityChange = async (itemId, newQuantity, itemType) => {
@@ -153,7 +196,10 @@ const CartPage = () => {
     };
 
     const handleShowWrapperImage = (wrapper) => {
-        setSelectedWrapperImage(wrapper);
+        setSelectedWrapperImage({
+            ...wrapper,
+            image: getImageUrl(wrapper.image)
+        });
     };
 
     const handleCloseWrapperImage = () => {
@@ -174,6 +220,17 @@ const CartPage = () => {
 
     const handleContinueShopping = () => {
         navigate('/catalog');
+    };
+
+    // Функция для расчета цены товара
+    const calculateItemPrice = (item) => {
+        if (item.itemType === 'addon') {
+            // Для дополнительных товаров: цена * количество
+            return (item.price || item.itemTotal || 0) * item.quantity;
+        } else {
+            // Для цветов: используем itemTotal * количество
+            return (item.itemTotal || 0) * item.quantity;
+        }
     };
 
     if (loading) {
@@ -245,8 +302,15 @@ const CartPage = () => {
                                 <div key={`${item.itemType}-${item._id}`} className="cart-item">
                                     <div className="item-image">
                                         <img
-                                            src={item.image || '/images/placeholder-flower.jpg'}
+                                            src={item.image}
                                             alt={item.name}
+                                            onError={(e) => {
+                                                if (item.itemType === 'addon') {
+                                                    e.target.src = '/images/placeholder-addon.jpg';
+                                                } else {
+                                                    e.target.src = '/images/placeholder-flower.jpg';
+                                                }
+                                            }}
                                         />
                                         {item.itemType === 'addon' && (
                                             <div className="item-type-badge addon-badge">
@@ -279,7 +343,7 @@ const CartPage = () => {
                                         {item.itemType === 'addon' && (
                                             <div className="item-specs">
                                                 <span className="item-type">
-                                                    {item.typeLabel || item.type}
+                                                    {item.typeLabel || getAddonTypeLabel(item.type)}
                                                 </span>
                                             </div>
                                         )}
@@ -304,8 +368,11 @@ const CartPage = () => {
                                                         onClick={() => handleShowWrapperImage(item.wrapper)}
                                                     >
                                                         <img
-                                                            src={item.wrapper.image || '/images/placeholder-wrapper.jpg'}
+                                                            src={getImageUrl(item.wrapper.image)}
                                                             alt={item.wrapper.name}
+                                                            onError={(e) => {
+                                                                e.target.src = '/images/placeholder-wrapper.jpg';
+                                                            }}
                                                         />
                                                         <span className="wrapper-preview-text">👁️ Посмотреть</span>
                                                     </div>
@@ -349,10 +416,7 @@ const CartPage = () => {
                                         </div>
 
                                         <div className="item-price">
-                                            {item.itemType === 'addon'
-                                                ? formatPrice(item.price * item.quantity) // Для доп. товаров: цена * количество
-                                                : formatPrice(item.itemTotal * item.quantity) // Для цветов: используем itemTotal
-                                            }
+                                            {formatPrice(calculateItemPrice(item))}
                                         </div>
 
                                         <button
@@ -422,8 +486,11 @@ const CartPage = () => {
                         </button>
                         <div className="modal-image-container">
                             <img
-                                src={selectedWrapperImage.image || '/images/placeholder-wrapper.jpg'}
+                                src={selectedWrapperImage.image}
                                 alt={selectedWrapperImage.name}
+                                onError={(e) => {
+                                    e.target.src = '/images/placeholder-wrapper.jpg';
+                                }}
                             />
                         </div>
                         <div className="modal-info">
