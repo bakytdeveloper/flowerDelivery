@@ -745,10 +745,12 @@
 }
 
 .confirmation-modal {
+    position: absolute!important;
     background: white;
     border-radius: 12px;
-    max-width: 400px;
+    max-width: 400px!important;
     width: 100%;
+    bottom: 20% !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     animation: modalAppear 0.3s ease-out;
 }
