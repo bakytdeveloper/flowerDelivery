@@ -613,7 +613,7 @@
 
     .cart-summary {
         position: static;
-        order: -1;
+        order: 1;
     }
 }
 
@@ -631,7 +631,7 @@
 
     .cart-item {
         grid-template-columns: 80px 1fr;
-        gap: 1rem;
+        gap: 0.3rem;
         padding: 1rem;
     }
 
@@ -643,6 +643,7 @@
         margin-top: 1rem;
         padding-top: 1rem;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
     }
 
     .item-image {
@@ -705,6 +706,32 @@
     .summary-total {
         font-size: 1.2rem;
     }
+
+    /* Новые стили для мобильных устройств */
+    .item-controls {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .quantity-controls {
+        order: 1;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .item-price {
+        order: 3;
+        font-size: 1.1rem;
+        text-align: right;
+        flex: 1;
+    }
+
+    .btn-remove-item {
+        order: 2;
+        flex: 0 0 auto;
+    }
 }
 
 @media (max-width: 480px) {
@@ -718,12 +745,28 @@
     }
 
     .item-controls {
-        flex-direction: column;
-        gap: 0.8rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .quantity-controls {
-        justify-self: center;
+        order: 1;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .item-price {
+        order: 3;
+        font-size: 1.1rem;
+        text-align: right;
+        flex: 1;
+    }
+
+    .btn-remove-item {
+        order: 2;
+        flex: 0 0 auto;
     }
 }
 
