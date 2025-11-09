@@ -4,6 +4,8 @@ import { useFavorites } from '../../hooks/useFavorites';
 import { useCart } from '../../contexts/CartContext';
 import { occasionOptions, recipientOptions } from "../../constants/constants";
 import ProductReviews from "../ProductReviews/ProductReviews";
+import ProductModal from './ProductModal/ProductModal'; // ДОБАВЬТЕ ЭТОТ ИМПОРТ
+
 import { toast } from 'react-toastify';
 import './ProductDetails.css';
 
@@ -22,7 +24,9 @@ const ProductDetails = () => {
     const { toggleFavorite, isFavorite } = useFavorites();
     const location = useLocation();
     const { addFlowerToCart, addAddonToCart } = useCart();
-
+    // ДОБАВЬТЕ ЭТИ СОСТОЯНИЯ ДЛЯ МОДАЛЬНОГО ОКНА
+    const [modalProduct, setModalProduct] = useState(null);
+    const [modalType, setModalType] = useState(null); // 'wrapper' или 'addon'
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
 
     // Функция для получения корректного URL изображения
@@ -264,9 +268,19 @@ const ProductDetails = () => {
         }
     };
 
-    // Компонент для секции обёрток
+    // ДОБАВЬТЕ ФУНКЦИИ ДЛЯ РАБОТЫ С МОДАЛЬНЫМ ОКНОМ
+    const openModal = (product, type) => {
+        setModalProduct(product);
+        setModalType(type);
+    };
+
+    const closeModal = () => {
+        setModalProduct(null);
+        setModalType(null);
+    };
+
+    // Обновите функции клика по карточкам в секциях
     const WrappersSection = () => {
-        // Скрываем секцию обёрток для букетов
         if (product?.type === 'bouquet') {
             return null;
         }
@@ -317,8 +331,9 @@ const ProductDetails = () => {
                                         key={wrapper._id}
                                         className="season-product-card"
                                         style={{ cursor: 'pointer' }}
-                                        onClick={() => navigate(`/wrapper/${wrapper._id}`)}
+                                        onClick={() => openModal(wrapper, 'wrapper')} // ИЗМЕНИТЕ НА openModal
                                     >
+                                        {/* Остальной код карточки остается без изменений */}
                                         <div className="product-image-container">
                                             <img
                                                 src={getImageUrl(wrapper.image)}
@@ -331,8 +346,8 @@ const ProductDetails = () => {
                                             />
                                             {wrapper.originalPrice && wrapper.originalPrice > wrapper.price && (
                                                 <span className="discount-badge">
-                                                    -{Math.round((1 - wrapper.price / wrapper.originalPrice) * 100)}%
-                                                </span>
+                          -{Math.round((1 - wrapper.price / wrapper.originalPrice) * 100)}%
+                        </span>
                                             )}
                                         </div>
 
@@ -348,17 +363,17 @@ const ProductDetails = () => {
                                             <div className="product-price-catalog">
                                                 {wrapper.originalPrice && wrapper.originalPrice > wrapper.price ? (
                                                     <>
-                                                        <span className="original-price-catalog">
-                                                            {formatPrice(wrapper.originalPrice)}
-                                                        </span>
+                            <span className="original-price-catalog">
+                              {formatPrice(wrapper.originalPrice)}
+                            </span>
                                                         <span className="current-price-catalog">
-                                                            {formatPrice(wrapper.price)}
-                                                        </span>
+                              {formatPrice(wrapper.price)}
+                            </span>
                                                     </>
                                                 ) : (
                                                     <span className="current-price-catalog">
-                                                        {formatPrice(wrapper.price)}
-                                                    </span>
+                            {formatPrice(wrapper.price)}
+                          </span>
                                                 )}
                                             </div>
 
@@ -391,13 +406,12 @@ const ProductDetails = () => {
                             ›
                         </button>
                     </div>
-
                 </div>
             </section>
         );
     };
 
-    // Компонент для секции дополнительных товаров
+    // Аналогично обновите AddonsSection
     const AddonsSection = () => {
         if (loadingAddons) {
             return (
@@ -445,8 +459,9 @@ const ProductDetails = () => {
                                         key={addon._id}
                                         className="season-product-card"
                                         style={{ cursor: 'pointer' }}
-                                        onClick={() => navigate(`/addon/${addon._id}`)}
+                                        onClick={() => openModal(addon, 'addon')} // ИЗМЕНИТЕ НА openModal
                                     >
+                                        {/* Остальной код карточки остается без изменений */}
                                         <div className="product-image-container">
                                             <img
                                                 src={getImageUrl(addon.image)}
@@ -459,16 +474,16 @@ const ProductDetails = () => {
                                             />
                                             {addon.originalPrice && addon.originalPrice > addon.price && (
                                                 <span className="discount-badge">
-                                                    -{Math.round((1 - addon.price / addon.originalPrice) * 100)}%
-                                                </span>
+                          -{Math.round((1 - addon.price / addon.originalPrice) * 100)}%
+                        </span>
                                             )}
                                             <span className="popular-badge">
-                                                {addon.type === 'soft_toy' ? '🧸' :
-                                                    addon.type === 'candy_box' ? '🍬' :
-                                                        addon.type === 'chocolate' ? '🍫' :
-                                                            addon.type === 'card' ? '💌' :
-                                                                addon.type === 'perfume' ? '💎' : '🎁'}
-                                            </span>
+                        {addon.type === 'soft_toy' ? '🧸' :
+                            addon.type === 'candy_box' ? '🍬' :
+                                addon.type === 'chocolate' ? '🍫' :
+                                    addon.type === 'card' ? '💌' :
+                                        addon.type === 'perfume' ? '💎' : '🎁'}
+                      </span>
                                         </div>
 
                                         <div className="cart-product-info">
@@ -481,29 +496,29 @@ const ProductDetails = () => {
                                             </p>
 
                                             <div className="product-meta-catalog">
-                                                <span className="product-occasion-catalog">
-                                                    {addon.type === 'soft_toy' ? 'Мягкая игрушка' :
-                                                        addon.type === 'candy_box' ? 'Коробка конфет' :
-                                                            addon.type === 'chocolate' ? 'Шоколад' :
-                                                                addon.type === 'card' ? 'Открытка' :
-                                                                    addon.type === 'perfume' ? 'Парфюм' : 'Другое'}
-                                                </span>
+                        <span className="product-occasion-catalog">
+                          {addon.type === 'soft_toy' ? 'Мягкая игрушка' :
+                              addon.type === 'candy_box' ? 'Коробка конфет' :
+                                  addon.type === 'chocolate' ? 'Шоколад' :
+                                      addon.type === 'card' ? 'Открытка' :
+                                          addon.type === 'perfume' ? 'Парфюм' : 'Другое'}
+                        </span>
                                             </div>
 
                                             <div className="product-price-catalog">
                                                 {addon.originalPrice && addon.originalPrice > addon.price ? (
                                                     <>
-                                                        <span className="original-price-catalog">
-                                                            {formatPrice(addon.originalPrice)}
-                                                        </span>
+                            <span className="original-price-catalog">
+                              {formatPrice(addon.originalPrice)}
+                            </span>
                                                         <span className="current-price-catalog">
-                                                            {formatPrice(addon.price)}
-                                                        </span>
+                              {formatPrice(addon.price)}
+                            </span>
                                                     </>
                                                 ) : (
                                                     <span className="current-price-catalog">
-                                                        {formatPrice(addon.price)}
-                                                    </span>
+                            {formatPrice(addon.price)}
+                          </span>
                                                 )}
                                             </div>
 
@@ -536,7 +551,6 @@ const ProductDetails = () => {
                             ›
                         </button>
                     </div>
-
                 </div>
             </section>
         );
@@ -801,6 +815,15 @@ const ProductDetails = () => {
 
                 {/* Секция дополнительных товаров */}
                 <AddonsSection />
+
+                {/* ДОБАВЬТЕ МОДАЛЬНОЕ ОКНО */}
+                {modalProduct && (
+                    <ProductModal
+                        product={modalProduct}
+                        type={modalType}
+                        onClose={closeModal}
+                    />
+                )}
 
                 <div className="product-reviews-section">
                     <ProductReviews productId={product?._id} />
