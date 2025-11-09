@@ -1,8 +1,19 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './ProductModal.css';
+import {useLocation} from "react-router-dom";
 
 const ProductModal = ({ product, type, onClose, onAddToCart }) => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
+    const location = useLocation();
+
+    // Прокрутка вверх при монтировании компонента и изменении фильтров
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+    }, [location.search]);
 
     const getImageUrl = (imagePath) => {
         if (!imagePath) {
@@ -41,19 +52,19 @@ const ProductModal = ({ product, type, onClose, onAddToCart }) => {
     if (!product) return null;
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <button className="modal-close-btn modal-close-btn-wrapper-addon" onClick={onClose}>
+        <div className="modal-overlay-wrapper-addon" onClick={onClose}>
+            <div className="modal-content-wrapper-addon" onClick={(e) => e.stopPropagation()}>
+                <button className="modal-close-btn-wrapper-addon" onClick={onClose}>
                     ×
                 </button>
 
-                <div className="modal-product-content">
+                <div className="modal-product-content-wrapper-addon">
                     {/* Левая колонка - изображение */}
-                    <div className="modal-product-image">
+                    <div className="modal-product-image-wrapper-addon">
                         <img
                             src={getImageUrl(product.image)}
                             alt={product.name}
-                            className="modal-main-image"
+                            className="modal-main-image-wrapper-addon"
                             onError={(e) => {
                                 e.target.src = type === 'wrapper'
                                     ? '/images/placeholder-wrapper.jpg'
@@ -61,36 +72,36 @@ const ProductModal = ({ product, type, onClose, onAddToCart }) => {
                             }}
                         />
                         {product.originalPrice && product.originalPrice > product.price && (
-                            <span className="modal-discount-badge">
+                            <span className="modal-discount-badge-wrapper-addon">
                 -{Math.round((1 - product.price / product.originalPrice) * 100)}%
               </span>
                         )}
                     </div>
 
                     {/* Правая колонка - информация */}
-                    <div className="modal-product-info">
-                        <h2 className="modal-product-title">{product.name}</h2>
+                    <div className="modal-product-info-wrapper-addon">
+                        <h2 className="modal-product-title-wrapper-addon">{product.name}</h2>
 
                         {/* Цена */}
-                        <div className="modal-price-section">
+                        <div className="modal-price-section-wrapper-addon">
                             {product.originalPrice && product.originalPrice > product.price ? (
-                                <div className="modal-price-with-discount">
-                  <span className="modal-original-price">
+                                <div className="modal-price-with-discount-wrapper-addon">
+                  <span className="modal-original-price-wrapper-addon">
                     {formatPrice(product.originalPrice)}
                   </span>
-                                    <span className="modal-current-price">
+                                    <span className="modal-current-price-wrapper-addon">
                     {formatPrice(product.price)}
                   </span>
                                 </div>
                             ) : (
-                                <span className="modal-current-price">
+                                <span className="modal-current-price-wrapper-addon">
                   {formatPrice(product.price)}
                 </span>
                             )}
                         </div>
 
                         {/* Описание */}
-                        <div className="modal-description">
+                        <div className="modal-description-wrapper-addon">
                             <p>{product.description ||
                             (type === 'wrapper'
                                 ? 'Стильная упаковка для вашего букета'
@@ -99,10 +110,10 @@ const ProductModal = ({ product, type, onClose, onAddToCart }) => {
                         </div>
 
                         {/* Характеристики */}
-                        <div className="modal-specs">
-                            <div className="modal-spec-item">
-                                <span className="modal-spec-label">Тип товара:</span>
-                                <span className="modal-spec-value">
+                        <div className="modal-specs-wrapper-addon">
+                            <div className="modal-spec-item-wrapper-addon">
+                                <span className="modal-spec-label-wrapper-addon">Тип товара:</span>
+                                <span className="modal-spec-value-wrapper-addon">
                   {type === 'wrapper'
                       ? '🎁 Обёртка для букета'
                       : getAddonTypeLabel(product.type)
@@ -111,42 +122,42 @@ const ProductModal = ({ product, type, onClose, onAddToCart }) => {
                             </div>
 
                             {product.material && (
-                                <div className="modal-spec-item">
-                                    <span className="modal-spec-label">Материал:</span>
-                                    <span className="modal-spec-value">{product.material}</span>
+                                <div className="modal-spec-item-wrapper-addon">
+                                    <span className="modal-spec-label-wrapper-addon">Материал:</span>
+                                    <span className="modal-spec-value-wrapper-addon">{product.material}</span>
                                 </div>
                             )}
 
                             {product.size && (
-                                <div className="modal-spec-item">
-                                    <span className="modal-spec-label">Размер:</span>
-                                    <span className="modal-spec-value">{product.size}</span>
+                                <div className="modal-spec-item-wrapper-addon">
+                                    <span className="modal-spec-label-wrapper-addon">Размер:</span>
+                                    <span className="modal-spec-value-wrapper-addon">{product.size}</span>
                                 </div>
                             )}
 
                             {product.weight && (
-                                <div className="modal-spec-item">
-                                    <span className="modal-spec-label">Вес:</span>
-                                    <span className="modal-spec-value">{product.weight} г</span>
+                                <div className="modal-spec-item-wrapper-addon">
+                                    <span className="modal-spec-label-wrapper-addon">Вес:</span>
+                                    <span className="modal-spec-value-wrapper-addon">{product.weight} г</span>
                                 </div>
                             )}
 
                             {product.brand && (
-                                <div className="modal-spec-item">
-                                    <span className="modal-spec-label">Бренд:</span>
-                                    <span className="modal-spec-value">{product.brand}</span>
+                                <div className="modal-spec-item-wrapper-addon">
+                                    <span className="modal-spec-label-wrapper-addon">Бренд:</span>
+                                    <span className="modal-spec-value-wrapper-addon">{product.brand}</span>
                                 </div>
                             )}
 
                             {/* Для обёрток - цвета */}
                             {type === 'wrapper' && product.colors && product.colors.length > 0 && (
-                                <div className="modal-spec-item">
-                                    <span className="modal-spec-label">Цвета:</span>
-                                    <div className="modal-color-tags">
+                                <div className="modal-spec-item-wrapper-addon">
+                                    <span className="modal-spec-label-wrapper-addon">Цвета:</span>
+                                    <div className="modal-color-tags-wrapper-addon">
                                         {product.colors.map((color, index) => (
                                             <span
                                                 key={index}
-                                                className="modal-color-tag"
+                                                className="modal-color-tag-wrapper-addon"
                                                 style={{
                                                     backgroundColor: color.value,
                                                     border: color.value === '#FFFFFF' ? '1px solid #ccc' : 'none'
@@ -160,13 +171,13 @@ const ProductModal = ({ product, type, onClose, onAddToCart }) => {
                         </div>
 
                         {/* Информация о наличии */}
-                        <div className="modal-stock-info">
+                        <div className="modal-stock-info-wrapper-addon">
                             {product.quantity > 0 ? (
-                                <span className="modal-in-stock">
+                                <span className="modal-in-stock-wrapper-addon">
                   ✓ В наличии ({product.quantity} шт.)
                 </span>
                             ) : (
-                                <span className="modal-out-of-stock">✗ Нет в наличии</span>
+                                <span className="modal-out-of-stock-wrapper-addon">✗ Нет в наличии</span>
                             )}
                         </div>
                     </div>

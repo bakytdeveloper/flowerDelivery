@@ -1,4 +1,4 @@
-.modal-overlay {
+.modal-overlay-wrapper-addon {
     position: fixed;
     top: 0;
     left: 0;
@@ -7,23 +7,25 @@
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(5px);
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Изменено с center на flex-start */
     justify-content: center;
     z-index: 10000;
     padding: 1rem;
+    overflow-y: auto; /* Добавлено для прокрутки если контент большой */
 }
 
-.modal-content {
+.modal-content-wrapper-addon {
     background: rgba(15, 23, 42, 0.95);
     border-radius: 20px;
     padding: 2rem;
     max-width: 800px;
     width: 100%;
-    max-height: 90vh;
+    max-height: calc(100vh - 2rem); /* Ограничение по высоте с учетом отступов */
     overflow-y: auto;
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    margin: 1rem 0; /* Добавлено для отступа сверху и снизу */
 }
 
 .modal-close-btn-wrapper-addon {
@@ -47,14 +49,14 @@
     transform: scale(1.1);
 }
 
-.modal-product-content {
+.modal-product-content-wrapper-addon {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     align-items: start;
 }
 
-.modal-product-image {
+.modal-product-image-wrapper-addon {
     position: relative;
     border-radius: 15px;
     overflow: hidden;
@@ -62,13 +64,13 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-main-image {
+.modal-main-image-wrapper-addon {
     width: 100%;
     height: 300px;
     object-fit: cover;
 }
 
-.modal-discount-badge {
+.modal-discount-badge-wrapper-addon {
     position: absolute;
     top: 1rem;
     left: 1rem;
@@ -80,13 +82,13 @@
     font-weight: 600;
 }
 
-.modal-product-info {
+.modal-product-info-wrapper-addon {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.modal-product-title {
+.modal-product-title-wrapper-addon {
     color: #f1f5f9;
     font-size: 1.5rem;
     font-weight: 700;
@@ -94,35 +96,35 @@
     line-height: 1.3;
 }
 
-.modal-price-section {
+.modal-price-section-wrapper-addon {
     padding: 0.5rem 0;
 }
 
-.modal-price-with-discount {
+.modal-price-with-discount-wrapper-addon {
     display: flex;
     align-items: center;
     gap: 0.8rem;
 }
 
-.modal-original-price {
+.modal-original-price-wrapper-addon {
     text-decoration: line-through;
     color: #94a3b8;
     font-size: 1.1rem;
 }
 
-.modal-current-price {
+.modal-current-price-wrapper-addon {
     font-size: 1.5rem;
     font-weight: 700;
     color: #10b981;
 }
 
-.modal-description {
+.modal-description-wrapper-addon {
     color: #cbd5e1;
     line-height: 1.5;
     font-size: 0.95rem;
 }
 
-.modal-specs {
+.modal-specs-wrapper-addon {
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
@@ -132,7 +134,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-spec-item {
+.modal-spec-item-wrapper-addon {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -140,29 +142,29 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.modal-spec-item:last-child {
+.modal-spec-item-wrapper-addon:last-child {
     border-bottom: none;
 }
 
-.modal-spec-label {
+.modal-spec-label-wrapper-addon {
     color: #94a3b8;
     font-weight: 500;
     font-size: 0.9rem;
 }
 
-.modal-spec-value {
+.modal-spec-value-wrapper-addon {
     color: #e2e8f0;
     text-align: right;
     font-size: 0.9rem;
 }
 
-.modal-color-tags {
+.modal-color-tags-wrapper-addon {
     display: flex;
     gap: 0.4rem;
     flex-wrap: wrap;
 }
 
-.modal-color-tag {
+.modal-color-tag-wrapper-addon {
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -170,7 +172,7 @@
     border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.modal-stock-info {
+.modal-stock-info-wrapper-addon {
     text-align: center;
     padding: 0.8rem;
     background: rgba(30, 41, 59, 0.6);
@@ -178,57 +180,57 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-in-stock {
+.modal-in-stock-wrapper-addon {
     color: #10b981;
     font-weight: 500;
 }
 
-.modal-out-of-stock {
+.modal-out-of-stock-wrapper-addon {
     color: #ef4444;
     font-weight: 500;
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    .modal-content {
+    .modal-content-wrapper-addon {
         padding: 1.5rem;
         margin: 1rem;
     }
 
-    .modal-product-content {
+    .modal-product-content-wrapper-addon {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
 
-    .modal-main-image {
+    .modal-main-image-wrapper-addon {
         height: 250px;
     }
 
-    .modal-product-title {
+    .modal-product-title-wrapper-addon {
         font-size: 1.3rem;
     }
 
-    .modal-spec-item {
+    .modal-spec-item-wrapper-addon {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.2rem;
     }
 
-    .modal-spec-value {
+    .modal-spec-value-wrapper-addon {
         text-align: left;
     }
 }
 
 @media (max-width: 480px) {
-    .modal-content {
+    .modal-content-wrapper-addon {
         padding: 1rem;
     }
 
-    .modal-main-image {
+    .modal-main-image-wrapper-addon {
         height: 200px;
     }
 
-    .modal-current-price {
+    .modal-current-price-wrapper-addon {
         font-size: 1.3rem;
     }
 }
