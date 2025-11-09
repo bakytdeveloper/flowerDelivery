@@ -20,6 +20,27 @@ const CartPage = () => {
 
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
 
+    // Функция для прокрутки наверх
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+    };
+
+    // Прокрутка вверх при монтировании компонента и изменении фильтров
+    useEffect(() => {
+        scrollToTop();
+    }, [location.search]);
+
+    // Прокрутка наверх при открытии модальных окон
+    useEffect(() => {
+        if (showRemoveItemModal || showClearCartModal || showRemoveWrapperModal || selectedWrapperImage) {
+            scrollToTop();
+        }
+    }, [showRemoveItemModal, showClearCartModal, showRemoveWrapperModal, selectedWrapperImage]);
+
     // Функция для получения корректного URL изображения
     const getImageUrl = (imagePath) => {
         if (!imagePath) {
@@ -39,15 +60,6 @@ const CartPage = () => {
         // Если это относительный путь
         return `${apiUrl}/uploads/${imagePath}`;
     };
-
-    // Прокрутка вверх при монтировании компонента и изменении фильтров
-    useEffect(() => {
-        window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth'
-        });
-    }, [location.search]);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('ru-RU', {
@@ -479,12 +491,12 @@ const CartPage = () => {
 
             {/* Модальное окно для просмотра картинки обертки */}
             {selectedWrapperImage && (
-                <div className="wrapper-image-modal" onClick={handleCloseWrapperImage}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="modal-close" onClick={handleCloseWrapperImage}>
+                <div className="wrapper-image-modal-cart" onClick={handleCloseWrapperImage}>
+                    <div className="modal-content-wrapper-image-cart" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close-wrapper-image-cart" onClick={handleCloseWrapperImage}>
                             ×
                         </button>
-                        <div className="modal-image-container">
+                        <div className="modal-image-container-cart">
                             <img
                                 src={selectedWrapperImage.image}
                                 alt={selectedWrapperImage.name}
@@ -493,9 +505,9 @@ const CartPage = () => {
                                 }}
                             />
                         </div>
-                        <div className="modal-info">
+                        <div className="modal-info-cart">
                             <h3>{selectedWrapperImage.name}</h3>
-                            <p className="modal-price">{formatPrice(selectedWrapperImage.price)}</p>
+                            <p className="modal-price-cart">{formatPrice(selectedWrapperImage.price)}</p>
                         </div>
                     </div>
                 </div>
@@ -503,24 +515,24 @@ const CartPage = () => {
 
             {/* Модальное окно удаления товара */}
             {showRemoveItemModal && (
-                <div className="modal-overlay" onClick={() => setShowRemoveItemModal(false)}>
-                    <div className="modal-content confirmation-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
+                <div className="modal-overlay-cart" onClick={() => setShowRemoveItemModal(false)}>
+                    <div className="confirmation-modal-cart" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header-cart">
                             <h3>Удаление товара</h3>
-                            <button className="modal-close" onClick={() => setShowRemoveItemModal(false)}>×</button>
+                            <button className="modal-close-cart" onClick={() => setShowRemoveItemModal(false)}>×</button>
                         </div>
-                        <div className="modal-body">
+                        <div className="modal-body-cart">
                             <p>Вы уверены, что хотите удалить этот товар из корзины?</p>
                         </div>
-                        <div className="modal-footer">
+                        <div className="modal-footer-cart">
                             <button
-                                className="btn btn-outline"
+                                className="btn btn-outline-cart"
                                 onClick={() => setShowRemoveItemModal(false)}
                             >
                                 Отмена
                             </button>
                             <button
-                                className="btn btn-danger"
+                                className="btn btn-danger-cart"
                                 onClick={confirmRemoveItem}
                             >
                                 Удалить
@@ -532,25 +544,25 @@ const CartPage = () => {
 
             {/* Модальное окно очистки корзины */}
             {showClearCartModal && (
-                <div className="modal-overlay" onClick={() => setShowClearCartModal(false)}>
-                    <div className="modal-content confirmation-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
+                <div className="modal-overlay-cart" onClick={() => setShowClearCartModal(false)}>
+                    <div className="confirmation-modal-cart" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header-cart">
                             <h3>Очистка корзины</h3>
-                            <button className="modal-close" onClick={() => setShowClearCartModal(false)}>×</button>
+                            <button className="modal-close-cart" onClick={() => setShowClearCartModal(false)}>×</button>
                         </div>
-                        <div className="modal-body">
+                        <div className="modal-body-cart">
                             <p>Вы уверены, что хотите очистить всю корзину?</p>
-                            <p className="warning-text">Это действие нельзя отменить.</p>
+                            <p className="warning-text-cart">Это действие нельзя отменить.</p>
                         </div>
-                        <div className="modal-footer">
+                        <div className="modal-footer-cart">
                             <button
-                                className="btn btn-outline"
+                                className="btn btn-outline-cart"
                                 onClick={() => setShowClearCartModal(false)}
                             >
                                 Отмена
                             </button>
                             <button
-                                className="btn btn-danger"
+                                className="btn btn-danger-cart"
                                 onClick={confirmClearCart}
                             >
                                 Очистить корзину
@@ -562,24 +574,24 @@ const CartPage = () => {
 
             {/* Модальное окно удаления обёртки */}
             {showRemoveWrapperModal && (
-                <div className="modal-overlay" onClick={() => setShowRemoveWrapperModal(false)}>
-                    <div className="modal-content confirmation-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
+                <div className="modal-overlay-cart" onClick={() => setShowRemoveWrapperModal(false)}>
+                    <div className="confirmation-modal-cart" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header-cart">
                             <h3>Удаление обёртки</h3>
-                            <button className="modal-close" onClick={() => setShowRemoveWrapperModal(false)}>×</button>
+                            <button className="modal-close-cart" onClick={() => setShowRemoveWrapperModal(false)}>×</button>
                         </div>
-                        <div className="modal-body">
+                        <div className="modal-body-cart">
                             <p>Вы уверены, что хотите удалить обёртку?</p>
                         </div>
-                        <div className="modal-footer">
+                        <div className="modal-footer-cart">
                             <button
-                                className="btn btn-outline"
+                                className="btn btn-outline-cart"
                                 onClick={() => setShowRemoveWrapperModal(false)}
                             >
                                 Отмена
                             </button>
                             <button
-                                className="btn btn-danger"
+                                className="btn btn-danger-cart"
                                 onClick={confirmRemoveWrapper}
                             >
                                 Удалить

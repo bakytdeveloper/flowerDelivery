@@ -772,31 +772,32 @@
 
 
 
-/* Стили для модальных окон */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 20px;
-}
+/*!* Стили для модальных окон *!*/
+/*.modal-overlay {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    bottom: 0;*/
+/*    background: rgba(0, 0, 0, 0.6);*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    z-index: 1000;*/
+/*    padding: 20px;*/
+/*}*/
 
-.confirmation-modal {
-    position: absolute!important;
-    background: white;
-    border-radius: 12px;
-    max-width: 400px!important;
-    width: 100%;
-    bottom: 20% !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    animation: modalAppear 0.3s ease-out;
-}
+/*.confirmation-modal {*/
+/*    position: absolute!important;*/
+/*    background: white;*/
+/*    border-radius: 12px;*/
+/*    max-width: 400px!important;*/
+/*    width: 100%;*/
+/*    margin-top: 0!important;*/
+/*    !*bottom: 20% !important;*!*/
+/*    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);*/
+/*    animation: modalAppear 0.3s ease-out;*/
+/*}*/
 
 @keyframes modalAppear {
     from {
@@ -917,14 +918,14 @@
 
 /* Адаптивность для модальных окон */
 @media (max-width: 768px) {
-    .modal-overlay {
-        padding: 10px;
-    }
+    /*.modal-overlay {*/
+    /*    padding: 10px;*/
+    /*}*/
 
-    .confirmation-modal {
-        max-width: 100%;
-        margin: 20px;
-    }
+    /*.confirmation-modal {*/
+    /*    max-width: 100%;*/
+    /*    margin: 20px;*/
+    /*}*/
 
     .modal-footer {
         flex-direction: column;
@@ -1007,4 +1008,274 @@
     font-size: 18px;
     font-weight: 600;
     color: #e91e63;
+}
+
+
+/* Стили для модальных окон */
+.modal-overlay-cart {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Изменено с center на flex-start */
+    z-index: 1000;
+    padding: 1rem;
+    overflow-y: auto; /* Добавлено для прокрутки */
+}
+
+.confirmation-modal-cart {
+    background: rgba(15, 23, 42, 0.95);
+    border-radius: 20px;
+    max-width: 400px;
+    width: 100%;
+    margin-top: 2rem; /* Отступ сверху */
+    margin-bottom: 2rem; /* Отступ снизу */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    animation: modalAppearCart 0.3s ease-out;
+}
+
+@keyframes modalAppearCart {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-header-cart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.5rem 0;
+    margin-bottom: 1rem;
+}
+
+.modal-header-cart h3 {
+    margin: 0;
+    color: #f1f5f9;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.modal-close-cart {
+    background: rgba(81, 81, 81, 0.6);
+    border: none;
+    color: #e2e8f0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close-cart:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.modal-body-cart {
+    padding: 0 1.5rem;
+}
+
+.modal-body-cart p {
+    margin: 0 0 10px;
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+.warning-text-cart {
+    color: #ef4444;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.modal-footer-cart {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    padding-top: 1rem;
+}
+
+.modal-footer-cart .btn {
+    padding: 0.7rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 80px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.modal-footer-cart .btn-outline-cart {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+}
+
+.modal-footer-cart .btn-outline-cart:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.modal-footer-cart .btn-danger-cart {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.modal-footer-cart .btn-danger-cart:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Стили для модального окна просмотра обертки */
+.wrapper-image-modal-cart {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Изменено на flex-start */
+    z-index: 1000;
+    padding: 1rem;
+    overflow-y: auto; /* Добавлено для прокрутки */
+    backdrop-filter: blur(5px);
+}
+
+.modal-content-wrapper-image-cart {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 2rem; /* Отступ сверху */
+    margin-bottom: 2rem; /* Отступ снизу */
+}
+
+.modal-close-wrapper-image-cart {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(81, 81, 81, 0.6);
+    border: none;
+    color: #e2e8f0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close-wrapper-image-cart:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.modal-image-container-cart {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-image-container-cart img {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 12px;
+    object-fit: contain;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.modal-info-cart {
+    text-align: center;
+}
+
+.modal-info-cart h3 {
+    margin: 0 0 8px 0;
+    color: #f1f5f9;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.modal-price-cart {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #10b981;
+    margin: 0;
+}
+
+/* Адаптивность для модальных окон */
+@media (max-width: 768px) {
+    .modal-overlay-cart,
+    .wrapper-image-modal-cart {
+        padding: 0.5rem;
+    }
+
+    .confirmation-modal-cart {
+        max-width: 100%;
+        margin: 1rem;
+    }
+
+    .modal-content-wrapper-image-cart {
+        width: 95%;
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .modal-footer-cart {
+        flex-direction: column;
+    }
+
+    .modal-footer-cart .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-header-cart {
+        padding: 1rem 1rem 0;
+    }
+
+    .modal-body-cart {
+        padding: 0 1rem;
+    }
+
+    .modal-footer-cart {
+        padding: 1rem;
+        padding-top: 0.8rem;
+    }
+
+    .modal-content-wrapper-image-cart {
+        padding: 1rem;
+    }
+
+    .modal-image-container-cart img {
+        max-height: 300px;
+    }
 }
