@@ -23,8 +23,6 @@ import OrderSuccess from "./components/OrderSuccess/OrderSuccess";
 import AdminPanel from './components/AdminPanel/AdminPanel';
 import AboutUs from './components/AboutUs/AboutUs';
 import ProfilePage from './components/ProfilePage/ProfilePage';
-// import WrapperDetails from './components/ProductDetails/WrapperDetails';
-// import AddonDetails from './components/ProductDetails/AddonDetails';
 import { jwtDecode } from "jwt-decode";
 
 
