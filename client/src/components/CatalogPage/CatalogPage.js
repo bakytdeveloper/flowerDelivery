@@ -17,6 +17,13 @@ const CatalogPage = () => {
         recipient: '',
         search: ''
     });
+    const [pagination, setPagination] = useState({
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 0,
+        limit: 15
+    });
+
     const location = useLocation();
     const navigate = useNavigate();
     const { toggleFavorite, isFavorite, fetchFavorites } = useFavorites();
@@ -45,6 +52,8 @@ const CatalogPage = () => {
     // Парсим параметры URL при загрузке и изменении location
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
+        const page = parseInt(searchParams.get('page')) || 1;
+
         const newFilters = {
             type: searchParams.get('type') || '',
             occasion: searchParams.get('occasion') || '',
@@ -53,10 +62,11 @@ const CatalogPage = () => {
         };
 
         setFilters(newFilters);
-        fetchProducts(newFilters);
+        setPagination(prev => ({...prev, currentPage: page}));
+        fetchProducts(newFilters, page);
     }, [location.search]);
 
-    const fetchProducts = async (filterParams) => {
+    const fetchProducts = async (filterParams, page = 1) => {
         try {
             setLoading(true);
             setError(null);
@@ -68,6 +78,9 @@ const CatalogPage = () => {
             if (filterParams.recipient) queryParams.append('recipient', filterParams.recipient);
             if (filterParams.search) queryParams.append('search', filterParams.search);
 
+            queryParams.append('page', page);
+            queryParams.append('limit', 15);
+
             const url = `${process.env.REACT_APP_API_URL}/api/products?${queryParams.toString()}`;
             const response = await fetch(url);
 
@@ -77,6 +90,12 @@ const CatalogPage = () => {
 
             const data = await response.json();
             setProducts(data.products || []);
+            setPagination({
+                currentPage: data.currentPage || 1,
+                totalPages: data.totalPages || 1,
+                totalCount: data.totalCount || 0,
+                limit: data.limit || 15
+            });
         } catch (err) {
             setError(err.message);
             console.error('Error fetching products:', err);
@@ -169,6 +188,12 @@ const CatalogPage = () => {
         });
     };
 
+    const handlePageChange = (newPage) => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set('page', newPage);
+        navigate(`/catalog?${searchParams.toString()}`);
+    };
+
     const formatPrice = (price) => {
         return new Intl.NumberFormat('ru-RU', {
             style: 'currency',
@@ -185,6 +210,93 @@ const CatalogPage = () => {
         if (filters.search) activeFilters.push(`Поиск: "${filters.search}"`);
 
         return activeFilters.length > 0 ? activeFilters.join(', ') : 'Все товары';
+    };
+
+    // Функция для рендеринга пагинации
+    const renderPagination = () => {
+        if (pagination.totalPages <= 1) return null;
+
+        const pages = [];
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, pagination.currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(pagination.totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        // Кнопка "Назад"
+        if (pagination.currentPage > 1) {
+            pages.push(
+                <button
+                    key="prev"
+                    className="pagination-btn"
+                    onClick={() => handlePageChange(pagination.currentPage - 1)}
+                >
+                    ←
+                </button>
+            );
+        }
+
+        // Первая страница
+        if (startPage > 1) {
+            pages.push(
+                <button
+                    key={1}
+                    className="pagination-btn"
+                    onClick={() => handlePageChange(1)}
+                >
+                    1
+                </button>
+            );
+            if (startPage > 2) {
+                pages.push(<span key="ellipsis1" className="pagination-ellipsis">...</span>);
+            }
+        }
+
+        // Основные страницы
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(
+                <button
+                    key={i}
+                    className={`pagination-btn ${pagination.currentPage === i ? 'active' : ''}`}
+                    onClick={() => handlePageChange(i)}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        // Последняя страница
+        if (endPage < pagination.totalPages) {
+            if (endPage < pagination.totalPages - 1) {
+                pages.push(<span key="ellipsis2" className="pagination-ellipsis">...</span>);
+            }
+            pages.push(
+                <button
+                    key={pagination.totalPages}
+                    className="pagination-btn"
+                    onClick={() => handlePageChange(pagination.totalPages)}
+                >
+                    {pagination.totalPages}
+                </button>
+            );
+        }
+
+        // Кнопка "Вперед"
+        if (pagination.currentPage < pagination.totalPages) {
+            pages.push(
+                <button
+                    key="next"
+                    className="pagination-btn"
+                    onClick={() => handlePageChange(pagination.currentPage + 1)}
+                >
+                    →
+                </button>
+            );
+        }
+
+        return pages;
     };
 
     if (loading) {
@@ -242,9 +354,16 @@ const CatalogPage = () => {
 
                 {/* Результаты поиска */}
                 <div className="catalog-results">
-                    <p className="results-count">
-                        Найдено товаров: <strong>{products.length}</strong>
-                    </p>
+                    <div className="results-info">
+                        <p className="results-count">
+                            Найдено товаров: <strong>{pagination.totalCount}</strong>
+                        </p>
+                        {pagination.totalPages > 1 && (
+                            <div className="pagination-info">
+                                Страница {pagination.currentPage} из {pagination.totalPages}
+                            </div>
+                        )}
+                    </div>
 
                     {products.length === 0 ? (
                         <div className="no-products">
@@ -258,89 +377,100 @@ const CatalogPage = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="products-grid products-grid-catalog">
-                            {products.map((product) => (
-                                <div
-                                    key={product._id}
-                                    className="product-card-catalog"
-                                    onClick={() => handleProductClick(product._id)}
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    <div className="product-image-container product-image-container-catalog">
-                                        <img
-                                            src={product.images?.[0] || '/images/placeholder-flower.jpg'}
-                                            alt={product.name}
-                                            className="product-image"
-                                        />
-                                        {product.discountPercentage > 0 && (
-                                            <span className="discount-badge">
-                                                -{product.discountPercentage}%
-                                            </span>
-                                        )}
-                                        {product.soldCount > 0 && (
-                                            <span className="popular-badge">
-                                                <span className="popular-badge-fire">🔥</span> Популярный
-                                            </span>
-                                        )}
+                        <>
+                            <div className="products-grid products-grid-catalog">
+                                {products.map((product) => (
+                                    <div
+                                        key={product._id}
+                                        className="product-card-catalog"
+                                        onClick={() => handleProductClick(product._id)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <div className="product-image-container product-image-container-catalog">
+                                            <img
+                                                src={product.images?.[0] || '/images/placeholder-flower.jpg'}
+                                                alt={product.name}
+                                                className="product-image"
+                                            />
+                                            {product.discountPercentage > 0 && (
+                                                <span className="discount-badge">
+                                                    -{product.discountPercentage}%
+                                                </span>
+                                            )}
+                                            {product.soldCount > 0 && (
+                                                <span className="popular-badge">
+                                                    <span className="popular-badge-fire">🔥</span> Популярный
+                                                </span>
+                                            )}
 
-                                    </div>
-
-                                    <div className="cart-product-info-catalog">
-                                        <h3 className="product-name-catalog">{product.name}</h3>
-                                        <p className="product-description-catalog">
-                                            {product.description?.length > 20
-                                                ? `${product.description.slice(0, 20)}...`
-                                                : product.description
-                                            }
-                                        </p>
-
-                                        <div className="product-meta-catalog">
-                                            <span className={`product-type-catalog ${product.type}`}>
-                                                {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
-                                            </span>
-                                            <span className="product-occasion-catalog">
-                                                {getOccasionLabel(product.occasion)}
-                                            </span>
                                         </div>
 
-                                        <div className="product-price-catalog">
-                                            {product.originalPrice && product.originalPrice > product.price ? (
-                                                <>
-                                                    <span className="original-price-catalog">
-                                                        {formatPrice(product.originalPrice)}
-                                                    </span>
+                                        <div className="cart-product-info-catalog">
+                                            <h3 className="product-name-catalog">{product.name}</h3>
+                                            <p className="product-description-catalog">
+                                                {product.description?.length > 20
+                                                    ? `${product.description.slice(0, 20)}...`
+                                                    : product.description
+                                                }
+                                            </p>
+
+                                            <div className="product-meta-catalog">
+                                                <span className={`product-type-catalog ${product.type}`}>
+                                                    {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
+                                                </span>
+                                                <span className="product-occasion-catalog">
+                                                    {getOccasionLabel(product.occasion)}
+                                                </span>
+                                            </div>
+
+                                            <div className="product-price-catalog">
+                                                {product.originalPrice && product.originalPrice > product.price ? (
+                                                    <>
+                                                        <span className="original-price-catalog">
+                                                            {formatPrice(product.originalPrice)}
+                                                        </span>
+                                                        <span className="current-price-catalog">
+                                                            {formatPrice(product.price)}
+                                                        </span>
+                                                    </>
+                                                ) : (
                                                     <span className="current-price-catalog">
                                                         {formatPrice(product.price)}
                                                     </span>
-                                                </>
-                                            ) : (
-                                                <span className="current-price-catalog">
-                                                    {formatPrice(product.price)}
-                                                </span>
-                                            )}
-                                        </div>
+                                                )}
+                                            </div>
 
-                                        <div className="product-actions-catalog">
-                                            <button
-                                                className="btn-add-to-cart-catalog"
-                                                onClick={(e) => handleAddToCart(e, product)}
-                                            >
-                                                В корзину
-                                            </button>
+                                            <div className="product-actions-catalog">
+                                                <button
+                                                    className="btn-add-to-cart-catalog"
+                                                    onClick={(e) => handleAddToCart(e, product)}
+                                                >
+                                                    В корзину
+                                                </button>
 
-                                            {/* Кнопка избранного теперь внизу рядом с кнопкой корзины */}
-                                            <button
-                                                className={`favorite-heart-btn-catalog ${isFavorite(product._id) ? 'favorited' : ''}`}
-                                                onClick={(e) => handleToggleFavorite(e, product)}
-                                                title={isFavorite(product._id) ? 'Удалить из избранного' : 'Добавить в избранное'}
-                                            >
-                                                {isFavorite(product._id) ? '❤️' : '🤍'}
-                                            </button>
+                                                {/* Кнопка избранного теперь внизу рядом с кнопкой корзины */}
+                                                <button
+                                                    className={`favorite-heart-btn-catalog ${isFavorite(product._id) ? 'favorited' : ''}`}
+                                                    onClick={(e) => handleToggleFavorite(e, product)}
+                                                    title={isFavorite(product._id) ? 'Удалить из избранного' : 'Добавить в избранное'}
+                                                >
+                                                    {isFavorite(product._id) ? '❤️' : '🤍'}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+
+                            {/* Пагинация */}
+                            {pagination.totalPages > 1 && (
+                                <div className="pagination-container">
+                                    <div className="pagination">
+                                        {renderPagination()}
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

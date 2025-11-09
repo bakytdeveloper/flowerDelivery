@@ -77,15 +77,32 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.results-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
 .results-count {
     font-size: 1.1rem;
     color: #94a3b8;
-    margin-bottom: 1.5rem;
-    text-align: center;
+    margin: 0;
 }
 
 .results-count strong {
     color: #e2e8f0;
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    background: rgba(148, 163, 184, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .no-products {
@@ -98,6 +115,66 @@
 .no-products h3 {
     color: #e2e8f0;
     margin-bottom: 1rem;
+}
+
+/* Пагинация */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination-btn {
+    background: rgba(51, 65, 85, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.pagination-btn:hover:not(.active) {
+    background: rgba(71, 85, 105, 0.8);
+    border-color: rgba(102, 126, 234, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.pagination-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.pagination-ellipsis {
+    color: #94a3b8;
+    padding: 0.5rem;
+    font-weight: 500;
 }
 
 /* Адаптивная сетка карточек - ИСПРАВЛЕННАЯ */
@@ -326,6 +403,46 @@
 .catalog-error h2 {
     color: #ef4444;
     margin-bottom: 1rem;
+}
+
+/* Адаптивность пагинации */
+@media (max-width: 768px) {
+    .results-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pagination-info {
+        align-self: flex-end;
+    }
+
+    .pagination {
+        gap: 0.3rem;
+    }
+
+    .pagination-btn {
+        padding: 0.5rem 0.8rem;
+        min-width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .pagination {
+        gap: 0.2rem;
+    }
+
+    .pagination-btn {
+        padding: 0.4rem 0.6rem;
+        min-width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+    }
+
+    .pagination-ellipsis {
+        padding: 0.3rem;
+    }
 }
 
 /* Адаптивность - ИСПРАВЛЕННЫЙ ПОРЯДОК */
