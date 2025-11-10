@@ -707,7 +707,6 @@
         font-size: 1.2rem;
     }
 
-    /* Новые стили для мобильных устройств */
     .item-controls {
         flex-direction: row;
         justify-content: space-between;
