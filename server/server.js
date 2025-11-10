@@ -185,7 +185,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Обработка событий MongoDB
 mongoose.connection.on('error', (err) => {
-    console.error('MongoDB connection error:', err);
+    console.error('Ошибка подключения MongoDB:', err);
 });
 
 mongoose.connection.on('disconnected', () => {
