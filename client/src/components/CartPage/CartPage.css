@@ -921,7 +921,6 @@
     transform: scale(1.1);
 }
 
-/* Стили для wrapper-image-modal (если их еще нет) */
 .wrapper-image-modal {
     position: fixed;
     top: 0;
