@@ -35,7 +35,6 @@ app.use(bodyParser.urlencoded({
 app.use(express.json());
 app.use(compression());
 
-// ОПТИМИЗИРОВАННЫЙ КОД ДЛЯ СТАТИЧЕСКИХ ФАЙЛОВ:
 // Убедимся, что директории существуют
 const uploadsDir = path.join(__dirname, 'uploads');
 const thumbnailsDir = path.join(__dirname, 'uploads', 'thumbnails');
