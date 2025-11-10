@@ -196,7 +196,7 @@ const App = () => {
 
   return (
       <AuthProvider>
-        <AppProvider> {/* ДОБАВЛЕН - должен быть ВНУТРИ AuthProvider и СНАРУЖИ CartProvider */}
+        <AppProvider> 
           <CartProvider>
             <Router>
               <ToastContainer style={{zIndex:"999999"}} />
