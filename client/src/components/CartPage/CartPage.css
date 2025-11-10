@@ -888,15 +888,6 @@
 
 /* Адаптивность для модальных окон */
 @media (max-width: 768px) {
-    /*.modal-overlay {*/
-    /*    padding: 10px;*/
-    /*}*/
-
-    /*.confirmation-modal {*/
-    /*    max-width: 100%;*/
-    /*    margin: 20px;*/
-    /*}*/
-
     .modal-footer {
         flex-direction: column;
     }
