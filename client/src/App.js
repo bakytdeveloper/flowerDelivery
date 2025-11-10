@@ -196,7 +196,7 @@ const App = () => {
 
   return (
       <AuthProvider>
-        <AppProvider> 
+        <AppProvider>
           <CartProvider>
             <Router>
               <ToastContainer style={{zIndex:"999999"}} />
@@ -262,7 +262,6 @@ const App = () => {
                       <Route path="/cart" element={<CartPage />} />
                       <Route path="/checkout" element={<CheckoutPage />} />
                       <Route path="/order-success" element={<OrderSuccess />} />
-                      {/* Добавьте сюда другие маршруты по мере необходимости */}
                       <Route path="/about" element={<AboutUs />} />
                       <Route path="/payment" element={<div>Страница оплаты</div>} />
 
