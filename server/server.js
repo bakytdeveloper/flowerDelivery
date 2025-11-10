@@ -219,7 +219,7 @@ app.get('/api/admin/cleanup-zero-quantity', async (req, res) => {
 app.use((req, res) => {
     res.status(404).json({
         success: false,
-        message: 'Route not found',
+        message: 'Маршрут не найден',
         path: req.originalUrl
     });
 });
