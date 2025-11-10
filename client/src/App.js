@@ -9,7 +9,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from "./contexts/CartContext";
-import { AppProvider } from './contexts/AppContext'; // ДОБАВЛЕН
+import { AppProvider } from './contexts/AppContext'; 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
