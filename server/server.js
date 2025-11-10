@@ -230,7 +230,7 @@ app.use((error, req, res, next) => {
 
     res.status(error.status || 500).json({
         success: false,
-        message: error.message || 'Internal Server Error',
+        message: error.message || 'Внутренняя ошибка сервера',
         ...(process.env.NODE_ENV === 'development' && {
             stack: error.stack
         })
