@@ -226,7 +226,7 @@ app.use((req, res) => {
 
 // Глобальная обработка ошибок
 app.use((error, req, res, next) => {
-    console.error('Global error handler:', error);
+    console.error('Глобальный обработчик ошибок:', error);
 
     res.status(error.status || 500).json({
         success: false,
@@ -266,7 +266,7 @@ process.on('SIGINT', async () => {
 });
 
 process.on('SIGTERM', async () => {
-    console.log('🛑 Received SIGTERM. Shutting down gracefully...');
+    console.log('🛑 Получен сигнал SIGTERM. Осуществляется корректное завершение работы....');
     await mongoose.connection.close();
     console.log('✅ MongoDB connection closed.');
     process.exit(0);
