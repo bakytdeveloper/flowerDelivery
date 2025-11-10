@@ -127,7 +127,6 @@ const App = () => {
     sessionStorage.setItem('token', token);
   };
 
-
   useEffect(() => {
     const fetchOrders = async () => {
       const token = sessionStorage.getItem('token');
