@@ -3,14 +3,14 @@
     margin-top: 5px;
     justify-content: center;
     align-items: center;
-    padding: 25px 5px;
+    padding: 25px 0; /* Убираем боковые отступы */
     overflow-y: auto;
 }
 
 .carousel {
     position: relative;
-    width: auto;
-    /*max-width: 1340px;*/
+    width: 100%;
+    max-width: 100%; /* Убираем ограничение */
     overflow: hidden;
     margin: 0 auto;
     background-size: cover;
@@ -299,6 +299,22 @@
     height: 100%;
     object-fit: cover;
     z-index: -1;
+}
+
+
+/* Для больших мониторов увеличиваем высоту карусели */
+@media (min-width: 1920px) {
+    .carousel {
+        height: 70vh;
+        max-width: 95%;
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: 2560px) {
+    .carousel {
+        height: 75vh;
+    }
 }
 
 

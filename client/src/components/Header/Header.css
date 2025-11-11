@@ -525,6 +525,35 @@
     box-shadow: 0 5px 15px rgba(45, 80, 22, 0.3);
 }
 
+
+/* Для больших мониторов */
+@media (min-width: 1920px) {
+    .header-content {
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    .search-input {
+        width: 300px;
+    }
+}
+
+@media (min-width: 2560px) {
+    .header-content {
+        max-width: 2000px;
+    }
+
+    .search-input {
+        width: 350px;
+    }
+
+    .nav-link {
+        font-size: 16px;
+        padding: 3px 20px !important;
+    }
+}
+
+
 /* Адаптивность */
 @media (max-width: 1200px) {
     .header-content {

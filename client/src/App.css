@@ -126,16 +126,16 @@ span {
 
 }
 
-.content {
-  display: flex!important;
-  width: 100%;
-  max-width: 1340px!important;
-  margin: 0 auto;
-  /*flex-grow: 1;*/
+/*.content {*/
+/*  display: flex!important;*/
+/*  width: 100%;*/
+/*  max-width: 1340px!important;*/
+/*  margin: 0 auto;*/
+/*  !*flex-grow: 1;*!*/
 
-  padding: 0!important;
-  justify-content: space-between!important;
-}
+/*  padding: 0!important;*/
+/*  justify-content: space-between!important;*/
+/*}*/
 
 
 
@@ -229,5 +229,49 @@ span {
 
   .spinner-text {
     font-size: 14px;
+  }
+}
+
+
+/* App.css - добавляем после существующих стилей */
+
+
+/* Обновляем основной контент */
+.content {
+  display: flex !important;
+  width: 100%;
+  max-width: 95% !important; /* Убираем ограничение */
+  margin: 0 auto;
+  padding: 0 !important;
+  justify-content: space-between !important;
+}
+
+/* Базовые настройки контейнера */
+.container-wide {
+  width: 100%;
+  max-width: 1340px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Для очень больших мониторов */
+@media (min-width: 1920px) {
+  .container-wide {
+    max-width: 1600px;
+    padding: 0 40px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .container-wide {
+    max-width: 2000px;
+    padding: 0 60px;
+  }
+}
+
+@media (min-width: 3840px) {
+  .container-wide {
+    max-width: 2600px;
+    padding: 0 80px;
   }
 }

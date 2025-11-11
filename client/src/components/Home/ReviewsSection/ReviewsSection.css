@@ -285,6 +285,42 @@
     100% { transform: rotate(360deg); }
 }
 
+/* ReviewsSection.css - добавляем */
+
+/* Для очень больших мониторов увеличиваем отступы */
+@media (min-width: 3840px) {
+    .reviews-scroll-wrapper {
+        gap: 3rem;
+    }
+}
+
+/* Для больших экранов - сетка вместо скролла */
+@media (min-width: 1920px) {
+    .reviews-scroll-container {
+        overflow-x: auto; /* Возвращаем скролл */
+    }
+
+    .reviews-scroll-wrapper {
+        display: flex; /* Возвращаем flex вместо grid */
+        grid-template-columns: none; /* Убираем grid */
+        flex-wrap: nowrap; /* Запрещаем перенос */
+        gap: 2rem;
+        padding: 0 2rem;
+    }
+
+    .review-card-compact {
+        min-width: 280px; /* Фиксированная ширина */
+        max-width: none; /* Убираем ограничение */
+        margin: 0; /* Убираем auto */
+        flex-shrink: 0; /* Запрещаем сжатие */
+    }
+
+    /* Скрываем кнопки скролла */
+    .scroll-btn {
+        display: none !important;
+    }
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
     .reviews-section {

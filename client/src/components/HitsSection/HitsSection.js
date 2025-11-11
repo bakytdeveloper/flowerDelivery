@@ -140,7 +140,7 @@ const HitsSection = () => {
     if (loading) {
         return (
             <section className="season-section">
-                <div className="container">
+                <div className="container-wide">
                     <h2 className="season-title">Хиты продаж</h2>
                     <div className="loading-products">
                         <div className="spinner-border text-primary" role="status">
@@ -155,7 +155,7 @@ const HitsSection = () => {
     if (error) {
         return (
             <section className="season-section">
-                <div className="container">
+                <div className="container-wide">
                     <h2 className="season-title">Хиты продаж</h2>
                     <div className="error-message">
                         <p>Не удалось загрузить хиты продаж</p>
@@ -179,7 +179,7 @@ const HitsSection = () => {
 
     return (
         <section className="season-section">
-            <div className="container">
+            <div className="container-wide">
                 <div className="season-header">
                     <h2 className="season-title">Хиты продаж</h2>
                 </div>

@@ -29,7 +29,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    /*gap: 1rem;*/
+    max-width: 100%;
 }
 
 .season-scroll-container {
@@ -40,6 +40,7 @@
     cursor: grab;
     flex: 1;
     padding: 1rem 0;
+    width: 100%;
 }
 
 .season-scroll-container:active {
@@ -362,6 +363,64 @@
 
 .error-message {
     color: #ef4444;
+}
+
+
+/* Адаптивное количество карточек для больших экранов */
+@media (min-width: 1920px) {
+    .season-products-row {
+        gap: 2rem;
+        padding: 0 2rem;
+    }
+}
+
+@media (min-width: 2560px) {
+    .season-products-row {
+        gap: 2.5rem;
+        padding: 0 3rem;
+    }
+
+    .season-product-card {
+        width: 300px; /* Немного увеличиваем карточки */
+    }
+}
+
+/* Включаем горизонтальный скролл только когда нужно */
+@media (max-width: 1919px) {
+    .season-scroll-container {
+        overflow-x: auto;
+    }
+
+    .season-products-row {
+        flex-wrap: nowrap;
+    }
+}
+
+/* Для очень больших экранов - сетка вместо скролла */
+@media (min-width: 1920px) {
+    .season-scroll-container {
+        overflow-x: auto; /* Возвращаем скролл */
+    }
+
+    .season-products-row {
+        display: flex; /* Возвращаем flex вместо grid */
+        grid-template-columns: none; /* Убираем grid */
+        flex-wrap: nowrap; /* Запрещаем перенос */
+        gap: 2rem;
+        padding: 0 2rem;
+    }
+
+    .season-product-card {
+        width: 280px; /* Фиксированная ширина */
+        max-width: none; /* Убираем ограничение */
+        margin: 0; /* Убираем auto */
+        flex-shrink: 0; /* Запрещаем сжатие */
+    }
+
+    /* Скрываем кнопки скролла на больших экранах */
+    .scroll-btn {
+        display: none !important;
+    }
 }
 
 /* АДАПТИВНОСТЬ - ОБНОВЛЕННАЯ */

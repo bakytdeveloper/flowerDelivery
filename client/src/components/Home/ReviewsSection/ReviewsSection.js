@@ -137,7 +137,7 @@ const ReviewsSection = () => {
     if (isLoading) {
         return (
             <section className="reviews-section">
-                <div className="container">
+                <div className="container-wide">
                     <div className="reviews-loading">
                         <div className="spinner"></div>
                         <p>Загрузка отзывов...</p>
@@ -150,7 +150,7 @@ const ReviewsSection = () => {
     if (error) {
         return (
             <section className="reviews-section">
-                <div className="container">
+                <div className="container-wide">
                     <div className="reviews-error">
                         <p>{error}</p>
                     </div>
@@ -166,7 +166,7 @@ const ReviewsSection = () => {
     return (
         <>
             <section className="reviews-section">
-                <div className="container">
+                <div className="container-wide">
                     <div className="reviews-header">
                         <h2 className="reviews-title">Отзывы наших клиентов</h2>
                         <p className="reviews-subtitle">Что говорят покупатели о наших цветах</p>

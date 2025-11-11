@@ -135,7 +135,7 @@ const SeasonalOffers = () => {
     if (loading) {
         return (
             <section className="season-section">
-                <div className="container">
+                <div className="container-wide">
                     <h2 className="season-title">Сезонные предложения</h2>
                     <div className="loading-products">
                         <div className="spinner-border text-primary" role="status">
@@ -150,7 +150,7 @@ const SeasonalOffers = () => {
     if (error) {
         return (
             <section className="season-section">
-                <div className="container">
+                <div className="container-wide">
                     <h2 className="season-title">Сезонные предложения</h2>
                     <div className="error-message">
                         <p>Не удалось загрузить хиты продаж</p>
@@ -172,7 +172,7 @@ const SeasonalOffers = () => {
 
     return (
         <section className="season-section">
-            <div className="container">
+            <div className="container-wide">
                 <div className="season-header">
                     <h2 className="season-title">Сезонные предложения</h2>
                 </div>
