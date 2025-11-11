@@ -471,21 +471,60 @@ export const getSalesStats = async (req, res) => {
 };
 
 // Контроллер для удаления изображения
+// export const removeImage = async (req, res) => {
+//     const {
+//         imageUrl
+//     } = req.body;
+//     try {
+//         const filePath = path.join(__dirname, '..', 'uploads', path.basename(imageUrl));
+//         if (fs.existsSync(filePath)) {
+//             fs.unlinkSync(filePath);
+//         }
+//
+//         await Product.updateMany({}, {
+//             $pull: {
+//                 images: imageUrl
+//             }
+//         });
+//         res.status(200).send({
+//             message: 'Изображение успешно удалено'
+//         });
+//     } catch (error) {
+//         console.error('Ошибка при удалении изображения:', error);
+//         res.status(500).send({
+//             message: 'Ошибка при удалении изображения'
+//         });
+//     }
+// };
+
+// Контроллер для удаления изображения товара
 export const removeImage = async (req, res) => {
-    const {
-        imageUrl
-    } = req.body;
+    const { imageUrl } = req.body;
     try {
-        const filePath = path.join(__dirname, '..', 'uploads', path.basename(imageUrl));
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
+        // Извлекаем имя файла из URL
+        const filename = path.basename(imageUrl);
+
+        // Проверяем, является ли это изображением товара
+        if (filename.startsWith('product-')) {
+            const filePath = path.join(__dirname, '..', 'uploads', filename);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        } else {
+            // Для миниатюр (отзывов) удаляем из папки thumbnails
+            const filePath = path.join(__dirname, '..', 'uploads', 'thumbnails', filename);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
         }
 
+        // Удаляем ссылку на изображение из всех товаров
         await Product.updateMany({}, {
             $pull: {
                 images: imageUrl
             }
         });
+
         res.status(200).send({
             message: 'Изображение успешно удалено'
         });
@@ -559,6 +598,27 @@ export const updateSoldCount = async (req, res) => {
 
 
 // Контроллер для загрузки изображений
+// export const uploadImages = async (req, res) => {
+//     try {
+//         if (!req.files || req.files.length === 0) {
+//             return res.status(400).json({ message: 'No files uploaded' });
+//         }
+//
+//         const imageUrls = req.files.map(file =>
+//             `${req.protocol}://${req.get('host')}/uploads/${file.filename}`
+//         );
+//
+//         res.json({
+//             message: 'Images uploaded successfully',
+//             images: imageUrls
+//         });
+//     } catch (error) {
+//         console.error('Error uploading images:', error);
+//         res.status(500).json({ message: 'Error uploading images' });
+//     }
+// };
+
+// Контроллер для загрузки изображений товаров
 export const uploadImages = async (req, res) => {
     try {
         if (!req.files || req.files.length === 0) {
