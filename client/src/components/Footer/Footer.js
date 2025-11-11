@@ -16,7 +16,7 @@ const Footer = () => {
 
     return (
         <footer className="footer">
-            <div className="container">
+            <div className="container-wide">
                 <div className="footer-content">
                     {/* Контактные данные */}
                     <div className="footer-section">
