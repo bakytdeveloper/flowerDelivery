@@ -113,6 +113,106 @@
     font-size: 1rem;
 }
 
+/* Стили для больших мониторов (1920px и больше) */
+@media (min-width: 1920px) {
+    .map-section {
+        padding: 4rem 0 2rem;
+        max-width: 1600px;
+        margin: 0 auto;
+        border-radius: 20px;
+    }
+
+    .map-title {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .map-subtitle {
+        font-size: 1.4rem;
+        max-width: 800px;
+        line-height: 1.8;
+    }
+
+    .map-container {
+        border-radius: 25px;
+        margin-bottom: 3rem;
+    }
+
+    .map-iframe {
+        height: 550px;
+        border-radius: 25px;
+    }
+
+    .location-info {
+        max-width: 1200px;
+        gap: 2rem;
+    }
+
+    .info-card {
+        padding: 2.5rem;
+        border-radius: 20px;
+        gap: 1.5rem;
+    }
+
+    .info-icon {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+    }
+
+    .info-content h4 {
+        font-size: 1.5rem;
+    }
+
+    .info-content p {
+        font-size: 1.2rem;
+    }
+}
+
+/* Стили для очень больших мониторов (2560px и больше) */
+@media (min-width: 2560px) {
+    .map-section {
+        max-width: 2000px;
+        padding: 5rem 0 3rem;
+    }
+
+    .map-title {
+        font-size: 4.5rem;
+    }
+
+    .map-subtitle {
+        font-size: 1.5rem;
+        max-width: 900px;
+    }
+
+    .map-iframe {
+        height: 650px;
+    }
+
+    .location-info {
+        max-width: 1400px;
+        gap: 2.5rem;
+    }
+
+    .info-card {
+        padding: 3rem;
+    }
+
+    .info-icon {
+        width: 90px;
+        height: 90px;
+        font-size: 3rem;
+    }
+
+    .info-content h4 {
+        font-size: 1.6rem;
+    }
+
+    .info-content p {
+        font-size: 1.3rem;
+    }
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
     .map-section {

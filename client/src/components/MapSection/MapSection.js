@@ -44,7 +44,7 @@ const MapSection = () => {
 
     return (
         <section className="map-section" ref={mapRef}>
-            <div className="container">
+            <div className="container-wide">
                 <div className="map-header">
                     <h2 className="map-title">Мы находимся здесь</h2>
                     <p className="map-subtitle">

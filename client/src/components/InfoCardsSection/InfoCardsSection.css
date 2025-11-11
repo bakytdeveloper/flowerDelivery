@@ -265,6 +265,112 @@
     }
 }
 
+/* Стили для больших мониторов (1920px и больше) */
+@media (min-width: 1920px) {
+    .info-cards-section {
+        padding: 6rem 0;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    .info-cards-grid {
+        max-width: 1400px;
+        gap: 3rem;
+    }
+
+    .info-card-header {
+        padding: 2rem 3rem;
+        min-height: 100px;
+    }
+
+    .info-card.closed {
+        top: 0;
+        padding: 0;
+    }
+
+    .info-card-title {
+        font-size: 1.8rem;
+    }
+
+    .toggle-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 2rem;
+    }
+
+    .text-content {
+        padding: 3rem;
+    }
+
+    .section-title-color {
+        font-size: 1.2rem;
+    }
+
+    .section-item {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-description {
+        font-size: 1.1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+    }
+
+    .card-image {
+        height: 280px;
+    }
+}
+
+/* Стили для очень больших мониторов (2560px и больше) */
+@media (min-width: 2560px) {
+    .info-cards-section {
+        max-width: 2000px;
+        padding: 8rem 0;
+    }
+
+    .info-cards-grid {
+        max-width: 1800px;
+        gap: 4rem;
+    }
+
+    .info-card-header {
+        padding: 2.5rem 4rem;
+        min-height: 120px;
+    }
+
+    .info-card-title {
+        font-size: 2rem;
+    }
+
+    .toggle-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 2.2rem;
+    }
+
+    .text-content {
+        padding: 4rem;
+    }
+
+    .section-title-color {
+        font-size: 1.3rem;
+    }
+
+    .section-item {
+        font-size: 1.2rem;
+    }
+
+    .card-description {
+        font-size: 1.2rem;
+    }
+
+    .card-image {
+        height: 320px;
+    }
+}
+
 /* АДАПТИВНОСТЬ - ОБНОВЛЕННАЯ ДЛЯ ЗАГОЛОВКОВ */
 
 @media (max-width: 1024px) {

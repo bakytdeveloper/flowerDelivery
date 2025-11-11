@@ -386,7 +386,7 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
             {/* Новая секция с информационными карточками */}
             <InfoCardsSection />
 
-            {/* Карта с расположением */}
+            {/* Карта с расположением */}  
             <MapSection />
 
 

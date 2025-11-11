@@ -66,7 +66,7 @@ const InfoCardsSection = () => {
 
     return (
         <section className="info-cards-section">
-            <div className="container">
+            <div className="container-wide">
                 <div className="info-cards-grid">
                     {cards.map((card) => (
                         <div

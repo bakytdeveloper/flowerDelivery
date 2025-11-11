@@ -345,6 +345,120 @@
             rgba(255, 255, 255, 0.15);
 }
 
+/* Стили для больших мониторов (1920px и больше) */
+@media (min-width: 1920px) {
+    .why-choose-us {
+        padding: 4rem 0 !important;
+        max-width: 1600px;
+        margin: 0 auto;
+        border-radius: 30px !important;
+    }
+
+    .section-title {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.4rem;
+        max-width: 800px;
+        line-height: 1.8;
+    }
+
+    .features-grid {
+        max-width: 1400px;
+        gap: 3rem;
+    }
+
+    .feature-card {
+        padding: 3.5rem 2rem;
+        border-radius: 25px;
+    }
+
+    .feature-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .icon-emoji {
+        font-size: 2.5rem;
+    }
+
+    .icon-background {
+        width: 120px;
+        height: 120px;
+    }
+
+    .feature-title {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-description {
+        font-size: 1.2rem;
+        line-height: 1.7;
+    }
+
+    .decoration-circle {
+        width: 100px;
+        height: 100px;
+    }
+
+    .why-choose-us::after {
+        font-size: 4rem;
+        bottom: 30px;
+        right: 30px;
+    }
+}
+
+/* Стили для очень больших мониторов (2560px и больше) */
+@media (min-width: 2560px) {
+    .why-choose-us {
+        max-width: 2000px;
+        padding: 5rem 0 !important;
+    }
+
+    .section-title {
+        font-size: 4.5rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.5rem;
+        max-width: 900px;
+    }
+
+    .features-grid {
+        max-width: 1800px;
+        gap: 4rem;
+    }
+
+    .feature-card {
+        padding: 4rem 2.5rem;
+    }
+
+    .feature-icon {
+        width: 120px;
+        height: 120px;
+    }
+
+    .icon-emoji {
+        font-size: 3rem;
+    }
+
+    .icon-background {
+        width: 140px;
+        height: 140px;
+    }
+
+    .feature-title {
+        font-size: 2rem;
+    }
+
+    .feature-description {
+        font-size: 1.3rem;
+    }
+}
+
 /* Дополнительный медиа-запрос для средних экранов */
 @media (max-width: 1200px) and (min-width: 1025px) {
     .features-grid {

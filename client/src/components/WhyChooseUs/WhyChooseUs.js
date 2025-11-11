@@ -35,7 +35,7 @@ const WhyChooseUs = () => {
 
     return (
         <section className="why-choose-us">
-            <div className="container">
+            <div className="container-wide">
                 <div className="section-header">
                     <h2 className="section-title">Почему выбирают нас?</h2>
                     <p className="section-subtitle">
