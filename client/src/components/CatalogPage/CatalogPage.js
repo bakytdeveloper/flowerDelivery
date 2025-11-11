@@ -302,7 +302,7 @@ const CatalogPage = () => {
     if (loading) {
         return (
             <div className="catalog-page">
-                <div className="container">
+                <div className="catalog-wide-container">
                     <div className="catalog-loading">
                         <div className="spinner-border text-primary" role="status">
                             <span className="visually-hidden">Загрузка...</span>
@@ -317,7 +317,7 @@ const CatalogPage = () => {
     if (error) {
         return (
             <div className="catalog-page">
-                <div className="container">
+                <div className="catalog-wide-container">
                     <div className="catalog-error">
                         <h2>Ошибка</h2>
                         <p>{error}</p>
@@ -335,7 +335,7 @@ const CatalogPage = () => {
 
     return (
         <div className="catalog-page">
-            <div className="container">
+            <div className="catalog-wide-container">
                 {/* Заголовок и фильтры */}
                 <div className="catalog-header">
                     <h1 className="catalog-title">Каталог цветов</h1>

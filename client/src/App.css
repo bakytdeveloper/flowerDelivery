@@ -275,3 +275,51 @@ span {
     padding: 0 80px;
   }
 }
+
+
+/* App.css - добавьте в конец файла */
+
+/* Широкий контейнер для каталога и избранного */
+.catalog-wide-container,
+.favorites-wide-container {
+  width: 100%;
+  max-width: 95%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Адаптация для очень больших мониторов */
+@media (min-width: 1400px) {
+  .catalog-wide-container,
+  .favorites-wide-container {
+    max-width: 95%;
+  }
+}
+
+@media (min-width: 1600px) {
+  .catalog-wide-container,
+  .favorites-wide-container {
+    max-width: 92%;
+  }
+}
+
+@media (min-width: 1920px) {
+  .catalog-wide-container,
+  .favorites-wide-container {
+    max-width: 90%;
+  }
+}
+
+@media (min-width: 2560px) {
+  .catalog-wide-container,
+  .favorites-wide-container {
+    max-width: 85%;
+  }
+}
+
+@media (min-width: 3840px) {
+  .catalog-wide-container,
+  .favorites-wide-container {
+    max-width: 80%;
+  }
+}

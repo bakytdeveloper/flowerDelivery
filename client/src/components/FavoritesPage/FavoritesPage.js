@@ -116,7 +116,7 @@ const FavoritesPage = () => {
     // Остальная разметка без изменений...
     return (
         <div className="favorites-page">
-            <div className="container">
+            <div className="favorites-wide-container">
                 {/* Заголовок */}
                 <div className="favorites-header">
                     <nav className="breadcrumb-nav breadcrumb-nav-favorites">

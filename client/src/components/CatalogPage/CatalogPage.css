@@ -445,16 +445,167 @@
     }
 }
 
-/* Адаптивность - ИСПРАВЛЕННЫЙ ПОРЯДОК */
+/* Плавная анимация появления */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-/* Очень большие мониторы (1400px+) - 5 колонок */
-@media (min-width: 1400px) {
+.product-card-catalog {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Задержки для анимации появления карточек */
+.product-card-catalog:nth-child(1) { animation-delay: 0.1s; }
+.product-card-catalog:nth-child(2) { animation-delay: 0.15s; }
+.product-card-catalog:nth-child(3) { animation-delay: 0.2s; }
+.product-card-catalog:nth-child(4) { animation-delay: 0.25s; }
+.product-card-catalog:nth-child(5) { animation-delay: 0.3s; }
+.product-card-catalog:nth-child(6) { animation-delay: 0.35s; }
+
+/* Обновленные стили для кнопки избранного */
+.favorite-heart-btn-catalog {
+    background: rgb(66, 75, 103);
+    border: none;
+    border-radius: 10px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+}
+
+.favorite-heart-btn-catalog:hover {
+    background: #0b1e24;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.favorite-heart-btn-catalog.favorited {
+    background: rgb(255, 252, 205);
+    color: #e74c3c;
+}
+
+.favorite-heart-btn-catalog:active {
+    transform: scale(0.95);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .favorite-heart-btn-catalog {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .product-actions-catalog {
+        gap: 0.5rem;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 380px) {
+    .product-actions-catalog {
+        flex-direction: row;
+    }
+
+    .favorite-heart-btn-catalog {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+    }
+}
+
+/* Убираем ограничение по ширине для контейнера каталога */
+.catalog-page .container {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+}
+
+/* ========================================================================= */
+/* АДАПТИВНЫЕ СТИЛИ ДЛЯ БОЛЬШИХ МОНИТОРОВ - ПРАВИЛЬНЫЙ ПОРЯДОК */
+/* ========================================================================= */
+
+/* Очень большие мониторы (3840px+) - 10 колонок */
+@media (min-width: 3840px) {
+    .products-grid-catalog {
+        grid-template-columns: repeat(10, 1fr);
+        gap: 2.2rem;
+    }
+
+    .product-image-container-catalog {
+        height: 240px;
+    }
+
+    .catalog-title {
+        font-size: 3.5rem;
+    }
+
+    .product-name-catalog {
+        font-size: 1.2rem;
+    }
+
+    .product-description-catalog {
+        font-size: 1rem;
+    }
+}
+
+/* Большие 4K мониторы (2560px - 3839px) - 8 колонок */
+@media (min-width: 2560px) and (max-width: 3839px) {
+    .products-grid-catalog {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 2rem;
+    }
+
+    .product-image-container-catalog {
+        height: 220px;
+    }
+
+    .catalog-title {
+        font-size: 3rem;
+    }
+}
+
+/* Большие мониторы (1920px - 2559px) - 7 колонок */
+@media (min-width: 1920px) and (max-width: 2559px) {
+    .products-grid-catalog {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1.8rem;
+    }
+
+    .product-image-container-catalog {
+        height: 200px;
+    }
+}
+
+/* Средне-большие мониторы (1600px - 1919px) - 6 колонок */
+@media (min-width: 1600px) and (max-width: 1919px) {
+    .products-grid-catalog {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+/* Стандартные большие мониторы (1400px - 1599px) - 5 колонок */
+@media (min-width: 1400px) and (max-width: 1599px) {
     .products-grid-catalog {
         grid-template-columns: repeat(5, 1fr);
     }
 }
 
-/* Большие мониторы (1200px - 1399px) - 5 колонок */
+/* Средние мониторы (1200px - 1399px) - 5 колонок */
 @media (max-width: 1399px) and (min-width: 1200px) {
     .products-grid-catalog {
         grid-template-columns: repeat(5, 1fr);
@@ -577,88 +728,5 @@
 
     .product-description-catalog {
         font-size: 0.75rem;
-    }
-}
-
-/* Плавная анимация появления */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.product-card-catalog {
-    animation: fadeInUp 0.5s ease forwards;
-}
-
-/* Задержки для анимации появления карточек */
-.product-card-catalog:nth-child(1) { animation-delay: 0.1s; }
-.product-card-catalog:nth-child(2) { animation-delay: 0.15s; }
-.product-card-catalog:nth-child(3) { animation-delay: 0.2s; }
-.product-card-catalog:nth-child(4) { animation-delay: 0.25s; }
-.product-card-catalog:nth-child(5) { animation-delay: 0.3s; }
-.product-card-catalog:nth-child(6) { animation-delay: 0.35s; }
-
-/* Обновленные стили для кнопки избранного */
-.favorite-heart-btn-catalog {
-    background: rgb(66, 75, 103);
-    border: none;
-    border-radius: 10px;
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    transition: all 0.3s ease;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    flex-shrink: 0;
-}
-
-.favorite-heart-btn-catalog:hover {
-    background: #0b1e24;
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.favorite-heart-btn-catalog.favorited {
-    background: rgb(255, 252, 205);
-    color: #e74c3c;
-}
-
-.favorite-heart-btn-catalog:active {
-    transform: scale(0.95);
-}
-
-/* Адаптивность для мобильных */
-@media (max-width: 768px) {
-    .favorite-heart-btn-catalog {
-        width: 36px;
-        height: 36px;
-        font-size: 16px;
-    }
-
-    .product-actions-catalog {
-        gap: 0.5rem;
-    }
-}
-
-/* Для очень маленьких экранов */
-@media (max-width: 380px) {
-    .product-actions-catalog {
-        flex-direction: row;
-    }
-
-    .favorite-heart-btn-catalog {
-        width: 34px;
-        height: 34px;
-        font-size: 15px;
     }
 }

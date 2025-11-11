@@ -527,3 +527,87 @@
         font-size: 0.75rem;
     }
 }
+
+
+/* FavoritesPage.css - добавьте в конец файла */
+
+/* Адаптация для больших мониторов */
+@media (min-width: 1400px) {
+    .products-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (min-width: 1600px) {
+    .products-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+@media (min-width: 1920px) {
+    .products-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1.8rem;
+    }
+
+    .product-image-container {
+        height: 220px;
+    }
+
+    .product-card {
+        height: 480px;
+    }
+}
+
+@media (min-width: 2560px) {
+    .products-grid {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 2rem;
+    }
+
+    .product-image-container {
+        height: 240px;
+    }
+
+    .product-card {
+        height: 500px;
+    }
+
+    .favorites-title {
+        font-size: 3rem;
+    }
+}
+
+@media (min-width: 3840px) {
+    .products-grid {
+        grid-template-columns: repeat(10, 1fr);
+        gap: 2.2rem;
+    }
+
+    .product-image-container {
+        height: 260px;
+    }
+
+    .product-card {
+        height: 520px;
+    }
+
+    .favorites-title {
+        font-size: 3.5rem;
+    }
+
+    .product-name {
+        font-size: 1.2rem;
+    }
+
+    .product-description {
+        font-size: 1rem;
+    }
+}
+
+/* Убираем ограничение по ширине для контейнера избранного */
+.favorites-page .container {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+}
