@@ -496,13 +496,17 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                         <div className="image-badge">
                                             {getImageType(image) === 'url' ? 'URL' : 'File'}
                                         </div>
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() => removeImage(index)}
-                                        >
-                                            ×
-                                        </button>
+                                        <div type="button"
+                                             onClick={() => removeImage(index)}
+                                             className="button-dangers">
+                                            {/*<button*/}
+                                            {/*    type="button"*/}
+                                            {/*    className="btn btn-dangers btn-sm"*/}
+                                            {/*    onClick={() => removeImage(index)}*/}
+                                            {/*>*/}
+                                                ×
+                                            {/*</button>*/}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
