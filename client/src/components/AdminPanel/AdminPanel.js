@@ -440,8 +440,8 @@ const AdminPanel = () => {
 
 
                                             {slide.backgroundType === 'color' && (
-                                                <div className="form-group">
-                                                    <label>Цвет фона:</label>
+                                                <div className="form-group" style={{zIndex:"0"}}>
+                                                    <label  style={{zIndex:"0"}}>Цвет фона:</label>
                                                     <input
                                                         type="color"
                                                         value={slide.backgroundColor}
