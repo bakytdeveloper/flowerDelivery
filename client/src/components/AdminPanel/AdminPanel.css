@@ -360,6 +360,29 @@ textarea.form-control {
     color: #888888;
 }
 
+/* В AdminPanel.css добавьте: */
+
+/* Гарантируем правильное отображение в слайдере */
+.slide-editor {
+    position: relative;
+    z-index: 1;
+}
+
+.slide-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Специфичные стили для селектов в админ-панели */
+.admin-panel .custom-select__dropdown {
+    z-index: 1002;
+}
+
+/* В модальных окнах админ-панели */
+.modal-content .custom-select__dropdown {
+    z-index: 10050;
+}
+
 /* АДАПТИВНЫЕ СТИЛИ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
 @media (max-width: 1200px) {
     .admin-panel {
@@ -686,7 +709,6 @@ textarea.form-control {
     margin-bottom: 10px;
     font-size: 9px;
 }
-
 
 /* Адаптивные стили для мобильного предпросмотра */
 @media (max-width: 768px) {

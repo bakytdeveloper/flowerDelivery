@@ -324,7 +324,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
 
 
                             {/* Кому */}
-                            <div className="form-group">
+                            <div className="form-group"  style={{zIndex:"0"}}>
                                 <label>Кому</label>
                                 <CustomSelect
                                     value={product.recipient}
@@ -340,7 +340,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                 />
                             </div>
 
-                                <div className="form-group">
+                                <div className="form-group"  style={{zIndex:"0"}}>
                                     <label>Длина стебля (см)</label>
                                     <input
                                         type="number"

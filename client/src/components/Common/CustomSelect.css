@@ -17,7 +17,8 @@
     justify-content: space-between;
     align-items: center;
     transition: border-color 0.3s ease;
-
+    position: relative;
+    z-index: 100;
 }
 
 .custom-select__control:hover {
@@ -28,12 +29,13 @@
     border-color: #3e97f6;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-
+    z-index: 1002; /* Выше чем dropdown */
 }
 
 .custom-select__arrow {
     transition: transform 0.3s ease;
     color: white;
+    font-size: 12px;
 }
 
 .custom-select__arrow--open {
@@ -49,12 +51,11 @@
     border: 2px solid #3e97f6;
     border-top: none;
     border-radius: 0 0 6px 6px;
-    z-index: 1000;
+    z-index: 1001; /* Высокий z-index для отображения поверх других элементов */
     max-height: 200px;
     overflow-y: auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px); /* Перекрывает border контрола */
 }
 
 .custom-select__option {
@@ -63,6 +64,7 @@
     color: white;
     border-bottom: 1px solid #4a5568;
     transition: background-color 0.2s ease;
+    background: #2d3748;
 }
 
 .custom-select__option:hover {
@@ -78,21 +80,47 @@
     border-bottom: none;
 }
 
-/* Стили для скроллбара */
+/* Улучшенные стили для скроллбара */
 .custom-select__dropdown::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 .custom-select__dropdown::-webkit-scrollbar-track {
     background: #4a5568;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 .custom-select__dropdown::-webkit-scrollbar-thumb {
     background: #3e97f6;
-    border-radius: 3px;
+    border-radius: 4px;
 }
 
 .custom-select__dropdown::-webkit-scrollbar-thumb:hover {
     background: #3182ce;
+}
+
+/* Для Firefox */
+.custom-select__dropdown {
+    scrollbar-width: thin;
+    scrollbar-color: #3e97f6 #4a5568;
+}
+
+/* Гарантируем, что dropdown будет поверх модальных окон */
+.modal-content .custom-select__dropdown {
+    z-index: 10000; /* Очень высокий z-index для модальных окон */
+}
+
+/* Специфичные стили для разных контекстов */
+.admin-panel .custom-select__dropdown,
+.modal-overlay .custom-select__dropdown {
+    z-index: 9999;
+}
+
+/* Улучшенная видимость в формах */
+.form-section .custom-select__dropdown {
+    z-index: 1001;
+}
+
+.slide-editor .custom-select__dropdown {
+    z-index: 1001;
 }

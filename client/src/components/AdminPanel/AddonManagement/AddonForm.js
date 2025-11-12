@@ -399,7 +399,7 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
                                 />
                             </div>
 
-                            <div className="form-group">
+                            <div className="form-group"  style={{zIndex:"0"}}>
                                 <label>Описание</label>
                                 <textarea
                                     value={addon.description}

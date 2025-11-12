@@ -436,7 +436,7 @@ const AdminPanel = () => {
                                             )}
 
                                             {slide.backgroundType === 'image' && (
-                                                <div className="form-group">
+                                                <div className="form-group" style={{zIndex:"0"}}>
                                                     <label>URL фонового изображения:</label>
                                                     <input
                                                         type="text"
@@ -566,7 +566,7 @@ const AdminPanel = () => {
                                             </div>
 
                                             <div className="form-row">
-                                                <div className="form-group">
+                                                <div className="form-group" style={{zIndex:"0"}}>
                                                     <label>Размер заголовка:</label>
                                                     <input
                                                         type="text"
@@ -577,7 +577,7 @@ const AdminPanel = () => {
                                                     />
                                                 </div>
 
-                                                <div className="form-group">
+                                                <div className="form-group" style={{zIndex:"0"}}>
                                                     <label>Размер описания:</label>
                                                     <input
                                                         type="text"

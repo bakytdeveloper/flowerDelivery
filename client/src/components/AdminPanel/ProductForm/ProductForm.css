@@ -515,6 +515,40 @@
     width: 100%;
 }
 
+/* В ProductForm.css добавьте: */
+
+/* Гарантируем правильное позиционирование в модальных окнах */
+.product-form-modal .custom-select {
+    position: relative;
+    z-index: auto;
+}
+
+.product-form-modal .custom-select__dropdown {
+    z-index: 10050; /* Выше чем модальное окно */
+}
+
+/* Специфичные стили для характеристик и названий цветов */
+.characteristics-container .custom-select__dropdown,
+.flower-names-container .custom-select__dropdown {
+    z-index: 1002;
+}
+
+/* Убедимся, что в формах все корректно отображается */
+.form-section {
+    position: relative;
+    z-index: 1; /* Нормальный z-index для секций */
+}
+
+.form-group {
+    position: relative;
+    z-index: 1;
+}
+
+/* Когда селект открыт, увеличиваем z-index родителя */
+.form-group .custom-select--open {
+    z-index: 1000;
+}
+
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     .custom-select__dropdown {
@@ -526,3 +560,4 @@
         font-size: 14px;
     }
 }
+

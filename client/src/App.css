@@ -323,3 +323,27 @@ span {
     max-width: 80%;
   }
 }
+
+/* Глобальные гарантии для z-index */
+* {
+  box-sizing: border-box;
+}
+
+/* Гарантируем, что модальные окна имеют правильный z-index */
+.modal-overlay {
+  z-index: 10000;
+}
+
+.modal-content {
+  z-index: 10001;
+}
+
+/* Кастомные селекты должны быть выше модальных окон */
+.modal-content .custom-select__dropdown {
+  z-index: 10002 !important;
+}
+
+/* Для всех выпадающих списков устанавливаем высокий z-index */
+.custom-select__dropdown {
+  z-index: 10050 !important;
+}

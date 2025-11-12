@@ -432,3 +432,21 @@
 .filter-group-select-input .custom-select__option--selected {
     background: #e91e63;
 }
+
+/* В WrapperForm.css добавьте: */
+.wrapper-form-modal .custom-select__dropdown {
+    z-index: 10050;
+}
+
+.modal-overlay .custom-select__dropdown {
+    z-index: 10050;
+}
+
+/* В AddonManagement.css добавьте: */
+.addon-management .custom-select__dropdown {
+    z-index: 1002;
+}
+
+.filters-panel .custom-select__dropdown {
+    z-index: 1003; /* Выше чем другие элементы фильтров */
+}
