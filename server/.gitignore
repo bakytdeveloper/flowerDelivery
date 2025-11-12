@@ -43,6 +43,6 @@ Thumbs.db
 dist/
 build/
 #uploads
-#uploads/
-#uploads/
-#uploads/*
+uploads/
+uploads/
+uploads/*
