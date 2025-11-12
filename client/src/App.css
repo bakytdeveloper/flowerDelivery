@@ -344,6 +344,6 @@ span {
 /*}*/
 
 /*!* Для всех выпадающих списков устанавливаем высокий z-index *!*/
-/*.custom-select__dropdown {*/
-/*  z-index: 10050 !important;*/
-/*}*/
+.custom-select__dropdown {
+  z-index: 10050 !important;
+}
