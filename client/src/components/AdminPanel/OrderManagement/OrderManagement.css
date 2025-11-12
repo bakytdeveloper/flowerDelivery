@@ -4,7 +4,6 @@
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     min-height: 100vh;
     color: #e0e0e0;
-
     border-radius: 10px;
 }
 
@@ -27,62 +26,68 @@
     margin: 0;
 }
 
-/* Статистика */
+/* Статистика - обновленные стили для адаптивности */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
     margin-bottom: 30px;
 }
 
 .stats-card {
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;
-    gap: 20px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    gap: 15px;
+    transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 90px;
 }
 
 .stats-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
 }
 
-.stats-card-blue { border-left: 6px solid #3498db; }
-.stats-card-green { border-left: 6px solid #2ecc71; }
-.stats-card-orange { border-left: 6px solid #f39c12; }
-.stats-card-purple { border-left: 6px solid #9b59b6; }
+.stats-card-green { border-left: 4px solid #2ecc71; }
+.stats-card-orange { border-left: 4px solid #f39c12; }
+.stats-card-purple { border-left: 4px solid #9b59b6; }
 
 .stats-icon {
-    font-size: 32px;
+    font-size: 24px;
     background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 12px;
+    padding: 12px;
+    border-radius: 10px;
     backdrop-filter: blur(10px);
+    min-width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .stats-content h3 {
     margin: 0;
-    font-size: 28px;
+    font-size: 22px;
     font-weight: bold;
     color: #ffffff;
+    line-height: 1.2;
 }
 
 .stats-content p {
-    margin: 8px 0 0 0;
+    margin: 6px 0 0 0;
     color: #b0b0b0;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
 }
 
 /* Фильтры */
 .filters-section {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     margin-bottom: 25px;
     flex-wrap: wrap;
     align-items: end;
@@ -98,21 +103,21 @@
     flex-direction: column;
     gap: 8px;
     flex: 1;
-    min-width: 180px;
+    min-width: 150px;
 }
 
 .filter-group-label {
     color: #ffffff;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .filter-group input,
 .filter-group select {
-    padding: 12px 15px;
+    padding: 10px 12px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 13px;
     background: rgba(255, 255, 255, 0.1);
     color: #ffffff;
     transition: all 0.3s ease;
@@ -134,9 +139,9 @@
 /* Таблица */
 .orders-table-container {
     background: rgba(44, 62, 80, 0.8);
-    border-radius: 15px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -148,22 +153,23 @@
 
 .orders-table th {
     background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
-    padding: 18px 15px;
+    padding: 16px 12px;
     text-align: left;
     font-weight: 600;
     color: #ffffff;
     border-bottom: 2px solid rgba(52, 152, 219, 0.5);
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .orders-table td {
-    padding: 15px;
+    padding: 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: #e0e0e0;
+    font-size: 13px;
 }
 
 .orders-table tr:hover {
-    background: rgba(52, 152, 219, 0.1);
+    background: rgba(52, 152, 219, 0.08);
     transition: background 0.3s ease;
 }
 
@@ -172,7 +178,7 @@
     font-family: 'Courier New', monospace;
     font-weight: bold;
     color: #3498db;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .customer-info {
@@ -183,11 +189,11 @@
 
 .customer-info strong {
     color: #ffffff;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .user-type {
-    font-size: 11px;
+    font-size: 10px;
     color: #b0b0b0;
     background: rgba(255, 255, 255, 0.1);
     padding: 2px 6px;
@@ -197,31 +203,31 @@
 }
 
 .items-preview {
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .flowers-count, .addons-count, .total-items {
-    margin-bottom: 3px;
+    margin-bottom: 2px;
     color: #e0e0e0;
 }
 
 .order-amount {
     font-weight: bold;
     color: #2ecc71;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .order-date {
     color: #b0b0b0;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 /* Статусы */
 .status-select {
-    padding: 8px 12px;
+    padding: 6px 10px;
     border: none;
-    border-radius: 8px;
-    font-size: 12px;
+    border-radius: 6px;
+    font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -232,7 +238,7 @@
 
 .status-select:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
 }
 
 .status-pending {
@@ -256,32 +262,32 @@
 }
 
 .status-badge {
-    padding: 6px 12px;
-    border-radius: 12px;
-    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 10px;
     font-weight: 600;
 }
 
 /* Кнопки действий */
 .action-buttons {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
 .btn {
-    padding: 8px 16px;
+    padding: 6px 12px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
 }
 
 .btn-sm {
-    padding: 6px 12px;
-    font-size: 11px;
+    padding: 5px 10px;
+    font-size: 10px;
 }
 
 .btn-info {
@@ -306,8 +312,8 @@
 }
 
 .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
     opacity: 0.95;
 }
 
@@ -316,29 +322,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
-    margin-top: 25px;
-    padding: 20px;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 15px;
     background: rgba(44, 62, 80, 0.7);
-    border-radius: 12px;
+    border-radius: 10px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .pagination button {
-    padding: 10px 18px;
+    padding: 8px 14px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     color: #ffffff;
     font-weight: 600;
     transition: all 0.3s ease;
+    font-size: 12px;
 }
 
 .pagination button:hover:not(:disabled) {
     background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .pagination button:disabled {
@@ -350,674 +357,10 @@
 .pagination span {
     color: #ffffff;
     font-weight: 600;
-}
-
-/* Модальное окно */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    backdrop-filter: blur(5px);
-}
-
-.modal-content {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    border-radius: 15px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 25px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.2);
-}
-
-.modal-header h3 {
-    margin: 0;
-    color: #ffffff;
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.close-button {
-    background: none;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    color: #b0b0b0;
-    transition: color 0.3s ease;
-}
-
-.close-button:hover {
-    color: #ffffff;
-}
-
-.modal-body {
-    padding: 25px;
-    color: #e0e0e0;
-}
-
-.modal-footer {
-    padding: 20px 25px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    background: rgba(0, 0, 0, 0.2);
-}
-
-/* Детали заказа */
-.detail-section {
-    margin-bottom: 30px;
-}
-
-.detail-section h4 {
-    margin-bottom: 15px;
-    color: #3498db;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 8px;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-.order-items {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.order-item {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 4px solid #3498db;
-    backdrop-filter: blur(10px);
-}
-
-.item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.item-name {
-    font-weight: 600;
-    color: #ffffff;
-    font-size: 14px;
-}
-
-.item-price {
-    color: #b0b0b0;
-}
-
-.item-details {
-    display: flex;
-    gap: 15px;
-    font-size: 12px;
-    color: #b0b0b0;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-}
-
-.item-total {
-    font-weight: bold;
-    color: #2ecc71;
-}
-
-.status-history {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.status-history-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    border-left: 3px solid #3498db;
-}
-
-/* Форма редактирования */
-.edit-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.form-group label {
-    font-weight: 600;
-    color: #ffffff;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    padding: 12px 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    font-size: 14px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #3498db;
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-/* Состояния загрузки и пустые состояния */
-.order-management-loading,
-.empty-orders {
-    text-align: center;
-    padding: 60px 40px;
-    color: #b0b0b0;
-    background: rgba(44, 62, 80, 0.8);
-    border-radius: 15px;
-    margin: 20px 0;
-    backdrop-filter: blur(10px);
-}
-
-.empty-orders p {
-    font-size: 18px;
-    margin: 0;
-    color: #ffffff;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .filters-section {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-
-    .filter-group {
-        width: 100%;
-    }
-
-    .orders-table-container {
-        overflow-x: auto;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .modal-content {
-        width: 95%;
-        margin: 20px;
-    }
-
-    .order-header-title {
-        font-size: 2rem;
-    }
-
-    .modal-body {
-        padding: 15px;
-    }
-}
-
-/* OrderManagement.css - дополнительные стили */
-
-.large-modal {
-    max-width: 900px !important;
-    max-height: 75vh!important;
-    overflow-y: auto;
-    padding-top: 0;
-    margin-top: 12%;
-}
-
-.order-item-editable {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-}
-
-.order-item-editable .item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.order-item-editable .item-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.quantity-edit {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.quantity-input {
-    width: 70px;
-    padding: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    text-align: center;
-}
-
-.btn-xs {
-    padding: 4px 8px;
-    font-size: 11px;
-    border-radius: 6px;
-}
-
-.order-item-editable .item-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 10px;
-    font-size: 12px;
-    color: #b0b0b0;
-}
-
-.order-item-editable .item-details span {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 4px 8px;
-    border-radius: 6px;
-    backdrop-filter: blur(10px);
-}
-
-.order-item-editable .item-pricing {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    border-top: 1px dashed rgba(255, 255, 255, 0.2);
-    padding-top: 10px;
-    color: #ffffff;
-}
-
-.items-editing-section {
-    margin-top: 25px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-}
-
-.items-category {
-    margin-bottom: 25px;
-}
-
-.items-category h5 {
-    margin-bottom: 15px;
-    color: #3498db;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: 8px;
-    font-size: 1.1rem;
-}
-
-.order-total-editing {
-    text-align: right;
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(41, 128, 185, 0.2) 100%);
-    border-radius: 10px;
-    margin-top: 20px;
-    font-size: 1.3em;
-    color: #ffffff;
-    backdrop-filter: blur(10px);
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-/* OrderManagement.css - дополнительные стили для детальной информации */
-
-.order-item-view {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    padding: 18px;
-    margin-bottom: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #e0e0e0;
-    backdrop-filter: blur(10px);
-}
-
-.item-main-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    font-weight: bold;
-    color: #ffffff;
-}
-
-.product-details-view {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    color: #e0e0e0;
-    font-size: 13px !important;
-    border-left: 3px solid #3498db;
-}
-
-.product-details-view span {
-    color: #b0b0b0;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.product-details-view .detail-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.wrapper-details {
-    background: rgba(255, 193, 7, 0.1);
-    padding: 10px;
-    border-radius: 6px;
-    margin: 10px 0;
-    border-left: 3px solid #ffc107;
-    color: #ffc107;
-}
-
-.item-total-view {
-    text-align: right;
-    font-weight: bold;
-    color: #2ecc71;
-    border-top: 1px dashed rgba(255, 255, 255, 0.2);
-    padding-top: 10px;
-    font-size: 14px;
-}
-
-.item-total-view-check {
-    text-align: right;
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #2ecc71;
-    border-top: 1px dashed rgba(255, 255, 255, 0.2);
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
-    padding: 15px;
-    margin-bottom: 25px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 0 0 10px 10px;
-    backdrop-filter: blur(10px);
-}
-
-/* Информационные сетки */
-.info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.info-item {
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    border-left: 3px solid #3498db;
-    backdrop-filter: blur(10px);
-}
-
-.info-item strong {
-    color: #3498db;
-}
-
-.comment-box {
-    background: rgba(52, 152, 219, 0.1);
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 4px solid #3498db;
-    font-style: italic;
-    color: #e0e0e0;
-    backdrop-filter: blur(10px);
-}
-
-.items-category-view {
-    margin-bottom: 25px;
-}
-
-.items-category-view h5 {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    color: white;
-    padding: 12px 18px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.item-quantity {
-    font-weight: bold;
-    color: #ffffff;
-    background: rgba(52, 152, 219, 0.3);
-    padding: 4px 10px;
-    border-radius: 6px;
-    backdrop-filter: blur(10px);
-}
-
-/* Статусы */
-.status-buttons-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    padding: 0;
-    margin: 15px 0;
-}
-
-.status-btn {
-    padding: 12px 8px;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    margin: 0;
-    border: none;
-    font-weight: 600;
-    font-size: 12px;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    backdrop-filter: blur(10px);
-}
-
-.status-btn:hover:not(:disabled) {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: translateY(-3px);
-}
-
-.status-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.status-btn.active {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-}
-
-.status-icon {
-    font-size: 16px;
-}
-
-.status-text {
-    font-size: 11px;
-}
-
-.status-indicator {
-    font-size: 8px;
-    color: #ffffff;
-}
-
-.current-status-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    backdrop-filter: blur(10px);
-}
-
-.current-status-label {
-    color: #b0b0b0;
-    font-weight: 600;
-}
-
-.current-status {
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-weight: 600;
     font-size: 13px;
 }
 
-.wrapper-info {
-    background: rgba(255, 193, 7, 0.1) !important;
-    border: 1px solid rgba(255, 193, 7, 0.3);
-    color: #ffc107;
-    padding: 4px 8px;
-    border-radius: 6px;
-}
-
-.product-details {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    border-left: 3px solid #3498db;
-    color: #e0e0e0;
-}
-
-.detail-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    font-size: 12px;
-    color: #b0b0b0;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.detail-row strong {
-    color: #ffffff;
-}
-
-@media (max-width: 768px) {
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-
-    .large-modal {
-        margin: 10px;
-        max-width: calc(100% - 20px);
-    }
-
-    .order-item-editable .item-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-
-    .order-item-editable .item-actions {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .product-details-view .detail-row {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .item-main-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    .status-buttons-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .modal-header {
-        padding: 20px;
-    }
-
-    .modal-body {
-        padding: 20px;
-    }
-}
-
-/* Специфические стили для админ панели */
-.order-management ::-webkit-scrollbar {
-    width: 8px;
-}
-
-.order-management ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-}
-
-.order-management ::-webkit-scrollbar-thumb {
-    background: rgba(52, 152, 219, 0.6);
-    border-radius: 4px;
-}
-
-.order-management ::-webkit-scrollbar-thumb:hover {
-    background: rgba(52, 152, 219, 0.8);
-}
-
-
-/* OrderManagement.css - Обновленные стили для модального окна */
-
-/* Модальное окно */
+/* ОБНОВЛЕННЫЕ СТИЛИ МОДАЛЬНОГО ОКНА - в стиле проекта */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1025,116 +368,120 @@
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-    backdrop-filter: blur(10px);
-    animation: fadeIn 0.3s ease;
+    z-index: 10000;
+    padding: 20px;
+    animation: modal-fadeIn 0.3s ease;
 }
 
-@keyframes fadeIn {
+@keyframes modal-fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
 
-.modal-content {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+.large-modal {
+    background: rgba(30, 41, 59, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
     border-radius: 20px;
-    width: 95%;
-    max-width: 1000px;
-    max-height: 95vh;
-    overflow-y: auto;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    animation: slideUp 0.3s ease;
+    box-shadow:
+            0 25px 50px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    width: 100% !important;
+    max-width: 900px;
+    max-height: 85vh!important;
+    overflow: hidden;
+    animation: modal-slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-@keyframes slideUp {
+@keyframes modal-slideUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(50px) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
 .modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    background: linear-gradient(135deg, rgba(30, 60, 114, 0.9) 0%, rgba(42, 82, 152, 0.9) 100%);
-    /*position: sticky;*/
-    top: 0;
-    z-index: 10;
-    margin-top: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     backdrop-filter: blur(10px);
 }
 
 .modal-header h3 {
     margin: 0;
-    color: #ffffff;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
 }
 
 .close-button {
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    font-size: 24px;
-    cursor: pointer;
-    color: #ffffff;
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    color: #e2e8f0;
+    font-size: 1.3rem;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
 }
 
 .close-button:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: rotate(90deg);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
 .modal-body {
-    padding: 30px;
-    color: #e0e0e0;
-    background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.1) 100%);
+    padding: 2rem 0.1rem!important;
+    color: #e2e8f0;
+    background: rgba(15, 23, 42, 0.3);
+    max-height: calc(85vh - 140px);
+    overflow-y: auto;
 }
 
 .modal-footer {
-    padding: 25px 30px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
-    gap: 15px;
+    gap: 12px;
     justify-content: flex-end;
-    background: linear-gradient(135deg, rgba(30, 60, 114, 0.9) 0%, rgba(42, 82, 152, 0.9) 100%);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     backdrop-filter: blur(10px);
-    border-radius: 0 0 20px 20px;
 }
 
-/* Детали заказа */
+/* Детали заказа в модальном окне */
 .order-details {
     background: transparent;
 }
 
 .detail-section {
-    margin-bottom: 35px;
+    margin-bottom: 2rem;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    padding: 25px;
+    border-radius: 12px;
+    padding: 1.5rem;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .detail-section:hover {
@@ -1143,51 +490,46 @@
 }
 
 .detail-section h4 {
-    margin-bottom: 20px;
-    color: #3498db;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 12px;
-    font-size: 1.3rem;
-    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #667eea;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-.detail-section h4::before {
-    font-size: 1.2em;
+    gap: 0.5rem;
 }
 
 /* Блок быстрого изменения статуса */
 .status-buttons-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin: 20px 0;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.8rem;
+    margin: 1rem 0;
 }
 
 .status-btn {
-    padding: 15px 10px;
-    border-radius: 12px;
+    padding: 1rem 0.5rem;
+    border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    margin: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     border: 2px solid transparent;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 0.8rem;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     backdrop-filter: blur(10px);
-    min-height: 80px;
+    min-height: 70px;
     justify-content: center;
 }
 
 .status-btn:hover:not(:disabled) {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
     border-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -1199,66 +541,59 @@
 
 .status-btn.active {
     transform: scale(1.05);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4), 0 8px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3), 0 6px 16px rgba(0, 0, 0, 0.4);
     border-color: rgba(255, 255, 255, 0.5);
 }
 
 .status-icon {
-    font-size: 20px;
-    margin-bottom: 5px;
+    font-size: 1.2rem;
 }
 
 .status-text {
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.status-indicator {
-    font-size: 10px;
-    color: #ffffff;
-    margin-top: 2px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .current-status-info {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 20px;
-    padding: 15px;
+    margin-top: 1rem;
+    padding: 1rem;
     background: rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
+    border-radius: 8px;
     backdrop-filter: blur(10px);
-    border-left: 4px solid #3498db;
+    border-left: 4px solid #667eea;
 }
 
 .current-status-label {
-    color: #b0b0b0;
+    color: #cbd5e1;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 0.9rem;
 }
 
 .current-status {
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 14px;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
 /* Информационные сетки */
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
 }
 
 .info-item {
-    padding: 15px;
+    padding: 1rem;
     background: rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
-    border-left: 4px solid #3498db;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 }
@@ -1269,62 +604,63 @@
 }
 
 .info-item strong {
-    color: #3498db;
+    color: #667eea;
     font-weight: 600;
     display: block;
-    margin-bottom: 5px;
-    font-size: 13px;
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
 }
 
 .info-item span:not(.status-badge) {
-    color: #ffffff;
+    color: #e2e8f0;
     font-weight: 500;
+    font-size: 0.9rem;
 }
 
 /* Комментарий */
 .comment-box {
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
-    padding: 20px;
-    border-radius: 12px;
-    border-left: 4px solid #3498db;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+    padding: 1.2rem;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
     font-style: italic;
-    color: #e0e0e0;
+    color: #e2e8f0;
     backdrop-filter: blur(10px);
-    line-height: 1.6;
-    border: 1px solid rgba(52, 152, 219, 0.3);
+    line-height: 1.5;
+    border: 1px solid rgba(102, 126, 234, 0.3);
 }
 
 /* Состав заказа */
 .items-category-view {
-    margin-bottom: 30px;
+    margin-bottom: 1.5rem;
 }
 
 .items-category-view h5 {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 15px 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    font-size: 1.2rem;
-    font-weight: 700;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .order-items {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 1rem;
 }
 
 .order-item-view {
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 10px;
+    padding: 1.2rem;
     background: rgba(255, 255, 255, 0.08);
-    color: #e0e0e0;
+    color: #e2e8f0;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
     border-left: 4px solid #2ecc71;
@@ -1340,60 +676,61 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
     font-weight: bold;
     color: #ffffff;
 }
 
 .item-name {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 600;
     color: #ffffff;
 }
 
 .item-quantity-price {
     color: #2ecc71;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 0.9rem;
 }
 
 .product-details-view {
     background: rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    color: #e0e0e0;
-    font-size: 13px !important;
-    border-left: 3px solid #3498db;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.8rem;
+    color: #e2e8f0;
+    font-size: 0.8rem !important;
+    border-left: 3px solid #667eea;
 }
 
 .product-details-view .detail-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 1rem;
 }
 
 .product-details-view span {
-    color: #b0b0b0;
-    font-size: 13px;
+    color: #cbd5e1;
+    font-size: 0.8rem;
     font-weight: 600;
     flex: 1;
-    min-width: 200px;
+    min-width: 180px;
 }
 
 .wrapper-details {
     background: rgba(255, 193, 7, 0.15);
-    padding: 12px;
-    border-radius: 8px;
-    margin: 12px 0;
+    padding: 0.8rem;
+    border-radius: 6px;
+    margin: 0.8rem 0;
     border-left: 4px solid #ffc107;
     color: #ffc107;
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
+    font-size: 0.85rem;
 }
 
 .item-total-view {
@@ -1401,21 +738,21 @@
     font-weight: bold;
     color: #2ecc71;
     border-top: 1px dashed rgba(255, 255, 255, 0.3);
-    padding-top: 12px;
-    font-size: 15px;
+    padding-top: 0.8rem;
+    font-size: 0.9rem;
 }
 
 .item-total-view-check {
     text-align: right;
-    font-size: 1.5em;
+    font-size: 1.3rem;
     font-weight: bold;
     color: #2ecc71;
     border-top: 2px solid rgba(255, 255, 255, 0.2);
     border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    padding: 20px;
-    margin: 30px 0;
+    padding: 1.5rem;
+    margin: 2rem 0;
     background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
-    border-radius: 12px;
+    border-radius: 10px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(46, 204, 113, 0.3);
 }
@@ -1424,17 +761,17 @@
 .status-history {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 0.8rem;
 }
 
 .status-history-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 15px;
+    padding: 0.8rem 1rem;
     background: rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
-    border-left: 4px solid #3498db;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 }
@@ -1445,51 +782,346 @@
 }
 
 .status-history-item .status {
-    padding: 6px 12px;
-    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .status-history-item .time {
-    color: #b0b0b0;
-    font-size: 12px;
+    color: #cbd5e1;
+    font-size: 0.75rem;
     font-weight: 500;
 }
 
-/* Адаптивность для модального окна */
+/* Форма редактирования */
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Редактирование товаров */
+.order-item-editable {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.order-item-editable .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.order-item-editable .item-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.quantity-edit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quantity-input {
+    width: 60px;
+    padding: 0.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.btn-xs {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+}
+
+.order-item-editable .item-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+}
+
+.order-item-editable .item-details span {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    backdrop-filter: blur(10px);
+}
+
+.order-item-editable .item-pricing {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    padding-top: 0.8rem;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.items-editing-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.items-category {
+    margin-bottom: 2rem;
+}
+
+.items-category h5 {
+    margin-bottom: 1rem;
+    color: #667eea;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.order-total-editing {
+    text-align: right;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+    border-radius: 8px;
+    margin-top: 1.5rem;
+    font-size: 1.2rem;
+    color: #e2e8f0;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+/* Кастомный скроллбар для модального окна */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+/* Состояния загрузки и пустые состояния */
+.order-management-loading,
+.empty-orders {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #cbd5e1;
+    background: rgba(44, 62, 80, 0.8);
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.empty-orders p {
+    font-size: 1.1rem;
+    margin: 0;
+    color: #e2e8f0;
+}
+
+/* АДАПТИВНОСТЬ */
+
+/* Планшеты и маленькие мониторы */
+@media (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+    }
+
+    .stats-card {
+        padding: 15px;
+        min-height: 80px;
+    }
+
+    .stats-icon {
+        font-size: 20px;
+        padding: 10px;
+        min-width: 42px;
+        height: 42px;
+    }
+
+    .stats-content h3 {
+        font-size: 18px;
+    }
+
+    .stats-content p {
+        font-size: 12px;
+    }
+
+    .large-modal {
+        max-width: 95% !important;
+    }
+}
+
+/* Мобильные устройства */
 @media (max-width: 768px) {
-    .modal-content {
-        width: 98%;
-        margin: 10px;
-        max-height: 95vh;
+    .order-management {
+        padding: 15px;
+    }
+
+    .order-header-title {
+        font-size: 2rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .stats-card {
+        padding: 15px;
+        min-height: 70px;
+    }
+
+    .stats-icon {
+        font-size: 18px;
+        padding: 8px;
+        min-width: 38px;
+        height: 38px;
+    }
+
+    .stats-content h3 {
+        font-size: 16px;
+    }
+
+    .filters-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .filter-group {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .orders-table-container {
+        overflow-x: auto;
+        font-size: 12px;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 10px 8px;
+        font-size: 11px;
+    }
+
+    .modal-overlay {
+        padding: 10px;
+    }
+
+    .large-modal {
+        max-width: 99% !important;
+        max-height: 90vh!important;
+        border-radius: 16px;
+        margin: 0!important;
+        padding: 0!important;
     }
 
     .modal-header {
-        padding: 20px;
+        padding: 1.2rem 1.5rem;
     }
 
     .modal-header h3 {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
+    }
+
+    .close-button {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
     }
 
     .modal-body {
-        padding: 20px;
+        padding: 1.5rem;
+        max-height: calc(90vh - 120px);
     }
 
     .modal-footer {
-        padding: 20px;
+        padding: 1.2rem 1.5rem;
         flex-direction: column;
     }
 
     .status-buttons-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        gap: 0.6rem;
     }
 
     .status-btn {
-        padding: 12px 8px;
-        min-height: 70px;
+        padding: 0.8rem 0.4rem;
+        min-height: 60px;
+        font-size: 0.7rem;
     }
 
     .info-grid {
@@ -1498,459 +1130,153 @@
 
     .current-status-info {
         flex-direction: column;
-        gap: 10px;
+        gap: 0.8rem;
         text-align: center;
     }
 
     .item-main-info {
         flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
+        gap: 0.6rem;
     }
 
     .product-details-view .detail-row {
         flex-direction: column;
-        gap: 8px;
+        gap: 0.6rem;
     }
 
     .detail-section {
-        padding: 20px;
-        margin-bottom: 25px;
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
     }
 
     .items-category-view h5 {
-        padding: 12px 15px;
-        font-size: 1.1rem;
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
     }
 
     .order-item-view {
-        padding: 15px;
+        padding: 1rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .order-item-editable .item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+
+    .order-item-editable .item-actions {
+        width: 100%;
+        justify-content: space-between;
     }
 }
 
+/* Очень маленькие экраны */
 @media (max-width: 480px) {
+    .order-management {
+        padding: 10px;
+    }
+
+    .order-header-title {
+        font-size: 1.7rem;
+    }
+
+    .stats-card {
+        padding: 12px;
+        gap: 10px;
+        min-height: 65px;
+    }
+
+    .stats-icon {
+        font-size: 16px;
+        padding: 6px;
+        min-width: 34px;
+        height: 34px;
+    }
+
+    .stats-content h3 {
+        font-size: 15px;
+    }
+
+    .stats-content p {
+        font-size: 11px;
+    }
+
+    .modal-header {
+        padding: 1rem;
+    }
+
+    .modal-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .close-button {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+
+    .modal-body {
+        padding: 1rem;
+    }
+
+    .modal-footer {
+        padding: 1rem;
+    }
+
     .status-buttons-grid {
         grid-template-columns: 1fr;
     }
 
-    .modal-header {
-        padding: 15px;
-    }
-
-    .modal-body {
-        padding: 15px;
+    .status-btn {
+        min-height: 55px;
     }
 
     .detail-section {
-        padding: 15px;
+        padding: 1rem;
+    }
+
+    .items-category-view h5 {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .order-item-view {
+        padding: 0.8rem;
+    }
+
+    .item-total-view-check {
+        font-size: 1.1rem;
+        padding: 1rem;
     }
 }
 
-/* Специфические стили для скроллбара в модальном окне */
-.modal-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    margin: 5px;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    border-radius: 4px;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
-}
-
-/* Анимации для элементов модального окна */
-.detail-section {
-    animation: fadeInUp 0.5s ease;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Стили для статусов в модальном окне */
-.status-pending {
-    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-    color: #ffffff;
-}
-
-.status-in-progress {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    color: #ffffff;
-}
-
-.status-completed {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-    color: #ffffff;
-}
-
-.status-cancelled {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    color: #ffffff;
-}
-
-.status-badge {
-    padding: 6px 12px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-/* OrderManagement.css - Специфичные стили для CustomSelect в таблице */
-
-/* Гарантируем, что CustomSelect в таблице будет поверх всех элементов */
-.orders-table-container {
-    position: relative;
-    z-index: 1; /* Нормальный z-index для контейнера */
-}
-
-.orders-table {
-    position: relative;
-    z-index: 1;
-}
-
-.orders-table td {
-    position: relative;
-}
-
-/* Специфичные стили для CustomSelect в контексте таблицы */
+/* Специфичные стили для CustomSelect в таблице */
 .table-select-wrapper {
     position: relative;
-    z-index: 100; /* Высокий z-index для обертки */
+    z-index: 100;
 }
 
-/* Гарантируем, что выпадающий список будет поверх таблицы */
 .custom-select--table-context {
     position: relative;
     z-index: 1000;
 }
 
-/* Переопределяем z-index для выпадающего списка в таблице */
 .orders-table .custom-select--table-context .custom-select__dropdown {
     z-index: 1100 !important;
     position: absolute;
 }
 
-/* Для статус селектов в таблице */
-.orders-table .status-select.custom-select--table-context .custom-select__dropdown {
-    z-index: 1100 !important;
-}
-
-/* Убираем overflow для ячеек с селектами */
 .orders-table td:has(.custom-select) {
     overflow: visible !important;
-}
-
-/* Специфичные стили для фильтров */
-.filters-section .custom-select__dropdown {
-    z-index: 1001;
-}
-
-/* Гарантируем видимость в модальных окнах */
-.modal-overlay .custom-select__dropdown {
-    z-index: 10001 !important;
-}
-
-/* Улучшенное позиционирование для табличного контекста */
-.custom-select--table-context .custom-select__dropdown {
-    transform: translateY(-1px) translateZ(0); /* Аппаратное ускорение */
-    will-change: transform; /* Оптимизация для браузера */
-}
-
-/* Специфичные стили для OrderManagement */
-.custom-select--filters {
-    position: relative;
-    z-index: 1001;
-}
-
-.custom-select--filters.custom-select--open {
-    z-index: 1002;
-}
-
-.custom-select--filters .custom-select__dropdown {
-    z-index: 1003 !important;
-}
-
-.custom-select--order-status {
-    position: relative;
-}
-
-.custom-select--order-status.custom-select--open {
-    z-index: 1004;
-}
-
-.custom-select--order-status .custom-select__dropdown {
-    z-index: 1005 !important;
-}
-
-/* Гарантируем, что кнопки действий имеют нормальный z-index */
-.action-buttons {
-    position: relative;
-    z-index: 1;
-}
-
-/* Улучшаем видимость открытых селектов в таблице */
-.orders-table tr:has(.custom-select--open) {
-    z-index: 1003 !important;
-    position: relative;
-}
-
-.orders-table tr:has(.custom-select--open) td {
-    background: rgba(52, 152, 219, 0.05);
-}
-
-
-/* Исправление z-index для модального окна и фильтров */
-.filters-section {
-    position: relative;
-    z-index: 10; /* Уменьшаем z-index для фильтров */
-}
-
-/* Увеличиваем z-index для модального окна */
-.modal-overlay {
-    z-index: 10000; /* Увеличиваем z-index оверлея */
-}
-
-.modal-overlay .modal-content {
-    z-index: 10001; /* Увеличиваем z-index контента */
-}
-
-/* Специфичные стили для large-modal */
-.large-modal {
-    background: linear-gradient(135deg, #03243b 0%, #012b32 100%) !important;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
-    backdrop-filter: blur(20px);
-}
-
-.large-modal .modal-header {
-    background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(42, 82, 152, 0.95) 100%) !important;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    padding: 30px;
-    margin: 0;
-}
-
-.large-modal .modal-body {
-    background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.1) 100%);
-    padding: 30px;
-}
-
-.large-modal .modal-footer {
-    background: linear-gradient(135deg, rgba(30, 60, 114, 0.9) 0%, rgba(42, 82, 152, 0.9) 100%);
-    border-top: 2px solid rgba(255, 255, 255, 0.2);
-    padding: 25px 30px;
-}
-
-/* Стилизация контента large-modal в соответствии с родительским компонентом */
-.large-modal .detail-section {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(15px);
-}
-
-.large-modal .detail-section h4 {
-    color: #3498db;
-    border-bottom: 2px solid #3498db;
-}
-
-.large-modal .info-item {
-    background: rgba(255, 255, 255, 0.1);
-    border-left: 4px solid #3498db;
-}
-
-.large-modal .comment-box {
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(41, 128, 185, 0.2) 100%);
-    border: 1px solid rgba(52, 152, 219, 0.4);
-}
-
-.large-modal .order-item-view {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-}
-
-.large-modal .status-btn {
-    backdrop-filter: blur(15px);
-    border: 2px solid transparent;
-}
-
-.large-modal .status-btn:hover:not(:disabled) {
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Улучшенные стили для формы редактирования в large-modal */
-.large-modal .edit-form {
-    background: transparent;
-}
-
-.large-modal .form-group input,
-.large-modal .form-group select,
-.large-modal .form-group textarea {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(10px);
-}
-
-.large-modal .form-group input:focus,
-.large-modal .form-group select:focus,
-.large-modal .form-group textarea:focus {
-    background: rgba(255, 255, 255, 0.18);
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
-}
-
-.large-modal .items-editing-section {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(15px);
-}
-
-.large-modal .order-item-editable {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-}
-
-/* Стили для CustomSelect внутри large-modal */
-.large-modal .custom-select__control {
-    background: rgba(51, 65, 85, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(10px);
-}
-
-.large-modal .custom-select__dropdown {
-    background: rgba(44, 62, 80, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(15px);
-}
-
-.large-modal .custom-select__option {
-    background: rgba(44, 62, 80, 0.95);
-}
-
-.large-modal .custom-select__option:hover {
-    background: rgba(52, 152, 219, 0.3);
-}
-
-/* Улучшенные кнопки в large-modal */
-.large-modal .btn {
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.large-modal .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.3);
-}
-
-.large-modal .btn-primary {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-}
-
-.large-modal .btn-success {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-}
-
-.large-modal .btn-secondary {
-    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-}
-
-.large-modal .btn-info {
-    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-}
-
-.large-modal .btn-danger {
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-}
-
-/* Анимация для large-modal */
-.large-modal {
-    animation: modalSlideUp 0.4s ease-out;
-}
-
-@keyframes modalSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
 }
 
 /* Запрещаем скролл body когда открыто модальное окно */
 body.modal-open {
     overflow: hidden;
-}
-
-/* Гарантируем, что фильтры не будут поверх модального окна */
-.order-management {
-    position: relative;
-    z-index: 1;
-}
-
-/* Улучшаем отображение на мобильных устройствах */
-@media (max-width: 768px) {
-    .large-modal {
-        width: 98% !important;
-        margin: 10px;
-        max-height: 90vh;
-    }
-
-    .large-modal .modal-header {
-        padding: 20px;
-    }
-
-    .large-modal .modal-body {
-        padding: 20px;
-    }
-
-    .large-modal .modal-footer {
-        padding: 20px;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .large-modal .btn {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-/* Улучшаем видимость скроллбара в large-modal */
-.large-modal::-webkit-scrollbar {
-    width: 10px;
-}
-
-.large-modal::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-}
-
-.large-modal::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    border-radius: 5px;
-}
-
-.large-modal::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
 }
