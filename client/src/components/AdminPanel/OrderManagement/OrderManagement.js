@@ -382,18 +382,18 @@ const OrderManagement = () => {
                         disabled={filters.page === 1}
                         onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
                     >
-                        Назад
+                        &laquo;
                     </button>
 
                     <span>
-                        Страница {filters.page} из {pagination.totalPages}
+                        Стр. {filters.page} из {pagination.totalPages}
                     </span>
 
                     <button
                         disabled={filters.page >= pagination.totalPages}
                         onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
                     >
-                        Вперед
+                        &raquo;
                     </button>
                 </div>
             )}
@@ -410,6 +410,8 @@ const OrderManagement = () => {
         </div>
     );
 };
+
+
 
 // ОБНОВЛЕННЫЙ КОМПОНЕНТ МОДАЛЬНОГО ОКНА С ДЕТАЛЯМИ ЗАКАЗА
 const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
@@ -428,6 +430,17 @@ const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
     });
 
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+    // Управление состоянием body при открытии/закрытии модального окна
+    useEffect(() => {
+        // Добавляем класс к body при открытии модального окна
+        document.body.classList.add('modal-open');
+
+        // Убираем класс при размонтировании
+        return () => {
+            document.body.classList.remove('modal-open');
+        };
+    }, []);
 
     // Функция для быстрого обновления статуса
     const handleQuickStatusUpdate = async (newStatus) => {
@@ -590,6 +603,7 @@ const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
             toast.error(error.message || 'Ошибка обновления количества');
         }
     };
+
 
 
     // Расчет общей суммы

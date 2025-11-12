@@ -596,9 +596,10 @@
 
 .large-modal {
     max-width: 900px !important;
-    max-height: 90vh;
+    max-height: 75vh!important;
     overflow-y: auto;
     padding-top: 0;
+    margin-top: 12%;
 }
 
 .order-item-editable {
@@ -1711,4 +1712,245 @@
 
 .orders-table tr:has(.custom-select--open) td {
     background: rgba(52, 152, 219, 0.05);
+}
+
+
+/* Исправление z-index для модального окна и фильтров */
+.filters-section {
+    position: relative;
+    z-index: 10; /* Уменьшаем z-index для фильтров */
+}
+
+/* Увеличиваем z-index для модального окна */
+.modal-overlay {
+    z-index: 10000; /* Увеличиваем z-index оверлея */
+}
+
+.modal-overlay .modal-content {
+    z-index: 10001; /* Увеличиваем z-index контента */
+}
+
+/* Специфичные стили для large-modal */
+.large-modal {
+    background: linear-gradient(135deg, #03243b 0%, #012b32 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(20px);
+}
+
+.large-modal .modal-header {
+    background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(42, 82, 152, 0.95) 100%) !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 30px;
+    margin: 0;
+}
+
+.large-modal .modal-body {
+    background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.1) 100%);
+    padding: 30px;
+}
+
+.large-modal .modal-footer {
+    background: linear-gradient(135deg, rgba(30, 60, 114, 0.9) 0%, rgba(42, 82, 152, 0.9) 100%);
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 25px 30px;
+}
+
+/* Стилизация контента large-modal в соответствии с родительским компонентом */
+.large-modal .detail-section {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+}
+
+.large-modal .detail-section h4 {
+    color: #3498db;
+    border-bottom: 2px solid #3498db;
+}
+
+.large-modal .info-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid #3498db;
+}
+
+.large-modal .comment-box {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(41, 128, 185, 0.2) 100%);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+}
+
+.large-modal .order-item-view {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.large-modal .status-btn {
+    backdrop-filter: blur(15px);
+    border: 2px solid transparent;
+}
+
+.large-modal .status-btn:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Улучшенные стили для формы редактирования в large-modal */
+.large-modal .edit-form {
+    background: transparent;
+}
+
+.large-modal .form-group input,
+.large-modal .form-group select,
+.large-modal .form-group textarea {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+}
+
+.large-modal .form-group input:focus,
+.large-modal .form-group select:focus,
+.large-modal .form-group textarea:focus {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+}
+
+.large-modal .items-editing-section {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+}
+
+.large-modal .order-item-editable {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+/* Стили для CustomSelect внутри large-modal */
+.large-modal .custom-select__control {
+    background: rgba(51, 65, 85, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+}
+
+.large-modal .custom-select__dropdown {
+    background: rgba(44, 62, 80, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+}
+
+.large-modal .custom-select__option {
+    background: rgba(44, 62, 80, 0.95);
+}
+
+.large-modal .custom-select__option:hover {
+    background: rgba(52, 152, 219, 0.3);
+}
+
+/* Улучшенные кнопки в large-modal */
+.large-modal .btn {
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.large-modal .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.large-modal .btn-primary {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+}
+
+.large-modal .btn-success {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+.large-modal .btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+}
+
+.large-modal .btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+}
+
+.large-modal .btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+}
+
+/* Анимация для large-modal */
+.large-modal {
+    animation: modalSlideUp 0.4s ease-out;
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Запрещаем скролл body когда открыто модальное окно */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Гарантируем, что фильтры не будут поверх модального окна */
+.order-management {
+    position: relative;
+    z-index: 1;
+}
+
+/* Улучшаем отображение на мобильных устройствах */
+@media (max-width: 768px) {
+    .large-modal {
+        width: 98% !important;
+        margin: 10px;
+        max-height: 90vh;
+    }
+
+    .large-modal .modal-header {
+        padding: 20px;
+    }
+
+    .large-modal .modal-body {
+        padding: 20px;
+    }
+
+    .large-modal .modal-footer {
+        padding: 20px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .large-modal .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Улучшаем видимость скроллбара в large-modal */
+.large-modal::-webkit-scrollbar {
+    width: 10px;
+}
+
+.large-modal::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.large-modal::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    border-radius: 5px;
+}
+
+.large-modal::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
 }
