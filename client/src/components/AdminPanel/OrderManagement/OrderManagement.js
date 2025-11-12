@@ -3,6 +3,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import './OrderManagement.css';
 import {useLocation} from "react-router-dom";
+import CustomSelect from "../../Common/CustomSelect";
 
 const OrderManagement = () => {
     const { token } = useAuth();
@@ -226,16 +227,18 @@ const OrderManagement = () => {
             <div className="filters-section">
                 <div className="filter-group">
                     <label className="filter-group-label">Статус:</label>
-                    <select
+                    <CustomSelect
                         value={filters.status}
-                        onChange={(e) => setFilters({ ...filters, status: e.target.value, page: 1 })}
-                    >
-                        <option value="all">Все статусы</option>
-                        <option value="pending">Ожидание</option>
-                        <option value="inProgress">В процессе</option>
-                        <option value="completed">Завершен</option>
-                        <option value="cancelled">Отменен</option>
-                    </select>
+                        onChange={(value) => setFilters({ ...filters, status: value, page: 1 })}
+                        options={[
+                            { value: 'all', label: 'Все статусы' },
+                            { value: 'pending', label: 'Ожидание' },
+                            { value: 'inProgress', label: 'В процессе' },
+                            { value: 'completed', label: 'Завершен' },
+                            { value: 'cancelled', label: 'Отменен' }
+                        ]}
+                        className="filter-select custom-select--overlay"
+                    />
                 </div>
 
                 <div className="filter-group">
@@ -282,8 +285,8 @@ const OrderManagement = () => {
             </div>
 
             {/* Таблица заказов */}
-            <div className="orders-table-container">
-                <table className="orders-table">
+            <div className="orders-table-container" >
+                <table className="orders-table" style={{zIndex:"0"}}>
                     <thead>
                     <tr>
                         <th>N˚</th>
@@ -329,16 +332,19 @@ const OrderManagement = () => {
                             </td>
                             <td className="order-amount">{formatPrice(order.totalAmount)}</td>
                             <td>
-                                <select
-                                    value={order.status}
-                                    onChange={(e) => updateOrderStatus(order._id, e.target.value)}
-                                    className={`status-select ${getStatusClass(order.status)}`}
-                                >
-                                    <option value="pending">Ожидание</option>
-                                    <option value="inProgress">В процессе</option>
-                                    <option value="completed">Завершен</option>
-                                    <option value="cancelled">Отменен</option>
-                                </select>
+                                <div className="table-select-wrapper">
+                                    <CustomSelect
+                                        value={order.status}
+                                        onChange={(value) => updateOrderStatus(order._id, value)}
+                                        options={[
+                                            { value: 'pending', label: 'Ожидание' },
+                                            { value: 'inProgress', label: 'В процессе' },
+                                            { value: 'completed', label: 'Завершен' },
+                                            { value: 'cancelled', label: 'Отменен' }
+                                        ]}
+                                        className={`status-select ${getStatusClass(order.status)} custom-select--table-context`}
+                                    />
+                                </div>
                             </td>
                             <td className="order-date">{formatDate(order.date)}</td>
                             <td>
@@ -868,25 +874,27 @@ const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Способ оплаты:</label>
-                                    <select
+                                    <CustomSelect
                                         value={formData.paymentMethod}
-                                        onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
-                                    >
-                                        <option value="cash">Наличные</option>
-                                        <option value="card">Карта</option>
-                                    </select>
+                                        onChange={(value) => setFormData({ ...formData, paymentMethod: value })}
+                                        options={[
+                                            { value: 'cash', label: 'Наличные' },
+                                            { value: 'card', label: 'Карта' }
+                                        ]}
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Статус:</label>
-                                    <select
+                                    <CustomSelect
                                         value={formData.status}
-                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                    >
-                                        <option value="pending">Ожидание</option>
-                                        <option value="inProgress">В процессе</option>
-                                        <option value="completed">Завершен</option>
-                                        <option value="cancelled">Отменен</option>
-                                    </select>
+                                        onChange={(value) => setFormData({ ...formData, status: value })}
+                                        options={[
+                                            { value: 'pending', label: 'Ожидание' },
+                                            { value: 'inProgress', label: 'В процессе' },
+                                            { value: 'completed', label: 'Завершен' },
+                                            { value: 'cancelled', label: 'Отменен' }
+                                        ]}
+                                    />
                                 </div>
                             </div>
 

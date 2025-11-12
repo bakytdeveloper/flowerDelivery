@@ -116,12 +116,6 @@
 //         setShowAddonModal(false);
 //         setCurrentAddon(null);
 //         fetchAddons();
-//
-//         // if (modalMode === 'create') {
-//         //     toast.success('Дополнение успешно создано');
-//         // } else {
-//         //     toast.success('Дополнение успешно обновлено');
-//         // }
 //     };
 //
 //     // Переключение активности
@@ -160,6 +154,26 @@
 //             currency: 'KZT',
 //             minimumFractionDigits: 0
 //         }).format(price);
+//     };
+//
+//     // Функция для получения корректного URL изображения
+//     const getImageUrl = (imagePath) => {
+//         if (!imagePath) {
+//             return '/images/placeholder-addon.jpg';
+//         }
+//
+//         // Если это уже полный URL (включая base64)
+//         if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+//             return imagePath;
+//         }
+//
+//         // Если это путь к файлу на сервере
+//         if (imagePath.startsWith('/')) {
+//             return `${apiUrl}${imagePath}`;
+//         }
+//
+//         // Если это относительный путь
+//         return `${apiUrl}/uploads/${imagePath}`;
 //     };
 //
 //     if (loading && addons.length === 0) {
@@ -227,9 +241,12 @@
 //                         <div key={addon._id} className="addon-card-admin">
 //                             <div className="addon-image-container">
 //                                 <img
-//                                     src={addon.image || '/images/placeholder-addon.jpg'}
+//                                     src={getImageUrl(addon.image)}
 //                                     alt={addon.name}
 //                                     className="addon-image"
+//                                     onError={(e) => {
+//                                         e.target.src = '/images/placeholder-addon.jpg';
+//                                     }}
 //                                 />
 //                                 <div className="addon-badges">
 //                                     {!addon.isActive && (
@@ -352,11 +369,15 @@
 // export default AddonManagement;
 
 
+
+
+
 // src/components/AdminPanel/AddonManagement/AddonManagement.js
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import AddonForm from './AddonForm';
 import { toast } from 'react-toastify';
+import CustomSelect from '../../Common/CustomSelect';
 import './AddonManagement.css';
 
 const AddonManagement = () => {
@@ -382,6 +403,15 @@ const AddonManagement = () => {
         'perfume': 'Парфюм',
         'other': 'Другое'
     };
+
+    // Опции для фильтра
+    const typeOptions = [
+        { value: '', label: 'Все типы' },
+        ...Object.entries(typeLabels).map(([value, label]) => ({
+            value,
+            label
+        }))
+    ];
 
     // Загрузка дополнений
     const fetchAddons = async () => {
@@ -558,16 +588,12 @@ const AddonManagement = () => {
             {/* Фильтры */}
             <div className="filters-panel">
                 <div className="filter-group">
-                    <select
+                    <CustomSelect
                         value={filterType}
-                        onChange={(e) => setFilterType(e.target.value)}
-                        className="form-control filter-group-select-input"
-                    >
-                        <option value="">Все типы</option>
-                        {Object.entries(typeLabels).map(([value, label]) => (
-                            <option key={value} value={value}>{label}</option>
-                        ))}
-                    </select>
+                        onChange={setFilterType}
+                        options={typeOptions}
+                        className="filter-group-select-input"
+                    />
                 </div>
             </div>
 

@@ -29,7 +29,7 @@
     border-color: #3e97f6;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    z-index: 1002; /* Выше чем dropdown */
+    z-index: 1002;
 }
 
 .custom-select__arrow {
@@ -51,11 +51,24 @@
     border: 2px solid #3e97f6;
     border-top: none;
     border-radius: 0 0 6px 6px;
-    z-index: 1001; /* Высокий z-index для отображения поверх других элементов */
+    z-index: 1100; /* Увеличиваем z-index */
     max-height: 200px;
     overflow-y: auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    transform: translateY(-1px); /* Перекрывает border контрола */
+    transform: translateY(-1px);
+}
+
+/* Новые классы для разных контекстов */
+.custom-select--table-context .custom-select__dropdown {
+    z-index: 1101; /* Еще выше для таблиц */
+}
+
+.custom-select--modal-context .custom-select__dropdown {
+    z-index: 10000; /* Максимальный для модальных окон */
+}
+
+.custom-select--overlay .custom-select__dropdown {
+    z-index: 9999; /* Для overlay контекстов */
 }
 
 .custom-select__option {
@@ -105,22 +118,23 @@
     scrollbar-color: #3e97f6 #4a5568;
 }
 
-/* Гарантируем, что dropdown будет поверх модальных окон */
-.modal-content .custom-select__dropdown {
-    z-index: 10000; /* Очень высокий z-index для модальных окон */
+/* Гарантируем, что dropdown будет поверх всех элементов */
+.custom-select__dropdown {
+    isolation: isolate; /* Создает новый stacking context */
 }
 
-/* Специфичные стили для разных контекстов */
-.admin-panel .custom-select__dropdown,
-.modal-overlay .custom-select__dropdown {
-    z-index: 9999;
+/* Принудительное отображение поверх таблиц */
+.orders-table-container .custom-select--table-context .custom-select__dropdown,
+.table-context .custom-select--table-context .custom-select__dropdown {
+    position: fixed !important; /* Используем fixed для гарантии поверх всего */
+    width: auto !important;
+    min-width: 200px;
 }
 
-/* Улучшенная видимость в формах */
-.form-section .custom-select__dropdown {
-    z-index: 1001;
-}
-
-.slide-editor .custom-select__dropdown {
-    z-index: 1001;
+/* Медиа-запрос для мобильных устройств */
+@media (max-width: 768px) {
+    .custom-select--table-context .custom-select__dropdown {
+        position: absolute !important; /* На мобильных возвращаем absolute */
+        width: 100% !important;
+    }
 }

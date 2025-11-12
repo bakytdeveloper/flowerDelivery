@@ -1607,3 +1607,64 @@
     font-weight: 600;
     display: inline-block;
 }
+
+/* OrderManagement.css - Специфичные стили для CustomSelect в таблице */
+
+/* Гарантируем, что CustomSelect в таблице будет поверх всех элементов */
+.orders-table-container {
+    position: relative;
+    z-index: 1; /* Нормальный z-index для контейнера */
+}
+
+.orders-table {
+    position: relative;
+    z-index: 1;
+}
+
+.orders-table td {
+    position: relative;
+}
+
+/* Специфичные стили для CustomSelect в контексте таблицы */
+.table-select-wrapper {
+    position: relative;
+    z-index: 100; /* Высокий z-index для обертки */
+}
+
+/* Гарантируем, что выпадающий список будет поверх таблицы */
+.custom-select--table-context {
+    position: relative;
+    z-index: 1000;
+}
+
+/* Переопределяем z-index для выпадающего списка в таблице */
+.orders-table .custom-select--table-context .custom-select__dropdown {
+    z-index: 1100 !important;
+    position: absolute;
+}
+
+/* Для статус селектов в таблице */
+.orders-table .status-select.custom-select--table-context .custom-select__dropdown {
+    z-index: 1100 !important;
+}
+
+/* Убираем overflow для ячеек с селектами */
+.orders-table td:has(.custom-select) {
+    overflow: visible !important;
+}
+
+/* Специфичные стили для фильтров */
+.filters-section .custom-select__dropdown {
+    z-index: 1001;
+}
+
+/* Гарантируем видимость в модальных окнах */
+.modal-overlay .custom-select__dropdown {
+    z-index: 10001 !important;
+}
+
+/* Улучшенное позиционирование для табличного контекста */
+.custom-select--table-context .custom-select__dropdown {
+    transform: translateY(-1px) translateZ(0); /* Аппаратное ускорение */
+    will-change: transform; /* Оптимизация для браузера */
+}
