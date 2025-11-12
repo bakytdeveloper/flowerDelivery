@@ -54,7 +54,8 @@
 .season-products-row {
     display: flex;
     gap: 1.5rem;
-    padding: 0 1rem;
+    padding: 1rem;
+    height: auto;
 }
 
 /* ОБНОВЛЕННЫЕ СТИЛИ КАРТОЧЕК - одинаковые с HitsSection */
@@ -71,7 +72,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 450px; /* Фиксированная высота */
+    height: auto; /* Фиксированная высота */
 }
 
 .season-product-card:hover {
@@ -85,7 +86,7 @@
 .product-image-container-catalog {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 60%;
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -137,13 +138,15 @@
 }
 
 /* Контент карточки - используем классы из каталога */
-.cart-product-info-catalog {
-    padding: 1.2rem;
+.cart-product-info-catalog-seasonal {
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     justify-content: space-between;
     min-height: 0; /* Важно для flexbox */
+    height: 40%;
+    line-height: 15px;
 }
 
 .product-name-catalog {
@@ -226,11 +229,11 @@
     color: #10b981;
 }
 
-.product-actions-catalog {
+.product-actions-catalog-seasonal {
     display: flex !important;
     gap: 0.6rem;
     margin-top: auto;
-    padding-top: 1rem;
+    padding-top: 0;
     align-items: center;
 }
 
@@ -370,14 +373,14 @@
 @media (min-width: 1920px) {
     .season-products-row {
         gap: 2rem;
-        padding: 0 2rem;
+        padding: 1rem 2rem;
     }
 }
 
 @media (min-width: 2560px) {
     .season-products-row {
         gap: 2.5rem;
-        padding: 0 3rem;
+        padding: 1rem 3rem;
     }
 
     .season-product-card {
@@ -407,7 +410,7 @@
         grid-template-columns: none; /* Убираем grid */
         flex-wrap: nowrap; /* Запрещаем перенос */
         gap: 2rem;
-        padding: 0 2rem;
+        padding: 1rem 2rem;
     }
 
     .season-product-card {
@@ -431,7 +434,7 @@
     }
 
     .product-image-container-catalog {
-        height: 180px;
+        /*height: 180px;*/
     }
 }
 
@@ -442,7 +445,7 @@
     }
 
     .product-image-container-catalog {
-        height: 170px;
+        /*height: 170px;*/
     }
 
     .cart-product-info-catalog {
@@ -462,7 +465,7 @@
 
     .season-products-row {
         gap: 1rem;
-        padding: 0 0.5rem;
+        padding: 0.5rem;
     }
 
     .season-product-card {
@@ -472,7 +475,7 @@
     }
 
     .product-image-container-catalog {
-        height: 150px;
+        height: 50%;
     }
 
     .product-actions-wrapper {
@@ -495,7 +498,7 @@
     /*}*/
 
     .product-image-container-catalog {
-        height: 140px;
+        /*height: 140px;*/
     }
 
     .cart-product-info-catalog {
@@ -529,7 +532,7 @@
     }
 
     .product-image-container-catalog {
-        height: 130px;
+        /*height: 130px;*/
     }
 
     .season-title {

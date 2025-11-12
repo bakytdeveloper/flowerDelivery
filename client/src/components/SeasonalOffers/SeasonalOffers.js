@@ -222,7 +222,7 @@ const SeasonalOffers = () => {
                                         )}
                                     </div>
 
-                                    <div className="cart-product-info-catalog">
+                                    <div className="cart-product-info-catalog-seasonal">
                                         <h3 className="product-name-catalog">{product.name}</h3>
                                         <p className="product-description-catalog">
                                             {product.description?.length > 20
@@ -257,7 +257,7 @@ const SeasonalOffers = () => {
                                             )}
                                         </div>
 
-                                        <div className="product-actions-catalog">
+                                        <div className="product-actions-catalog-seasonal">
                                             <button
                                                 className="btn-add-to-cart-catalog"
                                                 onClick={(e) => handleAddToCart(e, product)}
