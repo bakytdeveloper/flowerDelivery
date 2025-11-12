@@ -289,6 +289,7 @@ const AdminPanel = () => {
                             <div
                                 className="preview-title"
                                 style={{
+                                    textAlign: "center",
                                     color: slide.colorTitle || '#000000',
                                     fontSize: slide.fontSizeTitle || '16px',
                                     fontFamily: slide.fontFamilleTitle || 'Arial',
@@ -299,6 +300,7 @@ const AdminPanel = () => {
                             <div
                                 className="preview-description"
                                 style={{
+                                    textAlign: "center",
                                     color: slide.colorDescription || '#000000',
                                     fontSize: slide.fontSizeDescription || '14px',
                                     fontFamily: slide.fontFamilleDescription || 'Arial',
