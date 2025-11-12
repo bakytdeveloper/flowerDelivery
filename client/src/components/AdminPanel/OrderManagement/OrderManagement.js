@@ -898,7 +898,7 @@ const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
                                 </div>
                             </div>
 
-                            <div className="form-group">
+                            <div className="form-group" style={{zIndex:"0"}}>
                                 <label>Комментарий:</label>
                                 <textarea
                                     value={formData.comments}
