@@ -72,7 +72,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    height: auto; /* Фиксированная высота */
+    height:480px; /* Фиксированная высота */
+    padding-bottom: 5px;
 }
 
 .season-product-card:hover {
@@ -430,7 +431,7 @@
 @media (max-width: 1200px) {
     .season-product-card {
         width: 260px;
-        height: 430px;
+        /*height: 430px;*/
     }
 
     .product-image-container-catalog {
@@ -470,8 +471,8 @@
 
     .season-product-card {
         width: 220px!important;
-        height: auto!important;
-        /*height: 400px;*/
+        /*height: auto!important;*/
+        height: 400px!important;
     }
 
     .product-image-container-catalog {
