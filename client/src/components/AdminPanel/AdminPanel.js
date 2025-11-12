@@ -217,6 +217,22 @@ const AdminPanel = () => {
         }
     };
 
+    // Функция для обработки ввода размера
+    const handleSizeInput = (value) => {
+        // Удаляем все нецифровые символы
+        const numericValue = value.replace(/\D/g, '');
+        // Ограничиваем максимальное значение (например, 999)
+        const limitedValue = numericValue.slice(0, 3);
+        return limitedValue ? `${limitedValue}px` : '';
+    };
+
+    // Функция для отображения значения в инпуте
+        const getDisplaySize = (value) => {
+            if (!value) return '';
+            return value.replace('px', '');
+    };
+
+
     // Функция для отображения дат в читаемом формате (без времени)
     const formatDateForDisplay = (isoDateString) => {
         if (!isoDateString) return '';
@@ -565,29 +581,68 @@ const AdminPanel = () => {
 
                                             </div>
 
+                                            {/*<div className="form-row">*/}
+                                            {/*    <div className="form-group" style={{zIndex:"0"}}>*/}
+                                            {/*        <label>Размер заголовка:</label>*/}
+                                            {/*        <input*/}
+                                            {/*            type="text"*/}
+                                            {/*            value={slide.fontSizeTitle}*/}
+                                            {/*            onChange={(e) => handleSlideChange(index, 'fontSizeTitle', e.target.value)}*/}
+                                            {/*            placeholder="24px"*/}
+                                            {/*            className="form-control"*/}
+                                            {/*        />*/}
+                                            {/*    </div>*/}
+
+                                            {/*    <div className="form-group" style={{zIndex:"0"}}>*/}
+                                            {/*        <label>Размер описания:</label>*/}
+                                            {/*        <input*/}
+                                            {/*            type="text"*/}
+                                            {/*            value={slide.fontSizeDescription}*/}
+                                            {/*            onChange={(e) => handleSlideChange(index, 'fontSizeDescription', e.target.value)}*/}
+                                            {/*            placeholder="16px"*/}
+                                            {/*            className="form-control"*/}
+                                            {/*        />*/}
+                                            {/*    </div>*/}
+                                            {/*</div>*/}
+
                                             <div className="form-row">
                                                 <div className="form-group" style={{zIndex:"0"}}>
                                                     <label>Размер заголовка:</label>
                                                     <input
                                                         type="text"
-                                                        value={slide.fontSizeTitle}
-                                                        onChange={(e) => handleSlideChange(index, 'fontSizeTitle', e.target.value)}
-                                                        placeholder="24px"
+                                                        value={getDisplaySize(slide.fontSizeTitle)}
+                                                        onChange={(e) => handleSlideChange(index, 'fontSizeTitle', handleSizeInput(e.target.value))}
+                                                        placeholder="24"
                                                         className="form-control"
+                                                        onBlur={(e) => {
+                                                            // Если поле пустое при потере фокуса, устанавливаем значение по умолчанию
+                                                            if (!e.target.value) {
+                                                                handleSlideChange(index, 'fontSizeTitle', '16px');
+                                                            }
+                                                        }}
                                                     />
+                                                    <small className="input-hint">Только число</small>
                                                 </div>
 
                                                 <div className="form-group" style={{zIndex:"0"}}>
                                                     <label>Размер описания:</label>
                                                     <input
                                                         type="text"
-                                                        value={slide.fontSizeDescription}
-                                                        onChange={(e) => handleSlideChange(index, 'fontSizeDescription', e.target.value)}
-                                                        placeholder="16px"
+                                                        value={getDisplaySize(slide.fontSizeDescription)}
+                                                        onChange={(e) => handleSlideChange(index, 'fontSizeDescription', handleSizeInput(e.target.value))}
+                                                        placeholder="16"
                                                         className="form-control"
+                                                        onBlur={(e) => {
+                                                            if (!e.target.value) {
+                                                                handleSlideChange(index, 'fontSizeDescription', '14px');
+                                                            }
+                                                        }}
                                                     />
+                                                    <small className="input-hint">Только число</small>
                                                 </div>
                                             </div>
+
+
                                         </div>
 
                                         <div className="form-section">
