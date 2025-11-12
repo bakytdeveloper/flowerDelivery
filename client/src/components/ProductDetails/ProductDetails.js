@@ -288,7 +288,7 @@ const ProductDetails = () => {
         if (loadingWrappers) {
             return (
                 <section className="season-section">
-                    <div className="container">
+                    <div className="container-wide">
                         <h2 className="season-title">Обёртки</h2>
                         <div className="loading-products">
                             <div className="spinner-border text-primary" role="status">
@@ -306,7 +306,7 @@ const ProductDetails = () => {
 
         return (
             <section className="season-section">
-                <div className="container">
+                <div className="container-wide">
                     <div className="season-header">
                         <h2 className="season-title">Обёртки</h2>
                     </div>
@@ -416,7 +416,7 @@ const ProductDetails = () => {
         if (loadingAddons) {
             return (
                 <section className="season-section">
-                    <div className="container">
+                    <div className="container-wide">
                         <h2 className="season-title">Дополнительные товары</h2>
                         <div className="loading-products">
                             <div className="spinner-border text-primary" role="status">
@@ -434,7 +434,7 @@ const ProductDetails = () => {
 
         return (
             <section className="season-section">
-                <div className="container">
+                <div className="container-wide">
                     <div className="season-header">
                         <h2 className="season-title">Дополнительные товары</h2>
                     </div>
@@ -559,7 +559,7 @@ const ProductDetails = () => {
     if (loading) {
         return (
             <div className="product-details-page">
-                <div className="container">
+                <div className="container-wide">
                     <div className="product-loading">
                         <div className="spinner-border text-primary" role="status">
                             <span className="visually-hidden">Загрузка...</span>
@@ -574,7 +574,7 @@ const ProductDetails = () => {
     if (error || !product) {
         return (
             <div className="product-details-page">
-                <div className="container">
+                <div className="container-wide">
                     <div className="product-error">
                         <h2>Ошибка</h2>
                         <p>{error || 'Товар не найден'}</p>
@@ -600,7 +600,7 @@ const ProductDetails = () => {
 
     return (
         <div className="product-details-page">
-            <div className="container">
+            <div className="container-wide">
                 {/* Хлебные крошки */}
                 <nav className="breadcrumb-nav">
                     <button
