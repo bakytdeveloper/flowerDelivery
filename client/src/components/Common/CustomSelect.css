@@ -1,0 +1,98 @@
+/* src/components/Common/CustomSelect.css */
+.custom-select {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select__control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    background: rgba(51, 65, 85, 0.6);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.3s ease;
+
+}
+
+.custom-select__control:hover {
+    border-color: #3e97f6;
+}
+
+.custom-select__control--open {
+    border-color: #3e97f6;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+}
+
+.custom-select__arrow {
+    transition: transform 0.3s ease;
+    color: white;
+}
+
+.custom-select__arrow--open {
+    transform: rotate(180deg);
+}
+
+.custom-select__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #2d3748;
+    border: 2px solid #3e97f6;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+
+}
+
+.custom-select__option {
+    padding: 12px;
+    cursor: pointer;
+    color: white;
+    border-bottom: 1px solid #4a5568;
+    transition: background-color 0.2s ease;
+}
+
+.custom-select__option:hover {
+    background: #4a5568;
+}
+
+.custom-select__option--selected {
+    background: #3e97f6;
+    color: white;
+}
+
+.custom-select__option:last-child {
+    border-bottom: none;
+}
+
+/* Стили для скроллбара */
+.custom-select__dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-select__dropdown::-webkit-scrollbar-track {
+    background: #4a5568;
+    border-radius: 3px;
+}
+
+.custom-select__dropdown::-webkit-scrollbar-thumb {
+    background: #3e97f6;
+    border-radius: 3px;
+}
+
+.custom-select__dropdown::-webkit-scrollbar-thumb:hover {
+    background: #3182ce;
+}

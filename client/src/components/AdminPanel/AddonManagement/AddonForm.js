@@ -4,6 +4,8 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import '../WrapperManagement/WrapperForm.css';
 
+import CustomSelect from "../../Common/CustomSelect";
+
 const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
     const { token } = useAuth();
     const [addon, setAddon] = useState(initialAddon || getDefaultAddon());
@@ -389,17 +391,12 @@ const AddonForm = ({ onSave, onCancel, initialAddon = null }) => {
 
                             <div className="form-group">
                                 <label>Тип дополнения</label>
-                                <select
+                                <CustomSelect
                                     value={addon.type}
-                                    onChange={(e) => handleChange('type', e.target.value)}
+                                    onChange={(value) => handleChange('type', value)}
+                                    options={typeOptions}
                                     className="form-control"
-                                >
-                                    {typeOptions.map(option => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
+                                />
                             </div>
 
                             <div className="form-group">

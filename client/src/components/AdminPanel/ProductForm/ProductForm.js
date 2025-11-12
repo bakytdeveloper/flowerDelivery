@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { occasionOptions, recipientOptions } from "../../../constants/constants";
 import { toast } from 'react-toastify';
+import CustomSelect from "../../Common/CustomSelect";
 import './ProductForm.css';
 
 const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
@@ -294,49 +295,50 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Тип</label>
-                                    <select
+                                    <CustomSelect
                                         value={product.type}
-                                        onChange={(e) => handleChange('type', e.target.value)}
-                                        className="form-control form-control-background"
-                                    >
-                                        <option value="single">Одиночный цветок</option>
-                                        <option value="bouquet">Букет</option>
-                                    </select>
+                                        onChange={(value) => handleChange('type', value)}
+                                        options={[
+                                            { value: 'single', label: 'Одиночный цветок' },
+                                            { value: 'bouquet', label: 'Букет' }
+                                        ]}
+                                        className="form-control-background"
+                                    />
                                 </div>
+                                {/* Повод */}
                                 <div className="form-group">
                                     <label>Повод</label>
-                                    <select
+                                    <CustomSelect
                                         value={product.occasion}
-                                        onChange={(e) => handleChange('occasion', e.target.value)}
-                                        className="form-control form-control-background"
-                                    >
-                                        <option value="">Выберите повод</option>
-                                        {occasionOptions.map((option) => (
-                                            <option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        onChange={(value) => handleChange('occasion', value)}
+                                        options={[
+                                            { value: '', label: 'Выберите повод' },
+                                            ...occasionOptions.map(option => ({
+                                                value: option.value,
+                                                label: option.label
+                                            }))
+                                        ]}
+                                        className="form-control-background"
+                                    />
                                 </div>
 
+
+                            {/* Кому */}
+                            <div className="form-group">
+                                <label>Кому</label>
+                                <CustomSelect
+                                    value={product.recipient}
+                                    onChange={(value) => handleChange('recipient', value)}
+                                    options={[
+                                        { value: '', label: 'Выберите получателя' },
+                                        ...recipientOptions.map(option => ({
+                                            value: option.value,
+                                            label: option.label
+                                        }))
+                                    ]}
+                                    className="form-control-background"
+                                />
                             </div>
-
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label>Кому</label>
-                                    <select
-                                        value={product.recipient}
-                                        onChange={(e) => handleChange('recipient', e.target.value)}
-                                        className="form-control form-control-background"
-                                    >
-                                        <option value="">Выберите получателя</option>
-                                        {recipientOptions.map((option) => (
-                                            <option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
 
                                 <div className="form-group">
                                     <label>Длина стебля (см)</label>

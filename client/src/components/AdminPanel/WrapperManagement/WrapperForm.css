@@ -152,3 +152,45 @@
     flex-direction: column;
     gap: 16px;
 }
+
+/* В ProductForm.css и WrapperForm.css добавьте: */
+
+/* Стили для кастомных селектов в формах */
+.form-control-background .custom-select__control {
+    background: rgba(51, 65, 85, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.form-control-background .custom-select__control:hover {
+    border-color: #3e97f6;
+    background: rgba(51, 65, 85, 0.8);
+}
+
+.form-control-select .custom-select__control {
+    background: rgba(51, 65, 85, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.form-control-select .custom-select__control:hover {
+    border-color: #3e97f6;
+    background: rgba(51, 65, 85, 0.8);
+}
+
+/* Обеспечим правильное позиционирование в формах */
+.form-group .custom-select {
+    width: 100%;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .custom-select__dropdown {
+        max-height: 150px;
+    }
+
+    .custom-select__option {
+        padding: 10px;
+        font-size: 14px;
+    }
+}

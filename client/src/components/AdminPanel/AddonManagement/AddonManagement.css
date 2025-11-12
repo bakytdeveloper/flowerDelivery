@@ -396,3 +396,39 @@
         padding: 10px;
     }
 }
+
+/* В AddonManagement.css добавьте стили для фильтров: */
+
+.filter-group-select-input.custom-select {
+    min-width: 200px;
+}
+
+.filter-group-select-input .custom-select__control {
+    background: #404040;
+    border: 1px solid #555;
+    color: #e0e0e0;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+.filter-group-select-input .custom-select__control:hover {
+    border-color: #e91e63;
+}
+
+.filter-group-select-input .custom-select__dropdown {
+    background: #404040;
+    border-color: #555;
+}
+
+.filter-group-select-input .custom-select__option {
+    color: #e0e0e0;
+    border-bottom-color: #555;
+}
+
+.filter-group-select-input .custom-select__option:hover {
+    background: #555;
+}
+
+.filter-group-select-input .custom-select__option--selected {
+    background: #e91e63;
+}

@@ -9,6 +9,7 @@ import { fontFamilies } from "../../constants/constants";
 
 import { toast } from 'react-toastify';
 import './AdminPanel.css';
+import CustomSelect from "../Common/CustomSelect";
 
 const AdminPanel = () => {
     const { token } = useAuth();
@@ -406,18 +407,21 @@ const AdminPanel = () => {
                                                 />
                                             </div>
 
+                                            {/* Тип фона */}
                                             <div className="form-group">
                                                 <label>Тип фона:</label>
-                                                <select
+                                                <CustomSelect
                                                     value={slide.backgroundType}
-                                                    onChange={(e) => handleSlideChange(index, 'backgroundType', e.target.value)}
-                                                    className="form-control form-control-select"
-                                                >
-                                                    <option value="color">Цвет</option>
-                                                    <option value="image">Изображение</option>
-                                                    {/*<option value="video">Видео</option>*/}
-                                                </select>
+                                                    onChange={(value) => handleSlideChange(index, 'backgroundType', value)}
+                                                    options={[
+                                                        { value: 'color', label: 'Цвет' },
+                                                        { value: 'image', label: 'Изображение' },
+                                                        // { value: 'video', label: 'Видео' }
+                                                    ]}
+                                                    className="form-control-select"
+                                                />
                                             </div>
+
 
                                             {slide.backgroundType === 'color' && (
                                                 <div className="form-group">
@@ -534,29 +538,31 @@ const AdminPanel = () => {
                                             <div className="form-row">
                                                 <div className="form-group">
                                                     <label>Шрифт заголовка:</label>
-                                                    <select
+                                                    <CustomSelect
                                                         value={slide.fontFamilleTitle}
-                                                        onChange={(e) => handleSlideChange(index, 'fontFamilleTitle', e.target.value)}
-                                                        className="form-control form-control-select"
-                                                    >
-                                                        {fontFamilies.map((font, index) => (
-                                                            <option key={index} value={font}>{font}</option>
-                                                        ))}
-                                                    </select>
+                                                        onChange={(value) => handleSlideChange(index, 'fontFamilleTitle', value)}
+                                                        options={fontFamilies.map((font, index) => ({
+                                                            value: font,
+                                                            label: font
+                                                        }))}
+                                                        className="form-control-select"
+                                                    />
                                                 </div>
 
+                                                {/* Шрифт описания */}
                                                 <div className="form-group">
                                                     <label>Шрифт описания:</label>
-                                                    <select
+                                                    <CustomSelect
                                                         value={slide.fontFamilleDescription}
-                                                        onChange={(e) => handleSlideChange(index, 'fontFamilleDescription', e.target.value)}
-                                                        className="form-control form-control-select"
-                                                    >
-                                                        {fontFamilies.map((font, index) => (
-                                                            <option key={index} value={font}>{font}</option>
-                                                        ))}
-                                                    </select>
+                                                        onChange={(value) => handleSlideChange(index, 'fontFamilleDescription', value)}
+                                                        options={fontFamilies.map((font, index) => ({
+                                                            value: font,
+                                                            label: font
+                                                        }))}
+                                                        className="form-control-select"
+                                                    />
                                                 </div>
+
                                             </div>
 
                                             <div className="form-row">
