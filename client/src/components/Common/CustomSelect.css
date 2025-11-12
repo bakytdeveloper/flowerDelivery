@@ -138,3 +138,95 @@
         width: 100% !important;
     }
 }
+
+
+/* Новые стили для решения проблемы z-index */
+.custom-select--overlay {
+    position: relative;
+    z-index: 1002;
+}
+
+.custom-select--overlay .custom-select__dropdown {
+    z-index: 1003 !important;
+    position: absolute;
+}
+
+/* Улучшенные стили для табличного контекста */
+.custom-select--table-context {
+    position: relative;
+    z-index: 5; /* Нормальный z-index для закрытого состояния */
+}
+
+.custom-select--table-context.custom-select--open {
+    z-index: 1004; /* Высокий z-index когда открыт */
+}
+
+.custom-select--table-context .custom-select__dropdown {
+    z-index: 1005 !important;
+    position: absolute;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Гарантируем, что выпадающие списки в таблице будут поверх всего */
+.orders-table-container {
+    position: relative;
+    isolation: isolate; /* Создаем новый stacking context */
+}
+
+.orders-table {
+    position: relative;
+    z-index: 1;
+}
+
+/* Убираем overflow для ячеек с селектами */
+.orders-table td:has(.custom-select) {
+    overflow: visible !important;
+    position: relative;
+}
+
+/* Специальные стили для строк таблицы */
+.orders-table tr {
+    position: relative;
+    z-index: 1;
+}
+
+.orders-table tr:hover {
+    z-index: 2; /* При hover увеличиваем z-index */
+}
+
+/* Гарантируем, что выпадающий список в фильтрах поверх таблицы */
+.filters-section {
+    position: relative;
+    z-index: 1001;
+}
+
+.filters-section .custom-select--overlay.custom-select--open {
+    z-index: 1002;
+}
+
+.filters-section .custom-select__dropdown {
+    z-index: 1003 !important;
+}
+
+/* Универсальное решение для всех контекстов */
+.custom-select__dropdown {
+    pointer-events: auto !important;
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media (max-width: 768px) {
+    .custom-select--table-context .custom-select__dropdown {
+        position: fixed !important;
+        width: auto !important;
+        min-width: 200px;
+        max-width: 90vw;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 10000 !important;
+    }
+
+    .custom-select--overlay .custom-select__dropdown {
+        position: absolute !important;
+        width: 100% !important;
+    }
+}

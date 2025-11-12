@@ -237,7 +237,7 @@ const OrderManagement = () => {
                             { value: 'completed', label: 'Завершен' },
                             { value: 'cancelled', label: 'Отменен' }
                         ]}
-                        className="filter-select custom-select--overlay"
+                        className="filter-select custom-select--overlay custom-select--filters"
                     />
                 </div>
 
@@ -332,7 +332,7 @@ const OrderManagement = () => {
                             </td>
                             <td className="order-amount">{formatPrice(order.totalAmount)}</td>
                             <td>
-                                <div className="table-select-wrapper">
+                                <div className="table-select-wrapper" style={{ position: 'relative', zIndex: 'auto' }}>
                                     <CustomSelect
                                         value={order.status}
                                         onChange={(value) => updateOrderStatus(order._id, value)}
@@ -342,7 +342,7 @@ const OrderManagement = () => {
                                             { value: 'completed', label: 'Завершен' },
                                             { value: 'cancelled', label: 'Отменен' }
                                         ]}
-                                        className={`status-select ${getStatusClass(order.status)} custom-select--table-context`}
+                                        className={`status-select ${getStatusClass(order.status)} custom-select--table-context custom-select--order-status`}
                                     />
                                 </div>
                             </td>
