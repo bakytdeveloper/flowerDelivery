@@ -72,6 +72,12 @@ const CatalogModal = ({ isOpen, onClose }) => {
             case 'recipients':
                 queryParams.append('recipient', value);
                 break;
+            case 'allSingle':
+                queryParams.append('type', 'single');
+                break;
+            case 'allBouquets':
+                queryParams.append('type', 'bouquet');
+                break;
             default:
                 break;
         }
@@ -138,6 +144,16 @@ const CatalogModal = ({ isOpen, onClose }) => {
                                     Цветы штучно
                                 </h3>
                                 <div className="catalog-column-content">
+                                    {/* Кнопка "Все одиночные" */}
+                                    <div
+                                        className="catalog-item"
+                                        onClick={() => handleItemClick('allSingle', '')}
+                                    >
+                                        <span className="catalog-all-icon">💐</span>
+                                        Все штучные цветы
+                                        <span className="catalog-all-arrow">→</span>
+                                    </div>
+
                                     {catalogData.singleFlowers.length > 0 ? (
                                         catalogData.singleFlowers.map((flower, index) => (
                                             <div
@@ -161,6 +177,16 @@ const CatalogModal = ({ isOpen, onClose }) => {
                                     Букеты
                                 </h3>
                                 <div className="catalog-column-content">
+                                    {/* Кнопка "Все букеты" */}
+                                    <div
+                                        className="catalog-item"
+                                        onClick={() => handleItemClick('allBouquets', '')}
+                                    >
+                                        <span className="catalog-all-icon">💮</span>
+                                        Все букеты
+                                        <span className="catalog-all-arrow">→</span>
+                                    </div>
+
                                     {catalogData.bouquetFlowers.length > 0 ? (
                                         catalogData.bouquetFlowers.map((bouquet, index) => (
                                             <div
