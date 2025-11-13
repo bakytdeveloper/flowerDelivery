@@ -476,37 +476,37 @@ const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
 
     // Обновление основного заказа
     // Обновление основного заказа
-    const handleUpdateOrder = async () => {
-        try {
-            console.log('🔄 Отправка запроса на обновление заказа:', {
-                orderId: order._id,
-                formData
-            });
-
-            const response = await fetch(`${apiUrl}/api/orders/${order._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(formData)
-            });
-
-            const responseData = await response.json();
-
-            if (response.ok) {
-                toast.success('Заказ обновлен');
-                onUpdate();
-                onClose();
-            } else {
-                console.error('❌ Ошибка от сервера:', responseData);
-                throw new Error(responseData.message || `Ошибка ${response.status}: ${response.statusText}`);
-            }
-        } catch (error) {
-            console.error('❌ Ошибка при обновлении заказа:', error);
-            toast.error(error.message || 'Ошибка обновления заказа');
-        }
-    };
+    // const handleUpdateOrder = async () => {
+    //     try {
+    //         console.log('🔄 Отправка запроса на обновление заказа:', {
+    //             orderId: order._id,
+    //             formData
+    //         });
+    //
+    //         const response = await fetch(`${apiUrl}/api/orders/${order._id}`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             body: JSON.stringify(formData)
+    //         });
+    //
+    //         const responseData = await response.json();
+    //
+    //         if (response.ok) {
+    //             toast.success('Заказ обновлен');
+    //             onUpdate();
+    //             onClose();
+    //         } else {
+    //             console.error('❌ Ошибка от сервера:', responseData);
+    //             throw new Error(responseData.message || `Ошибка ${response.status}: ${response.statusText}`);
+    //         }
+    //     } catch (error) {
+    //         console.error('❌ Ошибка при обновлении заказа:', error);
+    //         toast.error(error.message || 'Ошибка обновления заказа');
+    //     }
+    // };
 
 
 
@@ -1137,25 +1137,8 @@ const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
                 <div className="modal-footer">
                     {editing ? (
                         <>
-                            <button className="btn btn-success" onClick={handleUpdateOrder}>
-                                💾 Сохранить изменения
-                            </button>
-                            <button className="btn btn-secondary" onClick={() => {
-                                setEditing(false);
-                                setOrderItems({
-                                    flowerItems: [...order.flowerItems],
-                                    addonItems: [...order.addonItems]
-                                });
-                                setFormData({
-                                    firstName: order.firstName,
-                                    address: order.address,
-                                    phoneNumber: order.phoneNumber,
-                                    paymentMethod: order.paymentMethod,
-                                    comments: order.comments || '',
-                                    status: order.status
-                                });
-                            }}>
-                                ❌ Отмена
+                            <button className="btn btn-secondary" onClick={onClose}>
+                                🔒 Закрыть
                             </button>
                         </>
                     ) : (
