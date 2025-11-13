@@ -710,19 +710,23 @@ const ProductDetails = () => {
                         </div>
 
                         {/* Характеристики товара */}
+                        {/* Характеристики товара */}
                         <div className="product-specs">
+                            {/* Основные характеристики */}
                             <div className="spec-item">
                                 <span className="spec-label">Тип:</span>
                                 <span className="spec-value">
-                                    {product.type === 'single' ? '💐 Одиночный цветок' : '💮 Букет'}
-                                </span>
+      {product.type === 'single' ? '💐 Одиночный цветок' : '💮 Букет'}
+    </span>
                             </div>
+
                             {product.occasion && (
                                 <div className="spec-item">
                                     <span className="spec-label">Повод:</span>
                                     <span className="spec-value">{getOccasionLabel(product.occasion)}</span>
                                 </div>
                             )}
+
                             {product.recipient && (
                                 <div className="spec-item">
                                     <span className="spec-label">Кому:</span>
@@ -736,12 +740,14 @@ const ProductDetails = () => {
                                     <span className="spec-value">{product.flowerNames.join(', ')}</span>
                                 </div>
                             )}
+
                             {product.stemLength && (
                                 <div className="spec-item">
                                     <span className="spec-label">Длина стебля:</span>
                                     <span className="spec-value">{product.stemLength} см</span>
                                 </div>
                             )}
+
                             {product.flowerColors && product.flowerColors.length > 0 && (
                                 <div className="spec-item">
                                     <span className="spec-label">Цвета:</span>
@@ -759,6 +765,20 @@ const ProductDetails = () => {
                                         ))}
                                     </div>
                                 </div>
+                            )}
+
+                            {/* Дополнительные характеристики из characteristics */}
+                            {product.characteristics && product.characteristics.length > 0 && (
+                                <>
+                                    <div className="specs-divider"></div>
+                                    <div className="specs-section-title">Дополнительные характеристики</div>
+                                    {product.characteristics.map((char, index) => (
+                                        <div key={index} className="spec-item">
+                                            <span className="spec-label">{char.name}:</span>
+                                            <span className="spec-value">{char.value}</span>
+                                        </div>
+                                    ))}
+                                </>
                             )}
                         </div>
 
