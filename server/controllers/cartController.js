@@ -337,29 +337,23 @@ const getOrCreateCart = async (user) => {
 };
 
 // Вспомогательная функция для форматирования ответа корзины
+// Вспомогательная функция для форматирования ответа корзины
 const formatCartResponse = async (cart) => {
-    const populatedCart = await cart.populate([
-        { path: 'flowerItems.product', select: 'name images isActive quantity' },
-        { path: 'addonItems.addonId', select: 'name image isActive quantity type' }
-    ]);
-
-    // Убедимся, что все itemTotal являются числами
-    populatedCart.flowerItems = populatedCart.flowerItems.map(item => ({
-        ...item.toObject ? item.toObject() : item,
-        itemTotal: Number(item.itemTotal) || 0
-    }));
-
-    populatedCart.addonItems = populatedCart.addonItems.map(item => ({
-        ...item.toObject ? item.toObject() : item,
-        itemTotal: Number(item.itemTotal) || 0
-    }));
-
-    return {
-        _id: populatedCart._id,
-        flowerItems: populatedCart.flowerItems,
-        addonItems: populatedCart.addonItems,
-        total: populatedCart.total,
-        totalItems: populatedCart.totalItems,
-        lastUpdated: populatedCart.lastUpdated
+    // Используем уже существующую корзину, не выполняем дополнительных запросов
+    const response = {
+        _id: cart._id,
+        flowerItems: cart.flowerItems.map(item => ({
+            ...item.toObject ? item.toObject() : item,
+            itemTotal: Number(item.itemTotal) || 0
+        })),
+        addonItems: cart.addonItems.map(item => ({
+            ...item.toObject ? item.toObject() : item,
+            itemTotal: Number(item.itemTotal) || 0
+        })),
+        total: cart.total,
+        totalItems: cart.totalItems,
+        lastUpdated: cart.lastUpdated
     };
+
+    return response;
 };

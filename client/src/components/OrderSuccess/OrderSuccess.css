@@ -10,7 +10,7 @@
 }
 
 .success-content {
-    background: #4fb1f3;
+    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
     padding: 3rem;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -29,7 +29,7 @@
 
 .success-title {
     font-size: 2.5rem;
-    color: #2c3e50;
+    color: #33f108;
     margin-bottom: 1.5rem;
     font-weight: 700;
     line-height: 1.2;
@@ -42,7 +42,7 @@
 
 .success-message p {
     font-size: 1.1rem;
-    color: #012a2d;
+    color: #eaecec;
     line-height: 1.6;
     margin-bottom: 1rem;
     word-wrap: break-word;
@@ -183,7 +183,7 @@
 }
 
 .contact-info p {
-    color: #01181a;
+    color: #e5f2f3;
     margin-bottom: 0.5rem;
     font-size: 1rem;
     line-height: 1.4;

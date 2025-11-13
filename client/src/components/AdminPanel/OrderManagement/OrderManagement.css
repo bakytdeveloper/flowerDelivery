@@ -96,6 +96,8 @@
     border-radius: 12px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+
+    z-index: 1;
 }
 
 .filter-group {
@@ -224,14 +226,14 @@
 
 /* Статусы */
 .status-select {
-    padding: 6px 10px;
+    padding: 1px 2px!important;
     border: none;
     border-radius: 6px;
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.1);
+    /*background: rgba(255, 255, 255, 0.1);*/
     color: #ffffff;
     backdrop-filter: blur(10px);
 }
@@ -242,7 +244,7 @@
 }
 
 .status-pending {
-    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%) !important;
+    background: linear-gradient(135deg, #f39c12 0%, #ef862a 100%) !important;
     color: #ffffff!important;
 }
 
