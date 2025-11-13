@@ -394,15 +394,14 @@ const CatalogPage = () => {
                                             />
                                             {product.discountPercentage > 0 && (
                                                 <span className="discount-badge">
-                                                    -{product.discountPercentage}%
-                                                </span>
+                -{product.discountPercentage}%
+            </span>
                                             )}
                                             {product.soldCount > 0 && (
                                                 <span className="popular-badge">
-                                                    <span className="popular-badge-fire">🔥</span> Популярный
-                                                </span>
+                <span className="popular-badge-fire">🔥</span> Популярный
+            </span>
                                             )}
-
                                         </div>
 
                                         <div className="cart-product-info-catalog">
@@ -415,28 +414,28 @@ const CatalogPage = () => {
                                             </p>
 
                                             <div className="product-meta-catalog">
-                                                <span className={`product-type-catalog ${product.type}`}>
-                                                    {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
-                                                </span>
+            <span className={`product-type-catalog ${product.type}`}>
+                {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
+            </span>
                                                 <span className="product-occasion-catalog">
-                                                    {getOccasionLabel(product.occasion)}
-                                                </span>
+                {getOccasionLabel(product.occasion)}
+            </span>
                                             </div>
 
                                             <div className="product-price-catalog">
                                                 {product.originalPrice && product.originalPrice > product.price ? (
                                                     <>
-                                                        <span className="original-price-catalog">
-                                                            {formatPrice(product.originalPrice)}
-                                                        </span>
+                    <span className="original-price-catalog">
+                        {formatPrice(product.originalPrice)}
+                    </span>
                                                         <span className="current-price-catalog">
-                                                            {formatPrice(product.price)}
-                                                        </span>
+                        {formatPrice(product.price)}
+                    </span>
                                                     </>
                                                 ) : (
                                                     <span className="current-price-catalog">
-                                                        {formatPrice(product.price)}
-                                                    </span>
+                    {formatPrice(product.price)}
+                </span>
                                                 )}
                                             </div>
 
@@ -448,7 +447,6 @@ const CatalogPage = () => {
                                                     В корзину
                                                 </button>
 
-                                                {/* Кнопка избранного теперь внизу рядом с кнопкой корзины */}
                                                 <button
                                                     className={`favorite-heart-btn-catalog ${isFavorite(product._id) ? 'favorited' : ''}`}
                                                     onClick={(e) => handleToggleFavorite(e, product)}

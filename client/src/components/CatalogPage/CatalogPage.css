@@ -197,6 +197,9 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    /*min-height: 400px!important; !* Минимальная высота для консистентности *!*/
+    max-height: 560px;
+    padding-bottom: 7px;
 }
 
 .product-card-catalog:hover {
@@ -210,9 +213,9 @@
 .product-image-container-catalog {
     position: relative;
     width: 100%;
-    height: 60%;
+    height: 60% !important; /* Фиксированные 60% высоты карточки */
     overflow: hidden;
-    flex-shrink: 0;
+    flex-shrink: 0; /* Запрещаем сжатие */
 }
 
 .product-image {
@@ -259,20 +262,22 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    justify-content: space-between;
-    height: 40%;
+    height: 40% !important; /* Фиксированные 40% высоты карточки */
+    min-height: 0; /* Важно для правильного расчета flex */
+    overflow: hidden; /* Скрываем переполнение */
 }
 
 .product-name-catalog {
-    font-size: 1rem;
+    ffont-size: 1rem;
     font-weight: 700;
     color: #f1f5f9;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: 1.6rem;
+    line-height: 1.2;
+    flex-shrink: 0; /* Запрещаем сжатие */
 }
 
 .product-description-catalog {
@@ -292,6 +297,7 @@
     flex-direction: column;
     gap: 0.4rem;
     margin-bottom: 0.5rem;
+    flex-shrink: 0; /* Запрещаем сжатие */
 }
 
 .product-type-catalog {
@@ -327,6 +333,9 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
+    margin-bottom: 0.5rem;
+    flex-shrink: 0; /* Запрещаем сжатие */
+    flex-shrink: 0; /* Запрещаем сжатие */
 }
 
 .original-price-catalog {
@@ -344,9 +353,10 @@
 .product-actions-catalog {
     display: flex !important;
     gap: 0.6rem;
-    margin-top: auto;
-    padding-top: 1rem;
+    margin-top: auto; /* Прижимаем к низу */
+    padding-top: 0.3rem;
     align-items: center;
+    flex-shrink: 0; /* Запрещаем сжатие */
 }
 
 .btn-add-to-cart-catalog {
@@ -513,6 +523,7 @@
 
     .product-actions-catalog {
         gap: 0.5rem;
+        margin-top: 5px;
     }
 }
 
@@ -665,12 +676,20 @@
     }
 
     .catalog-results {
-        padding: 1.5rem;
+        padding: 1.5rem 0.2rem;
         background: rgba(4, 9, 17, 0.4);
     }
 
+    .product-card-catalog {
+        height: 450px!important;
+    }
+
+    .cart-product-info-catalog {
+        padding: 0.2rem;
+    }
+
     .product-image-container-catalog {
-        height: 50%;
+        height: 60%;
     }
 }
 
@@ -694,9 +713,9 @@
         gap: 0.8rem;
     }
 
-    .product-image-container-catalog {
-        height: 50%;
-    }
+    /*.product-image-container-catalog {*/
+    /*    height: 50%;*/
+    /*}*/
 
     .product-actions-catalog {
         flex-direction: row;
@@ -710,6 +729,27 @@
         padding: 1.5rem;
         background: rgba(4, 9, 17, 0.4);
     }
+
+    .product-card-catalog {
+        height: 480px!important;
+
+        line-height: 10px;
+    }
+
+
+    .product-name-catalog {
+        font-size: 0.9rem;
+    }
+
+    .product-description-catalog {
+        font-size: 0.75rem;
+    }
+
+    .cart-product-info-catalog {
+        padding: 0.8rem;
+    }
+
+
 }
 
 /* Очень маленькие телефоны */

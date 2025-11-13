@@ -147,7 +147,7 @@
     justify-content: space-between;
     min-height: 0; /* Важно для flexbox */
     height: 40%;
-    line-height: 15px;
+    line-height: 10px;
 }
 
 .product-name-catalog {
@@ -234,8 +234,9 @@
     display: flex !important;
     gap: 0.6rem;
     margin-top: auto;
-    padding-top: 0;
+    padding-top: 5px;
     align-items: center;
+    margin-bottom: 5px;
 }
 
 .btn-add-to-cart-catalog {
@@ -249,6 +250,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 0.8rem;
+    line-height: 15px;
 }
 
 .btn-add-to-cart-catalog:hover {
@@ -472,7 +474,8 @@
     .season-product-card {
         width: 220px!important;
         /*height: auto!important;*/
-        height: 400px!important;
+        line-height: 10px;
+        height: 480px!important;
     }
 
     .product-image-container-catalog {
