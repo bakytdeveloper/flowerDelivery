@@ -214,7 +214,7 @@ const Header = ({
         <header className="header">
             {/* Верхняя панель с режимом работы и контактами */}
             <div className="header-top">
-                <div className="container">
+                <div className="container-wide">
                     <div className="header-top-content">
                         <div className="working-hours">
                             <span>⏰ {workingHours}</span>
@@ -363,7 +363,7 @@ const Header = ({
 
             {/* Навигационная панель */}
             <nav className="header-nav" ref={mobileMenuRef}>
-                <div className="container">
+                <div className="container-wide">
                     <div className={`nav-content ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                         <Link
                             to="/"
