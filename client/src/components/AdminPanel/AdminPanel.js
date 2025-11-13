@@ -559,10 +559,7 @@ const AdminPanel = () => {
                                                     <CustomSelect
                                                         value={slide.fontFamilleTitle}
                                                         onChange={(value) => handleSlideChange(index, 'fontFamilleTitle', value)}
-                                                        options={fontFamilies.map((font, index) => ({
-                                                            value: font,
-                                                            label: font
-                                                        }))}
+                                                        options={fontFamilies}
                                                         className="form-control-select"
                                                     />
                                                 </div>
@@ -573,10 +570,7 @@ const AdminPanel = () => {
                                                     <CustomSelect
                                                         value={slide.fontFamilleDescription}
                                                         onChange={(value) => handleSlideChange(index, 'fontFamilleDescription', value)}
-                                                        options={fontFamilies.map((font, index) => ({
-                                                            value: font,
-                                                            label: font
-                                                        }))}
+                                                        options={fontFamilies}
                                                         className="form-control-select"
                                                     />
                                                 </div>

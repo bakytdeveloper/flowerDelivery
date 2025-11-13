@@ -1,33 +1,98 @@
 // constants.js
+// export const fontFamilies = [
+//     'Arial',
+//     'Verdana',
+//     'DIN Alternate',
+//     'SignPainter',
+//     'Phosphate',
+//     'STSong',
+//     'Bradley Hand',
+//     'Rockwell',
+//     'Ayuthaya',
+//     'Trattatello',
+//     'PT Mono',
+//     'Heiti TC',
+//     'Luminari',
+//     'PT Serif Caption',
+//     'Menlo',
+//     'Copperplate',
+//     'Arial Black',
+//     'Comic Sans MS',
+//     'Hiragino Sans',
+//     'Times New Roman',
+//     'Georgia',
+//     'Sathu',
+//     'Oswald',
+//     'Courier New',
+//     "American Typewriter",
+//     'Trebuchet MS',
+//     'Impact'
+// ];
+
+// constants.js
 export const fontFamilies = [
-    'Arial',
-    'Verdana',
-    'DIN Alternate',
-    'SignPainter',
-    'Phosphate',
-    'STSong',
-    'Bradley Hand',
-    'Rockwell',
-    'Ayuthaya',
-    'Trattatello',
-    'PT Mono',
-    'Heiti TC',
-    'Luminari',
-    'PT Serif Caption',
-    'Menlo',
-    'Copperplate',
-    'Arial Black',
-    'Comic Sans MS',
-    'Hiragino Sans',
-    'Times New Roman',
-    'Georgia',
-    'Sathu',
-    'Oswald',
-    'Courier New',
-    "American Typewriter",
-    'Trebuchet MS',
-    'Impact'
+    // Основные безопасные шрифты
+    { value: 'Arial, Helvetica, sans-serif', label: 'Arial' },
+    { value: 'Verdana, Geneva, sans-serif', label: 'Verdana' },
+    { value: 'Trebuchet MS, Helvetica, sans-serif', label: 'Trebuchet MS' },
+    { value: 'Georgia, Times, serif', label: 'Georgia' },
+    { value: 'Times New Roman, Times, serif', label: 'Times New Roman' },
+    { value: 'Courier New, Courier, monospace', label: 'Courier New' },
+    { value: 'Impact, Haettenschweiler, sans-serif', label: 'Impact' },
+    { value: 'Comic Sans MS, cursive, sans-serif', label: 'Comic Sans MS' },
+
+    // Популярные Google Fonts
+    { value: 'Roboto, Arial, sans-serif', label: 'Roboto' },
+    { value: 'Lato, Arial, sans-serif', label: 'Lato' },
+    { value: 'Oswald, Arial, sans-serif', label: 'Oswald' },
+    { value: 'Source Sans Pro, Arial, sans-serif', label: 'Source Sans Pro' },
+    { value: 'PT Sans, Arial, sans-serif', label: 'PT Sans' },
+
+    // Моноширинные
+    { value: 'PT Mono, Courier New, monospace', label: 'PT Mono' },
+    { value: 'Source Code Pro, Menlo, monospace', label: 'Source Code Pro' },
+    { value: 'Roboto Mono, Courier New, monospace', label: 'Roboto Mono' },
+
+    // Декоративные и рукописные (прописные)
+    { value: 'Playfair Display, Georgia, serif', label: 'Playfair Display' },
+    { value: 'Merriweather, Georgia, serif', label: 'Merriweather' },
+    { value: 'Dancing Script, cursive', label: 'Dancing Script' },
+    { value: 'Pacifico, cursive', label: 'Pacifico' },
+
+    // ✅ НОВЫЕ: Рукописные шрифты с хорошей поддержкой
+    { value: 'Great Vibes, cursive', label: 'Great Vibes' },
+    { value: 'Parisienne, cursive', label: 'Parisienne' },
+    { value: 'Alex Brush, cursive', label: 'Alex Brush' },
+    { value: 'Allura, cursive', label: 'Allura' },
+    { value: 'Cookie, cursive', label: 'Cookie' },
+    { value: 'Marck Script, cursive', label: 'Marck Script' },
+    { value: 'Monsieur La Doulaise, cursive', label: 'Monsieur La Doulaise' },
+    { value: 'Mr De Haviland, cursive', label: 'Mr De Haviland' },
+    { value: 'Mrs Saint Delafield, cursive', label: 'Mrs Saint Delafield' },
+    { value: 'Niconne, cursive', label: 'Niconne' },
+    { value: 'Petit Formal Script, cursive', label: 'Petit Formal Script' },
+    { value: 'Rouge Script, cursive', label: 'Rouge Script' },
+    { value: 'Tangerine, cursive', label: 'Tangerine' },
+    { value: 'Yellowtail, cursive', label: 'Yellowtail' },
+
+    // Более формальные прописные
+    { value: 'Cormorant Garamond, serif', label: 'Cormorant Garamond' },
+    { value: 'Cinzel, serif', label: 'Cinzel' },
+    { value: 'Cormorant, serif', label: 'Cormorant' },
+
+    // Стилизованные но читаемые
+    { value: 'Caveat, cursive', label: 'Caveat' },
+    { value: 'Kalam, cursive', label: 'Kalam' },
+    { value: 'Indie Flower, cursive', label: 'Indie Flower' },
+    { value: 'Shadows Into Light, cursive', label: 'Shadows Into Light' },
+    { value: 'Permanent Marker, cursive', label: 'Permanent Marker' },
+
+    // Элегантные прописные
+    { value: 'La Belle Aurore, cursive', label: 'La Belle Aurore' },
+    { value: 'Style Script, cursive', label: 'Style Script' },
+    { value: 'Zeyada, cursive', label: 'Zeyada' }
 ];
+
 
 export const statusTranslations = {
     pending: "В ожидании",
