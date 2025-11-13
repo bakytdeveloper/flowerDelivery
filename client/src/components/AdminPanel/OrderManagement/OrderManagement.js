@@ -473,43 +473,6 @@ const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
         }
     };
 
-
-    // Обновление основного заказа
-    // Обновление основного заказа
-    // const handleUpdateOrder = async () => {
-    //     try {
-    //         console.log('🔄 Отправка запроса на обновление заказа:', {
-    //             orderId: order._id,
-    //             formData
-    //         });
-    //
-    //         const response = await fetch(`${apiUrl}/api/orders/${order._id}`, {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${token}`
-    //             },
-    //             body: JSON.stringify(formData)
-    //         });
-    //
-    //         const responseData = await response.json();
-    //
-    //         if (response.ok) {
-    //             toast.success('Заказ обновлен');
-    //             onUpdate();
-    //             onClose();
-    //         } else {
-    //             console.error('❌ Ошибка от сервера:', responseData);
-    //             throw new Error(responseData.message || `Ошибка ${response.status}: ${response.statusText}`);
-    //         }
-    //     } catch (error) {
-    //         console.error('❌ Ошибка при обновлении заказа:', error);
-    //         toast.error(error.message || 'Ошибка обновления заказа');
-    //     }
-    // };
-
-
-
     // Удаление товара из заказа
     const handleRemoveItem = async (itemType, index) => {
         if (!window.confirm('Вы уверены, что хотите удалить этот товар из заказа?')) return;
