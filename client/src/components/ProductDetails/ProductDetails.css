@@ -1017,7 +1017,7 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    background: linear-gradient(135deg, #f58209, #de0f04);
+    background: linear-gradient(135deg, #f58209, #de0f04) !important;
     color: white;
     padding: 4px 10px;
     border-radius: 15px;
