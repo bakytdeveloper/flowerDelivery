@@ -8,7 +8,9 @@ import {useCart} from "../../contexts/CartContext";
 
 const FavoritesPage = () => {
     const [favoriteProducts, setFavoriteProducts] = useState([]);
+    // eslint-disable-next-line
     const [loading, setLoading] = useState(true);
+    // eslint-disable-next-line
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { isAuthenticated, token } = useAuth();
@@ -24,6 +26,7 @@ const FavoritesPage = () => {
             return;
         }
         fetchFavorites();
+        // eslint-disable-next-line
     }, [isAuthenticated, navigate, token]);
 
     const fetchFavorites = async () => {

@@ -64,7 +64,7 @@ const productSchema = new mongoose.Schema({
     // Повод для цветов
     occasion: {
         type: String,
-        required: true,
+        // required: true,
         enum: [
             'birthday',
             'anniversary',
@@ -92,7 +92,7 @@ const productSchema = new mongoose.Schema({
 // Кому предназначены цветы
     recipient: {
         type: String,
-        required: true,
+        // required: true,
         enum: [
             'woman',
             'man',
@@ -120,7 +120,7 @@ const productSchema = new mongoose.Schema({
     // Название цветов (роза, тюльпан и т.д.)
     flowerNames: [{
         type: String,
-        required: true
+        // required: true
     }],
     // Длина стебля (в см)
     stemLength: {

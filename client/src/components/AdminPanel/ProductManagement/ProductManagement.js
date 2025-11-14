@@ -22,12 +22,17 @@ const ProductManagement = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
-    const [showEditModal, setShowEditModal] = useState(false);
+    // eslint-disable-next-line
+    // const [showEditModal, setShowEditModal] = useState(false);
+    // eslint-disable-next-line
     const [editingProduct, setEditingProduct] = useState(null);
-    const [isSaving, setIsSaving] = useState(false);
-    const [uploadingImages, setUploadingImages] = useState(false);
-    const [imageUrlInput, setImageUrlInput] = useState('');
-    const [showUrlInput, setShowUrlInput] = useState(false);
+    // eslint-disable-next-line
+    // const [isSaving, setIsSaving] = useState(false);
+    // eslint-disable-next-line
+    // const [uploadingImages, setUploadingImages] = useState(false);
+    // const [imageUrlInput, setImageUrlInput] = useState('');
+    // eslint-disable-next-line
+    // const [showUrlInput, setShowUrlInput] = useState(false);
     const [modalMode, setModalMode] = useState('edit'); // 'edit' или 'create'
     const [showProductModal, setShowProductModal] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
@@ -200,184 +205,184 @@ const ProductManagement = () => {
         }
     };
 
-    const handleEditChange = (field, value) => {
-        setEditingProduct(prev => ({
-            ...prev,
-            [field]: value
-        }));
-    };
-
-    // Обработка характеристик
-    const handleCharacteristicChange = (index, field, value) => {
-        const updatedCharacteristics = [...editingProduct.characteristics];
-        updatedCharacteristics[index][field] = value;
-        handleEditChange('characteristics', updatedCharacteristics);
-    };
-
-    const addCharacteristic = () => {
-        const updatedCharacteristics = [
-            ...editingProduct.characteristics,
-            { name: '', value: '' }
-        ];
-        handleEditChange('characteristics', updatedCharacteristics);
-    };
-
-    const removeCharacteristic = (index) => {
-        const updatedCharacteristics = editingProduct.characteristics.filter((_, i) => i !== index);
-        handleEditChange('characteristics', updatedCharacteristics);
-    };
-
-    // Обработка названий цветов
-    const handleFlowerNameChange = (index, value) => {
-        const updatedFlowerNames = [...editingProduct.flowerNames];
-        updatedFlowerNames[index] = value;
-        handleEditChange('flowerNames', updatedFlowerNames);
-    };
-
-    const addFlowerName = () => {
-        const updatedFlowerNames = [...editingProduct.flowerNames, ''];
-        handleEditChange('flowerNames', updatedFlowerNames);
-    };
-
-    const removeFlowerName = (index) => {
-        const updatedFlowerNames = editingProduct.flowerNames.filter((_, i) => i !== index);
-        handleEditChange('flowerNames', updatedFlowerNames);
-    };
-
-    // Загрузка изображений (файлы)
-    const handleImageUpload = async (event) => {
-        const files = Array.from(event.target.files);
-        if (files.length === 0) return;
-
-        try {
-            setUploadingImages(true);
-
-            const formData = new FormData();
-            files.forEach(file => {
-                formData.append('images', file);
-            });
-
-            const response = await fetch(`${apiUrl}/api/admin/upload`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const newImages = data.images || [];
-                const updatedImages = [...editingProduct.images, ...newImages];
-                handleEditChange('images', updatedImages);
-                toast.success('Изображения успешно загружены');
-            } else {
-                throw new Error('Ошибка загрузки изображений');
-            }
-        } catch (error) {
-            console.error('Error uploading images:', error);
-            toast.error('Ошибка загрузки изображений');
-        } finally {
-            setUploadingImages(false);
-            event.target.value = '';
-        }
-    };
-
-    // Добавление URL изображения
-    const handleAddImageUrl = () => {
-        if (!imageUrlInput.trim()) {
-            toast.error('Введите URL изображения');
-            return;
-        }
-
-        // Простая валидация URL
-        try {
-            new URL(imageUrlInput);
-        } catch (error) {
-            toast.error('Введите корректный URL');
-            return;
-        }
-
-        const updatedImages = [...editingProduct.images, imageUrlInput.trim()];
-        handleEditChange('images', updatedImages);
-        setImageUrlInput('');
-        setShowUrlInput(false);
-        toast.success('URL изображения добавлен');
-    };
-
-    const removeImage = (index) => {
-        const imageToRemove = editingProduct.images[index];
-        const updatedImages = editingProduct.images.filter((_, i) => i !== index);
-        handleEditChange('images', updatedImages);
-
-        // Если это загруженное изображение (не URL), можно отправить запрос на удаление с сервера
-        if (imageToRemove.includes('/uploads/')) {
-            // Опционально: удалить файл с сервера
-            // deleteImageFromServer(imageToRemove);
-        }
-    };
-
-    // Функция для определения типа изображения (URL или загруженное)
-    const getImageType = (imageUrl) => {
-        if (imageUrl.startsWith('http') && !imageUrl.includes('/uploads/')) {
-            return 'url';
-        }
-        return 'uploaded';
-    };
-
-    // Сохранение изменений
-    const saveProductChanges = async () => {
-        if (!editingProduct) return;
-
-        // Валидация обязательных полей
-        if (!editingProduct.name || !editingProduct.price) {
-            toast.error('Заполните обязательные поля: название, цена, категория');
-            return;
-        }
-
-        try {
-            setIsSaving(true);
-
-            // Подготовка данных для отправки
-            const productData = {
-                ...editingProduct,
-                price: Number(editingProduct.price),
-                originalPrice: editingProduct.originalPrice ? Number(editingProduct.originalPrice) : undefined,
-                stemLength: editingProduct.stemLength ? Number(editingProduct.stemLength) : undefined,
-                quantity: editingProduct.quantity ? Number(editingProduct.quantity) : 0,
-                soldCount: editingProduct.soldCount ? Number(editingProduct.soldCount) : 0,
-                characteristics: editingProduct.characteristics.filter(char =>
-                    char.name && char.value && char.name.trim() !== '' && char.value.trim() !== ''
-                ),
-                flowerNames: editingProduct.flowerNames.filter(name => name && name.trim() !== ''),
-                // Изображения уже содержат как URL, так и пути к загруженным файлам
-                images: editingProduct.images
-            };
-
-            const response = await fetch(`${apiUrl}/api/admin/products/${editingProduct._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(productData)
-            });
-
-            if (response.ok) {
-                toast.success('Товар успешно обновлен');
-                fetchProducts(currentPage);
-                setShowEditModal(false);
-                setEditingProduct(null);
-            } else {
-                throw new Error('Ошибка при обновлении товара');
-            }
-        } catch (error) {
-            console.error('Error updating product:', error);
-            toast.error('Ошибка при обновлении товара');
-        } finally {
-            setIsSaving(false);
-        }
-    };
+    // const handleEditChange = (field, value) => {
+    //     setEditingProduct(prev => ({
+    //         ...prev,
+    //         [field]: value
+    //     }));
+    // };
+    //
+    // // Обработка характеристик
+    // const handleCharacteristicChange = (index, field, value) => {
+    //     const updatedCharacteristics = [...editingProduct.characteristics];
+    //     updatedCharacteristics[index][field] = value;
+    //     handleEditChange('characteristics', updatedCharacteristics);
+    // };
+    //
+    // const addCharacteristic = () => {
+    //     const updatedCharacteristics = [
+    //         ...editingProduct.characteristics,
+    //         { name: '', value: '' }
+    //     ];
+    //     handleEditChange('characteristics', updatedCharacteristics);
+    // };
+    //
+    // const removeCharacteristic = (index) => {
+    //     const updatedCharacteristics = editingProduct.characteristics.filter((_, i) => i !== index);
+    //     handleEditChange('characteristics', updatedCharacteristics);
+    // };
+    //
+    // // Обработка названий цветов
+    // const handleFlowerNameChange = (index, value) => {
+    //     const updatedFlowerNames = [...editingProduct.flowerNames];
+    //     updatedFlowerNames[index] = value;
+    //     handleEditChange('flowerNames', updatedFlowerNames);
+    // };
+    //
+    // const addFlowerName = () => {
+    //     const updatedFlowerNames = [...editingProduct.flowerNames, ''];
+    //     handleEditChange('flowerNames', updatedFlowerNames);
+    // };
+    //
+    // const removeFlowerName = (index) => {
+    //     const updatedFlowerNames = editingProduct.flowerNames.filter((_, i) => i !== index);
+    //     handleEditChange('flowerNames', updatedFlowerNames);
+    // };
+    //
+    // // Загрузка изображений (файлы)
+    // const handleImageUpload = async (event) => {
+    //     const files = Array.from(event.target.files);
+    //     if (files.length === 0) return;
+    //
+    //     try {
+    //         setUploadingImages(true);
+    //
+    //         const formData = new FormData();
+    //         files.forEach(file => {
+    //             formData.append('images', file);
+    //         });
+    //
+    //         const response = await fetch(`${apiUrl}/api/admin/upload`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             body: formData
+    //         });
+    //
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             const newImages = data.images || [];
+    //             const updatedImages = [...editingProduct.images, ...newImages];
+    //             handleEditChange('images', updatedImages);
+    //             toast.success('Изображения успешно загружены');
+    //         } else {
+    //             throw new Error('Ошибка загрузки изображений');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error uploading images:', error);
+    //         toast.error('Ошибка загрузки изображений');
+    //     } finally {
+    //         setUploadingImages(false);
+    //         event.target.value = '';
+    //     }
+    // };
+    //
+    // // Добавление URL изображения
+    // const handleAddImageUrl = () => {
+    //     if (!imageUrlInput.trim()) {
+    //         toast.error('Введите URL изображения');
+    //         return;
+    //     }
+    //
+    //     // Простая валидация URL
+    //     try {
+    //         new URL(imageUrlInput);
+    //     } catch (error) {
+    //         toast.error('Введите корректный URL');
+    //         return;
+    //     }
+    //
+    //     const updatedImages = [...editingProduct.images, imageUrlInput.trim()];
+    //     handleEditChange('images', updatedImages);
+    //     setImageUrlInput('');
+    //     setShowUrlInput(false);
+    //     toast.success('URL изображения добавлен');
+    // };
+    //
+    // const removeImage = (index) => {
+    //     const imageToRemove = editingProduct.images[index];
+    //     const updatedImages = editingProduct.images.filter((_, i) => i !== index);
+    //     handleEditChange('images', updatedImages);
+    //
+    //     // Если это загруженное изображение (не URL), можно отправить запрос на удаление с сервера
+    //     if (imageToRemove.includes('/uploads/')) {
+    //         // Опционально: удалить файл с сервера
+    //         // deleteImageFromServer(imageToRemove);
+    //     }
+    // };
+    //
+    // // Функция для определения типа изображения (URL или загруженное)
+    // const getImageType = (imageUrl) => {
+    //     if (imageUrl.startsWith('http') && !imageUrl.includes('/uploads/')) {
+    //         return 'url';
+    //     }
+    //     return 'uploaded';
+    // };
+    //
+    // // Сохранение изменений
+    // const saveProductChanges = async () => {
+    //     if (!editingProduct) return;
+    //
+    //     // Валидация обязательных полей
+    //     if (!editingProduct.name || !editingProduct.price) {
+    //         toast.error('Заполните обязательные поля: название, цена, категория');
+    //         return;
+    //     }
+    //
+    //     try {
+    //         setIsSaving(true);
+    //
+    //         // Подготовка данных для отправки
+    //         const productData = {
+    //             ...editingProduct,
+    //             price: Number(editingProduct.price),
+    //             originalPrice: editingProduct.originalPrice ? Number(editingProduct.originalPrice) : undefined,
+    //             stemLength: editingProduct.stemLength ? Number(editingProduct.stemLength) : undefined,
+    //             quantity: editingProduct.quantity ? Number(editingProduct.quantity) : 0,
+    //             soldCount: editingProduct.soldCount ? Number(editingProduct.soldCount) : 0,
+    //             characteristics: editingProduct.characteristics.filter(char =>
+    //                 char.name && char.value && char.name.trim() !== '' && char.value.trim() !== ''
+    //             ),
+    //             flowerNames: editingProduct.flowerNames.filter(name => name && name.trim() !== ''),
+    //             // Изображения уже содержат как URL, так и пути к загруженным файлам
+    //             images: editingProduct.images
+    //         };
+    //
+    //         const response = await fetch(`${apiUrl}/api/admin/products/${editingProduct._id}`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             body: JSON.stringify(productData)
+    //         });
+    //
+    //         if (response.ok) {
+    //             toast.success('Товар успешно обновлен');
+    //             fetchProducts(currentPage);
+    //             setShowEditModal(false);
+    //             setEditingProduct(null);
+    //         } else {
+    //             throw new Error('Ошибка при обновлении товара');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error updating product:', error);
+    //         toast.error('Ошибка при обновлении товара');
+    //     } finally {
+    //         setIsSaving(false);
+    //     }
+    // };
 
     // Переключение активности товара - ИСПРАВЛЕННАЯ ВЕРСИЯ
     const toggleProductActive = async (productId, currentStatus) => {
