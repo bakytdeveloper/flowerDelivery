@@ -103,7 +103,7 @@ export const createProduct = async (req, res) => {
         const adminId = req.user.userId;
 
         // Проверка обязательных полей для цветов
-        if (!name || !price || !type || !occasion || !recipient || !flowerNames || !stemLength) {
+        if (!name || !price || !type || !stemLength) {
             return res.status(400).json({
                 message: 'Необходимо заполнить все обязательные поля'
             });

@@ -24,9 +24,9 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
             price: '',
             originalPrice: '',
             type: 'single',
-            occasion: '',
-            recipient: '',
-            flowerNames: [''],
+            occasion: '', // пустая строка вместо undefined
+            recipient: '', // пустая строка вместо undefined
+            flowerNames: [''], // оставляем одно пустое поле для удобства
             stemLength: '',
             characteristics: [],
             images: [],
@@ -178,18 +178,95 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
         }
     };
 
-    // Сохранение товара
+    // // Сохранение товара
+    // const handleSave = async () => {
+    //     // Валидация обязательных полей
+    //     if (!product.name || !product.price) {
+    //         toast.error('Заполните обязательные поля: название, цена, категория');
+    //         return;
+    //     }
+    //
+    //     if (!product.flowerNames || product.flowerNames.length === 0 || !product.flowerNames[0].trim()) {
+    //         toast.error('Добавьте хотя бы одно название цветка');
+    //         return;
+    //     }
+    //
+    //     try {
+    //         setIsSaving(true);
+    //
+    //         // Проверка на дубликат только при создании
+    //         if (!isEditing) {
+    //             const duplicateCheck = await checkDuplicate();
+    //             if (duplicateCheck.isDuplicate) {
+    //                 toast.error('Товар с таким названием и цветами уже существует');
+    //                 return;
+    //             }
+    //         }
+    //
+    //         // Подготовка данных
+    //         const productData = {
+    //             ...product,
+    //             price: Number(product.price),
+    //             originalPrice: product.originalPrice ? Number(product.originalPrice) : undefined,
+    //             stemLength: product.stemLength ? Number(product.stemLength) : undefined,
+    //             quantity: product.quantity ? Number(product.quantity) : 10,
+    //             soldCount: product.soldCount ? Number(product.soldCount) : 0,
+    //             characteristics: product.characteristics.filter(char =>
+    //                 char.name && char.value && char.name.trim() !== '' && char.value.trim() !== ''
+    //             ),
+    //             flowerNames: product.flowerNames.filter(name => name && name.trim() !== ''),
+    //             images: product.images
+    //         };
+    //
+    //         const url = isEditing
+    //             ? `${apiUrl}/api/admin/products/${product._id}`
+    //             : `${apiUrl}/api/admin/products`;
+    //
+    //         const method = isEditing ? 'PUT' : 'POST';
+    //
+    //         const response = await fetch(url, {
+    //             method,
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             body: JSON.stringify(productData)
+    //         });
+    //
+    //         if (response.ok) {
+    //             const savedProduct = await response.json();
+    //             // toast.success(isEditing ? 'Товар успешно обновлен' : 'Товар успешно создан');
+    //
+    //                 if (isEditing) {
+    //                     toast.success( 'Товар успешно обновлен');
+    //                 }
+    //
+    //             onSave(savedProduct);
+    //         } else {
+    //             const errorData = await response.json();
+    //             throw new Error(errorData.message || 'Ошибка при сохранении товара');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error saving product:', error);
+    //         toast.error(error.message || 'Ошибка при сохранении товара');
+    //     } finally {
+    //         setIsSaving(false);
+    //     }
+    // };
+
+    // В функции handleSave обновим валидацию:
     const handleSave = async () => {
-        // Валидация обязательных полей
-        if (!product.name || !product.price) {
-            toast.error('Заполните обязательные поля: название, цена, категория');
+        // Валидация обязательных полей (без occasion, recipient, flowerNames)
+        if (!product.name || !product.price || !product.type || !product.stemLength) {
+            toast.error('Заполните обязательные поля: название, цена, тип, длина стебля');
             return;
         }
 
-        if (!product.flowerNames || product.flowerNames.length === 0 || !product.flowerNames[0].trim()) {
-            toast.error('Добавьте хотя бы одно название цветка');
-            return;
-        }
+        // Убираем проверку на flowerNames
+        // if (!product.flowerNames || product.flowerNames.length === 0 || !product.flowerNames[0].trim()) {
+        //     toast.error('Добавьте хотя бы одно название цветка');
+        //     return;
+        // }
 
         try {
             setIsSaving(true);
@@ -203,7 +280,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                 }
             }
 
-            // Подготовка данных
+            // Подготовка данных - очищаем пустые значения
             const productData = {
                 ...product,
                 price: Number(product.price),
@@ -214,9 +291,20 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                 characteristics: product.characteristics.filter(char =>
                     char.name && char.value && char.name.trim() !== '' && char.value.trim() !== ''
                 ),
-                flowerNames: product.flowerNames.filter(name => name && name.trim() !== ''),
+                flowerNames: product.flowerNames ? product.flowerNames.filter(name => name && name.trim() !== '') : [],
+                // Очищаем пустые значения для необязательных полей
+                occasion: product.occasion && product.occasion.trim() !== '' ? product.occasion : undefined,
+                recipient: product.recipient && product.recipient.trim() !== '' ? product.recipient : undefined,
                 images: product.images
             };
+
+            // Удаляем полностью пустые массивы
+            if (productData.flowerNames.length === 0) {
+                delete productData.flowerNames;
+            }
+            if (productData.characteristics.length === 0) {
+                delete productData.characteristics;
+            }
 
             const url = isEditing
                 ? `${apiUrl}/api/admin/products/${product._id}`
@@ -235,12 +323,11 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
 
             if (response.ok) {
                 const savedProduct = await response.json();
-                // toast.success(isEditing ? 'Товар успешно обновлен' : 'Товар успешно создан');
-
-                    if (isEditing) {
-                        toast.success( 'Товар успешно обновлен');
-                    }
-
+                if (isEditing) {
+                    toast.success('Товар успешно обновлен');
+                } else {
+                    toast.success('Товар успешно создан');
+                }
                 onSave(savedProduct);
             } else {
                 const errorData = await response.json();
@@ -307,9 +394,9 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                 </div>
                                 {/* Повод */}
                                 <div className="form-group">
-                                    <label>Повод</label>
+                                    <label>Повод (необязательно)</label>
                                     <CustomSelect
-                                        value={product.occasion}
+                                        value={product.occasion || ''}
                                         onChange={(value) => handleChange('occasion', value)}
                                         options={[
                                             { value: '', label: 'Выберите повод' },
@@ -325,9 +412,9 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
 
                             {/* Кому */}
                             <div className="form-group"  style={{zIndex:"0"}}>
-                                <label>Кому</label>
+                                <label>Кому (необязательно)</label>
                                 <CustomSelect
-                                    value={product.recipient}
+                                    value={product.recipient || ''}
                                     onChange={(value) => handleChange('recipient', value)}
                                     options={[
                                         { value: '', label: 'Выберите получателя' },
@@ -396,6 +483,8 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                     <input
                                         type="number"
                                         value={product.soldCount}
+                                        disabled
+                                        style={{background: 'rgba(51, 65, 85, 0.6)'}}
                                         onChange={(e) => handleChange('soldCount', e.target.value)}
                                         className="form-control"
                                         placeholder="Количество проданных единиц"
@@ -407,17 +496,17 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                         {/* Названия цветов */}
                         {/* Названия цветов */}
                         <div className="form-section">
-                            <h4>Названия цветов *</h4>
+                            <h4>Названия цветов (необязательно)</h4>
                             <div className="flower-names-container">
                                 {product.flowerNames.map((flowerName, index) => (
                                     <div key={index} className="flower-name-item">
                                         <div className="flower-name-input">
                                             <input
                                                 type="text"
-                                                value={flowerName}
+                                                value={flowerName || ''}
                                                 onChange={(e) => handleFlowerNameChange(index, e.target.value)}
                                                 className="form-control form-control-input-name-flowers "
-                                                placeholder={`Название цветка ${index + 1}`}
+                                                placeholder={`Название цветка ${index + 1} (необязательно)`} // изменяем placeholder
                                                 required={index === 0}
                                             />
                                         </div>

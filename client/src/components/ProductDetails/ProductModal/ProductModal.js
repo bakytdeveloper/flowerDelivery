@@ -114,11 +114,11 @@ const ProductModal = ({ product, type, onClose, onAddToCart }) => {
                             <div className="modal-spec-item-wrapper-addon">
                                 <span className="modal-spec-label-wrapper-addon">Тип товара:</span>
                                 <span className="modal-spec-value-wrapper-addon">
-                  {type === 'wrapper'
-                      ? '🎁 Обёртка для букета'
-                      : getAddonTypeLabel(product.type)
-                  }
-                </span>
+                                  {type === 'wrapper'
+                                      ? '🎁 Обёртка для букета'
+                                      : getAddonTypeLabel(product.type)
+                                  }
+                                </span>
                             </div>
 
                             {product.material && (
@@ -174,8 +174,8 @@ const ProductModal = ({ product, type, onClose, onAddToCart }) => {
                         <div className="modal-stock-info-wrapper-addon">
                             {product.quantity > 0 ? (
                                 <span className="modal-in-stock-wrapper-addon">
-                  ✓ В наличии ({product.quantity} шт.)
-                </span>
+                                  ✓ В наличии ({product.quantity} шт.)
+                                </span>
                             ) : (
                                 <span className="modal-out-of-stock-wrapper-addon">✗ Нет в наличии</span>
                             )}

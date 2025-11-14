@@ -720,24 +720,29 @@ const ProductDetails = () => {
                                 </span>
                             </div>
 
-                            {product.occasion && (
+                            {/* Показываем occasion только если он есть */}
+                            {product.occasion && product.occasion.trim() !== '' && (
                                 <div className="spec-item">
                                     <span className="spec-label">Повод:</span>
                                     <span className="spec-value">{getOccasionLabel(product.occasion)}</span>
                                 </div>
                             )}
 
-                            {product.recipient && (
+                            {/* Показываем recipient только если он есть */}
+                            {product.recipient && product.recipient.trim() !== '' && (
                                 <div className="spec-item">
                                     <span className="spec-label">Кому:</span>
                                     <span className="spec-value">{getRecipientLabel(product.recipient)}</span>
                                 </div>
                             )}
 
-                            {product.flowerNames && product.flowerNames.length > 0 && (
+                            {/* Показываем flowerNames только если они есть */}
+                            {product.flowerNames && product.flowerNames.length > 0 && product.flowerNames.some(name => name && name.trim() !== '') && (
                                 <div className="spec-item">
                                     <span className="spec-label">Виды цветов:</span>
-                                    <span className="spec-value">{product.flowerNames.join(', ')}</span>
+                                    <span className="spec-value">
+                                        {product.flowerNames.filter(name => name && name.trim() !== '').join(', ')}
+                                    </span>
                                 </div>
                             )}
 
