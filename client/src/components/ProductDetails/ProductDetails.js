@@ -287,9 +287,9 @@ const ProductDetails = () => {
 
         if (loadingWrappers) {
             return (
-                <section className="season-section">
+                <section className="wrappers-section">
                     <div className="container-wide">
-                        <h2 className="season-title">Обёртки</h2>
+                        <h2 className="section-title">Обёртки</h2>
                         <div className="loading-products">
                             <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Загрузка...</span>
@@ -305,106 +305,80 @@ const ProductDetails = () => {
         }
 
         return (
-            <section className="season-section">
+            <section className="wrappers-section">
                 <div className="container-wide">
-                    <div className="season-header">
-                        <h2 className="season-title">Обёртки</h2>
+                    <div className="section-header">
+                        <h2 className="section-title">Обёртки</h2>
                     </div>
 
-                    <div className="season-container">
-                        <button
-                            className="scroll-btn scroll-btn-left d-none d-md-flex"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                const container = e.target.closest('.season-container').querySelector('.season-scroll-container');
-                                container.scrollBy({ left: -300, behavior: 'smooth' });
-                            }}
-                            aria-label="Прокрутить влево"
-                        >
-                            ‹
-                        </button>
+                    <div className="cards-scroll-container">
+                        <div className="cards-scroll-wrapper">
+                            {wrappers.map((wrapper) => (
+                                <div
+                                    key={wrapper._id}
+                                    className="product-card-wrapper"
+                                    onClick={() => openModal(wrapper, 'wrapper')}
+                                >
+                                    <div className="product-card-image-container">
+                                        <img
+                                            src={getImageUrl(wrapper.image)}
+                                            alt={wrapper.name}
+                                            className="product-card-image"
+                                            loading="lazy"
+                                            onError={(e) => {
+                                                e.target.src = '/images/placeholder-wrapper.jpg';
+                                            }}
+                                        />
+                                        {wrapper.originalPrice && wrapper.originalPrice > wrapper.price && (
+                                            <span className="discount-badge-card">
+                                                -{Math.round((1 - wrapper.price / wrapper.originalPrice) * 100)}%
+                                            </span>
+                                        )}
+                                    </div>
 
-                        <div className="season-scroll-container">
-                            <div className="season-products-row">
-                                {wrappers.map((wrapper) => (
-                                    <div
-                                        key={wrapper._id}
-                                        className="season-product-card"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => openModal(wrapper, 'wrapper')} // ИЗМЕНИТЕ НА openModal
-                                    >
-                                        {/* Остальной код карточки остается без изменений */}
-                                        <div className="product-image-container">
-                                            <img
-                                                src={getImageUrl(wrapper.image)}
-                                                alt={wrapper.name}
-                                                className="product-image"
-                                                loading="lazy"
-                                                onError={(e) => {
-                                                    e.target.src = '/images/placeholder-wrapper.jpg';
-                                                }}
-                                            />
-                                            {wrapper.originalPrice && wrapper.originalPrice > wrapper.price && (
-                                                <span className="discount-badge">
-                          -{Math.round((1 - wrapper.price / wrapper.originalPrice) * 100)}%
-                        </span>
+                                    <div className="product-card-info">
+                                        <h3 className="product-card-name">
+                                            {wrapper.name.length > 15 ? wrapper.name.slice(0, 15) + '…' : wrapper.name}
+                                        </h3>
+                                        <p className="product-card-description">
+                                            {wrapper.description?.length > 20
+                                                ? `${wrapper.description.slice(0, 20)}...`
+                                                : wrapper.description || 'Стильная упаковка для вашего букета'
+                                            }
+                                        </p>
+
+                                        <div className="product-card-price">
+                                            {wrapper.originalPrice && wrapper.originalPrice > wrapper.price ? (
+                                                <>
+                                                    <span className="original-price-card">
+                                                        {formatPrice(wrapper.originalPrice)}
+                                                    </span>
+                                                    <span className="current-price-card">
+                                                        {formatPrice(wrapper.price)}
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <span className="current-price-card">
+                                                    {formatPrice(wrapper.price)}
+                                                </span>
                                             )}
                                         </div>
 
-                                        <div className="cart-product-info">
-                                            <h3 className="product-name-catalog">{wrapper.name}</h3>
-                                            <p className="product-description-catalog">
-                                                {wrapper.description?.length > 20
-                                                    ? `${wrapper.description.slice(0, 20)}...`
-                                                    : wrapper.description || 'Стильная упаковка для вашего букета'
-                                                }
-                                            </p>
-
-                                            <div className="product-price-catalog">
-                                                {wrapper.originalPrice && wrapper.originalPrice > wrapper.price ? (
-                                                    <>
-                            <span className="original-price-catalog">
-                              {formatPrice(wrapper.originalPrice)}
-                            </span>
-                                                        <span className="current-price-catalog">
-                              {formatPrice(wrapper.price)}
-                            </span>
-                                                    </>
-                                                ) : (
-                                                    <span className="current-price-catalog">
-                            {formatPrice(wrapper.price)}
-                          </span>
-                                                )}
-                                            </div>
-
-                                            <div className="product-actions-wrapper">
-                                                <button
-                                                    className="btn-add-to-cart"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleAddWrapperToCart(wrapper);
-                                                    }}
-                                                >
-                                                    В корзину
-                                                </button>
-                                            </div>
+                                        <div className="product-card-actions">
+                                            <button
+                                                className="btn-add-to-cart-card"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleAddWrapperToCart(wrapper);
+                                                }}
+                                            >
+                                                В корзину
+                                            </button>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            ))}
                         </div>
-
-                        <button
-                            className="scroll-btn scroll-btn-right d-none d-md-flex"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                const container = e.target.closest('.season-container').querySelector('.season-scroll-container');
-                                container.scrollBy({ left: 300, behavior: 'smooth' });
-                            }}
-                            aria-label="Прокрутить вправо"
-                        >
-                            ›
-                        </button>
                     </div>
                 </div>
             </section>
@@ -415,9 +389,9 @@ const ProductDetails = () => {
     const AddonsSection = () => {
         if (loadingAddons) {
             return (
-                <section className="season-section">
+                <section className="addons-section">
                     <div className="container-wide">
-                        <h2 className="season-title">Дополнительные товары</h2>
+                        <h2 className="section-title">Дополнительные товары</h2>
                         <div className="loading-products">
                             <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Загрузка...</span>
@@ -433,123 +407,97 @@ const ProductDetails = () => {
         }
 
         return (
-            <section className="season-section">
+            <section className="addons-section">
                 <div className="container-wide">
-                    <div className="season-header">
-                        <h2 className="season-title">Дополнительные товары</h2>
+                    <div className="section-header">
+                        <h2 className="section-title">Дополнительные товары</h2>
                     </div>
 
-                    <div className="season-container">
-                        <button
-                            className="scroll-btn scroll-btn-left d-none d-md-flex"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                const container = e.target.closest('.season-container').querySelector('.season-scroll-container');
-                                container.scrollBy({ left: -300, behavior: 'smooth' });
-                            }}
-                            aria-label="Прокрутить влево"
-                        >
-                            ‹
-                        </button>
+                    <div className="cards-scroll-container">
+                        <div className="cards-scroll-wrapper">
+                            {addons.map((addon) => (
+                                <div
+                                    key={addon._id}
+                                    className="product-card-addon"
+                                    onClick={() => openModal(addon, 'addon')}
+                                >
+                                    <div className="product-card-image-container">
+                                        <img
+                                            src={getImageUrl(addon.image)}
+                                            alt={addon.name}
+                                            className="product-card-image"
+                                            loading="lazy"
+                                            onError={(e) => {
+                                                e.target.src = '/images/placeholder-addon.jpg';
+                                            }}
+                                        />
+                                        {addon.originalPrice && addon.originalPrice > addon.price && (
+                                            <span className="discount-badge-card">
+                                                -{Math.round((1 - addon.price / addon.originalPrice) * 100)}%
+                                            </span>
+                                        )}
+                                        <span className="addon-type-badge">
+                                            {addon.type === 'soft_toy' ? '🧸' :
+                                                addon.type === 'candy_box' ? '🍬' :
+                                                    addon.type === 'chocolate' ? '🍫' :
+                                                        addon.type === 'card' ? '💌' :
+                                                            addon.type === 'perfume' ? '💎' : '🎁'}
+                                        </span>
+                                    </div>
 
-                        <div className="season-scroll-container">
-                            <div className="season-products-row">
-                                {addons.map((addon) => (
-                                    <div
-                                        key={addon._id}
-                                        className="season-product-card"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => openModal(addon, 'addon')} // ИЗМЕНИТЕ НА openModal
-                                    >
-                                        {/* Остальной код карточки остается без изменений */}
-                                        <div className="product-image-container">
-                                            <img
-                                                src={getImageUrl(addon.image)}
-                                                alt={addon.name}
-                                                className="product-image"
-                                                loading="lazy"
-                                                onError={(e) => {
-                                                    e.target.src = '/images/placeholder-addon.jpg';
-                                                }}
-                                            />
-                                            {addon.originalPrice && addon.originalPrice > addon.price && (
-                                                <span className="discount-badge">
-                          -{Math.round((1 - addon.price / addon.originalPrice) * 100)}%
-                        </span>
-                                            )}
-                                            <span className="popular-badge">
-                        {addon.type === 'soft_toy' ? '🧸' :
-                            addon.type === 'candy_box' ? '🍬' :
-                                addon.type === 'chocolate' ? '🍫' :
-                                    addon.type === 'card' ? '💌' :
-                                        addon.type === 'perfume' ? '💎' : '🎁'}
-                      </span>
+                                    <div className="product-card-info">
+                                        <h3 className="product-card-name">
+                                            {addon.name.length > 15 ? addon.name.slice(0, 15) + '…' : addon.name}
+                                        </h3>
+                                        <p className="product-card-description">
+                                            {addon.description?.length > 20
+                                                ? `${addon.description.slice(0, 20)}...`
+                                                : addon.description || 'Отличное дополнение к вашему заказу'
+                                            }
+                                        </p>
+
+                                        <div className="product-card-meta">
+                                            <span className="product-card-type">
+                                                {addon.type === 'soft_toy' ? 'Мягкая игрушка' :
+                                                    addon.type === 'candy_box' ? 'Коробка конфет' :
+                                                        addon.type === 'chocolate' ? 'Шоколад' :
+                                                            addon.type === 'card' ? 'Открытка' :
+                                                                addon.type === 'perfume' ? 'Парфюм' : 'Другое'}
+                                            </span>
                                         </div>
 
-                                        <div className="cart-product-info">
-                                            <h3 className="product-name-catalog">{addon.name}</h3>
-                                            <p className="product-description-catalog">
-                                                {addon.description?.length > 20
-                                                    ? `${addon.description.slice(0, 20)}...`
-                                                    : addon.description || 'Отличное дополнение к вашему заказу'
-                                                }
-                                            </p>
+                                        <div className="product-card-price">
+                                            {addon.originalPrice && addon.originalPrice > addon.price ? (
+                                                <>
+                                                    <span className="original-price-card">
+                                                        {formatPrice(addon.originalPrice)}
+                                                    </span>
+                                                    <span className="current-price-card">
+                                                        {formatPrice(addon.price)}
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <span className="current-price-card">
+                                                    {formatPrice(addon.price)}
+                                                </span>
+                                            )}
+                                        </div>
 
-                                            <div className="product-meta-catalog">
-                        <span className="product-occasion-catalog">
-                          {addon.type === 'soft_toy' ? 'Мягкая игрушка' :
-                              addon.type === 'candy_box' ? 'Коробка конфет' :
-                                  addon.type === 'chocolate' ? 'Шоколад' :
-                                      addon.type === 'card' ? 'Открытка' :
-                                          addon.type === 'perfume' ? 'Парфюм' : 'Другое'}
-                        </span>
-                                            </div>
-
-                                            <div className="product-price-catalog">
-                                                {addon.originalPrice && addon.originalPrice > addon.price ? (
-                                                    <>
-                            <span className="original-price-catalog">
-                              {formatPrice(addon.originalPrice)}
-                            </span>
-                                                        <span className="current-price-catalog">
-                              {formatPrice(addon.price)}
-                            </span>
-                                                    </>
-                                                ) : (
-                                                    <span className="current-price-catalog">
-                            {formatPrice(addon.price)}
-                          </span>
-                                                )}
-                                            </div>
-
-                                            <div className="product-actions-wrapper">
-                                                <button
-                                                    className="btn-add-to-cart"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleAddAddonToCart(addon);
-                                                    }}
-                                                >
-                                                    В корзину
-                                                </button>
-                                            </div>
+                                        <div className="product-card-actions">
+                                            <button
+                                                className="btn-add-to-cart-card"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleAddAddonToCart(addon);
+                                                }}
+                                            >
+                                                В корзину
+                                            </button>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            ))}
                         </div>
-
-                        <button
-                            className="scroll-btn scroll-btn-right d-none d-md-flex"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                const container = e.target.closest('.season-container').querySelector('.season-scroll-container');
-                                container.scrollBy({ left: 300, behavior: 'smooth' });
-                            }}
-                            aria-label="Прокрутить вправо"
-                        >
-                            ›
-                        </button>
                     </div>
                 </div>
             </section>
