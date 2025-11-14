@@ -286,22 +286,22 @@ const CheckoutPage = () => {
                                         </div>
                                     </label>
 
-                                    <label className="payment-method">
-                                        <input
-                                            type="radio"
-                                            name="paymentMethod"
-                                            value="card"
-                                            checked={orderData.paymentMethod === 'card'}
-                                            onChange={handleInputChange}
-                                        />
-                                        <div className="payment-method-content">
-                                            <span className="payment-icon">💳</span>
-                                            <div>
-                                                <div className="payment-name">Банковской картой онлайн</div>
-                                                <div className="payment-description">Оплата через безопасный платежный шлюз</div>
-                                            </div>
-                                        </div>
-                                    </label>
+                                    {/*<label className="payment-method">*/}
+                                    {/*    <input*/}
+                                    {/*        type="radio"*/}
+                                    {/*        name="paymentMethod"*/}
+                                    {/*        value="card"*/}
+                                    {/*        checked={orderData.paymentMethod === 'card'}*/}
+                                    {/*        onChange={handleInputChange}*/}
+                                    {/*    />*/}
+                                    {/*    <div className="payment-method-content">*/}
+                                    {/*        <span className="payment-icon">💳</span>*/}
+                                    {/*        <div>*/}
+                                    {/*            <div className="payment-name">Банковской картой онлайн</div>*/}
+                                    {/*            <div className="payment-description">Оплата через безопасный платежный шлюз</div>*/}
+                                    {/*        </div>*/}
+                                    {/*    </div>*/}
+                                    {/*</label>*/}
                                 </div>
                             </div>
 
