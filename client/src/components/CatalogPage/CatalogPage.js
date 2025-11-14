@@ -5,7 +5,7 @@ import { useCart } from '../../contexts/CartContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './CatalogPage.css';
-import {occasionOptions} from "../../constants/constants";
+import {occasionOptions, recipientOptions} from "../../constants/constants";
 
 const CatalogPage = () => {
     const [products, setProducts] = useState([]);
@@ -29,11 +29,17 @@ const CatalogPage = () => {
     const { toggleFavorite, isFavorite, fetchFavorites } = useFavorites();
     const { addToCart } = useCart();
 
-    // Функции для получения переведенных значений
+    // Функция для получения переведенных значений
     const getOccasionLabel = (occasionValue) => {
         const occasion = occasionOptions.find(opt => opt.value === occasionValue);
         return occasion ? occasion.label : occasionValue;
     };
+
+    const getRecipientLabel = (recipientValue) => {
+        const recipient = recipientOptions.find(opt => opt.value === recipientValue);
+        return recipient ? recipient.label : recipientValue;
+    };
+
 
     // Прокрутка вверх при монтировании компонента и изменении фильтров
     useEffect(() => {
@@ -205,8 +211,8 @@ const CatalogPage = () => {
     const getActiveFiltersText = () => {
         const activeFilters = [];
         if (filters.type) activeFilters.push(`Тип: ${filters.type === 'single' ? 'Штучные' : 'Букеты'}`);
-        if (filters.occasion) activeFilters.push(`Повод: ${filters.occasion}`);
-        if (filters.recipient) activeFilters.push(`Кому: ${filters.recipient}`);
+        if (filters.occasion) activeFilters.push(`Повод: ${getOccasionLabel(filters.occasion)}`);
+        if (filters.recipient) activeFilters.push(`Кому: ${getRecipientLabel(filters.recipient)}`);
         if (filters.search) activeFilters.push(`Поиск: "${filters.search}"`);
 
         return activeFilters.length > 0 ? activeFilters.join(', ') : 'Все товары';
@@ -394,13 +400,13 @@ const CatalogPage = () => {
                                             />
                                             {product.discountPercentage > 0 && (
                                                 <span className="discount-badge">
-                -{product.discountPercentage}%
-            </span>
+                                                    -{product.discountPercentage}%
+                                                </span>
                                             )}
                                             {product.soldCount > 0 && (
                                                 <span className="popular-badge">
-                <span className="popular-badge-fire">🔥</span> Популярный
-            </span>
+                                                    <span className="popular-badge-fire">🔥</span> Популярный
+                                                </span>
                                             )}
                                         </div>
 
