@@ -155,71 +155,71 @@ const FavoritesPage = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="products-grid">
+                        // В разметке замените классы на новые:
+                        <div className="products-grid products-grid-favorites">
                             {favoriteProducts.map((product) => (
                                 <div
                                     key={product._id}
-                                    className="product-card"
+                                    className="product-card-favorites"
                                     onClick={() => handleProductClick(product._id)}
                                     style={{ cursor: 'pointer' }}
                                 >
-                                    {/* Карточка товара */}
-                                    <div className="product-image-container">
+                                    <div className="product-image-container product-image-container-favorites">
                                         <img
                                             src={product.images?.[0] || '/images/placeholder-flower.jpg'}
                                             alt={product.name}
-                                            className="product-image"
+                                            className="product-image product-image-favorites"
                                         />
                                         {product.discountPercentage > 0 && (
-                                            <span className="discount-badge">
-                                                -{product.discountPercentage}%
-                                            </span>
+                                            <span className="discount-badge discount-badge-favorites">
+                        -{product.discountPercentage}%
+                    </span>
                                         )}
                                         {product.soldCount > 0 && (
-                                            <span className="popular-badge">
-                                                🔥 Популярный
-                                            </span>
+                                            <span className="popular-badge popular-badge-favorites">
+                        <span className="popular-badge-fire">🔥</span> Популярный
+                    </span>
                                         )}
                                     </div>
 
-                                    <div className="cart-product-info">
-                                        <h3 className="product-name">{product.name}</h3>
-                                        <p className="product-description">
+                                    <div className="cart-product-info cart-product-info-favorites">
+                                        <h3 className="product-name product-name-favorites">{product.name}</h3>
+                                        <p className="product-description product-description-favorites">
                                             {product.description?.length > 20
                                                 ? `${product.description.slice(0, 20)}...`
                                                 : product.description
                                             }
                                         </p>
 
-                                        <div className="product-meta">
-                                            <span className={`product-type ${product.type}`}>
-                                                {product.type === 'single' ? '💐 Штучный' : '💮 Букет'}
-                                            </span>
-                                            <span className="product-occasion">
-                                                {product.occasion}
-                                            </span>
+                                        <div className="product-meta product-meta-favorites">
+                    <span className={`product-type product-type-favorites ${product.type}`}>
+                        {product.type === 'single' ? '💐 Штучный' : '💮 Букет'}
+                    </span>
+                                            <span className="product-occasion product-occasion-favorites">
+                        {product.occasion}
+                    </span>
                                         </div>
 
-                                        <div className="product-price">
+                                        <div className="product-price product-price-favorites">
                                             {product.originalPrice && product.originalPrice > product.price ? (
                                                 <>
-                                                    <span className="original-price">
-                                                        {formatPrice(product.originalPrice)}
-                                                    </span>
-                                                    <span className="current-price">
-                                                        {formatPrice(product.price)}
-                                                    </span>
+                            <span className="original-price original-price-favorites">
+                                {formatPrice(product.originalPrice)}
+                            </span>
+                                                    <span className="current-price current-price-favorites">
+                                {formatPrice(product.price)}
+                            </span>
                                                 </>
                                             ) : (
-                                                <span className="current-price">
-                                                    {formatPrice(product.price)}
-                                                </span>
+                                                <span className="current-price current-price-favorites">
+                            {formatPrice(product.price)}
+                        </span>
                                             )}
                                         </div>
 
-                                        <div className="product-actions">
+                                        <div className="product-actions product-actions-favorites">
                                             <button
-                                                className="btn-add-to-cart"
+                                                className="btn-add-to-cart btn-add-to-cart-favorites"
                                                 onClick={(e) => handleAddToCart(e, product)}
                                             >
                                                 В корзину
