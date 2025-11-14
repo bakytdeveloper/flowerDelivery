@@ -721,7 +721,7 @@ const ProductManagement = () => {
 
     const typeOptions = [
         { value: '', label: 'Все типы' },
-        { value: 'single', label: 'Одиночные' },
+        { value: 'single', label: 'Штучные' },
         { value: 'bouquet', label: 'Букеты' }
     ];
 

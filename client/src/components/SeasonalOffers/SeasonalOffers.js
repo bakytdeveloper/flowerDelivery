@@ -233,7 +233,7 @@ const SeasonalOffers = () => {
 
                                         <div className="product-meta-catalog">
                                             <span className={`product-type-catalog ${product.type}`}>
-                                                {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
+                                                {product.type === 'single' ? '💐 Штучный' : '💮 Букет'}
                                             </span>
                                             <span className="product-occasion-catalog">
                                                 {product.occasion}

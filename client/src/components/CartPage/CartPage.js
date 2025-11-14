@@ -337,7 +337,7 @@ const CartPage = () => {
                                         {item.itemType === 'flower' && (
                                             <div className="item-specs">
                                                 <span className="item-type">
-                                                    {item.flowerType === 'single' ? '💐 Одиночный цветок' : '💮 Букет'}
+                                                    {item.flowerType === 'single' ? '💐 Штучный цветок' : '💮 Букет'}
                                                 </span>
                                                 {item.flowerNames && item.flowerNames.length > 0 && (
                                                     <span className="item-flowers">

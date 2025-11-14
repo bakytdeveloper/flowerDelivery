@@ -299,7 +299,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                         value={product.type}
                                         onChange={(value) => handleChange('type', value)}
                                         options={[
-                                            { value: 'single', label: 'Одиночный цветок' },
+                                            { value: 'single', label: 'Штучный цветок' },
                                             { value: 'bouquet', label: 'Букет' }
                                         ]}
                                         className="form-control-background"

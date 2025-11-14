@@ -204,7 +204,7 @@ const CatalogPage = () => {
 
     const getActiveFiltersText = () => {
         const activeFilters = [];
-        if (filters.type) activeFilters.push(`Тип: ${filters.type === 'single' ? 'Одиночные' : 'Букеты'}`);
+        if (filters.type) activeFilters.push(`Тип: ${filters.type === 'single' ? 'Штучные' : 'Букеты'}`);
         if (filters.occasion) activeFilters.push(`Повод: ${filters.occasion}`);
         if (filters.recipient) activeFilters.push(`Кому: ${filters.recipient}`);
         if (filters.search) activeFilters.push(`Поиск: "${filters.search}"`);
@@ -414,28 +414,28 @@ const CatalogPage = () => {
                                             </p>
 
                                             <div className="product-meta-catalog">
-            <span className={`product-type-catalog ${product.type}`}>
-                {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
-            </span>
-                                                <span className="product-occasion-catalog">
-                {getOccasionLabel(product.occasion)}
-            </span>
+                                                <span className={`product-type-catalog ${product.type}`}>
+                                                    {product.type === 'single' ? '💐 Штучный' : '💮 Букет'}
+                                                </span>
+                                                                                    <span className="product-occasion-catalog">
+                                                    {getOccasionLabel(product.occasion)}
+                                                </span>
                                             </div>
 
                                             <div className="product-price-catalog">
                                                 {product.originalPrice && product.originalPrice > product.price ? (
                                                     <>
-                    <span className="original-price-catalog">
-                        {formatPrice(product.originalPrice)}
-                    </span>
+                                                        <span className="original-price-catalog">
+                                                            {formatPrice(product.originalPrice)}
+                                                        </span>
                                                         <span className="current-price-catalog">
-                        {formatPrice(product.price)}
-                    </span>
+                                                            {formatPrice(product.price)}
+                                                        </span>
                                                     </>
                                                 ) : (
                                                     <span className="current-price-catalog">
-                    {formatPrice(product.price)}
-                </span>
+                                                        {formatPrice(product.price)}
+                                                    </span>
                                                 )}
                                             </div>
 

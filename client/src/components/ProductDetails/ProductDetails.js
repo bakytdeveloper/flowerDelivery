@@ -716,8 +716,8 @@ const ProductDetails = () => {
                             <div className="spec-item">
                                 <span className="spec-label">Тип:</span>
                                 <span className="spec-value">
-      {product.type === 'single' ? '💐 Одиночный цветок' : '💮 Букет'}
-    </span>
+                                  {product.type === 'single' ? '💐 Штучный цветок' : '💮 Букет'}
+                                </span>
                             </div>
 
                             {product.occasion && (

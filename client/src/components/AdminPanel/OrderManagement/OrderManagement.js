@@ -646,7 +646,7 @@ const OrderDetailsModal = ({ order, onClose, onUpdate, token }) => {
     // Получение русского названия типа цветов
     const getFlowerTypeLabel = (type) => {
         const typeLabels = {
-            'single': 'Одиночный цветок',
+            'single': 'Штучный цветок',
             'bouquet': 'Букет'
         };
         return typeLabels[type] || type;

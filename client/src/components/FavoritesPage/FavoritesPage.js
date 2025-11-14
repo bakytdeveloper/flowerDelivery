@@ -193,7 +193,7 @@ const FavoritesPage = () => {
 
                                         <div className="product-meta">
                                             <span className={`product-type ${product.type}`}>
-                                                {product.type === 'single' ? '💐 Одиночный' : '💮 Букет'}
+                                                {product.type === 'single' ? '💐 Штучный' : '💮 Букет'}
                                             </span>
                                             <span className="product-occasion">
                                                 {product.occasion}

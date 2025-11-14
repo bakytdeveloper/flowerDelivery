@@ -374,7 +374,7 @@ const CheckoutPage = () => {
                                             {item.itemType === 'flower' && (
                                                 <>
                                                     <div className="order-item-spec">
-                                                        {item.flowerType === 'single' ? '💐 Одиночный цветок' : '💮 Букет'}
+                                                        {item.flowerType === 'single' ? '💐 Штучный цветок' : '💮 Букет'}
                                                     </div>
                                                     {item.flowerNames && item.flowerNames.length > 0 && (
                                                         <div className="order-item-spec">

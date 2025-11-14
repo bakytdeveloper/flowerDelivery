@@ -45,7 +45,7 @@ async function sendOrderEmail(order, userType) {
                 let itemInfo = `• ${itemName} - ${quantity} шт. × ${price} сом = ${basePrice} сом`;
 
                 if (item.flowerType) {
-                    itemInfo += `\n  Тип: ${item.flowerType === 'single' ? 'Одиночный цветок' : 'Букет'}`;
+                    itemInfo += `\n  Тип: ${item.flowerType === 'single' ? 'Штучный цветок' : 'Букет'}`;
                 }
                 if (item.flowerNames && Array.isArray(item.flowerNames) && item.flowerNames.length > 0) {
                     itemInfo += `\n  Цветы: ${item.flowerNames.join(', ')}`;
