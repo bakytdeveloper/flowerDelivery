@@ -200,6 +200,8 @@ span {
   animation: pulse 1.5s infinite;
 }
 
+
+
 /* Animations */
 @keyframes spin {
   to {

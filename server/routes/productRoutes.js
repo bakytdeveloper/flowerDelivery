@@ -14,6 +14,7 @@ import {
     getProductsByOccasion,
     getCatalogData
 } from '../controllers/productController.js';
+import  { getProductVariants } from "../controllers/adminController.js";
 import {
     authenticateToken,
     requireAdmin
@@ -33,6 +34,7 @@ router.get('/occasion/:occasion', getProductsByOccasion);
 router.get('/catalog/data', getCatalogData);
 router.get('/related/:productId', getRelatedProducts);
 router.get('/:id/rating', getProductRating);
+router.get('/:productId/variants', getProductVariants);
 
 // Публичные маршруты для оберток
 router.get('/wrappers/available', getAvailableWrappers);

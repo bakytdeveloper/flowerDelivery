@@ -35,7 +35,7 @@
 //         type: Number,
 //         default: 0
 //     }
-// }, { _id: false }); // Отключаем _id для вложенных документов
+// }, { _id: false });
 //
 // // Схема для цветов в заказе
 // const flowerOrderItemSchema = new mongoose.Schema({
@@ -79,7 +79,7 @@
 //     // Информация об обертке - разрешаем null
 //     wrapper: {
 //         type: wrapperSchema,
-//         default: null // Явно указываем default как null
+//         default: null
 //     },
 //     itemType: {
 //         type: String,
@@ -189,12 +189,92 @@
 //     },
 // });
 //
+// // Middleware для автоматического расчета itemTotal и totalAmount
+// orderSchema.pre('save', function(next) {
+//     // Вычисляем itemTotal для каждого цветка
+//     this.flowerItems.forEach(item => {
+//         let itemTotal = item.price * item.quantity;
+//
+//         // Добавляем стоимость упаковки, если есть
+//         if (item.wrapper && item.wrapper.price) {
+//             itemTotal += item.wrapper.price;
+//         }
+//
+//         item.itemTotal = itemTotal;
+//     });
+//
+//     // Вычисляем itemTotal для каждого доп. товара
+//     this.addonItems.forEach(item => {
+//         item.itemTotal = item.price * item.quantity;
+//     });
+//
+//     // Вычисляем общую сумму заказа
+//     const flowersTotal = this.flowerItems.reduce((total, item) => total + item.itemTotal, 0);
+//     const addonsTotal = this.addonItems.reduce((total, item) => total + item.itemTotal, 0);
+//
+//     this.totalAmount = flowersTotal + addonsTotal;
+//
+//     next();
+// });
+//
+// // Статический метод для пересчета заказа (если нужно обновить вручную)
+// orderSchema.statics.recalculateOrder = async function(orderId) {
+//     const order = await this.findById(orderId);
+//     if (!order) {
+//         throw new Error('Order not found');
+//     }
+//
+//     await order.save(); // Вызовет pre-save hook
+//     return order;
+// };
+//
+// // Виртуальное поле для общего количества товаров
+// orderSchema.virtual('totalItems').get(function() {
+//     const flowersCount = this.flowerItems.reduce((total, item) => total + item.quantity, 0);
+//     const addonsCount = this.addonItems.reduce((total, item) => total + item.quantity, 0);
+//     return flowersCount + addonsCount;
+// });
+//
+// // Виртуальное поле для проверки наличия упаковки
+// orderSchema.virtual('hasWrappers').get(function() {
+//     return this.flowerItems.some(item => item.wrapper && item.wrapper.wrapperId);
+// });
+//
+// // Метод экземпляра для получения детальной информации о стоимости
+// orderSchema.methods.getCostBreakdown = function() {
+//     const flowersSubtotal = this.flowerItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+//     const addonsSubtotal = this.addonItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+//     const wrappersTotal = this.flowerItems.reduce((total, item) => {
+//         return total + (item.wrapper && item.wrapper.price ? item.wrapper.price : 0);
+//     }, 0);
+//
+//     return {
+//         flowersSubtotal,
+//         addonsSubtotal,
+//         wrappersTotal,
+//         totalAmount: this.totalAmount
+//     };
+// };
+//
+// // Убедимся, что виртуальные поля включаются в JSON
+// orderSchema.set('toJSON', {
+//     virtuals: true,
+//     transform: function(doc, ret) {
+//         delete ret.__v;
+//         return ret;
+//     }
+// });
+//
+// orderSchema.set('toObject', {
+//     virtuals: true,
+//     transform: function(doc, ret) {
+//         delete ret.__v;
+//         return ret;
+//     }
+// });
+//
 // const Order = mongoose.model('Order', orderSchema);
 // export default Order;
-
-
-
-
 
 
 import mongoose from 'mongoose';
@@ -248,6 +328,27 @@ const flowerOrderItemSchema = new mongoose.Schema({
         type: String,
         enum: ['single', 'bouquet'],
         required: true
+    },
+    // Выбранный цвет (только для одиночных цветов)
+    selectedColor: {
+        name: {
+            type: String
+        },
+        value: {
+            type: String
+        },
+        image: {
+            type: String
+        }
+    },
+    // Выбранная длина стебля
+    selectedStemLength: {
+        length: {
+            type: Number
+        },
+        price: {
+            type: Number
+        }
     },
     category: {
         type: String
@@ -439,6 +540,16 @@ orderSchema.virtual('hasWrappers').get(function() {
     return this.flowerItems.some(item => item.wrapper && item.wrapper.wrapperId);
 });
 
+// Виртуальное поле для проверки наличия выбранных цветов
+orderSchema.virtual('hasColorSelection').get(function() {
+    return this.flowerItems.some(item => item.selectedColor && item.selectedColor.value);
+});
+
+// Виртуальное поле для проверки наличия выбранных длин стеблей
+orderSchema.virtual('hasStemLengthSelection').get(function() {
+    return this.flowerItems.some(item => item.selectedStemLength && item.selectedStemLength.length);
+});
+
 // Метод экземпляра для получения детальной информации о стоимости
 orderSchema.methods.getCostBreakdown = function() {
     const flowersSubtotal = this.flowerItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -451,6 +562,66 @@ orderSchema.methods.getCostBreakdown = function() {
         flowersSubtotal,
         addonsSubtotal,
         wrappersTotal,
+        totalAmount: this.totalAmount
+    };
+};
+
+// Метод для получения информации о выбранных вариантах
+orderSchema.methods.getSelectedVariants = function() {
+    const variants = {
+        colors: [],
+        stemLengths: []
+    };
+
+    this.flowerItems.forEach(item => {
+        if (item.selectedColor && item.selectedColor.value) {
+            variants.colors.push({
+                productName: item.name,
+                color: item.selectedColor
+            });
+        }
+
+        if (item.selectedStemLength && item.selectedStemLength.length) {
+            variants.stemLengths.push({
+                productName: item.name,
+                stemLength: item.selectedStemLength
+            });
+        }
+    });
+
+    return variants;
+};
+
+// Метод для форматирования информации о заказе для email/уведомлений
+orderSchema.methods.getFormattedOrderDetails = function() {
+    const flowerDetails = this.flowerItems.map(item => {
+        let details = `• ${item.name} - ${item.quantity} шт. × ${item.price} ₸ = ${item.itemTotal} ₸`;
+
+        // Добавляем информацию о выбранном цвете
+        if (item.selectedColor && item.selectedColor.name) {
+            details += `\n  Цвет: ${item.selectedColor.name}`;
+        }
+
+        // Добавляем информацию о выбранной длине стебля
+        if (item.selectedStemLength && item.selectedStemLength.length) {
+            details += `\n  Длина стебля: ${item.selectedStemLength.length} см`;
+        }
+
+        // Добавляем информацию об упаковке
+        if (item.wrapper && item.wrapper.name) {
+            details += `\n  Упаковка: ${item.wrapper.name} (+${item.wrapper.price} ₸)`;
+        }
+
+        return details;
+    }).join('\n\n');
+
+    const addonDetails = this.addonItems.map(item =>
+        `• ${item.name} - ${item.quantity} шт. × ${item.price} ₸ = ${item.itemTotal} ₸`
+    ).join('\n');
+
+    return {
+        flowerDetails,
+        addonDetails,
         totalAmount: this.totalAmount
     };
 };
