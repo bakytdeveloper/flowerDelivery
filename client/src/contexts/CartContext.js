@@ -412,7 +412,7 @@ export const CartProvider = ({ children }) => {
                 headers['X-Session-Id'] = sessionId;
             }
 
-            const response = await fetch(`${apiUrl}/api/cart/add-flower`, {
+            const response = await fetch(`${apiUrl}/api/cart/flowers`, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify(productData)

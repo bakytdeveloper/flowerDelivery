@@ -2544,9 +2544,9 @@ const ProductDetails = () => {
                         )}
 
                         {/* Блок выбора цвета и длины стебля */}
-                        <div className="product-variants">
+                        {product.type === 'single' && availableVariants.colors.length > 0 && availableVariants.stemLengths.length > 0  && (<div className="product-variants">
                             {/* Выбор цвета (только для одиночных цветов) */}
-                            {product.type === 'single' && availableVariants.colors.length > 0 && (
+                            {product.type === 'single' &&  availableVariants.colors.length > 0 && (
                                 <div className="variant-section">
                                     <h4>Цвет:</h4>
                                     <div className="color-options">
@@ -2558,7 +2558,7 @@ const ProductDetails = () => {
                                             >
                                                 <div
                                                     className="color-swatch"
-                                                    style={{ backgroundColor: color.value }}
+                                                    style={{backgroundColor: color.value}}
                                                     title={color.name}
                                                 />
                                                 <span className="color-name">{color.name}</span>
@@ -2569,7 +2569,7 @@ const ProductDetails = () => {
                             )}
 
                             {/* Выбор длины стебля */}
-                            {availableVariants.stemLengths.length > 0 && (
+                            {product.type === 'single' && availableVariants.stemLengths.length > 0 && (
                                 <div className="variant-section">
                                     <h4>Длина стебля:</h4>
                                     <div className="stem-length-options">
@@ -2595,7 +2595,7 @@ const ProductDetails = () => {
                                     </div>
                                 </div>
                             )}
-                        </div>
+                        </div>)}
 
                         {/* Характеристики товара */}
                         <div className="product-specs">

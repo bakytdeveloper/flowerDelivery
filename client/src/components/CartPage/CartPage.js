@@ -860,14 +860,7 @@ const CartPage = () => {
             return (
                 <div className="item-color-info">
                     <span className="color-label">Цвет:</span>
-                    <div className="color-display">
-                        <div
-                            className="color-swatch-small"
-                            style={{ backgroundColor: item.selectedColor.value }}
-                            title={item.selectedColor.name}
-                        />
-                        <span className="color-name">{item.selectedColor.name}</span>
-                    </div>
+                    <span style={{color: item.selectedColor.value }} className="color-name">{item.selectedColor.name}</span>
                 </div>
             );
         }
