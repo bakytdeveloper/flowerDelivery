@@ -102,7 +102,8 @@ export const getRecentReviews = async (req, res) => {
             .populate('user', 'name')
             .populate('product', 'name')
             .sort({ createdAt: -1 })
-            .limit(10);
+            .limit(10)
+            .lean(); // Используем lean() для получения простых объектов
 
         res.json(reviews);
     } catch (error) {
