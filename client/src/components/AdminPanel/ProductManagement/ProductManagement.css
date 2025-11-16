@@ -543,6 +543,37 @@
 .btn-danger:hover {
     background: #c82333;
 }
+/*1234567890*/
+
+.product-management-card {
+    height: 550px!important;
+}
+
+.product-management-card-name {
+    margin-bottom: 2px!important;
+}
+
+.product-management-card-description {
+    margin-bottom: 2px!important;
+}
+
+.product-management-card-price {
+    margin-bottom: 3px!important;
+}
+
+.product-management-image-container {
+    height: 55% !important;
+}
+
+.product-management-info {
+    height: 40% !important;
+}
+
+.product-management-actions-admin {
+    margin-top: 0!important;
+    padding-top: 5px!important;
+}
+
 
 /* Адаптивность */
 @media (max-width: 1200px) {
@@ -567,7 +598,12 @@
     }
 
     .products-grid-admin {
-        grid-template-columns: 1fr;
+        grid-template-columns: 450fr;
+    }
+
+
+    .product-management-card {
+        height: 620px!important;
     }
 
     .product-actions-admin {

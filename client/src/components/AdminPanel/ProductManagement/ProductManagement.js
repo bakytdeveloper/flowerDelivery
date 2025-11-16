@@ -532,8 +532,8 @@ const ProductManagement = () => {
                 <>
                     <div className="addons-grid-admin">
                         {products.map((product) => (
-                            <div key={product._id} className="addon-card-admin">
-                                <div className="addon-image-container">
+                            <div key={product._id} className="addon-card-admin product-management-card">
+                                <div className="addon-image-container product-management-image-container">
                                     <img
                                         src={product.images?.[0] || '/images/placeholder-flower.jpg'}
                                         alt={product.name}
@@ -552,24 +552,24 @@ const ProductManagement = () => {
                                     </div>
                                 </div>
 
-                                <div className="addon-info">
-                                    <h3 className="addon-name">{product.name}</h3>
+                                <div className="addon-info product-management-info">
+                                    <h3 className="addon-name product-management-card-name">{product.name}</h3>
                                     {product.description && (
-                                        <p className="addon-description">
-                                            {product.description.length > 80
-                                                ? `${product.description.slice(0, 80)}...`
+                                        <p className="addon-description product-management-card-description">
+                                            {product.description.length > 20
+                                                ? `${product.description.slice(0, 20)}...`
                                                 : product.description
                                             }
                                         </p>
                                     )}
-                                    <div className="addon-details">
-                                        <div className="detail-item">
+                                    <div className="addon-details product-management-card-details">
+                                        <div className="detail-item product-management-card-item">
                                             <span className="detail-label">В наличии:</span>
                                             <span className="detail-value">{product.quantity} шт</span>
                                         </div>
                                     </div>
 
-                                    <div className="addon-price-admin">
+                                    <div className="addon-price-admin product-management-card-price">
                                         {product.originalPrice && product.originalPrice > product.price ? (
                                             <>
                                             <span className="original-price">
@@ -586,7 +586,7 @@ const ProductManagement = () => {
                                         )}
                                     </div>
 
-                                    <div className="addon-actions-admin">
+                                    <div className="addon-actions-admin product-management-actions-admin">
                                         <button
                                             className={`btn-status ${product.isActive ? 'btn-active' : 'btn-inactive'}`}
                                             onClick={() => toggleProductActive(product._id, product.isActive)}
