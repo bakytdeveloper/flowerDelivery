@@ -345,7 +345,7 @@
 }
 
 .btn-add-to-cart-large {
-    flex: 2;
+    flex: 1.5;
     background: linear-gradient(135deg, #7e94f5 0%, #764ba2 100%);
     color: white;
     border: none;
