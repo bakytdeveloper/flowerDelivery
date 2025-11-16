@@ -823,10 +823,6 @@
 // };
 //
 // export default ProductDetails;
-
-
-
-
 // import React, { useState, useEffect } from 'react';
 // import { useParams, useNavigate, useLocation } from 'react-router-dom';
 // import { useFavorites } from '../../hooks/useFavorites';
@@ -2417,6 +2413,14 @@ const ProductDetails = () => {
                                     e.target.src = '/images/placeholder-flower.jpg';
                                 }}
                             />
+
+                            {/* ПЕРЕНЕСЕННЫЙ ПОПУЛЯРНЫЙ ТЕГ */}
+                            {product.soldCount > 0 && (
+                                <span className="popular-tag-on-image">
+                                    <span className="popular-badge-fire">🔥</span> Продано: <span style={{fontWeight:"bold"}}>{product.soldCount}</span>
+                                </span>
+                            )}
+
                             {product.images && product.images.length > 1 && (
                                 <>
                                     <button
@@ -2465,11 +2469,11 @@ const ProductDetails = () => {
                     <div className="product-info">
                         <div className="product-header">
                             <h1 className="product-title">{product.name}</h1>
-                            {product.soldCount > 0 && (
-                                <span className="popular-tag popular-tag-product-details">
-                                    <span className="popular-badge-fire">🔥</span> Продано: <span style={{fontWeight:"bold"}}>{product.soldCount}</span>
-                                </span>
-                            )}
+                            {/*{product.soldCount > 0 && (*/}
+                            {/*    <span className="popular-tag popular-tag-product-details">*/}
+                            {/*        <span className="popular-badge-fire">🔥</span> Продано: <span style={{fontWeight:"bold"}}>{product.soldCount}</span>*/}
+                            {/*    </span>*/}
+                            {/*)}*/}
                         </div>
 
                         {/* Обновленное отображение цены */}

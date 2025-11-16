@@ -215,7 +215,7 @@
 .current-price-large {
     font-size: 2rem;
     font-weight: 700;
-    color: #10b981;
+    color: #02fa39;
 }
 
 /* Описание */
@@ -1183,6 +1183,11 @@
         font-size: 1.8rem;
     }
 
+    .product-info {
+        padding-left: 2px!important;
+        padding-right: 2px!important;
+    }
+
     .cards-scroll-wrapper {
         gap: 1rem;
         padding: 0 0.5rem;
@@ -1904,4 +1909,327 @@
 .quantity-btn:disabled:hover {
     transform: none;
     background: rgba(96, 165, 250, 0.2) !important;
+}
+
+
+/* ===== ОБНОВЛЕННЫЕ СТИЛИ ДЛЯ POPULAR-TAG НА ИЗОБРАЖЕНИИ ===== */
+.main-image-container {
+    position: relative;
+}
+
+.popular-tag-on-image {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, #ffa200, #f86604) !important;
+    color: white;
+    padding: 10px 12px !important;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(248, 102, 4, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.popular-badge-fire {
+    margin-right: 4px;
+}
+
+/* Убираем старый стиль из заголовка */
+.product-header .popular-tag-product-details {
+    display: none;
+}
+
+/* ===== УЛУЧШЕННЫЕ СТИЛИ ДЛЯ PRODUCT-VARIANTS ===== */
+.product-variants {
+    margin: 1rem 0;
+    padding: 1.2rem;
+    background: rgba(30, 41, 59, 0.4);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.variant-section {
+    margin-bottom: 1.2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.variant-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.variant-section h4 {
+    color: #f1f5f9;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Компактные цветовые опции */
+.color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.3rem;
+}
+
+.color-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(15, 23, 42, 0.4);
+    min-width: 70px;
+    position: relative;
+}
+
+.color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease;
+}
+
+.color-name {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    font-weight: 500;
+    text-align: center;
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Компактные опции длины стебля */
+.stem-length-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 0.6rem;
+    margin-top: 0.3rem;
+}
+
+.stem-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(15, 23, 42, 0.4);
+    text-align: center;
+    position: relative;
+}
+
+.stem-length {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #f1f5f9;
+}
+
+.stem-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+}
+
+.stem-price .current-price {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #10b981;
+}
+
+.stem-original-price {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+/* Улучшенные состояния hover и selected */
+.color-option:hover,
+.stem-option:hover {
+    background: rgba(96, 165, 250, 0.1);
+    transform: translateY(-1px);
+}
+
+.color-option.selected,
+.stem-option.selected {
+    border-color: #60a5fa;
+    background: rgba(96, 165, 250, 0.15);
+}
+
+.color-option.selected .color-swatch {
+    border-color: #ffffff;
+    transform: scale(1.05);
+}
+
+/* Индикаторы выбора */
+.color-option.selected::after,
+.stem-option.selected::after {
+    content: "✓";
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #10b981;
+    color: white;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.4);
+}
+
+/* ===== АДАПТИВНОСТЬ ДЛЯ ОБНОВЛЕННЫХ СТИЛЕЙ ===== */
+@media (max-width: 968px) {
+    .popular-tag-on-image {
+        font-size: 0.75rem;
+        padding: 8px 10px !important;
+    }
+
+    .product-variants {
+        padding: 1rem;
+    }
+
+    .color-option {
+        min-width: 65px;
+        padding: 0.5rem;
+    }
+
+    .color-swatch {
+        width: 28px;
+        height: 28px;
+    }
+
+    .stem-length-options {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .popular-tag-on-image {
+        top: 0.5rem;
+        right: 0.5rem;
+        font-size: 0.7rem;
+        padding: 6px 8px !important;
+    }
+
+    .product-variants {
+        padding: 0.8rem;
+        margin: 0.8rem 0;
+    }
+
+    .variant-section h4 {
+        font-size: 0.9rem;
+    }
+
+    .color-options {
+        gap: 0.4rem;
+    }
+
+    .color-option {
+        min-width: 60px;
+    }
+
+    .color-name {
+        font-size: 0.7rem;
+        max-width: 55px;
+    }
+
+    .stem-length-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stem-option {
+        padding: 0.6rem;
+    }
+
+    .stem-length {
+        font-size: 0.85rem;
+    }
+
+    .stem-price .current-price {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .popular-tag-on-image {
+        font-size: 0.65rem;
+        padding: 5px 7px !important;
+    }
+
+    .product-variants {
+        padding: 0.6rem;
+    }
+
+    .color-options {
+        justify-content: center;
+    }
+
+    .color-option {
+        min-width: 55px;
+        padding: 0.4rem;
+    }
+
+    .color-swatch {
+        width: 24px;
+        height: 24px;
+    }
+
+    .stem-length-options {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+    }
+
+    .variant-section h4 {
+        font-size: 0.85rem;
+    }
+}
+
+/* Скрываем блок вариантов если нет доступных опций */
+.product-variants:empty {
+    display: none;
+}
+
+/* Плавные анимации */
+.popular-tag-on-image {
+    animation: slideInFromTop 0.5s ease-out;
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-variants {
+    animation: fadeInScale 0.4s ease-out;
 }
