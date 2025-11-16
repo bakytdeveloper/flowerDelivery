@@ -31,6 +31,7 @@ const ProfilePage = () => {
     const [loading, setLoading] = useState(false);
     const [ordersLoading, setOrdersLoading] = useState(false);
     const location = useLocation();
+    // eslint-disable-next-line
     const { token, user } = useAuth();
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
 
@@ -46,6 +47,7 @@ const ProfilePage = () => {
     useEffect(() => {
         fetchProfileData();
         fetchUserStats();
+        // eslint-disable-next-line
     }, []);
 
     // Прокрутка вверх при монтировании компонента и изменении фильтров
@@ -62,6 +64,7 @@ const ProfilePage = () => {
         if (activeTab === 'orders') {
             fetchOrders();
         }
+        // eslint-disable-next-line
     }, [activeTab]);
 
     const fetchProfileData = async () => {
@@ -95,7 +98,7 @@ const ProfilePage = () => {
     const fetchOrders = async () => {
         try {
             setOrdersLoading(true);
-            const response = await fetch(`${apiUrl}/api/users/orders`, {
+            const response = await fetch(`${apiUrl}/api/orders/my-orders`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
