@@ -76,7 +76,7 @@ const CheckoutPage = () => {
             return (item.price || item.itemTotal || 0) * item.quantity;
         } else {
             // Для цветов: используем itemTotal * количество
-            return (item.itemTotal || 0) * item.quantity;
+            return (+item.itemTotal || 0);
         }
     };
 

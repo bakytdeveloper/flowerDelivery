@@ -8,162 +8,6 @@ import {
     transporter
 } from '../smtp/otpService.js';
 
-// // Функция для отправки email о новом заказе
-// async function sendOrderEmail(order, userType) {
-//     try {
-//         const {
-//             _id,
-//             firstName,
-//             address,
-//             phoneNumber,
-//             totalAmount,
-//             paymentMethod,
-//             comments,
-//             flowerItems = [],
-//             addonItems = []
-//         } = order;
-//
-//         const userTypeText = {
-//             'customer': 'Зарегистрированный клиент',
-//             'guest': 'Гость'
-//         }[userType] || 'Пользователь';
-//
-//         // Безопасное форматирование списка цветов
-//         const flowerList = flowerItems
-//             .filter(item => item && typeof item === 'object') // Фильтруем null и не объекты
-//             .map(item => {
-//                 // Безопасное извлечение свойств
-//                 const itemName = item?.name || 'Неизвестный товар';
-//                 const quantity = item?.quantity || 0;
-//                 const price = item?.price || 0;
-//                 const itemTotal = item?.itemTotal || 0;
-//                 const wrapperPrice = item?.wrapper?.price || 0;
-//
-//                 // Безопасный расчет стоимости без упаковки
-//                 const basePrice = Math.max(0, itemTotal - wrapperPrice);
-//
-//                 let itemInfo = `• ${itemName} - ${quantity} шт. × ${price} сом = ${basePrice} сом`;
-//
-//                 if (item.flowerType) {
-//                     itemInfo += `\n  Тип: ${item.flowerType === 'single' ? 'Штучный цветок' : 'Букет'}`;
-//                 }
-//                 if (item.flowerNames && Array.isArray(item.flowerNames) && item.flowerNames.length > 0) {
-//                     itemInfo += `\n  Цветы: ${item.flowerNames.join(', ')}`;
-//                 }
-//                 if (item.stemLength) {
-//                     itemInfo += `\n  Длина стебля: ${item.stemLength} см`;
-//                 }
-//                 if (item.occasion) {
-//                     itemInfo += `\n  Повод: ${item.occasion}`;
-//                 }
-//                 if (item.recipient) {
-//                     itemInfo += `\n  Для: ${item.recipient}`;
-//                 }
-//                 if (item.wrapper && item.wrapper.name) {
-//                     itemInfo += `\n  Упаковка: ${item.wrapper.name} (+${item.wrapper.price} сом)`;
-//                 }
-//
-//                 return itemInfo;
-//             }).join('\n\n');
-//
-//         // Безопасное форматирование списка дополнительных товаров
-//         const addonList = addonItems
-//             .filter(item => item && typeof item === 'object') // Фильтруем null и не объекты
-//             .map(item => {
-//                 const itemName = item?.name || 'Неизвестный товар';
-//                 const quantity = item?.quantity || 0;
-//                 const price = item?.price || 0;
-//                 const itemTotal = item?.itemTotal || 0;
-//                 const itemType = item?.type || 'доп. товар';
-//
-//                 return `• ${itemName} (${itemType}) - ${quantity} шт. × ${price} сом = ${itemTotal} сом`;
-//             }).join('\n');
-//
-//         const mailOptions = {
-//             from: process.env.EMAIL_USER,
-//             to: process.env.SMTP_USER,
-//             subject: `🎉 НОВЫЙ ЗАКАЗ ЦВЕТОВ #${_id}`,
-//             html: `
-//                 <!DOCTYPE html>
-//                 <html>
-//                 <head>
-//                     <meta charset="utf-8">
-//                     <style>
-//                         body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
-//                         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-//                         .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-//                         .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-//                         .section { margin-bottom: 25px; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-//                         .total { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; font-size: 1.2em; font-weight: bold; }
-//                         .item-list { background: #f8f9fa; padding: 15px; border-radius: 5px; }
-//                         .badge { display: inline-block; padding: 5px 10px; background: #28a745; color: white; border-radius: 15px; font-size: 0.9em; }
-//                     </style>
-//                 </head>
-//                 <body>
-//                     <div class="container">
-//                         <div class="header">
-//                             <h1>🎉 НОВЫЙ ЗАКАЗ ЦВЕТОВ</h1>
-//                             <p>Заказ #${_id}</p>
-//                         </div>
-//
-//                         <div class="content">
-//                             <div class="section">
-//                                 <h2>👤 Информация о клиенте</h2>
-//                                 <p><strong>Имя:</strong> ${firstName}</p>
-//                                 <p><strong>Телефон:</strong> ${phoneNumber}</p>
-//                                 <p><strong>Адрес доставки:</strong> ${address}</p>
-//                                 <p><strong>Тип клиента:</strong> <span class="badge">${userTypeText}</span></p>
-//                             </div>
-//
-//                             <div class="section">
-//                                 <h2>💐 Состав заказа</h2>
-//                                 <div class="item-list">
-//                                     <h3>Цветы:</h3>
-//                                     <pre style="white-space: pre-wrap; font-family: Arial;">${flowerList || 'Нет цветов в заказе'}</pre>
-//
-//                                     ${addonItems.filter(item => item && typeof item === 'object').length > 0 ? `
-//                                     <h3>Дополнительные товары:</h3>
-//                                     <pre style="white-space: pre-wrap; font-family: Arial;">${addonList}</pre>
-//                                     ` : ''}
-//                                 </div>
-//                             </div>
-//
-//                             <div class="section">
-//                                 <h2>💰 Детали оплаты</h2>
-//                                 <p><strong>Способ оплаты:</strong> ${paymentMethod === 'cash' ? 'Наличные при получении' : 'Онлайн оплата'}</p>
-//                                 <div class="total">
-//                                     <strong>Общая сумма:</strong> ${totalAmount} сом
-//                                 </div>
-//                             </div>
-//
-//                             ${comments ? `
-//                             <div class="section">
-//                                 <h2>💬 Комментарий клиента</h2>
-//                                 <p><em>${comments}</em></p>
-//                             </div>
-//                             ` : ''}
-//
-//                             <div class="section">
-//                                 <p><strong>🕒 Время заказа:</strong> ${new Date().toLocaleString('ru-RU')}</p>
-//                                 <p style="color: #666; font-size: 0.9em; margin-top: 20px;">
-//                                     Это автоматическое уведомление о новом заказе. Пожалуйста, обработайте заказ в течение 30 минут.
-//                                 </p>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </body>
-//                 </html>
-//             `
-//         };
-//
-//         await transporter.sendMail(mailOptions);
-//         console.log('✅ Email уведомление о заказе отправлено администратору');
-//         return true;
-//     } catch (error) {
-//         console.error('❌ Ошибка отправки email администратору:', error);
-//         return false;
-//     }
-// }
 
 // Функция для отправки email о новом заказе - ОБНОВЛЕННАЯ ВЕРСИЯ
 async function sendOrderEmail(order, userType) {
@@ -456,8 +300,7 @@ async function deductProductsFromStock(products) {
 }
 
 
-// // Создание заказа
-// // Создание заказа (основная функция)
+// Создание заказа (основная функция) - ОБНОВЛЕННАЯ ВЕРСИЯ
 // export const createOrder = async (req, res) => {
 //     try {
 //         const { user } = req;
@@ -487,13 +330,37 @@ async function deductProductsFromStock(products) {
 //             return res.status(400).json({ message: 'Корзина пуста' });
 //         }
 //
-//         // Проверяем доступность товаров
+//         // Проверяем доступность товаров с учетом выбранных вариантов
 //         for (const item of cart.flowerItems) {
 //             const product = await Product.findById(item.product);
 //             if (!product || !product.isActive || product.quantity < item.quantity) {
 //                 return res.status(400).json({
 //                     message: `Товар "${item.name}" недоступен в нужном количестве`
 //                 });
+//             }
+//
+//             // Дополнительная проверка для одиночных цветов с выбранным цветом
+//             if (item.flowerType === 'single' && item.selectedColor) {
+//                 const colorExists = product.availableColors?.some(
+//                     color => color.value === item.selectedColor.value
+//                 );
+//                 if (!colorExists) {
+//                     return res.status(400).json({
+//                         message: `Выбранный цвет "${item.selectedColor.name}" недоступен для товара "${item.name}"`
+//                     });
+//                 }
+//             }
+//
+//             // Проверка выбранной длины стебля
+//             if (item.selectedStemLength && product.stemLengths?.length > 0) {
+//                 const stemExists = product.stemLengths.some(
+//                     stem => stem.length === item.selectedStemLength.length
+//                 );
+//                 if (!stemExists) {
+//                     return res.status(400).json({
+//                         message: `Выбранная длина стебля "${item.selectedStemLength.length} см" недоступна для товара "${item.name}"`
+//                     });
+//                 }
 //             }
 //         }
 //
@@ -509,7 +376,7 @@ async function deductProductsFromStock(products) {
 //         // Определяем тип пользователя
 //         const userType = (user.userId && user.userId !== 'admin') ? 'customer' : 'guest';
 //
-//         // Создаем заказ
+//         // Создаем заказ с учетом выбранных цветов и длин стеблей
 //         const order = new Order({
 //             user: (user.userId && user.userId !== 'admin') ? user.userId : null,
 //             userType,
@@ -518,10 +385,17 @@ async function deductProductsFromStock(products) {
 //                 quantity: item.quantity,
 //                 name: item.name,
 //                 flowerType: item.flowerType,
-//                 price: item.price,
+//                 price: item.price, // цена уже включает выбранную длину стебля
+//                 // Сохраняем выбранный цвет для одиночных цветов
+//                 selectedColor: item.flowerType === 'single' ? item.selectedColor : undefined,
+//                 // Сохраняем выбранную длину стебля
+//                 selectedStemLength: item.selectedStemLength ? {
+//                     length: item.selectedStemLength.length,
+//                     price: item.selectedStemLength.price
+//                 } : undefined,
 //                 flowerNames: item.flowerNames,
 //                 flowerColors: item.flowerColors,
-//                 stemLength: item.stemLength,
+//                 stemLength: item.selectedStemLength ? item.selectedStemLength.length : item.stemLength,
 //                 occasion: item.occasion,
 //                 recipient: item.recipient,
 //                 wrapper: item.wrapper && item.wrapper.wrapperId ? item.wrapper : undefined,
@@ -550,7 +424,16 @@ async function deductProductsFromStock(products) {
 //         });
 //
 //         await order.save();
-//         console.log('✅ Заказ создан:', { orderId: order._id, totalAmount: order.totalAmount });
+//         console.log('✅ Заказ создан:', {
+//             orderId: order._id,
+//             totalAmount: order.totalAmount,
+//             items: order.flowerItems.map(item => ({
+//                 name: item.name,
+//                 color: item.selectedColor?.name,
+//                 stemLength: item.selectedStemLength?.length,
+//                 price: item.price
+//             }))
+//         });
 //
 //         // Обновляем количество товаров
 //         for (const item of cart.flowerItems) {
@@ -586,7 +469,107 @@ async function deductProductsFromStock(products) {
 //     }
 // };
 
-// Создание заказа (основная функция) - ОБНОВЛЕННАЯ ВЕРСИЯ
+// В функции createOrder обновите проверки
+// export const createOrder = async (req, res) => {
+//     try {
+//         const { user } = req;
+//         const {
+//             firstName,
+//             address,
+//             phoneNumber,
+//             paymentMethod,
+//             comments
+//         } = req.body;
+//
+//         console.log('🛒 Создание заказа для пользователя:', {
+//             userId: user.userId,
+//             sessionId: user.sessionId,
+//             role: user.role
+//         });
+//
+//         // Получаем корзину
+//         let cart;
+//         if (user.userId && user.userId !== 'admin') {
+//             cart = await Cart.findOne({ user: user.userId });
+//         } else {
+//             cart = await Cart.findOne({ sessionId: user.sessionId });
+//         }
+//
+//         if (!cart || (cart.flowerItems.length === 0 && cart.addonItems.length === 0)) {
+//             return res.status(400).json({ message: 'Корзина пуста' });
+//         }
+//
+//         // Проверяем доступность товаров с учетом выбранных вариантов
+//         for (const item of cart.flowerItems) {
+//             const product = await Product.findById(item.product);
+//             if (!product || !product.isActive || product.quantity < item.quantity) {
+//                 return res.status(400).json({
+//                     message: `Товар "${item.name}" недоступен в нужном количестве`
+//                 });
+//             }
+//
+//             // Для штучных цветов проверяем цвет
+//             if (item.flowerType === 'single') {
+//                 // Если цвет не выбран, используем первый доступный
+//                 if (!item.selectedColor && product.availableColors && product.availableColors.length > 0) {
+//                     item.selectedColor = {
+//                         name: product.availableColors[0].name,
+//                         value: product.availableColors[0].value
+//                     };
+//                 }
+//
+//                 // Проверяем доступность цвета
+//                 if (item.selectedColor) {
+//                     const colorExists = product.availableColors?.some(
+//                         color => color.value === item.selectedColor.value
+//                     );
+//                     if (!colorExists) {
+//                         return res.status(400).json({
+//                             message: `Выбранный цвет "${item.selectedColor.name}" недоступен для товара "${item.name}"`
+//                         });
+//                     }
+//                 } else {
+//                     return res.status(400).json({
+//                         message: `Для штучного цветка "${item.name}" не выбран цвет`
+//                     });
+//                 }
+//             }
+//
+//             // Для всех цветов проверяем/устанавливаем длину стебля
+//             if (!item.selectedStemLength && product.stemLengths && product.stemLengths.length > 0) {
+//                 // Используем первую доступную длину
+//                 item.selectedStemLength = {
+//                     length: product.stemLengths[0].length,
+//                     price: product.stemLengths[0].price
+//                 };
+//                 item.price = product.stemLengths[0].price;
+//             }
+//
+//             // Проверка выбранной длины стебля
+//             if (item.selectedStemLength && product.stemLengths?.length > 0) {
+//                 const stemExists = product.stemLengths.some(
+//                     stem => stem.length === item.selectedStemLength.length
+//                 );
+//                 if (!stemExists) {
+//                     return res.status(400).json({
+//                         message: `Выбранная длина стебля "${item.selectedStemLength.length} см" недоступена для товара "${item.name}"`
+//                     });
+//                 }
+//             } else if (!item.selectedStemLength) {
+//                 return res.status(400).json({
+//                     message: `Для товара "${item.name}" не выбрана длина стебля`
+//                 });
+//             }
+//         }
+//
+//         // Остальной код создания заказа остается без изменений...
+//     } catch (error) {
+//         console.error('❌ Ошибка при создании заказа:', error);
+//         res.status(500).json({ message: 'Ошибка при создании заказа' });
+//     }
+// };
+
+// Создание заказа (полная исправленная версия)
 export const createOrder = async (req, res) => {
     try {
         const { user } = req;
@@ -625,16 +608,41 @@ export const createOrder = async (req, res) => {
                 });
             }
 
-            // Дополнительная проверка для одиночных цветов с выбранным цветом
-            if (item.flowerType === 'single' && item.selectedColor) {
-                const colorExists = product.availableColors?.some(
-                    color => color.value === item.selectedColor.value
-                );
-                if (!colorExists) {
+            // Для штучных цветов проверяем цвет
+            if (item.flowerType === 'single') {
+                // Если цвет не выбран, используем первый доступный
+                if (!item.selectedColor && product.availableColors && product.availableColors.length > 0) {
+                    item.selectedColor = {
+                        name: product.availableColors[0].name,
+                        value: product.availableColors[0].value
+                    };
+                }
+
+                // Проверяем доступность цвета
+                if (item.selectedColor) {
+                    const colorExists = product.availableColors?.some(
+                        color => color.value === item.selectedColor.value
+                    );
+                    if (!colorExists) {
+                        return res.status(400).json({
+                            message: `Выбранный цвет "${item.selectedColor.name}" недоступен для товара "${item.name}"`
+                        });
+                    }
+                } else {
                     return res.status(400).json({
-                        message: `Выбранный цвет "${item.selectedColor.name}" недоступен для товара "${item.name}"`
+                        message: `Для штучного цветка "${item.name}" не выбран цвет`
                     });
                 }
+            }
+
+            // Для всех цветов проверяем/устанавливаем длину стебля
+            if (!item.selectedStemLength && product.stemLengths && product.stemLengths.length > 0) {
+                // Используем первую доступную длину
+                item.selectedStemLength = {
+                    length: product.stemLengths[0].length,
+                    price: product.stemLengths[0].price
+                };
+                item.price = product.stemLengths[0].price;
             }
 
             // Проверка выбранной длины стебля
@@ -644,12 +652,17 @@ export const createOrder = async (req, res) => {
                 );
                 if (!stemExists) {
                     return res.status(400).json({
-                        message: `Выбранная длина стебля "${item.selectedStemLength.length} см" недоступна для товара "${item.name}"`
+                        message: `Выбранная длина стебля "${item.selectedStemLength.length} см" недоступена для товара "${item.name}"`
                     });
                 }
+            } else if (!item.selectedStemLength) {
+                return res.status(400).json({
+                    message: `Для товара "${item.name}" не выбрана длина стебля`
+                });
             }
         }
 
+        // Проверяем доп. товары
         for (const item of cart.addonItems) {
             const addon = await Addon.findById(item.addonId);
             if (!addon || !addon.isActive || addon.quantity < item.quantity) {
@@ -721,7 +734,7 @@ export const createOrder = async (req, res) => {
             }))
         });
 
-        // Обновляем количество товаров
+        // Обновляем количество товаров на складе
         for (const item of cart.flowerItems) {
             await Product.findByIdAndUpdate(item.product, {
                 $inc: { quantity: -item.quantity, soldCount: item.quantity }
@@ -749,82 +762,12 @@ export const createOrder = async (req, res) => {
             message: 'Заказ успешно создан',
             order: await formatOrderResponse(order)
         });
+
     } catch (error) {
         console.error('❌ Ошибка при создании заказа:', error);
-        res.status(500).json({ message: 'Ошибка при создании заказа' });
+        res.status(500).json({ message: 'Ошибка при создании заказа: ' + error.message });
     }
 };
-
-
-// Получение заказов пользователя
-// Получение заказов пользователя
-// export const getUserOrders = async (req, res) => {
-//     try {
-//         const { user } = req;
-//
-//         let orders;
-//         if (user.userId && user.userId !== 'admin') {
-//             orders = await Order.find({ user: user.userId })
-//                 .sort({ date: -1 })
-//                 .populate('flowerItems.product', 'name images price flowerNames stemLength occasion recipient type description')
-//                 .populate('addonItems.addonId', 'name image price type description');
-//         } else {
-//             // Для гостей - по sessionId (если нужно)
-//             orders = await Order.find({
-//                 'guestInfo.phone': user.sessionId
-//             }).sort({ date: -1 })
-//                 .populate('flowerItems.product', 'name images price flowerNames stemLength occasion recipient type description')
-//                 .populate('addonItems.addonId', 'name image price type description');
-//         }
-//
-//         const formattedOrders = orders.map(order => ({
-//             _id: order._id,
-//             userType: order.userType,
-//             flowerItems: order.flowerItems.map(item => ({
-//                 ...item.toObject(),
-//                 product: item.product ? {
-//                     _id: item.product._id,
-//                     name: item.product.name,
-//                     images: item.product.images,
-//                     price: item.product.price,
-//                     flowerNames: item.product.flowerNames,
-//                     stemLength: item.product.stemLength,
-//                     occasion: item.product.occasion,
-//                     recipient: item.product.recipient,
-//                     type: item.product.type,
-//                     description: item.product.description
-//                 } : null
-//             })),
-//             addonItems: order.addonItems.map(item => ({
-//                 ...item.toObject(),
-//                 addonId: item.addonId ? {
-//                     _id: item.addonId._id,
-//                     name: item.addonId.name,
-//                     image: item.addonId.image,
-//                     price: item.addonId.price,
-//                     type: item.addonId.type,
-//                     description: item.addonId.description
-//                 } : null
-//             })),
-//             totalAmount: order.totalAmount,
-//             status: order.status,
-//             date: order.date,
-//             firstName: order.firstName,
-//             address: order.address,
-//             phoneNumber: order.phoneNumber,
-//             paymentMethod: order.paymentMethod,
-//             comments: order.comments,
-//             statusHistory: order.statusHistory
-//         }));
-//
-//         res.status(200).json({
-//             orders: formattedOrders
-//         });
-//     } catch (error) {
-//         console.error('Error getting user orders:', error);
-//         res.status(500).json({ message: 'Ошибка при получении заказов' });
-//     }
-// };
 
 // Получение заказов пользователя - ОБНОВЛЕННАЯ ВЕРСИЯ
 export const getUserOrders = async (req, res) => {
@@ -901,74 +844,6 @@ export const getUserOrders = async (req, res) => {
 };
 
 // // Вспомогательная функция для форматирования заказа
-// // Вспомогательная функция для форматирования ответа заказа
-// // Вспомогательная функция для форматирования ответа заказа (упрощенная версия)
-// // Вспомогательная функция для форматирования ответа заказа
-
-// const formatOrderResponse = async (order) => {
-//     try {
-//         // Если order уже populate, используем как есть
-//         return {
-//             _id: order._id,
-//             userType: order.userType,
-//             flowerItems: order.flowerItems.map(item => ({
-//                 ...item.toObject ? item.toObject() : item,
-//                 product: item.product ? {
-//                     _id: item.product._id,
-//                     name: item.product.name,
-//                     images: item.product.images,
-//                     price: item.product.price,
-//                     flowerNames: item.product.flowerNames,
-//                     stemLength: item.product.stemLength,
-//                     occasion: item.product.occasion,
-//                     recipient: item.product.recipient,
-//                     type: item.product.type,
-//                     description: item.product.description
-//                 } : null
-//             })),
-//             addonItems: order.addonItems.map(item => ({
-//                 ...item.toObject ? item.toObject() : item,
-//                 addonId: item.addonId ? {
-//                     _id: item.addonId._id,
-//                     name: item.addonId.name,
-//                     image: item.addonId.image,
-//                     price: item.addonId.price,
-//                     type: item.addonId.type,
-//                     description: item.addonId.description
-//                 } : null
-//             })),
-//             totalAmount: order.totalAmount,
-//             status: order.status,
-//             date: order.date,
-//             firstName: order.firstName,
-//             address: order.address,
-//             phoneNumber: order.phoneNumber,
-//             paymentMethod: order.paymentMethod,
-//             comments: order.comments,
-//             statusHistory: order.statusHistory,
-//             user: order.user
-//         };
-//     } catch (error) {
-//         console.error('Error in formatOrderResponse:', error);
-//         // В случае ошибки возвращаем базовую структуру
-//         return {
-//             _id: order._id,
-//             userType: order.userType,
-//             flowerItems: order.flowerItems || [],
-//             addonItems: order.addonItems || [],
-//             totalAmount: order.totalAmount,
-//             status: order.status,
-//             date: order.date,
-//             firstName: order.firstName,
-//             address: order.address,
-//             phoneNumber: order.phoneNumber,
-//             paymentMethod: order.paymentMethod,
-//             comments: order.comments,
-//             statusHistory: order.statusHistory,
-//             user: order.user
-//         };
-//     }
-// };
 
 // Вспомогательная функция для форматирования ответа заказа - ОБНОВЛЕННАЯ ВЕРСИЯ
 const formatOrderResponse = async (order) => {
@@ -1243,112 +1118,6 @@ export const getOrdersByOccasion = async (req, res) => {
 
 
 // Добавьте эти функции в orderController.js
-
-// Получение всех заказов с пагинацией и фильтрацией
-// Получение всех заказов с пагинацией и фильтрацией
-// export const getAllOrders = async (req, res) => {
-//     try {
-//         const {
-//             page = 1,
-//             perPage = 20,
-//             status,
-//             startDate,
-//             endDate,
-//             search
-//         } = req.query;
-//
-//         let query = {};
-//
-//         // Фильтрация по статусу
-//         if (status && status !== 'all') {
-//             query.status = status;
-//         }
-//
-//         // Фильтрация по дате
-//         if (startDate || endDate) {
-//             query.date = {};
-//             if (startDate) query.date.$gte = new Date(startDate);
-//             if (endDate) query.date.$lte = new Date(endDate);
-//         }
-//
-//         // Поиск по имени или телефону
-//         if (search) {
-//             query.$or = [
-//                 { firstName: { $regex: search, $options: 'i' } },
-//                 { phoneNumber: { $regex: search, $options: 'i' } },
-//                 { 'flowerItems.name': { $regex: search, $options: 'i' } }
-//             ];
-//         }
-//
-//         const orders = await Order.find(query)
-//             .populate('user', 'name email')
-//             .populate('flowerItems.product', 'name images price flowerNames stemLength occasion recipient type description')
-//             .populate('addonItems.addonId', 'name image price type description')
-//             .sort({ date: -1 })
-//             .skip((page - 1) * perPage)
-//             .limit(parseInt(perPage));
-//
-//         const totalOrders = await Order.countDocuments(query);
-//
-//         // Используем упрощенную версию formatOrderResponse
-//         const formattedOrders = orders.map(order => ({
-//             _id: order._id,
-//             userType: order.userType,
-//             flowerItems: order.flowerItems.map(item => ({
-//                 ...item.toObject(),
-//                 product: item.product ? {
-//                     _id: item.product._id,
-//                     name: item.product.name,
-//                     images: item.product.images,
-//                     price: item.product.price,
-//                     flowerNames: item.product.flowerNames,
-//                     stemLength: item.product.stemLength,
-//                     occasion: item.product.occasion,
-//                     recipient: item.product.recipient,
-//                     type: item.product.type,
-//                     description: item.product.description
-//                 } : null
-//             })),
-//             addonItems: order.addonItems.map(item => ({
-//                 ...item.toObject(),
-//                 addonId: item.addonId ? {
-//                     _id: item.addonId._id,
-//                     name: item.addonId.name,
-//                     image: item.addonId.image,
-//                     price: item.addonId.price,
-//                     type: item.addonId.type,
-//                     description: item.addonId.description
-//                 } : null
-//             })),
-//             totalAmount: order.totalAmount,
-//             status: order.status,
-//             date: order.date,
-//             firstName: order.firstName,
-//             address: order.address,
-//             phoneNumber: order.phoneNumber,
-//             paymentMethod: order.paymentMethod,
-//             comments: order.comments,
-//             statusHistory: order.statusHistory,
-//             user: order.user
-//         }));
-//
-//         res.json({
-//             orders: formattedOrders,
-//             pagination: {
-//                 currentPage: parseInt(page),
-//                 perPage: parseInt(perPage),
-//                 totalOrders,
-//                 totalPages: Math.ceil(totalOrders / perPage)
-//             }
-//         });
-//     } catch (error) {
-//         console.error('Error getting all orders:', error);
-//         res.status(500).json({
-//             message: 'Ошибка при получении заказов'
-//         });
-//     }
-// };
-
 // Получение всех заказов с пагинацией и фильтрацией - ОБНОВЛЕННАЯ ВЕРСИЯ
 export const getAllOrders = async (req, res) => {
     try {
@@ -1630,48 +1399,6 @@ export const updateOrder = async (req, res) => {
     }
 };
 
-
-// Вспомогательные функции для управления складом
-// Вспомогательная функция для возврата товаров на склад
-// Вспомогательная функция для возврата товаров на склад
-// async function returnOrderItemsToStock(order) {
-//     try {
-//         // console.log('🔄 Возврат товаров на склад для заказа:', order._id);
-//
-//         // Возвращаем цветы на склад
-//         for (const item of order.flowerItems) {
-//             if (item.product) {
-//                 await Product.findByIdAndUpdate(
-//                     item.product,
-//                     {
-//                         $inc: {
-//                             quantity: item.quantity,
-//                             soldCount: -item.quantity
-//                         }
-//                     }
-//                 );
-//                 console.log(`✅ Возвращены цветы: ${item.name}, количество: ${item.quantity}`);
-//             }
-//         }
-//
-//         // Возвращаем доп. товары на склад
-//         for (const item of order.addonItems) {
-//             if (item.addonId) {
-//                 await Addon.findByIdAndUpdate(
-//                     item.addonId,
-//                     { $inc: { quantity: item.quantity } }
-//                 );
-//                 console.log(`✅ Возвращены доп. товары: ${item.name}, количество: ${item.quantity}`);
-//             }
-//         }
-//
-//         console.log('✅ Все товары возвращены на склад');
-//     } catch (error) {
-//         console.error('❌ Ошибка при возврате товаров на склад:', error);
-//         throw error;
-//     }
-// }
-
 // Вспомогательная функция для возврата товаров на склад - ОБНОВЛЕННАЯ ВЕРСИЯ
 async function returnOrderItemsToStock(order) {
     try {
@@ -1711,58 +1438,6 @@ async function returnOrderItemsToStock(order) {
     }
 }
 
-// Вспомогательная функция для списания товаров со склада
-// async function deductOrderItemsFromStock(order) {
-//     try {
-//         console.log('🔄 Списываем товары со склада для заказа:', order._id);
-//
-//         // Списываем цветы со склада
-//         for (const item of order.flowerItems) {
-//             const product = await Product.findById(item.product);
-//             if (!product) {
-//                 throw new Error(`Товар "${item.name}" не найден`);
-//             }
-//
-//             if (product.quantity < item.quantity) {
-//                 throw new Error(`Недостаточно товара "${product.name}" на складе. Доступно: ${product.quantity}, требуется: ${item.quantity}`);
-//             }
-//
-//             await Product.findByIdAndUpdate(
-//                 item.product,
-//                 {
-//                     $inc: {
-//                         quantity: -item.quantity,
-//                         soldCount: item.quantity
-//                     }
-//                 }
-//             );
-//             console.log(`✅ Списан товар: ${item.name}, количество: ${item.quantity}`);
-//         }
-//
-//         // Списываем доп. товары со склада
-//         for (const item of order.addonItems) {
-//             const addon = await Addon.findById(item.addonId);
-//             if (!addon) {
-//                 throw new Error(`Доп. товар "${item.name}" не найден`);
-//             }
-//
-//             if (addon.quantity < item.quantity) {
-//                 throw new Error(`Недостаточно доп. товара "${addon.name}" на складе. Доступно: ${addon.quantity}, требуется: ${item.quantity}`);
-//             }
-//
-//             await Addon.findByIdAndUpdate(
-//                 item.addonId,
-//                 { $inc: { quantity: -item.quantity } }
-//             );
-//             console.log(`✅ Списан доп. товар: ${item.name}, количество: ${item.quantity}`);
-//         }
-//
-//         console.log('✅ Все товары списаны со склада');
-//     } catch (error) {
-//         console.error('❌ Ошибка при списании товаров со склада:', error);
-//         throw error;
-//     }
-// }
 
 // Вспомогательная функция для списания товаров со склада - ОБНОВЛЕННАЯ ВЕРСИЯ
 async function deductOrderItemsFromStock(order) {
