@@ -92,32 +92,6 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
         // eslint-disable-next-line
     }, [slides.length, isManualSwitch]);
 
-    // useEffect(() => {
-    //     const videoElement = videoRef.current;
-    //
-    //     if (slides[currentSlide]?.backgroundType === 'video' && videoElement) {
-    //         setIsVideoLoaded(false);
-    //         videoElement?.load();
-    //
-    //         const handleCanPlay = () => {
-    //             setIsVideoLoaded(true);
-    //             videoElement.play().catch(e => console.log('Autoplay prevented:', e));
-    //         };
-    //
-    //         const handleError = () => {
-    //             console.error('Video loading error');
-    //             setIsVideoLoaded(false);
-    //         };
-    //
-    //         videoElement?.addEventListener('canplay', handleCanPlay);
-    //         videoElement?.addEventListener('error', handleError);
-    //
-    //         return () => {
-    //             videoElement?.removeEventListener('canplay', handleCanPlay);
-    //             videoElement?.removeEventListener('error', handleError);
-    //         };
-    //     }
-    // }, [currentSlide, slides]);
 
     useEffect(() => {
         setShowSidebar(true);
