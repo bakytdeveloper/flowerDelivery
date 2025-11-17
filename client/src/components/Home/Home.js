@@ -25,12 +25,9 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
     // eslint-disable-next-line
     const [hasNewestProducts, setHasNewestProducts] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    // const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-    // const videoRef = useRef(null);
     const carouselRef = useRef(null);
-    // const [preloadMap, setPreloadMap] = useState(false);
     const location = useLocation();
-    
+
 
     useEffect(() => {
         if (!hasNewestProducts) {
