@@ -30,16 +30,7 @@ const Home = ({ setShowSidebar, cartItems, setCartItems, setIsFooterCatalog, set
     const carouselRef = useRef(null);
     // const [preloadMap, setPreloadMap] = useState(false);
     const location = useLocation();
-
-    // // Добавьте этот useEffect для предварительной загрузки карты
-    // useEffect(() => {
-    //     // Предзагружаем карту через 2 секунды после загрузки главной страницы
-    //     const timer = setTimeout(() => {
-    //         setPreloadMap(true);
-    //     }, 2000);
-    //
-    //     return () => clearTimeout(timer);
-    // }, []);
+    
 
     useEffect(() => {
         if (!hasNewestProducts) {
