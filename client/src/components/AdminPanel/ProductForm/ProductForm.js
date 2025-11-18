@@ -1514,6 +1514,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                     </div>
                                 ))}
                             </div>
+                            {product.type === 'single' && (
                             <button
                                 type="button"
                                 className="btn-add-stem-length"
@@ -1521,6 +1522,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                             >
                                 + Добавить вариант длины
                             </button>
+                            )}
                         </div>
 
                         {/* Цены и количество */}
