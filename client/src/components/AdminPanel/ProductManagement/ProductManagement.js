@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import ProductForm from "../ProductForm/ProductForm";
-import CustomSelect from '../../Common/CustomSelect'; // Импортируем кастомный селект
+import CustomSelect from '../../Common/CustomSelect'; 
 import { toast } from 'react-toastify';
 import './ProductManagement.css';
 
