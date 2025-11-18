@@ -1382,18 +1382,18 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                     />
                                 </div>
 
-                                {product.type !== 'single' && (
-                                    <div className="form-group">
-                                        <label>Базовая длина букета(см)</label>
-                                        <input
-                                            type="number"
-                                            value={product.stemLength}
-                                            onChange={(e) => handleChange('stemLength', e.target.value)}
-                                            className="form-control"
-                                            placeholder="Например: 40"
-                                        />
-                                    </div>
-                                )}
+                                {/*{product.type !== 'single' && (*/}
+                                {/*    <div className="form-group">*/}
+                                {/*        <label>Базовая длина букета(см)</label>*/}
+                                {/*        <input*/}
+                                {/*            type="number"*/}
+                                {/*            value={product.stemLength}*/}
+                                {/*            onChange={(e) => handleChange('stemLength', e.target.value)}*/}
+                                {/*            className="form-control"*/}
+                                {/*            placeholder="Например: 40"*/}
+                                {/*        />*/}
+                                {/*    </div>*/}
+                                {/*)}*/}
                             </div>
                         </div>
 
@@ -1463,7 +1463,6 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                         )}
 
                         {/* Секция для вариантов длины стебля */}
-                        {product.type === 'single' && (
                         <div className="form-section">
                             <h4>Варианты длины стебля и цены <span className="required-field"></span></h4>
                             <p className="help-text">Добавьте различные варианты длины стебля с соответствующими ценами. Пользователи смогут выбирать длину при покупке.</p>
@@ -1523,7 +1522,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                 + Добавить вариант длины
                             </button>
                         </div>
-                        )}
+
                         {/* Цены и количество */}
                         <div className="form-section">
                             <h4>Количество</h4>
