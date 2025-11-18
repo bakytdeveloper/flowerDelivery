@@ -557,31 +557,31 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                                         placeholder="Название цвета"
                                                     />
                                                 </div>
-                                                <div className="color-images">
-                                                    <label>Изображения для этого цвета:</label>
-                                                    <input
-                                                        type="file"
-                                                        multiple
-                                                        accept="image/*"
-                                                        onChange={(e) => handleColorImageUpload(e, index)}
-                                                        className="form-control"
-                                                        disabled={uploadingColorImages[index]}
-                                                    />
-                                                    {uploadingColorImages[index] && <p>Загрузка изображений...</p>}
-                                                    <div className="color-images-preview">
-                                                        {color.colorImages?.map((img, imgIndex) => (
-                                                            <div key={imgIndex} className="color-image-item">
-                                                                <img src={img} alt={`${color.name} ${imgIndex + 1}`} />
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => removeColorImage(index, imgIndex)}
-                                                                >
-                                                                    ×
-                                                                </button>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
+                                                {/*<div className="color-images">*/}
+                                                {/*    <label>Изображения для этого цвета:</label>*/}
+                                                {/*    <input*/}
+                                                {/*        type="file"*/}
+                                                {/*        multiple*/}
+                                                {/*        accept="image/*"*/}
+                                                {/*        onChange={(e) => handleColorImageUpload(e, index)}*/}
+                                                {/*        className="form-control"*/}
+                                                {/*        disabled={uploadingColorImages[index]}*/}
+                                                {/*    />*/}
+                                                {/*    {uploadingColorImages[index] && <p>Загрузка изображений...</p>}*/}
+                                                {/*    <div className="color-images-preview">*/}
+                                                {/*        {color.colorImages?.map((img, imgIndex) => (*/}
+                                                {/*            <div key={imgIndex} className="color-image-item">*/}
+                                                {/*                <img src={img} alt={`${color.name} ${imgIndex + 1}`} />*/}
+                                                {/*                <button*/}
+                                                {/*                    type="button"*/}
+                                                {/*                    onClick={() => removeColorImage(index, imgIndex)}*/}
+                                                {/*                >*/}
+                                                {/*                    ×*/}
+                                                {/*                </button>*/}
+                                                {/*            </div>*/}
+                                                {/*        ))}*/}
+                                                {/*    </div>*/}
+                                                {/*</div>*/}
                                             </div>
                                             <button
                                                 type="button"
