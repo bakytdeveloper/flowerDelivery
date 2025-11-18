@@ -2486,11 +2486,11 @@ const ProductDetails = () => {
                                     <span className="current-price-large">
                                         {formatPrice(selectedStemLength.price)}
                                     </span>
-                                    {discountPercentage > 0 && (
-                                        <span className="discount-percentage">
-                                            -{discountPercentage}%
-                                        </span>
-                                    )}
+                                    {/*{discountPercentage > 0 && (*/}
+                                    {/*    <span className="discount-percentage">*/}
+                                    {/*        -{discountPercentage}%*/}
+                                    {/*    </span>*/}
+                                    {/*)}*/}
                                 </div>
                             ) : product.originalPrice && product.originalPrice > getCurrentPrice() ? (
                                 <div className="price-with-discount">

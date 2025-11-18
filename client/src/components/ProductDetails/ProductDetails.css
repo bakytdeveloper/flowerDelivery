@@ -116,7 +116,7 @@
     position: absolute;
     top: 1rem;
     left: 1rem;
-    background: linear-gradient(135deg, #ff6b6b, #ee5a52) !important;
+    background: linear-gradient(135deg, #f52e45, #ee0f03) !important;
     color: white;
     padding: 8px 16px;
     border-radius: 20px;
@@ -204,6 +204,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    justify-content: space-between;
 }
 
 .original-price-large {
