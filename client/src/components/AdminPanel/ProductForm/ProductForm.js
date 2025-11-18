@@ -34,7 +34,6 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
             quantity: 10,
             soldCount: 0,
             isActive: true,
-            // Новые поля
             availableColors: [],
             stemLengths: [{ length: '', price: '', originalPrice: '' }]
         };
