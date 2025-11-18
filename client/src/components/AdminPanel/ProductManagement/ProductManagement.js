@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import ProductForm from "../ProductForm/ProductForm";
-import CustomSelect from '../../Common/CustomSelect'; 
+import CustomSelect from '../../Common/CustomSelect';
 import { toast } from 'react-toastify';
 import './ProductManagement.css';
 
@@ -33,7 +33,7 @@ const ProductManagement = () => {
     // const [imageUrlInput, setImageUrlInput] = useState('');
     // eslint-disable-next-line
     // const [showUrlInput, setShowUrlInput] = useState(false);
-    const [modalMode, setModalMode] = useState('edit'); // 'edit' или 'create'
+    const [modalMode, setModalMode] = useState('edit'); 
     const [showProductModal, setShowProductModal] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
