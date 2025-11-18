@@ -5,6 +5,7 @@ import ProductForm from "../ProductForm/ProductForm";
 import CustomSelect from '../../Common/CustomSelect';
 import { toast } from 'react-toastify';
 import './ProductManagement.css';
+import {occasionOptions} from "../../../constants/constants"
 
 const ProductManagement = () => {
     const { token } = useAuth();
@@ -33,7 +34,7 @@ const ProductManagement = () => {
     // const [imageUrlInput, setImageUrlInput] = useState('');
     // eslint-disable-next-line
     // const [showUrlInput, setShowUrlInput] = useState(false);
-    const [modalMode, setModalMode] = useState('edit'); 
+    const [modalMode, setModalMode] = useState('edit');
     const [showProductModal, setShowProductModal] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
@@ -51,29 +52,29 @@ const ProductManagement = () => {
         { value: 'false', label: 'Неактивные' }
     ];
 
-    const occasionOptions = [
-        { value: '', label: 'Все поводы' },
-        { value: 'birthday', label: 'День рождения' },
-        { value: 'jubilee', label: 'Юбилей' },
-        { value: 'wedding', label: 'Свадьба' },
-        { value: 'anniversary', label: 'Годовщина' },
-        { value: 'valentine', label: 'День святого Валентина' },
-        { value: 'womens_day', label: '8 марта' },
-        { value: 'mothers_day', label: 'День матери' },
-        { value: 'fathers_day', label: 'День отца' },
-        { value: 'baby_birth', label: 'Выписка из роддома' },
-        { value: 'graduation', label: 'Выпускной' },
-        { value: 'promotion', label: 'Повышение / новая работа' },
-        { value: 'thank_you', label: 'Благодарность' },
-        { value: 'apology', label: 'Извинение' },
-        { value: 'condolences', label: 'Сочувствие / соболезнование' },
-        { value: 'get_well', label: 'Выздоровление / поддержка' },
-        { value: 'just_because', label: 'Без повода / просто так' },
-        { value: 'romantic_evening', label: 'Романтический вечер' },
-        { value: 'love_confession', label: 'Признание в любви' },
-        { value: 'holiday', label: 'Праздник (Новый год, Курман айт, Нооруз и др.)' },
-        { value: 'business_opening', label: 'Открытие бизнеса / новоселье' }
-    ];
+    // const occasionOptions = [
+    //     { value: '', label: 'Все поводы' },
+    //     { value: 'birthday', label: 'День рождения' },
+    //     { value: 'jubilee', label: 'Юбилей' },
+    //     { value: 'wedding', label: 'Свадьба' },
+    //     { value: 'anniversary', label: 'Годовщина' },
+    //     { value: 'valentine', label: 'День святого Валентина' },
+    //     { value: 'womens_day', label: '8 марта' },
+    //     { value: 'mothers_day', label: 'День матери' },
+    //     { value: 'fathers_day', label: 'День отца' },
+    //     { value: 'baby_birth', label: 'Выписка из роддома' },
+    //     { value: 'graduation', label: 'Выпускной' },
+    //     { value: 'promotion', label: 'Повышение / новая работа' },
+    //     { value: 'thank_you', label: 'Благодарность' },
+    //     { value: 'apology', label: 'Извинение' },
+    //     { value: 'condolences', label: 'Сочувствие / соболезнование' },
+    //     { value: 'get_well', label: 'Выздоровление / поддержка' },
+    //     { value: 'just_because', label: 'Без повода / просто так' },
+    //     { value: 'romantic_evening', label: 'Романтический вечер' },
+    //     { value: 'love_confession', label: 'Признание в любви' },
+    //     { value: 'holiday', label: 'Праздник (Новый год, Курман айт, Нооруз и др.)' },
+    //     { value: 'business_opening', label: 'Открытие бизнеса / новоселье' }
+    // ];
 
     // Загрузка товаров
     const fetchProducts = async (page = 1) => {
