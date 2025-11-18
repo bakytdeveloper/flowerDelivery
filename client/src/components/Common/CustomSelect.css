@@ -52,7 +52,7 @@
     border-top: none;
     border-radius: 0 0 6px 6px;
     z-index: 1100; /* Увеличиваем z-index */
-    max-height: 200px;
+    max-height: 110px!important;
     overflow-y: auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transform: translateY(-1px);
@@ -64,7 +64,7 @@
 }
 
 .custom-select--modal-context .custom-select__dropdown {
-    z-index: 10000; /* Максимальный для модальных окон */
+    z-index: 10050; /* Максимальный для модальных окон */
 }
 
 .custom-select--overlay .custom-select__dropdown {
@@ -72,7 +72,7 @@
 }
 
 .custom-select__option {
-    padding: 12px;
+    padding: 5px 12px;
     cursor: pointer;
     color: white;
     border-bottom: 1px solid #4a5568;
@@ -138,7 +138,6 @@
         width: 100% !important;
     }
 }
-
 
 /* Новые стили для решения проблемы z-index */
 .custom-select--overlay {
@@ -229,4 +228,34 @@
         position: absolute !important;
         width: 100% !important;
     }
+}
+
+/* НОВЫЕ СТИЛИ ДЛЯ ФОРМ В МОДАЛЬНЫХ ОКНАХ */
+.custom-select--form-context {
+    position: relative;
+    z-index: 1;
+}
+
+.custom-select--form-context.custom-select--open {
+    z-index: 10060; /* Очень высокий z-index для форм в модальных окнах */
+}
+
+.custom-select--form-context .custom-select__dropdown {
+    z-index: 10061 !important; /* Еще выше чем открытый селект */
+    position: absolute;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Гарантируем правильное отображение в формах */
+.form-group .custom-select--form-context {
+    overflow: visible !important;
+}
+
+.form-section .custom-select--form-context {
+    overflow: visible !important;
+}
+
+/* Специальные стили для ProductForm */
+.product-form-modal .custom-select--form-context .custom-select__dropdown {
+    z-index: 10070 !important; /* Максимальный приоритет в формах товаров */
 }
