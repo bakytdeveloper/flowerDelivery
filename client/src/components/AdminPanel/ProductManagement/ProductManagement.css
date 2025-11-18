@@ -70,7 +70,6 @@
 .products-grid-admin {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 6 колонок на больших экранах */
-    /*grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));*/
     gap: 25px;
     margin-bottom: 30px;
 }
