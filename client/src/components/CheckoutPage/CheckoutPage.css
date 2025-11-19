@@ -91,6 +91,13 @@
     color: #e2e8f0;
 }
 
+
+/* Специальные стили для улучшения UX */
+.required-field::after {
+    content: " *";
+    color: #dc3545;
+}
+
 .form-group input,
 .form-group textarea {
     width: 100%;

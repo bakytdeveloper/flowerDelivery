@@ -226,7 +226,7 @@ const CheckoutPage = () => {
                                 <h3>Контактная информация</h3>
 
                                 <div className="form-group">
-                                    <label htmlFor="firstName">Имя *</label>
+                                    <label htmlFor="firstName">Имя <span className="required-field"></span></label>
                                     <input
                                         type="text"
                                         id="firstName"
@@ -239,7 +239,7 @@ const CheckoutPage = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="phoneNumber">Телефон *</label>
+                                    <label htmlFor="phoneNumber">Телефон <span className="required-field"></span></label>
                                     <input
                                         type="tel"
                                         id="phoneNumber"
@@ -252,7 +252,7 @@ const CheckoutPage = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="address">Адрес доставки *</label>
+                                    <label htmlFor="address">Адрес доставки <span className="required-field"></span></label>
                                     <textarea
                                         id="address"
                                         name="address"
