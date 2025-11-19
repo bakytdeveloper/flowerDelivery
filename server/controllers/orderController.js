@@ -841,8 +841,6 @@ export const getOrdersByOccasion = async (req, res) => {
     }
 };
 
-
-// Добавьте эти функции в orderController.js
 // Получение всех заказов с пагинацией и фильтрацией - ОБНОВЛЕННАЯ ВЕРСИЯ
 export const getAllOrders = async (req, res) => {
     try {
