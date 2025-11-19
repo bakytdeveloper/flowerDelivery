@@ -1054,7 +1054,6 @@ export const getOrdersStats = async (req, res) => {
     }
 };
 
-// Обновление заказа (администратором)
 // Обновление заказа с полной информацией
 export const updateOrder = async (req, res) => {
     try {
