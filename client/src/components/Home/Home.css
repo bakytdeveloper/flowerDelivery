@@ -582,3 +582,49 @@
 }
 
 
+/* Для больших мониторов увеличиваем высоту карусели */
+@media (min-width: 1920px) {
+    .carousel {
+        height: 70vh;
+        max-width: 95%;
+        margin: 0 auto;
+    }
+
+    .carousel-caption-title-description {
+        width: 40% !important;
+        margin-left: 30% !important;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .carousel-item-image {
+        width: 27% !important;
+    }
+}
+
+@media (min-width: 2560px) {
+    .carousel {
+        height: 75vh;
+    }
+
+    .carousel-caption-title-description {
+        width: 40% !important;
+        margin-left: 30% !important;
+    }
+
+    .carousel-item-image {
+        width: 27% !important;
+    }
+}
+
+/* Дополнительно для очень больших экранов */
+@media (min-width: 3840px) {
+    .carousel-caption-title-description {
+        width: 40% !important;
+        margin-left: 30% !important;
+    }
+
+    .carousel-item-image {
+        width: 27% !important;
+    }
+}
