@@ -899,7 +899,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
     const [uploadingImages, setUploadingImages] = useState(false);
     const [imageUrlInput, setImageUrlInput] = useState('');
     const [showUrlInput, setShowUrlInput] = useState(false);
-    const [uploadingColorImages, setUploadingColorImages] = useState({});
+    // const [uploadingColorImages, setUploadingColorImages] = useState({});
 
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5506';
     const isEditing = !!initialProduct;
@@ -990,7 +990,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
     //     handleChange('availableColors', updatedColors);
     // };
 
-    
+
     // // Загрузка изображений для цвета
     // const handleColorImageUpload = async (event, colorIndex) => {
     //     const files = Array.from(event.target.files);
