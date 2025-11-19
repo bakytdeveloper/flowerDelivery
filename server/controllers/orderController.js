@@ -573,8 +573,6 @@ export const getUserOrders = async (req, res) => {
     }
 };
 
-// // Вспомогательная функция для форматирования заказа
-
 // Вспомогательная функция для форматирования ответа заказа - ОБНОВЛЕННАЯ ВЕРСИЯ
 const formatOrderResponse = async (order) => {
     try {
