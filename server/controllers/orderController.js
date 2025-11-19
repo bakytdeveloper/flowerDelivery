@@ -220,6 +220,17 @@ async function sendOrderEmail(order, userType) {
                     additionalFields.push(`Тип: ${item.flowerType === 'single' ? 'Штучный цветок' : 'Букет'}`);
                 }
 
+                // Названия цветов (только если есть непустые значения)
+                if (item.flowerNames && Array.isArray(item.flowerNames)) {
+                    const validFlowerNames = item.flowerNames
+                        .filter(name => name && name.toString().trim() !== '')
+                        .map(name => name.toString().trim());
+
+                    if (validFlowerNames.length > 0) {
+                        additionalFields.push(`Цветы: ${validFlowerNames.join(', ')}`);
+                    }
+                }
+
                 // Цвет (только для штучных цветов)
                 if (item.flowerType === 'single' && item.selectedColor && item.selectedColor.name && item.selectedColor.name.trim() !== '') {
                     additionalFields.push(`Цвет: ${item.selectedColor.name}`);
@@ -231,16 +242,16 @@ async function sendOrderEmail(order, userType) {
                     additionalFields.push(`Длина стебля: ${stemLength} см`);
                 }
 
-                // Названия цветов (только если есть непустые значения)
-                if (item.flowerNames && Array.isArray(item.flowerNames)) {
-                    const validFlowerNames = item.flowerNames
-                        .filter(name => name && name.toString().trim() !== '')
-                        .map(name => name.toString().trim());
-
-                    if (validFlowerNames.length > 0) {
-                        additionalFields.push(`Цветы: ${validFlowerNames.join(', ')}`);
-                    }
-                }
+                // // Названия цветов (только если есть непустые значения)
+                // if (item.flowerNames && Array.isArray(item.flowerNames)) {
+                //     const validFlowerNames = item.flowerNames
+                //         .filter(name => name && name.toString().trim() !== '')
+                //         .map(name => name.toString().trim());
+                //
+                //     if (validFlowerNames.length > 0) {
+                //         additionalFields.push(`Цветы: ${validFlowerNames.join(', ')}`);
+                //     }
+                // }
 
                 // Повод (только если есть значение)
                 if (item.occasion && item.occasion.toString().trim() !== '') {
