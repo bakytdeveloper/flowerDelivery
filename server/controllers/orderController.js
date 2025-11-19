@@ -700,7 +700,6 @@ export const updateAdminComments = async (req, res) => {
     }
 };
 
-// Контроллер для удаления заказа
 // Удаление заказа с возвратом товаров
 export const deleteOrder = async (req, res) => {
     try {
@@ -723,8 +722,6 @@ export const deleteOrder = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
-
-
 
 // Контроллер для получения последнего заказа пользователя
 export const getLastOrder = async (req, res) => {
