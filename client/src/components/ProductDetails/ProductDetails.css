@@ -1366,9 +1366,9 @@
 }
 
 .color-name {
-    font-size: 0.8rem;
+    font-size: 0.9rem!important;
     color: #cbd5e1;
-    font-weight: 500;
+    font-weight: bold!important;
     text-align: center;
     max-width: 70px;
     overflow: hidden;
