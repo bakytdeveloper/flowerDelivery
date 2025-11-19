@@ -10,6 +10,189 @@ import {
 
 
 // Функция для отправки email о новом заказе - УЛУЧШЕННАЯ ВЕРСИЯ
+
+// async function sendOrderEmail(order, userType) {
+//     try {
+//         const { _id, firstName, address, phoneNumber, totalAmount, paymentMethod, comments, flowerItems = [], addonItems = [] } = order;
+//         const userTypeText = { 'customer': 'Зарегистрированный клиент', 'guest': 'Гость' }[userType] || 'Пользователь';
+//
+//         // Улучшенное форматирование списка цветов с фильтрацией пустых полей
+//         const flowerList = flowerItems
+//             .filter(item => item && typeof item === 'object')
+//             .map(item => {
+//                 const itemName = item?.name || 'Неизвестный товар';
+//                 const quantity = item?.quantity || 0;
+//                 const price = item?.price || 0;
+//                 const itemTotal = item?.itemTotal || 0;
+//                 const wrapperPrice = item?.wrapper?.price || 0;
+//
+//                 // Безопасный расчет стоимости без упаковки
+//                 const basePrice = Math.max(0, itemTotal - wrapperPrice);
+//                 let itemInfo = `• ${itemName} - ${quantity} шт. × ${price} сом = ${basePrice} сом`;
+//
+//                 // Собираем все дополнительные поля в массив
+//                 const additionalFields = [];
+//
+//                 // Тип цветка
+//                 if (item.flowerType) {
+//                     additionalFields.push(`Тип: ${item.flowerType === 'single' ? 'Штучный цветок' : 'Букет'}`);
+//                 }
+//
+//                 // Цвет (только для штучных цветов)
+//                 if (item.flowerType === 'single' && item.selectedColor && item.selectedColor.name && item.selectedColor.name.trim() !== '') {
+//                     additionalFields.push(`Цвет: ${item.selectedColor.name}`);
+//                 }
+//
+//                 // Длина стебля (приоритет выбранной длине, затем общей)
+//                 const stemLength = item.selectedStemLength?.length || item.stemLength;
+//                 if (stemLength && stemLength.toString().trim() !== '') {
+//                     additionalFields.push(`Длина стебля: ${stemLength} см`);
+//                 }
+//
+//                 // Названия цветов (только если есть непустые значения)
+//                 if (item.flowerNames && Array.isArray(item.flowerNames)) {
+//                     const validFlowerNames = item.flowerNames
+//                         .filter(name => name && name.toString().trim() !== '')
+//                         .map(name => name.toString().trim());
+//
+//                     if (validFlowerNames.length > 0) {
+//                         additionalFields.push(`Цветы: ${validFlowerNames.join(', ')}`);
+//                     }
+//                 }
+//
+//                 // Повод (только если есть значение)
+//                 if (item.occasion && item.occasion.toString().trim() !== '') {
+//                     additionalFields.push(`Повод: ${item.occasion}`);
+//                 }
+//
+//                 // Получатель (только если есть значение)
+//                 if (item.recipient && item.recipient.toString().trim() !== '') {
+//                     additionalFields.push(`Для: ${item.recipient}`);
+//                 }
+//
+//                 // Упаковка (только если есть название)
+//                 if (item.wrapper && item.wrapper.name && item.wrapper.name.toString().trim() !== '') {
+//                     const wrapperText = `Упаковка: ${item.wrapper.name}`;
+//                     if (item.wrapper.price && item.wrapper.price > 0) {
+//                         additionalFields.push(`${wrapperText} (+${item.wrapper.price} сом)`);
+//                     } else {
+//                         additionalFields.push(wrapperText);
+//                     }
+//                 }
+//
+//                 // Добавляем дополнительные поля только если они есть
+//                 if (additionalFields.length > 0) {
+//                     itemInfo += '\n ' + additionalFields.join('\n ');
+//                 }
+//
+//                 return itemInfo;
+//             })
+//             .join('\n\n');
+//
+//         // Улучшенное форматирование списка дополнительных товаров
+//         const addonList = addonItems
+//             .filter(item => item && typeof item === 'object')
+//             .map(item => {
+//                 const itemName = item?.name || 'Неизвестный товар';
+//                 const quantity = item?.quantity || 0;
+//                 const price = item?.price || 0;
+//                 const itemTotal = item?.itemTotal || 0;
+//                 const itemType = item?.type || 'доп. товар';
+//
+//                 return `• ${itemName} (${itemType}) - ${quantity} шт. × ${price} сом = ${itemTotal} сом`;
+//             })
+//             .join('\n');
+//
+//         const mailOptions = {
+//             from: process.env.EMAIL_USER,
+//             to: process.env.SMTP_USER,
+//             subject: `🎉 НОВЫЙ ЗАКАЗ ЦВЕТОВ #${_id}`,
+//             html: `
+//             <!DOCTYPE html>
+//             <html>
+//             <head>
+//                 <meta charset="utf-8">
+//                 <style>
+//                     body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+//                     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+//                     .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+//                     .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+//                     .section { margin-bottom: 25px; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+//                     .total { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; font-size: 1.2em; font-weight: bold; }
+//                     .item-list { background: #f8f9fa; padding: 15px; border-radius: 5px; }
+//                     .badge { display: inline-block; padding: 5px 10px; background: #28a745; color: white; border-radius: 15px; font-size: 0.9em; }
+//                     .flower-item { margin-bottom: 15px; padding: 10px; background: white; border-radius: 5px; border-left: 3px solid #667eea; }
+//                 </style>
+//             </head>
+//             <body>
+//                 <div class="container">
+//                     <div class="header">
+//                         <h1>🎉 НОВЫЙ ЗАКАЗ ЦВЕТОВ</h1>
+//                         <p>Заказ #${_id}</p>
+//                     </div>
+//                     <div class="content">
+//                         <div class="section">
+//                             <h2>👤 Информация о клиенте</h2>
+//                             <p><strong>Имя:</strong> ${firstName}</p>
+//                             <p><strong>Телефон:</strong> ${phoneNumber}</p>
+//                             <p><strong>Адрес доставки:</strong> ${address}</p>
+//                             <p><strong>Тип клиента:</strong> <span class="badge">${userTypeText}</span></p>
+//                         </div>
+//
+//                         <div class="section">
+//                             <h2>💐 Состав заказа</h2>
+//                             <div class="item-list">
+//                                 <h3>Цветы:</h3>
+//                                 ${flowerItems.filter(item => item && typeof item === 'object').length > 0 ?
+//                 `<div style="white-space: pre-wrap; font-family: Arial;">${flowerList}</div>` :
+//                 '<p>Нет цветов в заказе</p>'
+//             }
+//
+//                                 ${addonItems.filter(item => item && typeof item === 'object').length > 0 ? `
+//                                     <h3 style="margin-top: 20px;">Дополнительные товары:</h3>
+//                                     <div style="white-space: pre-wrap; font-family: Arial;">${addonList}</div>
+//                                 ` : ''}
+//                             </div>
+//                         </div>
+//
+//                         ${comments && comments.toString().trim() !== '' ? `
+//                             <div class="section">
+//                                 <h2>💬 Комментарий клиента</h2>
+//                                 <p><em>${comments}</em></p>
+//                             </div>
+//                         ` : ''}
+//
+//                          <div class="section">
+//                             <h2>💰 Детали оплаты</h2>
+//                             <p><strong>Способ оплаты:</strong> ${paymentMethod === 'cash' ? 'Наличные при получении' : 'Онлайн оплата'}</p>
+//                             <div class="total">
+//                                 <strong>Общая сумма:</strong> ${totalAmount} сом
+//                             </div>
+//                         </div>
+//
+//                         <div class="section">
+//                             <p><strong>🕒 Время заказа:</strong> ${new Date().toLocaleString('ru-RU')}</p>
+//                             <p style="color: #666; font-size: 0.9em; margin-top: 20px;">
+//                                 Это автоматическое уведомление о новом заказе. Пожалуйста, обработайте заказ в течение 30 минут.
+//                             </p>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </body>
+//             </html>
+//             `
+//         };
+//
+//         await transporter.sendMail(mailOptions);
+//         console.log('✅ Email уведомление о заказе отправлено администратору');
+//         return true;
+//     } catch (error) {
+//         console.error('❌ Ошибка отправки email администратору:', error);
+//         return false;
+//     }
+// }
+
+
 async function sendOrderEmail(order, userType) {
     try {
         const { _id, firstName, address, phoneNumber, totalAmount, paymentMethod, comments, flowerItems = [], addonItems = [] } = order;
@@ -81,12 +264,12 @@ async function sendOrderEmail(order, userType) {
 
                 // Добавляем дополнительные поля только если они есть
                 if (additionalFields.length > 0) {
-                    itemInfo += '\n ' + additionalFields.join('\n ');
+                    itemInfo += '\n' + additionalFields.join('\n');
                 }
 
                 return itemInfo;
             })
-            .join('\n\n');
+            .join('\n\n'); // Один перенос между элементами
 
         // Улучшенное форматирование списка дополнительных товаров
         const addonList = addonItems
@@ -106,80 +289,148 @@ async function sendOrderEmail(order, userType) {
             from: process.env.EMAIL_USER,
             to: process.env.SMTP_USER,
             subject: `🎉 НОВЫЙ ЗАКАЗ ЦВЕТОВ #${_id}`,
-            html: `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="utf-8">
-                <style>
-                    body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-                    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-                    .section { margin-bottom: 25px; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-                    .total { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; font-size: 1.2em; font-weight: bold; }
-                    .item-list { background: #f8f9fa; padding: 15px; border-radius: 5px; }
-                    .badge { display: inline-block; padding: 5px 10px; background: #28a745; color: white; border-radius: 15px; font-size: 0.9em; }
-                    .flower-item { margin-bottom: 15px; padding: 10px; background: white; border-radius: 5px; border-left: 3px solid #667eea; }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="header">
-                        <h1>🎉 НОВЫЙ ЗАКАЗ ЦВЕТОВ</h1>
-                        <p>Заказ #${_id}</p>
-                    </div>
-                    <div class="content">
-                        <div class="section">
-                            <h2>👤 Информация о клиенте</h2>
-                            <p><strong>Имя:</strong> ${firstName}</p>
-                            <p><strong>Телефон:</strong> ${phoneNumber}</p>
-                            <p><strong>Адрес доставки:</strong> ${address}</p>
-                            <p><strong>Тип клиента:</strong> <span class="badge">${userTypeText}</span></p>
+            html: `<!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <style>
+                        body { 
+                            font-family: 'Arial', sans-serif; 
+                            line-height: 1.4; 
+                            color: #333; 
+                            margin: 0; 
+                            padding: 0; 
+                        }
+                        .container { 
+                            max-width: 600px; 
+                            margin: 0 auto; 
+                            padding: 0; 
+                        }
+                        .header { 
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                            color: white; 
+                            padding: 25px 20px; 
+                            text-align: center; 
+                        }
+                        .content { 
+                            background: #f9f9f9; 
+                            padding: 20px; 
+                        }
+                        .section { 
+                            margin-bottom: 10px; 
+                            padding: 5px 15px; 
+                            background: white; 
+                            border-radius: 8px; 
+                            box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+                        }
+                        .total { 
+                            background: #fff3cd; 
+                            border-left: 4px solid #ffc107; 
+                            padding: 12px; 
+                            font-size: 1.1em; 
+                            font-weight: bold; 
+                            margin-top: 10px;
+                        }
+                        .item-list { 
+                            background: #f8f9fa; 
+                            padding: 12px; 
+                            border-radius: 5px; 
+                        }
+                        .badge { 
+                            display: inline-block; 
+                            padding: 3px 8px; 
+                            background: #28a745; 
+                            color: white; 
+                            border-radius: 12px; 
+                            font-size: 0.85em; 
+                        }
+                        .flower-item { 
+                            margin-bottom: 10px; 
+                            padding: 8px; 
+                            background: white; 
+                            border-radius: 5px; 
+                            border-left: 3px solid #667eea; 
+                        }
+                        h2 {
+                            margin-top: 0;
+                            margin-bottom: 12px;
+                            font-size: 1.3em;
+                        }
+                        h3 {
+                            margin-top: 0;
+                            margin-bottom: 10px;
+                            font-size: 1.1em;
+                        }
+                        p {
+                            margin: 8px 0;
+                        }
+                        pre {
+                            white-space: pre-wrap;
+                            font-family: Arial, sans-serif;
+                            font-size: 14px;
+                            line-height: 1.3;
+                            margin: 8px 0;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1 style="margin: 0 0 10px 0; font-size: 1.5em;">🎉 НОВЫЙ ЗАКАЗ ЦВЕТОВ</h1>
+                            <p style="margin: 0; font-size: 1.1em;">Заказ #${_id}</p>
                         </div>
-                        
-                        <div class="section">
-                            <h2>💐 Состав заказа</h2>
-                            <div class="item-list">
-                                <h3>Цветы:</h3>
-                                ${flowerItems.filter(item => item && typeof item === 'object').length > 0 ?
-                `<div style="white-space: pre-wrap; font-family: Arial;">${flowerList}</div>` :
-                '<p>Нет цветов в заказе</p>'
-            }
-                                
-                                ${addonItems.filter(item => item && typeof item === 'object').length > 0 ? `
-                                    <h3 style="margin-top: 20px;">Дополнительные товары:</h3>
-                                    <div style="white-space: pre-wrap; font-family: Arial;">${addonList}</div>
-                                ` : ''}
-                            </div>
-                        </div>
-                        
-                        ${comments && comments.toString().trim() !== '' ? `
+                        <div class="content">
                             <div class="section">
-                                <h2>💬 Комментарий клиента</h2>
-                                <p><em>${comments}</em></p>
+                                <h2>👤 Информация о клиенте</h2>
+                                <p><strong>Имя:</strong> ${firstName}</p>
+                                <p><strong>Телефон:</strong> ${phoneNumber}</p>
+                                <p><strong>Адрес доставки:</strong> ${address}</p>
+                                <p><strong>Тип клиента:</strong> <span class="badge">${userTypeText}</span></p>
                             </div>
-                        ` : ''}
-                        
-                         <div class="section">
-                            <h2>💰 Детали оплаты</h2>
-                            <p><strong>Способ оплаты:</strong> ${paymentMethod === 'cash' ? 'Наличные при получении' : 'Онлайн оплата'}</p>
-                            <div class="total">
-                                <strong>Общая сумма:</strong> ${totalAmount} сом
+                            
+                            <div class="section">
+                                <h2>💐 Состав заказа</h2>
+                                <div class="item-list">
+                                    <h3>Цветы:</h3>
+                                    ${flowerItems.filter(item => item && typeof item === 'object').length > 0 ?
+                                `<pre>${flowerList}</pre>` :
+                                '<p>Нет цветов в заказе</p>'
+                            }
+                                    
+                                    ${addonItems.filter(item => item && typeof item === 'object').length > 0 ?
+                                `<h3 style="margin-top: 15px;">Дополнительные товары:</h3>
+                                         <pre>${addonList}</pre>` :
+                                ''
+                            }
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="section">
-                            <p><strong>🕒 Время заказа:</strong> ${new Date().toLocaleString('ru-RU')}</p>
-                            <p style="color: #666; font-size: 0.9em; margin-top: 20px;">
-                                Это автоматическое уведомление о новом заказе. Пожалуйста, обработайте заказ в течение 30 минут.
-                            </p>
+                            
+                            ${comments && comments.toString().trim() !== '' ?
+                                `<div class="section">
+                                    <h2>💬 Комментарий клиента</h2>
+                                    <p><em>${comments}</em></p>
+                                </div>` :
+                                ''
+                            }
+                            
+                            <div class="section">
+                                <h2>💰 Детали оплаты</h2>
+                                <p><strong>Способ оплаты:</strong> ${paymentMethod === 'cash' ? 'Наличные при получении' : 'Онлайн оплата'}</p>
+                                <div class="total">
+                                    <strong>Общая сумма:</strong> ${totalAmount} сом
+                                </div>
+                            </div>
+                            
+                            <div class="section">
+                                <p><strong>🕒 Время заказа:</strong> ${new Date().toLocaleString('ru-RU')}</p>
+                                <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+                                    Это автоматическое уведомление о новом заказе. Пожалуйста, обработайте заказ в течение 30 минут.
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </body>
-            </html>
-            `
+                </body>
+                </html>`
         };
 
         await transporter.sendMail(mailOptions);
@@ -190,6 +441,7 @@ async function sendOrderEmail(order, userType) {
         return false;
     }
 }
+
 
 // Функция для отправки уведомлений о низком количестве товаров
 async function notifyAboutLowQuantity(items, itemType = 'flower') {
