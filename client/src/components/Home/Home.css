@@ -3,14 +3,14 @@
     margin-top: 5px;
     justify-content: center;
     align-items: center;
-    padding: 25px 0; 
+    padding: 25px 0;
     overflow-y: auto;
 }
 
 .carousel {
     position: relative;
     width: 100%;
-    max-width: 100%; /* Убираем ограничение */
+    max-width: 100%; 
     overflow: hidden;
     margin: 0 auto;
     background-size: cover;
