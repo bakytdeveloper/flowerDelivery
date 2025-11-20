@@ -182,7 +182,6 @@
 .info-block:hover {
     transform: scale(1.03);
     box-shadow: 2px 4px 8px rgba(7, 0, 0, 0.3);
-
 }
 
 .info-block-title {
