@@ -893,23 +893,6 @@ const ProductDetails = () => {
                                 </div>
                             )}
 
-                            {/*{selectedColor && (*/}
-                            {/*    <div className="spec-item">*/}
-                            {/*        <span className="spec-label">Цвет:</span>*/}
-                            {/*        <div className="color-tags">*/}
-                            {/*            <span*/}
-                            {/*                className="color-tag"*/}
-                            {/*                style={{*/}
-                            {/*                    backgroundColor: selectedColor.value,*/}
-                            {/*                    border: selectedColor.value === '#FFFFFF' ? '1px solid #ccc' : 'none'*/}
-                            {/*                }}*/}
-                            {/*                title={selectedColor.name}*/}
-                            {/*            />*/}
-                            {/*            <span className="color-name-text">{selectedColor.name}</span>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*)}*/}
-
                             {product.characteristics && product.characteristics.length > 0 && (
                                 <>
                                     <div className="specs-divider"></div>
