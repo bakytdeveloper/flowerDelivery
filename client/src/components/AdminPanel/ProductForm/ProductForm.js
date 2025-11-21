@@ -971,22 +971,28 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
 
     /// КОДЫ ПО УПРАВЛЕНИЮ ЦВЕТОМ ЦВЕТОВ
     // // Обработка цветов
-    const handleColorChange = (index, field, value) => {
-        const updatedColors = [...product.availableColors];
-        updatedColors[index][field] = value;
-        handleChange('availableColors', updatedColors);
-    };
+    // const handleColorChange = (index, field, value) => {
+    //     const updatedColors = [...product.availableColors];
+    //     updatedColors[index][field] = value;
+    //     handleChange('availableColors', updatedColors);
+    // };
+    //
+    // const addColor = () => {
+    //     const updatedColors = [
+    //         ...product.availableColors,
+    //         { name: '', value: '#000000', colorImages: [] }
+    //     ];
+    //     handleChange('availableColors', updatedColors);
+    // };
+    //
+    // const removeColor = (index) => {
+    //     const updatedColors = product.availableColors.filter((_, i) => i !== index);
+    //     handleChange('availableColors', updatedColors);
+    // };
 
-    const addColor = () => {
-        const updatedColors = [
-            ...product.availableColors,
-            { name: '', value: '#000000', colorImages: [] }
-        ];
-        handleChange('availableColors', updatedColors);
-    };
-
-    const removeColor = (index) => {
-        const updatedColors = product.availableColors.filter((_, i) => i !== index);
+    const handleColorChange = (field, value) => {
+        // Всегда работаем только с первым (единственным) цветом
+        const updatedColors = [{ ...product.availableColors[0], [field]: value }];
         handleChange('availableColors', updatedColors);
     };
 
@@ -1400,62 +1406,107 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                         </div>
                             {/*РАБОТАЕТ< ЭТО ФУНКЦИОНАЛ УСТАНОВКИ ЦВЕТА*/}
                         {/* Секция для цветов (только для одиночных цветов) */}
+                        {/*{product.type === 'single' && (*/}
+                        {/*    <div className="form-section">*/}
+                        {/*        <h4>Доступные цвета <span className="required-field"></span></h4>*/}
+                        {/*        <p className="help-text">Добавьте цвета для одиночных цветов. Пользователи смогут выбирать цвет при покупке.</p>*/}
+                        {/*        <div className="colors-container">*/}
+                        {/*            {product.availableColors.map((color, index) => (*/}
+                        {/*                <div key={index} className="color-item">*/}
+                        {/*                    <div className="color-input-group">*/}
+
+                        {/*                        <div className="color-inputs">*/}
+                        {/*                            <div className="color-input-row">*/}
+                        {/*                                <input*/}
+                        {/*                                    type="color"*/}
+                        {/*                                    value={color.value}*/}
+                        {/*                                    onChange={(e) => handleColorChange(index, 'value', e.target.value)}*/}
+                        {/*                                    className="color-picker"*/}
+                        {/*                                    title="Выберите цвет"*/}
+                        {/*                                />*/}
+                        {/*                                <input*/}
+                        {/*                                    type="text"*/}
+                        {/*                                    value={color.value}*/}
+                        {/*                                    onChange={(e) => handleColorChange(index, 'value', e.target.value)}*/}
+                        {/*                                    className="form-control color-hex-input"*/}
+                        {/*                                    placeholder="#HEX код"*/}
+                        {/*                                    pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"*/}
+                        {/*                                    title="Введите HEX код цвета (например: #FF0000)"*/}
+                        {/*                                />*/}
+                        {/*                            </div>*/}
+                        {/*                            <input*/}
+                        {/*                                type="text"*/}
+                        {/*                                value={color.name}*/}
+                        {/*                                onChange={(e) => handleColorChange(index, 'name', e.target.value)}*/}
+                        {/*                                className="form-control"*/}
+                        {/*                                placeholder="Название цвета"*/}
+                        {/*                            />*/}
+                        {/*                        </div>*/}
+                        {/*                    </div>*/}
+                        {/*                    /!*<button*!/*/}
+                        {/*                    /!*    type="button"*!/*/}
+                        {/*                    /!*    className="color-remove-btn"*!/*/}
+                        {/*                    /!*    onClick={() => removeColor(index)}*!/*/}
+                        {/*                    /!*>*!/*/}
+                        {/*                    /!*    ×*!/*/}
+                        {/*                    /!*</button>*!/*/}
+                        {/*                </div>*/}
+                        {/*            ))}*/}
+                        {/*        </div>*/}
+                        {/*        /!*<button*!/*/}
+                        {/*        /!*    type="button"*!/*/}
+                        {/*        /!*    className="btn-add-color"*!/*/}
+                        {/*        /!*    onClick={addColor}*!/*/}
+                        {/*        /!*>*!/*/}
+                        {/*        /!*    + Добавить цвет*!/*/}
+                        {/*        /!*</button>*!/*/}
+                        {/*    </div>*/}
+                        {/*)}*/}
+
                         {product.type === 'single' && (
                             <div className="form-section">
-                                <h4>Доступные цвета <span className="required-field"></span></h4>
-                                <p className="help-text">Добавьте цвета для одиночных цветов. Пользователи смогут выбирать цвет при покупке.</p>
+                                <h4>Цвет <span className="required-field"></span></h4>
+                                <p className="help-text">Укажите цвет для одиночных цветов. Пользователи смогут видеть цвет при покупке.</p>
                                 <div className="colors-container">
-                                    {product.availableColors.map((color, index) => (
-                                        <div key={index} className="color-item">
-                                            <div className="color-input-group">
-                                               
-                                                <div className="color-inputs">
-                                                    <div className="color-input-row">
-                                                        <input
-                                                            type="color"
-                                                            value={color.value}
-                                                            onChange={(e) => handleColorChange(index, 'value', e.target.value)}
-                                                            className="color-picker"
-                                                            title="Выберите цвет"
-                                                        />
-                                                        <input
-                                                            type="text"
-                                                            value={color.value}
-                                                            onChange={(e) => handleColorChange(index, 'value', e.target.value)}
-                                                            className="form-control color-hex-input"
-                                                            placeholder="#HEX код"
-                                                            pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-                                                            title="Введите HEX код цвета (например: #FF0000)"
-                                                        />
-                                                    </div>
+                                    {/* Всегда отображаем только один цвет */}
+                                    <div className="color-item">
+                                        <div className="color-input-group">
+                                            <div className="color-inputs">
+                                                <div className="color-input-row">
+                                                    <input
+                                                        type="color"
+                                                        value={product.availableColors[0]?.value || '#000000'}
+                                                        onChange={(e) => handleColorChange('value', e.target.value)}
+                                                        className="color-picker"
+                                                        title="Выберите цвет"
+                                                    />
                                                     <input
                                                         type="text"
-                                                        value={color.name}
-                                                        onChange={(e) => handleColorChange(index, 'name', e.target.value)}
-                                                        className="form-control"
-                                                        placeholder="Название цвета"
+                                                        value={product.availableColors[0]?.value || '#000000'}
+                                                        onChange={(e) => handleColorChange('value', e.target.value)}
+                                                        className="form-control color-hex-input"
+                                                        placeholder="#HEX код"
+                                                        pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                                                        title="Введите HEX код цвета (например: #FF0000)"
                                                     />
                                                 </div>
+                                                <input
+                                                    type="text"
+                                                    value={product.availableColors[0]?.name || ''}
+                                                    onChange={(e) => handleColorChange('name', e.target.value)}
+                                                    className="form-control"
+                                                    placeholder="Название цвета"
+                                                    required
+                                                />
                                             </div>
-                                            <button
-                                                type="button"
-                                                className="color-remove-btn"
-                                                onClick={() => removeColor(index)}
-                                            >
-                                                ×
-                                            </button>
                                         </div>
-                                    ))}
+                                        {/* Убрана кнопка удаления цвета */}
+                                    </div>
                                 </div>
-                                <button
-                                    type="button"
-                                    className="btn-add-color"
-                                    onClick={addColor}
-                                >
-                                    + Добавить цвет
-                                </button>
+                                {/* Убрана кнопка добавления цвета */}
                             </div>
                         )}
+
 
                         {/* Секция для вариантов длины стебля */}
                         <div className="form-section">

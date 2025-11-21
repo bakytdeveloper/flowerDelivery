@@ -231,6 +231,7 @@ const CheckoutPage = () => {
                                         type="text"
                                         id="firstName"
                                         name="firstName"
+                                        className="checkout-content-input-name"
                                         value={orderData.firstName}
                                         onChange={handleInputChange}
                                         required
@@ -244,6 +245,7 @@ const CheckoutPage = () => {
                                         type="tel"
                                         id="phoneNumber"
                                         name="phoneNumber"
+                                        className="checkout-content-input-phone"
                                         value={orderData.phoneNumber}
                                         onChange={handleInputChange}
                                         required

@@ -124,6 +124,13 @@
     background: rgba(71, 85, 105, 0.8);
 }
 
+.checkout-content-input-phone:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+    background: rgba(71, 85, 105, 0.8) !important;
+}
+
 .form-group textarea {
     resize: vertical;
     min-height: 80px;
