@@ -1408,14 +1408,7 @@ const ProductForm = ({ onSave, onCancel, initialProduct = null }) => {
                                     {product.availableColors.map((color, index) => (
                                         <div key={index} className="color-item">
                                             <div className="color-input-group">
-                                                {/*<div className="color-preview">*/}
-                                                {/*    <div*/}
-                                                {/*        className="color-swatch"*/}
-                                                {/*        style={{ backgroundColor: color.value }}*/}
-                                                {/*        title={color.name}*/}
-                                                {/*    />*/}
-                                                {/*    <span className="color-preview-text">Предпросмотр</span>*/}
-                                                {/*</div>*/}
+                                               
                                                 <div className="color-inputs">
                                                     <div className="color-input-row">
                                                         <input
