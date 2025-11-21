@@ -1307,7 +1307,8 @@
 }
 
 .variant-section h4::before {
-    content: "🎨";
+    content: "📏";
+    /*content: "🎨";*/
     font-size: 1.2rem;
 }
 

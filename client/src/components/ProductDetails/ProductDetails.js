@@ -788,29 +788,29 @@ const ProductDetails = () => {
                         )}
 
                         {/* Блок выбора цвета и длины стебля */}
-                        {product.type === 'single' && availableVariants.colors.length > 0 && availableVariants.stemLengths.length > 0  && (<div className="product-variants">
-                            {/* Выбор цвета (только для одиночных цветов) */}
-                            {product.type === 'single' &&  availableVariants.colors.length > 0 && (
-                                <div className="variant-section">
-                                    <h4>Цвет:</h4>
-                                    <div className="color-options">
-                                        {availableVariants.colors.map((color, index) => (
-                                            <div
-                                                key={index}
-                                                className={`color-option ${selectedColor?.value === color.value ? 'selected' : ''}`}
-                                                onClick={() => setSelectedColor(color)}
-                                            >
-                                                <div
-                                                    className="color-swatch"
-                                                    style={{backgroundColor: color.value}}
-                                                    title={color.name}
-                                                />
-                                                <span className="color-name">{color.name}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
+                        {product.type === 'single' && availableVariants.stemLengths.length > 0  && (<div className="product-variants">
+                            {/*/!* Выбор цвета (только для одиночных цветов) *!/*/}
+                            {/*{product.type === 'single' &&  availableVariants.colors.length > 0 && (*/}
+                            {/*    <div className="variant-section">*/}
+                            {/*        <h4>Цвет:</h4>*/}
+                            {/*        <div className="color-options">*/}
+                            {/*            {availableVariants.colors.map((color, index) => (*/}
+                            {/*                <div*/}
+                            {/*                    key={index}*/}
+                            {/*                    className={`color-option ${selectedColor?.value === color.value ? 'selected' : ''}`}*/}
+                            {/*                    onClick={() => setSelectedColor(color)}*/}
+                            {/*                >*/}
+                            {/*                    <div*/}
+                            {/*                        className="color-swatch"*/}
+                            {/*                        style={{backgroundColor: color.value}}*/}
+                            {/*                        title={color.name}*/}
+                            {/*                    />*/}
+                            {/*                    <span className="color-name">{color.name}</span>*/}
+                            {/*                </div>*/}
+                            {/*            ))}*/}
+                            {/*        </div>*/}
+                            {/*    </div>*/}
+                            {/*)}*/}
 
                             {/* Выбор длины стебля */}
                             {product.type === 'single' && availableVariants.stemLengths.length > 0 && (
