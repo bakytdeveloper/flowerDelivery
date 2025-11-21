@@ -762,20 +762,20 @@ const ProductDetails = () => {
                         {(selectedColor || selectedStemLength) && (
                             <div className="selected-options-summary">
                                 <div className="selected-option-item">
-                                    <span className="selected-option-label">Выбранные опции:</span>
+                                    <span className="selected-option-label">Выбранная длина:</span>
                                 </div>
-                                {selectedColor && (
-                                    <div className="selected-option-item">
-                                        <span className="selected-option-label">Цвет:</span>
-                                        <span className="selected-option-value">
-                                            <div
-                                                className="selected-color-preview"
-                                                style={{ backgroundColor: selectedColor.value }}
-                                            />
-                                            {selectedColor.name}
-                                        </span>
-                                    </div>
-                                )}
+                                {/*{selectedColor && (*/}
+                                {/*    <div className="selected-option-item">*/}
+                                {/*        <span className="selected-option-label">Цвет:</span>*/}
+                                {/*        <span className="selected-option-value">*/}
+                                {/*            <div*/}
+                                {/*                className="selected-color-preview"*/}
+                                {/*                style={{ backgroundColor: selectedColor.value }}*/}
+                                {/*            />*/}
+                                {/*            {selectedColor.name}*/}
+                                {/*        </span>*/}
+                                {/*    </div>*/}
+                                {/*)}*/}
                                 {selectedStemLength && (
                                     <div className="selected-option-item">
                                         <span className="selected-option-label">Длина стебля:</span>
@@ -883,19 +883,32 @@ const ProductDetails = () => {
                             {selectedColor && (
                                 <div className="spec-item">
                                     <span className="spec-label">Цвет:</span>
-                                    <div className="color-tags">
-                                        <span
-                                            className="color-tag"
-                                            style={{
-                                                backgroundColor: selectedColor.value,
-                                                border: selectedColor.value === '#FFFFFF' ? '1px solid #ccc' : 'none'
-                                            }}
-                                            title={selectedColor.name}
-                                        />
-                                        <span className="color-name-text">{selectedColor.name}</span>
-                                    </div>
+                                    <span className="spec-value">
+                                            <div
+                                                className="selected-color-preview"
+                                                style={{ backgroundColor: selectedColor.value }}
+                                            />
+                                        {selectedColor.name}
+                                        </span>
                                 </div>
                             )}
+
+                            {/*{selectedColor && (*/}
+                            {/*    <div className="spec-item">*/}
+                            {/*        <span className="spec-label">Цвет:</span>*/}
+                            {/*        <div className="color-tags">*/}
+                            {/*            <span*/}
+                            {/*                className="color-tag"*/}
+                            {/*                style={{*/}
+                            {/*                    backgroundColor: selectedColor.value,*/}
+                            {/*                    border: selectedColor.value === '#FFFFFF' ? '1px solid #ccc' : 'none'*/}
+                            {/*                }}*/}
+                            {/*                title={selectedColor.name}*/}
+                            {/*            />*/}
+                            {/*            <span className="color-name-text">{selectedColor.name}</span>*/}
+                            {/*        </div>*/}
+                            {/*    </div>*/}
+                            {/*)}*/}
 
                             {product.characteristics && product.characteristics.length > 0 && (
                                 <>
