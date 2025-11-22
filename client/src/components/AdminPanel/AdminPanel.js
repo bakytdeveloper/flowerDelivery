@@ -328,8 +328,7 @@ const AdminPanel = () => {
     if (isLoading && sliderImages.length === 0) {
         return <div className="admin-panel-loading">Загрузка...</div>;
     }
-
-
+    
     return (
         <div className="admin-panel">
             <div className="admin-header">
