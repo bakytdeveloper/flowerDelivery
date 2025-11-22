@@ -6,7 +6,6 @@ import WrapperManagement from './WrapperManagement/WrapperManagement';
 import AddonManagement from './AddonManagement/AddonManagement';
 import OrderManagement from './OrderManagement/OrderManagement';
 import { fontFamilies } from "../../constants/constants";
-
 import { toast } from 'react-toastify';
 import './AdminPanel.css';
 import CustomSelect from "../Common/CustomSelect";
