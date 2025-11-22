@@ -144,7 +144,6 @@ const AdminPanel = () => {
     };
 
     // Сохранение изменений
-    // Сохранение изменений
     const handleSaveChanges = async () => {
         try {
             setIsLoading(true);
