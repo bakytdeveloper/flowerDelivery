@@ -569,7 +569,6 @@ const AdminPanel = () => {
                                                         className="form-control-select"
                                                     />
                                                 </div>
-
                                             </div>
 
                                             {/*<div className="form-row">*/}
