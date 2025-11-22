@@ -328,7 +328,7 @@ const AdminPanel = () => {
     if (isLoading && sliderImages.length === 0) {
         return <div className="admin-panel-loading">Загрузка...</div>;
     }
-    
+
     return (
         <div className="admin-panel">
             <div className="admin-header">
@@ -435,7 +435,6 @@ const AdminPanel = () => {
                                                     className="form-control-select"
                                                 />
                                             </div>
-
 
                                             {slide.backgroundType === 'color' && (
                                                 <div className="form-group" style={{zIndex:"0"}}>
