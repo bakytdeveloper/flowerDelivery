@@ -110,7 +110,6 @@ const AdminPanel = () => {
         } else {
             updatedSlides[index][field] = value;
         }
-
         setSliderImages(updatedSlides);
     };
 
@@ -118,7 +117,7 @@ const AdminPanel = () => {
     const handleDeleteSlide = async (index) => {
         const slide = sliderImages[index];
         if (slide.url) {
-            
+
             try {
                 const response = await fetch(`${apiUrl}/api/homepage/slider/${encodeURIComponent(slide.url)}`, {
                     method: 'DELETE',
