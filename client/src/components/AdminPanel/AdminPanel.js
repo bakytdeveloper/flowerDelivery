@@ -632,8 +632,7 @@ const AdminPanel = () => {
                                                     <small className="input-hint">Только число</small>
                                                 </div>
                                             </div>
-
-
+                                            
                                         </div>
 
                                         <div className="form-section">
