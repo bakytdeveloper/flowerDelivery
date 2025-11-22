@@ -185,6 +185,7 @@ const AdminPanel = () => {
             if (response.ok) {
                 toast.success('Изменения сохранены успешно');
                 fetchSliderData();
+
             } else {
                 throw new Error('Ошибка сохранения изменений');
             }
