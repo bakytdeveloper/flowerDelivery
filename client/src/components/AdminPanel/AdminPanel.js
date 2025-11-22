@@ -230,7 +230,6 @@ const AdminPanel = () => {
             return value.replace('px', '');
     };
 
-
     // Функция для отображения дат в читаемом формате (без времени)
     const formatDateForDisplay = (isoDateString) => {
         if (!isoDateString) return '';
